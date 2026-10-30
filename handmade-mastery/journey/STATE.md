@@ -21,6 +21,7 @@ _Last updated: 2026-10-30_
 - Claude Code 2.1.302 (winget). New terminals find `claude` on PATH.
 - DebugView and Coreinfo in `%USERPROFILE%\Tools\Sysinternals`.
 - RAD Debugger: later, on purpose.
+- Editor: VS Code for Intro to C. Revisit at the start of Handmade Hero (see DECISIONS.md).
 
 ## Mac tools: not installed yet
 See `docs/toolset.md`, section "Mac M1".

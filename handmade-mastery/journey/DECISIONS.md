@@ -55,3 +55,8 @@ Newest at the bottom. Each entry: date, decision, why.
 - Only two machines: Windows PC (code) and Mac M1 (study). Linux isn't needed:
   Handmade Hero is Windows-only, and the Mac already covers all study tools.
   Fewer machines means less setup and less to keep in sync.
+
+## 2026-10-30: Editor for now, review later
+- Use **VS Code + Neovim extension** for *Intro to C on Windows*.
+- Look at the editor again when Handmade Hero starts: watch what Casey uses
+  there and decide then. Why: decide with real experience, not in advance.
