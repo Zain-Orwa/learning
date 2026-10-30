@@ -35,6 +35,25 @@ Every tool we use, what it's for, which machine it runs on, and how to set it up
 - **Installed:** 2.1.302 via the Anthropic-published winget package (2026-10-30).
   Restart the terminal to refresh the PATH.
 
+### [x] Terminal: colors, icons, git info (Windows)
+- **For:** a readable terminal: colored prompt with folder and git branch,
+  colored `ls` with icons, colors while typing.
+- **Pieces:**
+  - PowerShell 7 (`winget install Microsoft.PowerShell`), the default shell in
+    Windows Terminal and in the VS Code terminal.
+  - Starship prompt (`winget install Starship.Starship`). Config:
+    `~/.config/starship.toml`. Why Starship: the same config works in zsh/bash
+    on the Mac, so both machines look the same.
+  - JetBrainsMono Nerd Font (`winget install DEVCOM.JetBrainsMonoNerdFont`),
+    set in Windows Terminal and VS Code. Without it, icons show as boxes.
+  - Terminal-Icons and PSReadLine 2.4 (PowerShell Gallery), loaded in `$PROFILE`
+    (`Documents\PowerShell\Microsoft.PowerShell_profile.ps1`).
+  - Git Bash gets the same prompt from `~/.bashrc`.
+- **Not set up on purpose:** loading the compiler (`cl`) in every terminal.
+  Casey writes `shell.bat` for that in Handmade Hero Day 1; the learner writes it then.
+- **Installed:** 2026-10-30. Windows Terminal settings backup:
+  `settings.json.bak-2026-10-30` next to the original.
+
 ### [ ] RAD Debugger (later)
 - **For:** a faster debugger, once stepping through code feels routine.
 - **Get:** releases at https://github.com/EpicGamesExt/raddebugger (free, open source).
