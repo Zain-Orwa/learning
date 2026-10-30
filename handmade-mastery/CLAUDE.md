@@ -32,7 +32,8 @@ This file adds what is specific to this subject. Then read
 |---|---|---|
 | 1 | Choose the toolset | **Done** (2026-10-30). See `docs/toolset.md` |
 | 2 | Create the repo and the handoff files | **Done** (2026-10-30). Cloned on both machines |
-| 3+ | Not decided yet | Decide together, one step at a time |
+| 3 | The study routine | **Built** (2026-10-30): study page with video player + `/study`. Learner tries it on Day 1 Part 1 |
+| 4+ | Not decided yet | Decide together, one step at a time |
 
 ## Machines
 
@@ -66,34 +67,43 @@ journey/STATE.md          where we are now and the next action  ← update every
 journey/DECISIONS.md      dated log of every decision and why
 docs/toolset.md           each tool: purpose, machine, install, config, status
 courses/<course>/dayNN/   materials per episode
-    study-kit.html          interactive lesson (blocks × 7 steps), open in a browser
+    data.js                 the lesson content (source)
+    study-kit.html          built page: open in a browser, plays the video part by part
     transcript.txt          timestamped transcript of the episode
     cards.tsv               Anki cards (tab-separated: front, back, tags)
 code/                     the learner's own handwritten code (Windows)
 tools/transcribe/         how transcripts are made
+tools/study-kit/          page engine + build script for study kits
 ../.claude/settings.json  repo root: Claude Code settings (Learning style)
 ../.vscode/settings.json  repo root: editor settings (AI autocomplete off)
 ```
 
-## The study-kit format (reference: `courses/intro-to-c/day01/study-kit.html`)
+## The study-kit page (reference: `courses/intro-to-c/day01/`)
 
-Each episode is split at the guide's topic timestamps into blocks. Each block
-has 7 steps: **Watch** (time range, what to watch for, pause point) →
-**Explain** (notes that follow Casey; prerequisites explained in place; fixes
-for anything out of date) → **Experiment** (hands-on) → **Answer** (questions
-tied to timestamps, graded) → **Flashcards** → **Read code** (annotated) →
-**Why it matters** (CPU, Handmade Hero, career). Plus tabs: Review (spaced
-repetition), Parked for later, Toolbox, How to study.
-The page's data is the `window.STUDY` object inside the HTML. To make the next
-day's kit, copy the file and replace that object.
-Published copy of Day 1: https://claude.ai/artifact/DzvNGPZQUXzLUzdLSy2Txc
-(private to the learner's account that made it).
+One page per episode, opened in a browser on the Mac. It plays the episode's
+video file **one part at a time** (parts cut at the guide's topic timestamps),
+stops by itself at the end of each part and locks the parts ahead.
+Each part has 8 steps: **Watch** (player + parking lot for questions) →
+**Recall** (write from memory, compare, handle parked questions) → **Answer**
+(questions tied to timestamps) → **Explain** → **Experiment** → **Read code** →
+**Flashcards** → **Why it matters**. Between parts there's a break screen
+(5 min; 15 min after every 3 parts). The page remembers the exact place
+(browser storage), greets him with "Welcome back" plus a card warm-up, and
+"Copy position" produces the block that `/study` saves into `STATE.md`.
+Tabs: Review (spaced repetition), Parked, Toolbox, How to study.
+
+Files per day: `data.js` (all content, `window.STUDY`) → built into
+`study-kit.html` by `python3 tools/study-kit/build.py courses/<course>/dayNN`.
+The shared engine is `tools/study-kit/engine.html`. Never hand-edit the built page.
+Video files stay outside git (e.g. `~/learning-videos/` on the Mac).
 
 ## Study sessions: `/study`
 
-Lessons run through the `/study` command (`../.claude/skills/study/SKILL.md`):
-one section at a time, one task at a time, position saved in
-`journey/STATE.md` under **Study position**. Start every lesson with it.
+Lessons run on the study page. `/study` (`../.claude/skills/study/SKILL.md`)
+is the Claude side: it saves the position he pastes into `journey/STATE.md`
+under **Study position**, grades answers, answers parked questions, and builds
+new kits. Without the page, `/study` runs the same loop in chat, one section
+and one task at a time.
 
 ## Making a transcript
 

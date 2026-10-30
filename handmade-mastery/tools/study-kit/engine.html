@@ -1,0 +1,587 @@
+<title>__TITLE__</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: debugger-style split. Left "call stack" of parts (future parts locked), right the current part.
+   The current step carries the yellow instruction-pointer arrow. The video player lives inside the Watch step. */
+:root{
+  --paper:#f5f6f2; --panel:#ffffff; --ink:#1a222c; --muted:#5b6672; --rule:#dde1da;
+  --ip:#f2c230; --ip-ink:#3b2c00; --link:#2350c8; --code-bg:#eef0ea; --good:#2f7d4f; --warn:#a8641a; --bad:#b33a3a;
+  --chip:#e8ebe4; --screen:#0f1317; --screen-ink:#e3e7ea;
+  --f-display:"Archivo","Arial Narrow",system-ui,sans-serif;
+  --f-body:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#13171c; --panel:#1a1f26; --ink:#e3e7ea; --muted:#9aa4ad; --rule:#2c333c;
+  --ip:#e8b923; --ip-ink:#1e1600; --link:#8fb0ff; --code-bg:#0f1317; --good:#6cc48f; --warn:#e0a35a; --bad:#ec7f7f; --chip:#242b33; --screen:#07090b; --screen-ink:#e3e7ea; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#13171c; --panel:#1a1f26; --ink:#e3e7ea; --muted:#9aa4ad; --rule:#2c333c;
+  --ip:#e8b923; --ip-ink:#1e1600; --link:#8fb0ff; --code-bg:#0f1317; --good:#6cc48f; --warn:#e0a35a; --bad:#ec7f7f; --chip:#242b33; --screen:#07090b; --screen-ink:#e3e7ea; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.6;margin:0}
+a{color:var(--link)}
+button,input,textarea,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--link);outline-offset:2px}
+.wrap{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 60px;max-width:1240px;margin:0 auto}
+header.top{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:end;justify-content:space-between;padding-bottom:16px;border-bottom:1px solid var(--rule)}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(28px,4vw,40px);line-height:1.05;margin:4px 0 0;text-wrap:balance;letter-spacing:-.01em}
+h2{font-family:var(--f-display);font-weight:700;font-size:24px;line-height:1.2;margin:0;text-wrap:balance}
+h3{font-family:var(--f-display);font-weight:700;font-size:18px;margin:18px 0 6px}
+.meter{display:flex;align-items:center;gap:10px;font-family:var(--f-mono);font-size:13px;color:var(--muted)}
+.meter .bar{width:160px;height:8px;background:var(--chip);border-radius:4px;overflow:hidden}
+.meter .bar i{display:block;height:100%;background:var(--ip)}
+nav.tabs{display:flex;gap:4px;flex-wrap:wrap;margin:16px 0}
+nav.tabs button{border:1px solid var(--rule);background:var(--panel);padding:6px 14px;border-radius:6px;cursor:pointer;font-family:var(--f-display);font-weight:600;font-size:15px}
+nav.tabs button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+nav.tabs .badge{font-family:var(--f-mono);font-size:12px;background:var(--ip);color:var(--ip-ink);border-radius:9px;padding:0 6px;margin-left:6px}
+.grid{display:grid;grid-template-columns:280px minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:minmax(0,1fr)}}
+/* call stack */
+.stack{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);border:1px solid var(--rule);background:var(--panel);border-radius:8px;overflow:hidden}
+@media (max-width:860px){.stack{position:static}}
+.stack .hd{font-family:var(--f-mono);font-size:12px;color:var(--muted);padding:8px 12px;border-bottom:1px solid var(--rule);display:flex;justify-content:space-between}
+.stack ol{list-style:none;margin:0;padding:0;max-height:70vh;overflow:auto}
+@media (max-width:860px){.stack ol{max-height:220px}}
+.stack li>*{box-sizing:border-box;display:grid;grid-template-columns:18px 1fr auto;gap:8px;width:100%;padding:8px 12px;border-bottom:1px solid var(--rule);font-size:14px;line-height:1.35;text-align:left;background:none;border-left:0;border-right:0;border-top:0}
+.stack li button{cursor:pointer}
+.stack li button:hover{background:var(--chip)}
+.stack li [aria-current="true"]{background:color-mix(in srgb,var(--ip) 22%,var(--panel))}
+.stack li .locked{color:var(--muted)}
+.stack .arrow{width:0;height:0;border-top:6px solid transparent;border-bottom:6px solid transparent;border-left:10px solid transparent;margin-top:5px}
+.stack [aria-current="true"] .arrow{border-left-color:var(--ip)}
+.stack .t{font-family:var(--f-display);font-weight:600}
+.stack .ts{font-family:var(--f-mono);font-size:11px;color:var(--muted);display:block;font-weight:400}
+.stack .ck{font-family:var(--f-mono);font-size:11px;color:var(--muted);white-space:nowrap}
+.stack .ck.full{color:var(--good)}
+/* block */
+.block{background:var(--panel);border:1px solid var(--rule);border-radius:8px;padding:20px clamp(16px,3vw,32px) 28px;min-width:0}
+.bhead{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:baseline;justify-content:space-between}
+.tsr{font-family:var(--f-mono);font-size:13px;background:var(--chip);padding:2px 8px;border-radius:4px;white-space:nowrap}
+.steps{display:flex;margin:18px 0 6px;overflow-x:auto;border-bottom:1px solid var(--rule)}
+.steps button{all:unset;cursor:pointer;padding:8px 12px 10px 22px;position:relative;font-family:var(--f-display);font-weight:600;font-size:14px;color:var(--muted);white-space:nowrap}
+.steps button:disabled{cursor:default;opacity:.45}
+.steps button:focus-visible{outline:2px solid var(--link)}
+.steps button.done{color:var(--ink)}
+.steps button.done::after{content:"✓";font-family:var(--f-mono);font-size:11px;color:var(--good);margin-left:5px}
+.steps button[aria-selected="true"]{color:var(--ink);box-shadow:inset 0 -3px 0 var(--ip)}
+.steps button[aria-selected="true"]::before{content:"";position:absolute;left:6px;top:13px;border-top:6px solid transparent;border-bottom:6px solid transparent;border-left:10px solid var(--ip)}
+.stepnote{font-family:var(--f-mono);font-size:12px;color:var(--muted);margin:10px 0 0}
+.pane{max-width:72ch}
+.pane p{margin:10px 0}
+.pane ul,.pane ol{padding-left:22px}
+.pane li{margin:4px 0}
+code{font-family:var(--f-mono);font-size:.86em;background:var(--code-bg);padding:1px 5px;border-radius:3px}
+pre{font-family:var(--f-mono);font-size:13.5px;line-height:1.55;background:var(--code-bg);border:1px solid var(--rule);border-radius:6px;padding:14px 16px;overflow-x:auto;margin:12px 0}
+pre code{background:none;padding:0;font-size:inherit}
+.callout{border-left:4px solid var(--ip);background:color-mix(in srgb,var(--ip) 9%,var(--panel));padding:10px 14px;border-radius:0 6px 6px 0;margin:14px 0}
+.callout.later{border-left-color:var(--muted);background:var(--chip)}
+.callout b{font-family:var(--f-display)}
+.next{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px;padding-top:14px;border-top:1px dashed var(--rule)}
+.btn{border:1px solid var(--ink);background:var(--ink);color:var(--paper);padding:8px 16px;border-radius:6px;cursor:pointer;font-family:var(--f-display);font-weight:600;font-size:15px}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--rule)}
+.btn.small{padding:4px 10px;font-size:13px}
+.btn:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;align-items:center}
+textarea,input[type=text]{width:100%;border:1px solid var(--rule);border-radius:6px;background:var(--paper);padding:8px 10px;font-family:var(--f-body);font-size:16px}
+textarea{min-height:88px;resize:vertical}
+/* player */
+.player{background:var(--screen);color:var(--screen-ink);border-radius:8px;overflow:hidden;margin:12px 0;position:relative}
+.player video{display:block;width:100%;max-width:100%;aspect-ratio:16/9;background:#000}
+.player:fullscreen{display:flex;flex-direction:column;justify-content:center}
+.player:fullscreen video{flex:1;aspect-ratio:auto;max-height:calc(100vh - 56px)}
+.pctl{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;padding:8px 12px;font-family:var(--f-mono);font-size:13px}
+.pctl button{background:transparent;border:1px solid #3a434d;color:var(--screen-ink);border-radius:5px;padding:4px 10px;cursor:pointer;font-family:var(--f-mono);font-size:13px}
+.pctl button:hover{border-color:#6b7682}
+.pbar{flex:1 1 160px;height:10px;background:#2a3139;border-radius:5px;cursor:pointer;position:relative;overflow:hidden;min-width:120px}
+.pbar i{position:absolute;inset:0 auto 0 0;background:var(--ip);border-radius:5px}
+.pend{position:absolute;inset:0;background:rgba(7,9,11,.86);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:16px}
+.pend b{font-family:var(--f-display);font-size:22px}
+.pend .btn{background:var(--ip);color:var(--ip-ink);border-color:var(--ip)}
+.pend .btn.ghost{background:transparent;color:var(--screen-ink);border-color:#6b7682}
+.drop{border:2px dashed var(--rule);border-radius:8px;padding:22px;text-align:center;margin:12px 0}
+.drop.over{border-color:var(--ip);background:color-mix(in srgb,var(--ip) 8%,var(--panel))}
+.watchfor{margin:10px 0 0}
+.park{border:1px solid var(--rule);border-radius:8px;padding:12px 14px;margin:14px 0;background:var(--paper)}
+.park h3{margin:0 0 4px;font-size:16px}
+.plist{list-style:none;padding:0;margin:8px 0 0;display:flex;flex-direction:column;gap:6px}
+.plist li{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline;border-bottom:1px dashed var(--rule);padding-bottom:6px}
+.plist .at{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.plist .txt{flex:1 1 220px;min-width:0}
+.chip{font-family:var(--f-mono);font-size:11px;text-transform:uppercase;letter-spacing:.05em;border-radius:4px;padding:1px 6px;background:var(--chip);color:var(--muted)}
+.chip.later{background:color-mix(in srgb,var(--warn) 18%,var(--panel));color:var(--warn)}
+.chip.done{background:color-mix(in srgb,var(--good) 18%,var(--panel));color:var(--good)}
+.q{border:1px solid var(--rule);border-radius:8px;padding:14px 16px;margin:14px 0}
+.q .qn{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.q .qt{font-weight:600;margin:4px 0 10px}
+.fb{margin-top:10px;padding:10px 12px;border-radius:6px;background:var(--chip);white-space:pre-wrap}
+.verdict{font-family:var(--f-mono);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.v-correct{color:var(--good)} .v-partial{color:var(--warn)} .v-missing{color:var(--bad)}
+details.model{margin-top:8px} details.model summary{cursor:pointer;color:var(--muted);font-size:14px}
+.card{margin:14px 0}
+.card .face{border:1px solid var(--rule);border-radius:10px;min-height:150px;padding:22px;display:flex;flex-direction:column;justify-content:center;background:var(--panel)}
+.card .side{font-family:var(--f-mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.card .txt{font-size:19px}
+.rate{display:flex;gap:8px;flex-wrap:wrap}
+.rate button{flex:1 1 90px}
+.cardmeta{font-family:var(--f-mono);font-size:12px;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-family:var(--f-display);font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+td.mono{font-family:var(--f-mono);font-size:13px;white-space:nowrap}
+.toolgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.tool{border:1px solid var(--rule);border-radius:8px;padding:14px;background:var(--panel);min-width:0}
+.tool h3{margin:0 0 4px}
+.tool .k{font-family:var(--f-mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.chatlog{display:flex;flex-direction:column;gap:8px;margin:10px 0}
+.msg{padding:8px 12px;border-radius:8px;white-space:pre-wrap;max-width:100%}
+.msg.u{background:var(--chip);align-self:flex-end}
+.msg.a{border:1px solid var(--rule)}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+.loop{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0;font-family:var(--f-mono);font-size:13px}
+.loop span{background:var(--chip);border-radius:4px;padding:3px 8px}
+.loop span.on{background:var(--ip);color:var(--ip-ink)}
+.center{text-align:center}
+.bigtime{font-family:var(--f-mono);font-size:clamp(44px,9vw,72px);font-weight:600;letter-spacing:-.02em;margin:8px 0}
+.welcome{border:1px solid var(--ip);background:color-mix(in srgb,var(--ip) 10%,var(--panel));border-radius:8px;padding:14px 18px;margin-bottom:16px}
+.welcome b{font-family:var(--f-display)}
+.copybox{margin-top:8px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:6px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:20}
+.toast.on{opacity:1}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="eyebrow" id="eyebrow"></div>
+      <h1 id="h1"></h1>
+    </div>
+    <div class="meter" aria-live="polite"><span id="pct">0%</span><span class="bar"><i id="pctbar" style="width:0"></i></span><span id="saved" class="small">saved in this browser</span></div>
+  </header>
+  <nav class="tabs" id="tabs" aria-label="Sections"></nav>
+  <main id="view"></main>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/*DATA*/
+</script>
+<script>
+(function(){
+const D = window.STUDY;
+const STEPS = [
+  ["watch","Watch"],["recall","Recall"],["ask","Answer"],["explain","Explain"],["experiment","Experiment"],
+  ["code","Read code"],["cards","Flashcards"],["why","Why it matters"]
+];
+const SHORT_BREAK=5, LONG_BREAK=15, LONG_EVERY=3; // minutes; a long break after every 3 parts
+const $ = (s,el=document)=>el.querySelector(s);
+const esc = s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const today = ()=>Math.floor(Date.now()/86400000);
+const secs = t=>String(t).split(":").reduce((a,x)=>a*60+(+x),0);
+const fmt = s=>{s=Math.max(0,Math.round(s));const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return (h?h+":"+String(m).padStart(2,"0"):m)+":"+String(x).padStart(2,"0")};
+const md = s=>esc(s).replace(/`([^`]+)`/g,"<code>$1</code>").replace(/\*\*([^*]+)\*\*/g,"<b>$1</b>");
+
+$("#eyebrow").textContent=D.eyebrow||""; $("#h1").textContent=D.title||document.title;
+
+/* ---------- state + persistence ---------- */
+const FRESH={v:2,cur:D.blocks[0].id,step:"watch",tab:"path",done:{},completed:{},vt:{},recall:{},cmp:{},park:{},answers:{},fb:{},cards:{},notes:{},speed:1,lastVisit:0,sessionParts:0,brk:null,stopped:false};
+let S=JSON.parse(JSON.stringify(FRESH));
+const LS=D.storageKey||"study-kit";
+try{const raw=localStorage.getItem(LS); if(raw) S=Object.assign(S,JSON.parse(raw));}catch(e){}
+let welcome = S.lastVisit && (Date.now()-S.lastVisit>30*60*1000) && Object.keys(S.done).length>0;
+if(welcome){S.sessionParts=0; S.brk=null; S.stopped=false;}
+S.lastVisit=Date.now();
+let dbRef=null, saveT=null;
+function save(){
+  S.lastVisit=Date.now();
+  try{localStorage.setItem(LS,JSON.stringify(S));}catch(e){}
+  clearTimeout(saveT);
+  if(dbRef) saveT=setTimeout(()=>{dbRef.set({json:JSON.stringify(S),at:Date.now()}).then(()=>setSaved("saved to your account")).catch(()=>setSaved("saved in this browser"));},1500);
+}
+function setSaved(t){$("#saved").textContent=t}
+(async()=>{
+  try{
+    if(!window.claude) return;
+    const [db,user]=await Promise.all([claude.use("db"),claude.use("user")]);
+    if(!db||!user) return;
+    const id=await user.id(); if(!id) return;
+    dbRef=db.collection("data/users/"+id).doc("progress-"+LS);
+    const snap=await dbRef.get();
+    if(snap.exists){ const remote=JSON.parse(snap.data().json||"{}"); if((remote.lastVisit||0)>(S.lastVisit||0)-60000){S=Object.assign(S,remote); safeRender();} }
+    setSaved("saved to your account");
+  }catch(e){dbRef=null}
+})();
+let sample=null, downloads=null;
+(async()=>{try{if(window.claude){sample=await claude.use("sample"); safeRender();}}catch(e){}})();
+(async()=>{try{if(window.claude){downloads=await claude.use("downloads");}}catch(e){}})();
+function safeRender(){ if(vid && !vid.paused) return; render(); }
+function toast(t){const el=$("#toast");el.textContent=t;el.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove("on"),2000)}
+async function copy(text,box){
+  try{await navigator.clipboard.writeText(text);toast("Copied. Paste it to Claude.");}
+  catch(e){ if(box){box.innerHTML=`<textarea readonly>${esc(text)}</textarea><p class="small muted">Select all and copy this, then paste it to Claude.</p>`; box.querySelector("textarea").select();} }
+}
+
+/* ---------- helpers ---------- */
+const blockById=id=>D.blocks.find(b=>b.id===id);
+const idxOf=b=>D.blocks.indexOf(b);
+function stepsFor(b){return STEPS.filter(([k])=>["watch","recall","ask","cards"].includes(k)||b[k])}
+function blockDone(b){const d=S.done[b.id]||{};return stepsFor(b).filter(([k])=>d[k]).length}
+function frontier(){const i=D.blocks.findIndex(b=>!S.completed[b.id]);return i===-1?D.blocks.length:i}
+const allDone=()=>frontier()>=D.blocks.length;
+const unlocked=b=>idxOf(b)<=frontier();
+function stepOpen(b,k){const st=stepsFor(b),i=st.findIndex(([x])=>x===k),d=S.done[b.id]||{};return d[k]||st.slice(0,i).every(([x])=>d[x])}
+function allCards(){const out=[];D.blocks.forEach(b=>(b.cards||[]).forEach((c,i)=>out.push({id:b.id+"#"+i,b,c})));return out}
+function dueCards(){const t=today();return allCards().filter(x=>{const s=S.cards[x.id];return s&&s.due<=t})}
+function progress(){let tot=0,dn=0;D.blocks.forEach(b=>{tot+=stepsFor(b).length;dn+=blockDone(b)});return tot?Math.round(dn*100/tot):0}
+function rateCard(id,g){
+  const s=S.cards[id]||{ease:2.5,int:0,reps:0};
+  if(g===0){s.reps=0;s.int=0;s.ease=Math.max(1.3,s.ease-.2)}
+  else{ s.reps++; if(s.reps===1)s.int=g===3?3:1; else if(s.reps===2)s.int=g===1?3:6; else s.int=Math.round(s.int*(g===1?1.2:g===3?s.ease*1.3:s.ease)); s.ease=Math.max(1.3,s.ease+(g===1?-.15:g===3?.15:0)); }
+  s.due=today()+s.int; S.cards[id]=s; save();
+}
+function blockContext(b){
+  const strip=h=>String(h||"").replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim();
+  return `VIDEO: "${D.title}"${D.eyebrow?" ("+D.eyebrow+")":""}.
+PART: ${b.title} (${b.start}-${b.end})
+WHAT CASEY COVERS: ${b.summary}
+STUDY NOTES: ${strip(b.explain).slice(0,3500)}
+TOPICS CASEY PARKS FOR LATER (do not teach these; say they come later): ${(D.parked||[]).map(p=>p.what+" ["+p.where+"]").join("; ")}`;
+}
+
+/* ---------- the video player (one element, kept alive across renders) ---------- */
+let videoURL=null, playerBlock=null, lastSave=0;
+const vw=document.createElement("div"); vw.className="player";
+vw.innerHTML=`<video playsinline preload="metadata"></video>
+<div class="pctl"><button data-v="play" aria-label="Play or pause">Play</button><button data-v="back" aria-label="Back 10 seconds">−10s</button>
+<span class="pbar" role="slider" aria-label="Position in this part" tabindex="0"><i></i></span><span class="ptime">0:00 / 0:00</span>
+<button data-v="speed" aria-label="Playback speed">1×</button><button data-v="replay">Replay part</button><button data-v="fs">Full screen</button></div>
+<div class="pend" hidden><b>End of this part</b><span>The video stops here. Now recall what you just saw.</span><div class="row"><button class="btn" data-v="next">Next: Recall →</button><button class="btn ghost" data-v="replay">Replay part</button></div></div>`;
+const vid=vw.querySelector("video");
+const range=b=>[secs(b.start),secs(b.end)];
+function ptick(){
+  const b=playerBlock; if(!b||!vid.duration) return;
+  const [st,en]=range(b);
+  if(vid.currentTime<st-0.4){vid.currentTime=st}
+  if(vid.currentTime>=en-0.05){ if(!vid.paused) vid.pause(); if(Math.abs(vid.currentTime-en)>0.2) vid.currentTime=en; partEnded(); }
+  const t=Math.min(Math.max(vid.currentTime,st),en);
+  vw.querySelector(".pbar i").style.width=((t-st)/(en-st)*100)+"%";
+  vw.querySelector(".ptime").textContent=fmt(t-st)+" / "+fmt(en-st);
+  vw.querySelector('[data-v="play"]').textContent=vid.paused?"Play":"Pause";
+  if(Date.now()-lastSave>3000){lastSave=Date.now();S.vt[b.id]=t;save();}
+}
+(function loop(){ if(!vid.paused) ptick(); requestAnimationFrame(loop); })();
+vid.addEventListener("timeupdate",ptick); vid.addEventListener("pause",ptick); vid.addEventListener("play",()=>{vw.querySelector(".pend").hidden=true;ptick()});
+vid.addEventListener("seeking",()=>{const b=playerBlock;if(!b)return;const [st,en]=range(b);if(vid.currentTime<st)vid.currentTime=st;if(vid.currentTime>en)vid.currentTime=en;});
+vid.addEventListener("loadedmetadata",()=>{seekResume();ptick();});
+function seekResume(){const b=playerBlock;if(!b||!vid.duration)return;const [st,en]=range(b);let t=S.vt[b.id];if(!(t>=st&&t<en-1))t=st;vid.currentTime=t;vid.playbackRate=S.speed||1;vw.querySelector('[data-v="speed"]').textContent=(S.speed||1)+"×";}
+function partEnded(){
+  const b=playerBlock; if(!b) return;
+  vw.querySelector(".pend").hidden=false; S.vt[b.id]=range(b)[1];
+  const d=(S.done[b.id]=S.done[b.id]||{}); if(!d.watch){d.watch=true;save();const st=$(".steps [data-step='watch']");if(st)st.classList.add("done");const nb=$("#markNext");if(nb)nb.textContent="Next step →";}
+}
+vw.addEventListener("click",e=>{
+  const t=e.target.closest("[data-v]"); const b=playerBlock;
+  if(t&&b){const [st,en]=range(b),v=t.dataset.v;
+    if(v==="play"){ if(vid.paused){ if(vid.currentTime>=en-0.1) vid.currentTime=st; vid.play().catch(()=>{}); } else vid.pause(); }
+    if(v==="back"){vid.currentTime=Math.max(st,vid.currentTime-10)}
+    if(v==="replay"){vw.querySelector(".pend").hidden=true;vid.currentTime=st;vid.play().catch(()=>{})}
+    if(v==="speed"){const sp=[1,1.25,1.5,1.75,2,0.75];S.speed=sp[(sp.indexOf(S.speed||1)+1)%sp.length];vid.playbackRate=S.speed;t.textContent=S.speed+"×";save()}
+    if(v==="fs"){ if(document.fullscreenElement) document.exitFullscreen().catch(()=>{}); else vw.requestFullscreen?.().catch(()=>toast("Full screen isn't available here")); }
+    if(v==="next"){ if(document.fullscreenElement) document.exitFullscreen().catch(()=>{}); goNextStep(); }
+    ptick(); return;}
+  const bar=e.target.closest(".pbar"); if(bar&&b){const r=bar.getBoundingClientRect(),[st,en]=range(b);vid.currentTime=st+(en-st)*Math.min(1,Math.max(0,(e.clientX-r.left)/r.width));ptick();}
+});
+function loadVideo(file){
+  if(!file) return;
+  if(videoURL) URL.revokeObjectURL(videoURL);
+  videoURL=URL.createObjectURL(file); vid.src=videoURL;
+  if(D.video&&D.video.file&&file.name!==D.video.file) toast("Loaded "+file.name+" (expected "+D.video.file+")"); else toast("Video loaded");
+  render();
+}
+document.addEventListener("keydown",e=>{
+  if(!playerBlock||!vw.isConnected) return;
+  if(e.target.closest&&e.target.closest("input,textarea,select,button")) return;
+  if(e.code==="Space"){e.preventDefault();vw.querySelector('[data-v="play"]').click()}
+  if(e.code==="ArrowLeft"){e.preventDefault();const [st]=range(playerBlock);vid.currentTime=Math.max(st,vid.currentTime-5)}
+});
+
+/* ---------- tabs ---------- */
+const TABS=[["path","Study path"],["review","Review"],["parked","Parked"],["tools","Toolbox"],["how","How to study"]];
+function renderTabs(){
+  const due=dueCards().length;
+  $("#tabs").innerHTML=TABS.map(([k,l])=>`<button data-tab="${k}" aria-pressed="${S.tab===k}">${l}${k==="review"&&due?`<span class="badge">${due}</span>`:""}</button>`).join("");
+}
+$("#tabs").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;S.tab=b.dataset.tab;save();render();window.scrollTo({top:0})});
+
+/* ---------- path view ---------- */
+function stackHTML(cur){
+  const f=frontier();
+  const items=D.blocks.map((x,i)=>{
+    const n=blockDone(x),t=stepsFor(x).length;
+    if(i>f) return `<li><div class="locked"><span></span><span><span class="t">Part ${i+1}</span><span class="ts">locked</span></span><span class="ck">🔒︎</span></div></li>`;
+    return `<li><button data-blk="${x.id}" aria-current="${x.id===cur}"><span class="arrow"></span><span><span class="t">${i+1}. ${esc(x.title)}</span><span class="ts">${x.start}–${x.end}</span></span><span class="ck ${n===t?"full":""}">${n===t?"done":n+"/"+t}</span></button></li>`;
+  });
+  if(D.qa){ const open=allDone(); items.push(open?`<li><button data-blk="__qa" aria-current="${cur==="__qa"}"><span class="arrow"></span><span><span class="t">Q&amp;A</span><span class="ts">${esc(D.qa.label||"after the video")}</span></span><span class="ck"></span></button></li>`
+    :`<li><div class="locked"><span></span><span><span class="t">Q&amp;A</span><span class="ts">locked</span></span><span class="ck">🔒︎</span></div></li>`); }
+  return `<aside class="stack" aria-label="Parts"><div class="hd"><span>CALL STACK · ${D.blocks.length} parts</span><span>${Object.keys(S.completed).length} done</span></div><ol>${items.join("")}</ol></aside>`;
+}
+function welcomeHTML(){
+  if(!welcome) return "";
+  const b=blockById(S.cur), due=dueCards().length, step=(STEPS.find(([k])=>k===S.step)||[])[1]||"";
+  const where = S.cur==="__qa" ? "the Q&amp;A" : allDone() ? "the end of the video" : `Part ${idxOf(b)+1}, <b>${esc(b.title)}</b>, step <b>${step}</b>`;
+  return `<div class="welcome"><b>Welcome back.</b> You stopped at ${where}.
+  ${due?`<div class="row"><button class="btn" data-go="warmup">Warm up: ${due} card${due>1?"s":""} due</button><button class="btn ghost" data-go="continue">Skip warm-up, continue</button></div>`:`<div class="row"><button class="btn" data-go="continue">Continue</button></div>`}</div>`;
+}
+function renderPath(){
+  if(S.brk) return renderBreak();
+  if(S.stopped) return renderStopped();
+  if(S.cur==="__qa") return welcomeHTML()+`<div class="grid">${stackHTML("__qa")}<section class="block"><div class="eyebrow">After the video</div><h2>Q&amp;A</h2><div class="pane">${D.qa.html}</div></section></div>`;
+  let b=blockById(S.cur)||D.blocks[0];
+  if(!unlocked(b)){b=D.blocks[Math.min(frontier(),D.blocks.length-1)];S.cur=b.id;S.step="watch";}
+  const steps=stepsFor(b); if(!steps.find(([k])=>k===S.step)||!stepOpen(b,S.step)) S.step=steps.find(([k])=>!(S.done[b.id]||{})[k])?.[0]||"watch";
+  const d=S.done[b.id]||{}, idx=idxOf(b);
+  return welcomeHTML()+`<div class="grid">${stackHTML(b.id)}
+  <section class="block" aria-labelledby="bt">
+    <div class="bhead"><div><div class="eyebrow">Part ${idx+1} of ${D.blocks.length}</div><h2 id="bt">${esc(b.title)}</h2></div><span class="tsr">▶ ${b.start} – ${b.end}</span></div>
+    <div class="steps" role="tablist">${steps.map(([k,l])=>`<button role="tab" data-step="${k}" aria-selected="${S.step===k}" class="${d[k]?"done":""}" ${stepOpen(b,k)?"":"disabled"}>${l}</button>`).join("")}</div>
+    <div class="pane" id="pane">${renderStep(b,S.step)}</div>
+    <div class="next"><button class="btn" id="markNext">${nextLabel(b)}</button></div>
+  </section></div>`;
+}
+function nextLabel(b){
+  const st=stepsFor(b), last=st[st.length-1][0]===S.step, d=(S.done[b.id]||{})[S.step];
+  if(S.step==="watch") return d?"Next step →":"I watched it → Recall";
+  if(last) return idxOf(b)===D.blocks.length-1?"Finish the last part":"Finish part, take a break";
+  return d?"Next step →":"Mark done, next step →";
+}
+function renderStep(b,k){
+  if(k==="watch"){
+    const [st,en]=range(b);
+    const loader = videoURL ? `<div id="vslot"></div>` :
+      `<div class="drop" id="drop"><p><b>Load the video once per visit.</b> The page plays only this part and stops at ${b.end}.</p>
+       <p class="small muted">${D.video&&D.video.file?`File: <code>${esc(D.video.file)}</code>. `:""}It stays on your computer; nothing is uploaded.</p>
+       <label class="btn" for="vfile">Choose video file</label><input type="file" id="vfile" accept="video/*" hidden><p class="small muted">or drag the file here</p></div>`;
+    return `<p><b>Watch ${b.start} → ${b.end}</b> (${fmt(en-st)}). ${md(b.summary)}</p>
+    ${loader}
+    <div class="park" id="parkbox"><h3>Parking lot</h3><p class="small muted">Want to search something? Don't leave. Write it here and keep watching. We look at it after this part.</p>
+    <div class="row"><input type="text" id="parkin" placeholder="e.g. what does LPSTR stand for?" autocomplete="off"><button class="btn small" id="parkgo">Park it</button></div>
+    <ul class="plist" id="plist">${parkItems(b,false)}</ul></div>
+    <details class="watchfor"><summary class="small">What to watch for (optional hints)</summary><ol>${b.watchFor.map(w=>`<li>${md(w)}</li>`).join("")}</ol>
+    ${b.pauseAt?`<div class="callout"><b>Pause at ${b.pauseAt.t}.</b> ${md(b.pauseAt.do)}</div>`:""}</details>
+    ${(b.deferred||[]).map(x=>`<div class="callout later"><b>Casey parks this:</b> ${md(x)} It's on the Parked tab. Don't chase it now.</div>`).join("")}
+    <p class="stepnote">Keys: Space = play/pause · ← = back 5 s. The player won't go past ${b.end}.</p>`;
+  }
+  if(k==="recall"){
+    const shown=S.cmp[b.id];
+    return `<p><b>Without looking back:</b> what did Casey explain in this part? Write 3–5 short points in your own words.</p>
+    <textarea data-recall="${b.id}" placeholder="1. …">${esc(S.recall[b.id]||"")}</textarea>
+    <div class="row"><button class="btn ghost" id="cmp">${shown?"Hide":"Compare with the notes"}</button></div>
+    <div id="cmpbox" ${shown?"":"hidden"}><div class="callout"><b>What the part covers:</b> ${md(b.summary)}<ol>${b.watchFor.map(w=>`<li>${md(w)}</li>`).join("")}</ol></div></div>
+    <div class="park"><h3>Your parking lot</h3>${(S.park[b.id]||[]).length?`<p class="small muted">Answer now only if it's about this part. If Casey covers it later, keep it for later.</p><ul class="plist" id="plist">${parkItems(b,true)}</ul>`:`<p class="small muted">Empty. Nothing pulled you away. Good.</p>`}</div>`;
+  }
+  if(k==="explain") return b.explain + (b.prereq?`<div class="callout"><b>Prerequisite, explained now:</b> ${b.prereq}</div>`:"");
+  if(k==="experiment") return b.experiment;
+  if(k==="code") return b.code;
+  if(k==="why") return b.why;
+  if(k==="ask") return renderAsk(b);
+  if(k==="cards") return `<p class="muted small">Say the answer out loud before you flip. Finishing this step adds these ${b.cards.length} cards to Review.</p>`+
+    b.cards.map(c=>`<div class="card"><div class="face"><div class="side">Front</div><div class="txt">${md(c[0])}</div><details class="model"><summary>Flip</summary><p>${md(c[1])}</p></details></div></div>`).join("");
+  return "";
+}
+function parkItems(b,actions){
+  return (S.park[b.id]||[]).map((p,i)=>`<li><span class="at">${fmt(p.at)}</span><span class="txt">${esc(p.t)}</span>
+   ${p.status!=="open"?`<span class="chip ${p.status}">${p.status==="later"?"later":"answered"}</span>`:""}
+   ${actions?`<span class="row" style="margin:0">${sample?`<button class="btn ghost small" data-pask="${i}">Ask Claude</button>`:`<button class="btn ghost small" data-pcopy="${i}">Copy for Claude</button>`}<button class="btn ghost small" data-pset="${i}:later">Later</button><button class="btn ghost small" data-pset="${i}:done">Answered</button></span>
+   <div class="pans small" id="pans-${i}" style="flex-basis:100%">${p.ans?esc(p.ans):""}</div>`:""}</li>`).join("");
+}
+function renderAsk(b){
+  return `<p class="muted small">Answer from memory first, in your own words. Then check. A wrong answer you wrote teaches you more than a right one you only read.</p>`+
+  b.questions.map((q,i)=>{const id=b.id+"?"+i, fb=S.fb[id];
+    return `<div class="q"><div class="qn">Q${i+1}${q.t?` · from ${q.t}`:""}</div><div class="qt">${md(q.q)}</div>
+    <textarea data-ans="${id}" placeholder="Your answer…">${esc(S.answers[id]||"")}</textarea>
+    <div class="row">${sample?`<button class="btn" data-check="${id}">Check my answer</button>`:`<button class="btn ghost" data-copyq="${id}">Copy for Claude to check</button>`}
+    ${q.hint?`<button class="btn ghost" data-hint="${id}">Hint</button>`:""}</div>
+    <div class="small muted" id="hint-${id}" hidden>${md(q.hint||"")}</div>
+    <div class="copybox" id="cb-${id}"></div>
+    <div id="fb-${id}">${fb?renderFb(fb):""}</div>
+    <details class="model"><summary>Show model answer</summary><p>${md(q.a)}</p></details></div>`}).join("")+
+  (sample?`<div style="margin-top:18px;border-top:1px solid var(--rule);padding-top:14px"><h3>Stuck? Ask about this part</h3>
+  <div class="chatlog" id="chatlog">${(S.notes[b.id]||[]).map(m=>`<div class="msg ${m.r==="user"?"u":"a"}">${esc(m.c)}</div>`).join("")}</div>
+  <textarea id="chatin" placeholder="Ask about this part…"></textarea><div class="row"><button class="btn" id="chatgo">Ask</button><button class="btn ghost" id="chatclear">Clear</button></div></div>`:"");
+}
+function renderFb(fb){return `<div class="fb"><span class="verdict v-${fb.verdict}">${fb.verdict==="correct"?"Correct":fb.verdict==="partial"?"Partly there":"Not yet"}</span>\n${esc(fb.feedback)}${fb.followup?`\n\nFollow-up: ${esc(fb.followup)}`:""}</div>`}
+
+/* ---------- breaks ---------- */
+let brkTimer=null;
+function renderBreak(){
+  const B=S.brk, from=blockById(B.from), nb=D.blocks[idxOf(from)+1];
+  const long=S.sessionParts>0 && S.sessionParts%LONG_EVERY===0, mins=long?LONG_BREAK:SHORT_BREAK;
+  const nextName = nb?`Part ${idxOf(nb)+1}`:"the Q&A";
+  if(B.until){
+    const left=Math.max(0,B.until-Date.now());
+    return `<section class="block center"><div class="eyebrow">Break</div><div class="bigtime" id="bclock">${fmt(left/1000)}</div>
+    <p>${left>0?"Stand up, drink water, look away from the screen. No videos, no searching.":"Break over."}</p>
+    <div class="row" style="justify-content:center"><button class="btn" data-go="afterbreak">${left>0?"End break early, continue":"Continue to "+nextName}</button><button class="btn ghost" data-go="stop">Stop for today</button></div></section>`;
+  }
+  return `<section class="block center"><div class="eyebrow">Part ${idxOf(from)+1} of ${D.blocks.length} complete</div><h2>${esc(from.title)}: done</h2>
+  <p>${long?`That's ${S.sessionParts} parts in a row. Take a longer break.`:"Take a short break before the next part."}</p>
+  <div class="row" style="justify-content:center"><button class="btn" data-go="startbreak" data-min="${mins}">Start ${mins}-minute break</button><button class="btn ghost" data-go="afterbreak">Continue to ${nextName} now</button><button class="btn ghost" data-go="stop">Stop for today</button></div></section>`;
+}
+function renderStopped(){
+  const f=frontier(), nb=D.blocks[f];
+  return `<section class="block center"><div class="eyebrow">Saved</div><h2>Good session.</h2>
+  <p>${nb?`Next time you start at <b>Part ${f+1}: ${esc(nb.title)}</b>.`:"Next time: the Q&amp;A and your review cards."} Everything is saved in this browser. You can close this tab.</p>
+  <p class="small muted">So every Claude account and machine knows your place: press <b>Copy position</b> and paste it to Claude with <code>/study</code>. Claude saves it in <code>journey/STATE.md</code>.</p>
+  <div class="row" style="justify-content:center"><button class="btn" data-go="copypos">Copy position</button><button class="btn ghost" data-go="resume">Actually, keep going</button></div><div class="copybox" id="poscb"></div></section>`;
+}
+function positionText(){
+  const f=frontier(), b=blockById(S.cur), d=new Date().toISOString().slice(0,10);
+  const step=(STEPS.find(([k])=>k===S.step)||[])[1]||"Watch";
+  if(allDone()) return `/study\nSave my study position:\n## Study position\n- Course: ${D.course||D.title}\n- Section: all ${D.blocks.length} parts done; next is the Q&A\n- Step: Q&A\n- Updated: ${d}`;
+  const nb=(S.brk||S.stopped)?D.blocks[f]:b, i=idxOf(nb), st=(S.brk||S.stopped)?"Watch":step;
+  const into=S.vt[nb.id]?Math.max(0,S.vt[nb.id]-secs(nb.start)):0;
+  return `/study\nSave my study position:\n## Study position\n- Course: ${D.course||D.title}\n- Section: ${i+1} of ${D.blocks.length} ("${nb.title}", ${nb.start}-${nb.end})\n- Step: ${st}${into>1?` (video at ${fmt(into)} into the part, episode time ${fmt(secs(nb.start)+into)})`:""}\n- Parts done: ${Object.keys(S.completed).length}\n- Updated: ${d}`;
+}
+function tickBreak(){
+  const el=$("#bclock"); if(!el||!S.brk||!S.brk.until){clearInterval(brkTimer);brkTimer=null;return}
+  const left=Math.max(0,S.brk.until-Date.now()); el.textContent=fmt(left/1000);
+  if(left<=0){clearInterval(brkTimer);brkTimer=null;toast("Break over");render();}
+}
+
+/* ---------- review / parked / tools / how ---------- */
+let revQueue=null, revShow=false;
+function renderReview(){
+  if(!revQueue) revQueue=dueCards().map(x=>x.id);
+  const all=allCards(), started=Object.keys(S.cards).length;
+  const head=`<div class="cardmeta"><span>${revQueue.length} to review now</span><span>${started} of ${all.length} cards in rotation</span></div>`;
+  const exp=`<p><button class="btn ghost" id="anki">Export all cards for Anki (.tsv)</button></p>`;
+  if(!revQueue.length) return `<section class="block"><h2>Review</h2>${head}<p>Nothing due. Cards join when you finish a part's Flashcards step, then come back after 1 day, about 6 days, and longer each time you remember them.</p>${welcome?`<button class="btn" data-go="continue">Continue studying</button>`:""}${exp}</section>`;
+  const x=all.find(c=>c.id===revQueue[0]);
+  return `<section class="block"><h2>Review</h2>${head}
+  <div class="card"><div class="face"><div class="side">${esc(x.b.title)} · ${x.b.start}</div><div class="txt">${md(x.c[0])}</div>
+  ${revShow?`<hr style="border:0;border-top:1px dashed var(--rule);margin:14px 0"><div class="txt">${md(x.c[1])}</div>`:""}</div></div>
+  ${revShow?`<div class="rate"><button class="btn ghost" data-rate="0">Again</button><button class="btn ghost" data-rate="1">Hard</button><button class="btn" data-rate="2">Good</button><button class="btn ghost" data-rate="3">Easy</button></div>`:`<button class="btn" id="flip">Show answer</button>`}
+  ${exp}</section>`;
+}
+function renderParked(){
+  const mine=[];D.blocks.forEach((b,i)=>(S.park[b.id]||[]).forEach(p=>{if(p.status!=="done")mine.push({b,i,p})}));
+  return `<section class="block"><h2>Parked</h2>
+  <h3>Your questions</h3>${mine.length?`<div class="tbl"><table><thead><tr><th>Part</th><th>Question</th><th>Status</th></tr></thead><tbody>${mine.map(({i,p})=>`<tr><td class="mono">Part ${i+1} · ${fmt(p.at)}</td><td>${esc(p.t)}</td><td><span class="chip ${p.status}">${p.status==="later"?"later":"open"}</span></td></tr>`).join("")}</tbody></table></div>`:`<p class="muted small">None yet. Questions you park while watching show up here until they're answered.</p>`}
+  <h3>What Casey parks for later</h3><p class="small muted">He says "we'll get to that later" about these. When one comes up in a later episode, you'll recognize it.</p>
+  <div class="tbl"><table><thead><tr><th>When</th><th>What he parks</th><th>Where it's covered</th></tr></thead><tbody>
+  ${(D.parked||[]).map(p=>`<tr><td class="mono">${p.t}</td><td>${md(p.what)}</td><td>${md(p.where)}</td></tr>`).join("")}</tbody></table></div></section>`;
+}
+function renderTools(){
+  return `<section class="block"><h2>Toolbox</h2><div class="toolgrid">${(D.tools||[]).map(t=>`<div class="tool"><div class="k">${esc(t.role)}</div><h3><a href="${t.url}" target="_blank" rel="noopener">${esc(t.name)}</a></h3><p class="small">${md(t.use)}</p></div>`).join("")}</div></section>`;
+}
+function renderHow(){return `<section class="block"><div class="pane">${D.how||""}</div></section>`}
+
+/* ---------- render + events ---------- */
+function render(){
+  if(vw.isConnected){vid.pause();vw.remove();}
+  playerBlock=null;
+  renderTabs();
+  const p=progress(); $("#pct").textContent=p+"%"; $("#pctbar").style.width=p+"%";
+  $("#view").innerHTML = S.tab==="path"?renderPath():S.tab==="review"?renderReview():S.tab==="parked"?renderParked():S.tab==="tools"?renderTools():renderHow();
+  const slot=$("#vslot");
+  if(slot){ playerBlock=blockById(S.cur); slot.replaceWith(vw); vw.querySelector(".pend").hidden=true; seekResume(); ptick(); }
+  const drop=$("#drop");
+  if(drop){ $("#vfile").addEventListener("change",e=>loadVideo(e.target.files[0]));
+    drop.addEventListener("dragover",e=>{e.preventDefault();drop.classList.add("over")}); drop.addEventListener("dragleave",()=>drop.classList.remove("over"));
+    drop.addEventListener("drop",e=>{e.preventDefault();drop.classList.remove("over");loadVideo(e.dataTransfer.files[0])}); }
+  if(S.brk&&S.brk.until&&!brkTimer) brkTimer=setInterval(tickBreak,500);
+}
+function goNextStep(){
+  const b=blockById(S.cur); if(!b) return;
+  (S.done[b.id]=S.done[b.id]||{})[S.step]=true;
+  if(S.step==="cards"){b.cards.forEach((c,i)=>{const id=b.id+"#"+i;if(!S.cards[id])S.cards[id]={ease:2.5,int:0,reps:0,due:today()+1}});toast(b.cards.length+" cards added to Review")}
+  const st=stepsFor(b),i=st.findIndex(([k])=>k===S.step);
+  if(i<st.length-1){S.step=st[i+1][0];}
+  else{
+    S.completed[b.id]=true; S.sessionParts=(S.sessionParts||0)+1;
+    const nb=D.blocks[idxOf(b)+1];
+    if(nb){S.cur=nb.id;S.step="watch";S.brk={from:b.id,until:null};}
+    else{S.cur=D.qa?"__qa":b.id; toast("Last part finished");}
+  }
+  save();render();window.scrollTo({top:0});
+}
+function addPark(){
+  const b=blockById(S.cur), inp=$("#parkin"); const t=inp.value.trim(); if(!t||!b) return;
+  (S.park[b.id]=S.park[b.id]||[]).push({t,at:Math.max(0,(vid.currentTime||secs(b.start))-secs(b.start)),status:"open"});
+  inp.value=""; save(); $("#plist").innerHTML=parkItems(b,false); toast("Parked. Keep watching.");
+}
+$("#view").addEventListener("keydown",e=>{ if(e.target.id==="parkin"&&e.key==="Enter"){e.preventDefault();addPark();} });
+$("#view").addEventListener("click",async e=>{
+  const t=e.target.closest("button"); if(!t) return;
+  if(t.dataset.go){const g=t.dataset.go;
+    if(g==="continue"){welcome=false;S.tab="path";save();render();return}
+    if(g==="warmup"){welcome=true;S.tab="review";revQueue=null;save();render();return}
+    if(g==="startbreak"){S.brk.until=Date.now()+(+t.dataset.min)*60000;save();render();return}
+    if(g==="afterbreak"){if(S.sessionParts%LONG_EVERY===0&&S.brk&&S.brk.until)S.sessionParts=0;S.brk=null;save();render();window.scrollTo({top:0});return}
+    if(g==="stop"){S.brk=null;S.stopped=true;save();render();return}
+    if(g==="resume"){S.stopped=false;save();render();return}
+    if(g==="copypos"){copy(positionText(),$("#poscb"));return}
+  }
+  if(t.dataset.blk){welcome=false;S.cur=t.dataset.blk;const b=blockById(S.cur);S.step=b?(stepsFor(b).find(([k])=>!(S.done[b.id]||{})[k])||["watch"])[0]:"watch";save();render();$(".block")?.scrollIntoView({block:"start"});return}
+  if(t.dataset.step){S.step=t.dataset.step;save();render();return}
+  if(t.id==="markNext"){welcome=false;goNextStep();return}
+  if(t.id==="parkgo"){addPark();return}
+  if(t.id==="cmp"){S.cmp[S.cur]=!S.cmp[S.cur];save();$("#cmpbox").hidden=!S.cmp[S.cur];t.textContent=S.cmp[S.cur]?"Hide":"Compare with the notes";return}
+  if(t.dataset.pset){const [i,st]=t.dataset.pset.split(":");const b=blockById(S.cur);S.park[b.id][+i].status=st;save();$("#plist").innerHTML=parkItems(b,true);return}
+  if(t.dataset.pcopy){const b=blockById(S.cur),p=S.park[b.id][+t.dataset.pcopy];copy(`I'm studying "${D.title}", part "${b.title}" (${b.start}-${b.end}). While watching I parked this question at ${fmt(p.at)} into the part: "${p.t}". Answer it briefly in simple English. If Casey covers it later in the series, just say so and give a one-line preview.`,$("#pans-"+t.dataset.pcopy));return}
+  if(t.dataset.pask){const i=+t.dataset.pask,b=blockById(S.cur),p=S.park[b.id][i],out=$("#pans-"+i);t.disabled=true;out.textContent="Thinking…";
+    try{const r=await sample(`You are a tutor for one part of a programming video. Answer the student's parked question in under 120 words, simple English. If it's about something Casey parks for later, say so in one line and give at most a one-sentence preview.\n${blockContext(b)}\n\nQUESTION (asked at ${fmt(p.at)} into the part): ${p.t}`,{onText:({text})=>{out.textContent=text}});p.ans=r.text;p.status="done";save();$("#plist").innerHTML=parkItems(b,true);}
+    catch(err){out.textContent=err.text||"Couldn't answer this time. Try again later.";t.disabled=false}return}
+  if(t.dataset.hint){$("#hint-"+CSS.escape(t.dataset.hint)).hidden=false;return}
+  if(t.dataset.copyq){const [bid,qi]=t.dataset.copyq.split("?"),b=blockById(bid),q=b.questions[+qi];
+    copy(`Check my answer. Grade my understanding, not my wording. Tell me what's missing in 2–4 short sentences, simple English, then ask me one follow-up question. Don't teach topics Casey hasn't covered yet.\n\nVideo: "${D.title}", part "${b.title}" (${b.start}-${b.end})\nQuestion: ${q.q}\nReference answer: ${q.a}\nMy answer: ${S.answers[t.dataset.copyq]||"(empty)"}`,$("#cb-"+CSS.escape(t.dataset.copyq)));return}
+  if(t.dataset.check){checkAnswer(t.dataset.check,t);return}
+  if(t.id==="flip"){revShow=true;render();return}
+  if(t.dataset.rate){rateCard(revQueue.shift(),+t.dataset.rate);revShow=false;render();return}
+  if(t.id==="chatgo"){chat();return}
+  if(t.id==="chatclear"){S.notes[S.cur]=[];save();render();return}
+  if(t.id==="anki"){const rows=allCards().map(x=>[x.c[0],x.c[1],(D.cardTag||"study")+"::"+x.b.id].map(s=>s.replace(/\t|\n/g," ")).join("\t")).join("\n");
+    const name=(D.storageKey||"cards")+"-anki.tsv";
+    if(downloads){try{await downloads.save({filename:name,data:rows});}catch(err){toast("Export was not saved")}}
+    else{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([rows],{type:"text/tab-separated-values"}));a.download=name;a.click();}
+    return}
+});
+$("#view").addEventListener("input",e=>{
+  const a=e.target.dataset.ans; if(a){S.answers[a]=e.target.value;save()}
+  const r=e.target.dataset.recall; if(r){S.recall[r]=e.target.value;save()}
+});
+async function checkAnswer(id,btn){
+  const [bid,qi]=id.split("?"); const b=blockById(bid), q=b.questions[+qi]; const ans=(S.answers[id]||"").trim();
+  const box=$("#fb-"+CSS.escape(id));
+  if(!ans){box.innerHTML=`<div class="fb">Write an answer first, even a rough guess.</div>`;return}
+  btn.disabled=true; box.innerHTML=`<div class="fb muted">Thinking…</div>`;
+  const prompt=`You are a strict but encouraging tutor grading one answer from a student studying a programming video. The student's English is simple; use simple English.
+${blockContext(b)}
+
+QUESTION: ${q.q}
+REFERENCE ANSWER: ${q.a}
+STUDENT ANSWER: ${ans}
+
+Grade understanding, not wording. Say exactly what is missing or wrong in 2-4 short sentences. If correct, add one sentence that deepens it without going beyond this part. Then give one short follow-up question on the same idea.
+Reply with only JSON: {"verdict":"correct"|"partial"|"missing","feedback":"...","followup":"..."}`;
+  try{const r=await sample.json(prompt);const fb={verdict:["correct","partial","missing"].includes(r.verdict)?r.verdict:"partial",feedback:String(r.feedback||""),followup:String(r.followup||"")};
+    S.fb[id]=fb;save();box.innerHTML=renderFb(fb);}
+  catch(err){box.innerHTML=`<div class="fb">${err&&err.code==="not_granted"?"Checking needs permission to use Claude. Open the model answer instead.":err&&err.code==="rate_limited"?"Too many checks at once. Try again in a minute.":"Couldn't check this time. Try again, or open the model answer."}</div>`}
+  finally{btn.disabled=false}
+}
+async function chat(){
+  const b=blockById(S.cur); const inp=$("#chatin"); const text=inp.value.trim(); if(!text) return;
+  const log=S.notes[b.id]=S.notes[b.id]||[]; log.push({r:"user",c:text}); inp.value=""; save(); render();
+  const out=document.createElement("div"); out.className="msg a"; out.textContent="Thinking…"; $("#chatlog").append(out);
+  const rules=`You tutor one student through this video part. Simple English. Stay inside the part's topic. If the question is about something Casey parks for later, say so in one line and give at most a one-sentence preview. Under 180 words.\n${blockContext(b)}`;
+  try{const r=await sample([{role:"user",content:rules},...log.slice(-8).map(m=>({role:m.r,content:m.c}))],{cache:false,onText:({text})=>{out.textContent=text}});log.push({r:"assistant",c:r.text});save();}
+  catch(err){out.textContent=err.text||"Couldn't answer this time. Try again."}
+}
+save(); render();
+})();
+</script>

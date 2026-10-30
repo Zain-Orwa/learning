@@ -11,7 +11,10 @@ _Last updated: 2026-10-30_
   - [x] Pushed to GitHub: https://github.com/Zain-Orwa/learning (private)
   - [x] Cloned on the Windows PC at `C:\Users\orwaz\learning`
   - [x] Cloned on the Mac (learner says it is there; run `git pull --rebase` on the Mac to get today's commits)
-- Step 3: not decided yet.
+- Step 3, the study routine: **built** (2026-10-30).
+  - [x] Study page: video player that plays one part and stops, locked parts, parking lot, recall, breaks, welcome back, Copy position
+  - [x] `/study` updated: the page guides; Claude saves position, grades, answers parked questions, builds kits
+  - [ ] Learner tries Day 1 Part 1 with the page on the Mac and says if it works
 
 ## Windows tools: all installed and verified (2026-10-30)
 - Visual Studio Community 2026 with the C++ workload (MSVC 14.51). Test: a
@@ -43,4 +46,6 @@ See `docs/toolset.md`, section "Mac M1".
   via an API key, or with another provider, or skip it for now?
 
 ## Next action
-Step 3: decide together what comes next (likely: start Intro to C Day 1).
+On the Mac: `git pull --rebase`, put the Day 1 video in `~/learning-videos/`,
+open `handmade-mastery/courses/intro-to-c/day01/study-kit.html` in Chrome or Safari,
+load the video, and do Part 1. Then tell Claude how it went.

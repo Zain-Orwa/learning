@@ -69,3 +69,16 @@ Newest at the bottom. Each entry: date, decision, why.
   after every step. "Where was I?" gives a 2-line recap and the timestamp.
 - Builds on the study kit: its blocks are the sections. Claude works from the
   transcript and the guide's timestamps, because it can't watch video.
+
+## 2026-10-30: The study page guides everything
+- The study page is the main guide: it plays the video **inside the page**, one part
+  at a time, and **stops by itself** at the end of each part. Future parts stay locked.
+- Parking lot while watching (no leaving to search), Recall from memory after each part,
+  breaks between parts (5 min; 15 after every 3 parts), "Welcome back" + card warm-up
+  when he returns, and "Copy position" so `/study` can save the place in `STATE.md`.
+- `/study` stays as the Claude side (position, grading, parked questions, building kits)
+  and as a chat-only fallback.
+- Why: he gets distracted and loses his place. Short parts with questions after
+  each one reduce mind wandering (Szpunar, Khan & Schacter, PNAS 2013).
+- One shared engine (`tools/study-kit/engine.html`) + one `data.js` per episode,
+  built with `tools/study-kit/build.py`.

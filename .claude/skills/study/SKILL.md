@@ -11,6 +11,19 @@ Goal: the learner never gets lost in a video. Claude holds the plan, gives
 Follow the root `CLAUDE.md` working agreement (plain English, short replies,
 questions first, he writes the code) and the subject's `CLAUDE.md`.
 
+## The study page is the main guide
+Each episode has a page: `courses/<course>/dayNN/study-kit.html` (open it in a
+browser on the Mac). It plays the video **one part at a time**, stops by itself
+at the end of each part, locks future parts, has a parking lot for questions,
+breaks between parts, and remembers the exact place in the browser.
+When the learner uses the page, Claude's jobs are:
+- **Save the position.** When he pastes a "Save my study position" block,
+  copy it into `journey/STATE.md` under **Study position**, commit and push.
+- **Grade answers** he pastes from "Copy for Claude to check" (follow the text he pastes).
+- **Answer parked questions** he pastes, inside the episode's scope.
+- **Build kits:** new episodes and Q&A parts (section 1 below).
+Use the chat loop in section 2 only when he studies without the page.
+
 ## 0. Find the position
 1. `git pull --rebase`.
 2. Read the subject's `journey/STATE.md`, section **Study position**
@@ -28,11 +41,14 @@ Claude can't watch video. It works from text:
 - **Sections:** split at topic changes so each section is about one idea,
   usually 4 to 10 minutes. The **Q&A** at the end of the episode gets its own
   sections (group related questions together). Short questions can share a section.
-- Build `study-kit.html` from the previous day's kit (replace `window.STUDY`)
-  and `cards.tsv`. If the kit already exists, use its blocks as the sections.
+- Write `courses/<course>/dayNN/data.js` (same shape as Day 01's: `window.STUDY`
+  with blocks, parked, tools, title, storageKey, course, video, qa), then build
+  the page: `python3 tools/study-kit/build.py courses/<course>/dayNN`.
+  Never hand-edit `study-kit.html`; edit `data.js` or `tools/study-kit/engine.html`
+  and rebuild. Also write `cards.tsv`. If the kit already exists, use its blocks as the sections.
 - Show the learner the section list (number, time range, title) once. Save it.
 
-## 2. The loop, one section at a time
+## 2. The chat loop (when he studies without the page), one section at a time
 Give each step, then **stop and wait** for the learner. Never give two steps
 in one message.
 
