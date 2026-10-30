@@ -17,7 +17,7 @@ _Last updated: 2026-10-31_
   - [x] Learning method from Zain's "learning machine" video: `docs/learning-method.md`
   - [x] Strict % grading, guess-first, graded Recall, one-sentence idea / analogy / common mistake in the page
   - [x] Spaced reviews: `journey/REVIEWS.md` + `tools/reviews.py` + `/review`; `/study` adds finished parts
-  - [x] Daily review scheduled task (~13:00 Europe/Berlin)
+  - [x] Daily review scheduled task "Daily review", every day 12:48 Europe/Berlin, cloud, automatic approval, push notification (id `trig_015H7qGd7zXdGP9ACCUadnzw`, lives on the Claude account that created it on 2026-10-31)
   - [ ] Learner tries Day 1 Part 1 with the page on the Mac (planned: 2026-11-01)
 
 ## Windows tools: all installed and verified (2026-10-30)
