@@ -60,3 +60,12 @@ Newest at the bottom. Each entry: date, decision, why.
 - Use **VS Code + Neovim extension** for *Intro to C on Windows*.
 - Look at the editor again when Handmade Hero starts: watch what Casey uses
   there and decide then. Why: decide with real experience, not in advance.
+
+## 2026-10-30: Guided study sessions (`/study`)
+- Problem: while watching, he gets distracted, searches something, and loses his place.
+- Fix: the `/study` command (`.claude/skills/study/SKILL.md`). Claude splits each
+  episode into timed sections (Q&A included), gives one task at a time (watch,
+  answer, explain gaps, do, cards), and saves the exact position in `STATE.md`
+  after every step. "Where was I?" gives a 2-line recap and the timestamp.
+- Builds on the study kit: its blocks are the sections. Claude works from the
+  transcript and the guide's timestamps, because it can't watch video.

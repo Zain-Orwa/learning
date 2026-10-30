@@ -89,6 +89,12 @@ day's kit, copy the file and replace that object.
 Published copy of Day 1: https://claude.ai/artifact/DzvNGPZQUXzLUzdLSy2Txc
 (private to the learner's account that made it).
 
+## Study sessions: `/study`
+
+Lessons run through the `/study` command (`../.claude/skills/study/SKILL.md`):
+one section at a time, one task at a time, position saved in
+`journey/STATE.md` under **Study position**. Start every lesson with it.
+
 ## Making a transcript
 
 See `tools/transcribe/README.md`. Line format: `[h:mm:ss] text`.

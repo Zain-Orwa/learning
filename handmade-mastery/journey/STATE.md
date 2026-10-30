@@ -28,6 +28,13 @@ _Last updated: 2026-10-30_
 ## Mac tools: not installed yet
 See `docs/toolset.md`, section "Mac M1".
 
+## Study position
+- Course: intro-to-c, Day 01
+- Section: 1 of 12 ("Why this series, and getting a compiler", 0:00-5:21)
+- Step: Watch (not started)
+- Updated: 2026-10-30
+- Note: Day 1's Q&A is a separate recording; add it as extra sections when we get there.
+
 ## Course progress
 - Intro to C, Day 1: study kit ready, **not started**.
 
