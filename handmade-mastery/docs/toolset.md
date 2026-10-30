@@ -5,38 +5,44 @@ Every tool we use, what it's for, which machine it runs on, and how to set it up
 
 ## Windows PC (compiles and runs all course code)
 
-### [ ] Visual Studio Community: compiler, linker, debugger
+### [x] Visual Studio Community: compiler, linker, debugger
 - **For:** `cl.exe` (compiler), `link.exe` (linker) and the debugger: the same tools Casey uses.
 - **Install:** https://visualstudio.microsoft.com/vs/community/ → in the installer,
   tick the workload **Desktop development with C++**.
 - **Check:** Start menu → **x64 Native Tools Command Prompt for VS** → type `cl`.
   It prints "Microsoft (R) C/C++ Optimizing Compiler … for x64".
+- **Installed:** C++ workload is present; x64 compiler verified on 2026-10-30.
 - **Note:** Casey shows VS Express 2013 and VS 2008. Menus differ today, but the ideas are the same.
 
-### [ ] Git for Windows
+### [x] Git for Windows
 - **For:** cloning this repo; Claude Code also uses its Git Bash.
 - **Install:** https://git-scm.com/downloads/win
 
-### [ ] VS Code + Neovim extension
+### [x] VS Code + Neovim extension
 - **Install:** VS Code from https://code.visualstudio.com, Neovim 0.10+
   (`winget install Neovim.Neovim`), then the extension **vscode-neovim**
   (`asvetliakov.vscode-neovim`) and **C/C++** (`ms-vscode.cpptools`).
 - **If the extension can't find Neovim:** set
   `vscode-neovim.neovimExecutablePaths.win32` to the path of `nvim.exe`.
+- **Installed:** Neovim 0.12.6 and both extensions are present (2026-10-30).
+  Restart the terminal and VS Code to refresh the PATH and extension environment.
 - **Repo settings:** `.vscode/settings.json` turns AI autocomplete off.
 
-### [ ] Claude Code (Windows)
-- **Install (PowerShell):** `irm https://claude.ai/install.ps1 | iex`
+### [x] Claude Code (Windows)
+- **Install (PowerShell):** `winget install --id Anthropic.ClaudeCode --exact`
 - **Check:** open a new terminal → `claude --version`.
 - **Use:** in the repo folder run `claude`. It reads `CLAUDE.md` automatically.
+- **Installed:** 2.1.302 via the Anthropic-published winget package (2026-10-30).
+  Restart the terminal to refresh the PATH.
 
 ### [ ] RAD Debugger (later)
 - **For:** a faster debugger, once stepping through code feels routine.
 - **Get:** releases at https://github.com/EpicGamesExt/raddebugger (free, open source).
 
-### [ ] DebugView, Coreinfo (Sysinternals, small helpers used in Day 1 experiments)
+### [x] DebugView, Coreinfo (Sysinternals, small helpers used in Day 1 experiments)
 - https://learn.microsoft.com/en-us/sysinternals/downloads/debugview
 - https://learn.microsoft.com/en-us/sysinternals/downloads/coreinfo
+- **Installed:** `%USERPROFILE%\Tools\Sysinternals` (2026-10-30).
 
 ## Mac M1 (study station; never compiles course code)
 
