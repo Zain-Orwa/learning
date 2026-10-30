@@ -20,6 +20,8 @@ _Last updated: 2026-10-30_
 - Git 2.55, VS Code 1.144 with vscode-neovim and C/C++ extensions, Neovim 0.12.6.
 - Claude Code 2.1.302 (winget). New terminals find `claude` on PATH.
 - DebugView and Coreinfo in `%USERPROFILE%\Tools\Sysinternals`.
+- Terminal: PowerShell 7.6 + Starship 1.27 + JetBrainsMono Nerd Font +
+  Terminal-Icons + PSReadLine 2.4, tested and working. Details in `docs/toolset.md`.
 - RAD Debugger: later, on purpose.
 - Editor: VS Code for Intro to C. Revisit at the start of Handmade Hero (see DECISIONS.md).
 
