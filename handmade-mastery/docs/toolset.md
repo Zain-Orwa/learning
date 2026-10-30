@@ -1,0 +1,93 @@
+# Toolset
+
+Every tool we use, what it's for, which machine it runs on, and how to set it up.
+**Status** is updated as each tool gets installed. `[ ]` = not yet, `[x]` = done.
+
+## Windows PC (compiles and runs all course code)
+
+### [ ] Visual Studio Community: compiler, linker, debugger
+- **For:** `cl.exe` (compiler), `link.exe` (linker) and the debugger: the same tools Casey uses.
+- **Install:** https://visualstudio.microsoft.com/vs/community/ → in the installer,
+  tick the workload **Desktop development with C++**.
+- **Check:** Start menu → **x64 Native Tools Command Prompt for VS** → type `cl`.
+  It prints "Microsoft (R) C/C++ Optimizing Compiler … for x64".
+- **Note:** Casey shows VS Express 2013 and VS 2008. Menus differ today, but the ideas are the same.
+
+### [ ] Git for Windows
+- **For:** cloning this repo; Claude Code also uses its Git Bash.
+- **Install:** https://git-scm.com/downloads/win
+
+### [ ] VS Code + Neovim extension
+- **Install:** VS Code from https://code.visualstudio.com, Neovim 0.10+
+  (`winget install Neovim.Neovim`), then the extension **vscode-neovim**
+  (`asvetliakov.vscode-neovim`) and **C/C++** (`ms-vscode.cpptools`).
+- **If the extension can't find Neovim:** set
+  `vscode-neovim.neovimExecutablePaths.win32` to the path of `nvim.exe`.
+- **Repo settings:** `.vscode/settings.json` turns AI autocomplete off.
+
+### [ ] Claude Code (Windows)
+- **Install (PowerShell):** `irm https://claude.ai/install.ps1 | iex`
+- **Check:** open a new terminal → `claude --version`.
+- **Use:** in the repo folder run `claude`. It reads `CLAUDE.md` automatically.
+
+### [ ] RAD Debugger (later)
+- **For:** a faster debugger, once stepping through code feels routine.
+- **Get:** releases at https://github.com/EpicGamesExt/raddebugger (free, open source).
+
+### [ ] DebugView, Coreinfo (Sysinternals, small helpers used in Day 1 experiments)
+- https://learn.microsoft.com/en-us/sysinternals/downloads/debugview
+- https://learn.microsoft.com/en-us/sysinternals/downloads/coreinfo
+
+## Mac M1 (study station; never compiles course code)
+
+### [ ] Claude Code (Mac)
+- **Install:** `curl -fsSL https://claude.ai/install.sh | bash`
+  (or `brew install --cask claude-code`).
+- **Log in:** run `claude` and follow the browser prompt. Requires a Pro, Max,
+  Team, Enterprise or Console account. To switch Claude accounts, run `/logout`
+  then `/login`.
+- **Style:** this repo's `.claude/settings.json` sets the **Learning** output
+  style: Claude explains and leaves `TODO(human)` gaps for you.
+
+### [ ] VS Code + Neovim extension (Mac)
+- Neovim: `brew install neovim`. Same extensions as on Windows.
+
+### [ ] Anki (FSRS)
+- **Install:** https://apps.ankiweb.net (desktop; AnkiDroid is free on Android,
+  AnkiMobile is paid on iOS).
+- **Turn on FSRS:** deck options → FSRS (built in since Anki 23.10).
+- **Import a day's cards:** File → Import → `courses/<course>/dayNN/cards.tsv`.
+  The file's header sets tab separator and tags.
+
+### [ ] LearnHarness: concept teaching, practice, knowledge graph
+- **Get:** https://learnharness.ai (signed macOS Apple Silicon DMG).
+  Source: https://github.com/amosblomqvist/learnharness (your fork: Zain-Orwa/learnharness).
+- **Models:** add a provider key in Settings. For Claude, it needs
+  `ANTHROPIC_API_KEY` (pay per use from https://console.anthropic.com).
+  A Claude Pro/Max subscription doesn't work here.
+  **Decision still open**, see `journey/STATE.md`.
+- **Claude Code skill (optional):** copy `skills/learnharness/` from the
+  LearnHarness repo into `~/.claude/skills/`. Claude Code can then read your
+  LearnHarness learning history (read-only).
+
+### [ ] Manim: animated explanations
+- **Install (macOS):**
+  ```sh
+  curl -LsSf https://astral.sh/uv/install.sh | sh
+  uv python install
+  brew install cairo pkg-config
+  uv init manimations && cd manimations && uv add manim
+  uv run manim checkhealth
+  ```
+  LaTeX (MacTeX) is optional; only needed for math formulas.
+- **Claude Code skill:** `npx skills add https://github.com/davila7/claude-code-templates --skill manim`
+- **Rule:** only for hard ideas (memory, the stack, pixels, vectors, collisions), not every episode.
+
+### [ ] Optional: speedtyper.dev
+- Type-racing with real code, as a 5-minute warm-up: https://speedtyper.dev
+
+## Both machines
+
+- **This repo**, cloned on both. The Mac is for study files; the Windows PC
+  for code in `code/`. Commit and push from whichever machine you used.
+- **Episode guide:** https://guide.handmadehero.org (timestamps for every episode).

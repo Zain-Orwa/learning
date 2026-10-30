@@ -1,0 +1,8 @@
+{
+  "github.copilot.enable": { "*": false },
+  "editor.inlineSuggest.enabled": false,
+  "files.eol": "\r\n",
+  "[markdown]": { "files.eol": "\n" },
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true
+}

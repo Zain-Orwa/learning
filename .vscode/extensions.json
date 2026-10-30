@@ -1,0 +1,4 @@
+{
+  "recommendations": ["asvetliakov.vscode-neovim", "ms-vscode.cpptools"],
+  "unwantedRecommendations": ["github.copilot", "github.copilot-chat"]
+}

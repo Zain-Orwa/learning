@@ -1,0 +1,10 @@
+* text=auto
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.c   text eol=crlf
+*.cpp text eol=crlf
+*.h   text eol=crlf
+*.sh  text eol=lf
+*.md  text eol=lf
+*.html text eol=lf
+*.tsv text eol=lf

@@ -1,0 +1,1439 @@
+[0:00:01] OK.
+[0:00:03] Assuming this is working, I would
+[0:00:06] love to welcome everyone to this test stream.
+[0:00:10] Basically, what I wanted to do is I
+[0:00:12] am planning on starting a project on Monday, which is probably
+[0:00:18] very ill-advised, and I appreciate that.
+[0:00:19] But I'm planning to start a project where
+[0:00:22] I am going to show how to code a complete game in C, which
+[0:00:27] is a pretty big undertaking.
+[0:00:29] And I thought about it, whether it was a good idea for a while,
+[0:00:32] and I wasn't sure.
+[0:00:33] But I finally decided that I really wanted to do it.
+[0:00:35] And I always wanted to do it just to have
+[0:00:37] a documentation that you could basically,
+[0:00:40] well, a document, I should say, of a live recording of,
+[0:00:43] like, here's everything that we did to make an actual game
+[0:00:47] that you could play from scratch.
+[0:00:51] And so I don't know how that'll go.
+[0:00:53] Nobody may care about that at all
+[0:00:55] until the game is pretty far along or something like that.
+[0:00:57] But I really, really wanted to do it.
+[0:00:59] And so I'm going to be starting that on Monday,
+[0:01:02] but before then I wanted to practice the streaming
+[0:01:05] to make sure that all of the stuff was going well
+[0:01:07] because computers of course, as you know,
+[0:01:10] are oh so reliable these days.
+[0:01:12] And so I kind of have a feeling
+[0:01:14] that there will be plenty of kinks to iron out.
+[0:01:15] And so what I thought I'd do
+[0:01:17] is spend a couple of days doing test streams
+[0:01:20] where I will at least do something useful,
+[0:01:22] which is explain how to do C programming on a computer
+[0:01:27] because, I mean, let's face it, lots of people
+[0:01:30] don't know how to do that.
+[0:01:31] And if anyone wants to follow along as I program the game in C
+[0:01:36] and go through all the explanations of why
+[0:01:38] I'm writing the game code that way,
+[0:01:40] I won't be wanting to stop and explain little things like,
+[0:01:44] what is the question mark operator,
+[0:01:45] or how does the stack work, or something like that,
+[0:01:49] unless that's a particularly relevant topic at the time.
+[0:01:51] So I was hoping to basically do a couple of streams
+[0:01:54] that I could archive and just put up
+[0:01:56] on the website that's like, if you don't know how to program C at all,
+[0:01:59] if you literally have no idea, but would like to watch this series,
+[0:02:02] go watch these couple of videos, and that'll get you up to speed
+[0:02:05] on just what's going on so you can start to follow.
+[0:02:07] And granted, you'll still have to do a bunch of work to practice
+[0:02:10] and learn how to program at all, because if you don't know any programming,
+[0:02:13] you're not going to be able to just jump right in.
+[0:02:15] But at least that'll get you started,
+[0:02:17] and then you can presumably at least start to follow the videos
+[0:02:20] and understand the majority of them.
+[0:02:22] So what this video is going to be is it was going to be literally showing how I would start
+[0:02:29] to program C on a machine and how to do some of the basics of programming C.
+[0:02:33] So this is on a Windows machine because that's the most common programming machine that people
+[0:02:37] are going to have. And the thing that you have to do right off the bat, which is actually kind
+[0:02:42] of annoying and you don't have to do this if you're on Linux, but the thing you have to do
+[0:02:46] on a Windows machine is you have to find a C compiler. And currently you don't have a lot of
+[0:02:51] options, even though LLVM, which is a common one on other platforms, is sort of able to
+[0:02:57] build CNOW. It's not able to actually do the entire process. So what you have to do is
+[0:03:02] you have to go get something called Microsoft Visual Studio Express. And this is basically
+[0:03:09] a free version of their, you know, thing that their professional C programming environment.
+[0:03:17] And you'll see when you get to this page,
+[0:03:19] they want to give you a lot of other stuff
+[0:03:21] that you really don't want.
+[0:03:23] When you look on here, you can see stuff like, oh,
+[0:03:26] team foundation server.
+[0:03:28] And since you're just someone who's
+[0:03:30] trying to program C at home, you probably don't have a team.
+[0:03:34] Or if you do, they probably don't have a foundation
+[0:03:36] or don't want their foundation to be comprised primarily
+[0:03:39] of something from Microsoft.
+[0:03:40] I know I certainly wouldn't.
+[0:03:42] And they're also going to try and give you
+[0:03:44] things like this Express for Web, which
+[0:03:45] is something that you use to program,
+[0:03:49] like, if you want to do web deployment,
+[0:03:51] ASP.net and other things like this,
+[0:03:53] which we definitely want to do.
+[0:03:54] So the one that you actually want to get
+[0:03:56] is this one here, which is Express 2013 for Windows,
+[0:04:00] which is the thing that actually lets us compile C++, which
+[0:04:03] is what we want.
+[0:04:04] So I'm going to start that downloading,
+[0:04:06] or at least I'm going to go through this awesome crazy
+[0:04:10] circus here that you have to do to download,
+[0:04:12] and off it goes.
+[0:04:14] And now we're going to kind of have
+[0:04:15] to skip a little bit of this process only
+[0:04:18] because there's a challenge response that they do,
+[0:04:21] which people will have to do on their own.
+[0:04:22] I obviously can't show you how to do that.
+[0:04:25] You will have to basically install this guy.
+[0:04:29] Let's see.
+[0:04:31] Loading identity providers.
+[0:04:34] So yeah, you will have to go through and you'll
+[0:04:35] have to fill this out.
+[0:04:37] Unfortunately, you'll have to get like a Microsoft login
+[0:04:39] of some kind in order to get it.
+[0:04:42] But once you get it, it will allow you to install Visual Studio,
+[0:04:45] and you will be able to do, basically,
+[0:04:48] substantively what I'm about to do after you get that installed.
+[0:04:51] It'll probably make you reboot your machine, which I also
+[0:04:53] can't do on a live stream, of course,
+[0:04:55] because if I were to reboot the machine,
+[0:04:56] the stream would stop.
+[0:04:58] But after you do that, you will
+[0:05:00] get a newer version, essentially,
+[0:05:03] of this particular product.
+[0:05:04] This is the older version that was installed
+[0:05:06] on this machine.
+[0:05:07] It's Visual Studio 2008.
+[0:05:09] And as you can see, we've got stuff on here,
+[0:05:12] which is kind of not actually stuff I can open, obviously.
+[0:05:16] I'm not allowed to show you any of the secret witness things.
+[0:05:19] That would be very bad for them.
+[0:05:21] But what you can do to actually start programming
+[0:05:25] in this particular environment is you go to new
+[0:05:28] and you go to project.
+[0:05:29] And what that'll do is that will allow you
+[0:05:31] to create one of their dummy projects,
+[0:05:33] which I'll show you how to build,
+[0:05:35] only for a little while
+[0:05:36] because we'll kind of immediately get off that.
+[0:05:38] But what it basically does is it brings up
+[0:05:40] a giant window full of all of the things that you could build with this.
+[0:05:46] And most of them are things that we are not concerned with.
+[0:05:49] You can see there's a bunch of template things here you can use for .NET.
+[0:05:52] You can see there's all sorts of things here, MSC, which is like an antiquated library.
+[0:05:56] And you don't care about any of these things.
+[0:05:58] The only thing you want to do is build a Win32 application.
+[0:06:02] And there's two options here.
+[0:06:03] One is for a Win32 console application.
+[0:06:06] One is for a Win32 project.
+[0:06:08] And the difference between these two
+[0:06:10] is actually extremely rudimentary.
+[0:06:12] All it is is, for some reason, way back when they actually
+[0:06:15] did the original version of Windows,
+[0:06:19] they decided to segregate how you built basically applications that
+[0:06:25] could run from a command line, which is something
+[0:06:27] we'll look at in the future, and ones that are actually
+[0:06:29] more like apps like they have a window and stuff like this.
+[0:06:32] And because they did that, you have to build an app
+[0:06:36] as one or the other.
+[0:06:37] And this is actually something that's basically impossible to get around.
+[0:06:41] There are workarounds for it if you really care, but basically there is no way on Windows,
+[0:06:45] unlike say on Linux or Mac OS, there is no way to actually build something
+[0:06:50] that both works from a command line and works in the standard application mode.
+[0:06:57] But we don't have to care about that too much because we're going to be
+[0:07:00] building a game and games don't really have to do anything from the command
+[0:07:03] line in sort of that sort of way.
+[0:07:07] So what we're going to do is select Win32 Project, which
+[0:07:10] is what's set up for actually building.
+[0:07:12] Oh, sorry.
+[0:07:13] I got to enter a name here.
+[0:07:14] So we're going to call this, we're going to call this Test.
+[0:07:19] OK.
+[0:07:20] And what that'll do is that'll bring up this silly little
+[0:07:23] wizard here.
+[0:07:24] And the wizard is basically going to ask you a bunch of
+[0:07:26] stuff, none of which you want.
+[0:07:27] So what you want to do is just check empty project so
+[0:07:29] that it will get out of your way.
+[0:07:31] And it will kind of give you another option here to do
+[0:07:33] other things like the console application, DLLs, which
+[0:07:36] separate issues, static libraries, which we don't need to worry about right now, but
+[0:07:39] are things you might want to know in the future.
+[0:07:42] And we'll go to Windows application, which will basically just give us our own sort of,
+[0:07:47] I don't know why that thing keeps going.
+[0:07:51] This will basically give us our own sort of dumping ground where we can put stuff
+[0:07:55] in and build it.
+[0:07:56] Now the way that Microsoft Visual Studio works is it has this thing called a solution
+[0:08:00] explorer.
+[0:08:01] And one thing that will often happen to you when you're developing is it will
+[0:08:04] go away.
+[0:08:05] something that's like this or perhaps you'll get something that's even completely blank,
+[0:08:09] so that has nothing in it like this. And you can get back to this solution explorer thing by going
+[0:08:14] to view solution explorer. Now what is the solution you may ask? What was the problem even? You may
+[0:08:19] also ask and that's a very valid question. But the answer is there wasn't necessarily a problem
+[0:08:26] unless you consider the problem being that Microsoft makes it very hard to build things.
+[0:08:29] Solution was just something that they started calling a project at some point.
+[0:08:34] And so really a solution is just their word for a thing that you are going to build.
+[0:08:39] It's like a basically a list of things that need to get built and how they're going to build them.
+[0:08:43] And so instead of having an intuitive name like files explorer or project explorer,
+[0:08:49] it's called solution explorer and you have to go to it.
+[0:08:52] When you go to the solution explorer, you will basically get something here that works a lot like,
+[0:08:58] you know, the file explorer in Windows.
+[0:09:01] It's hierarchical and you can collapse it.
+[0:09:03] And they made some folders in here, but we don't really have to care about these folders very much.
+[0:09:08] And we can add our own folders or rename folders.
+[0:09:11] So if we wanted to rename one of these, you know, we could go in here and call this whatever we wanted and that's fine.
+[0:09:17] But what we need to do in order to start building something is actually have some files in here to build
+[0:09:22] so that it will know what we are trying to build.
+[0:09:25] So in order to do that, I'm just going to right-click on this
+[0:09:28] and go into Add, and I'm going to pick New Item.
+[0:09:31] So that will let us make a new file, basically,
+[0:09:34] that we can actually build.
+[0:09:36] So that will pop up a massive window of stuff,
+[0:09:38] because there's all sorts of things
+[0:09:40] that you might want to do.
+[0:09:41] You might want to make an SQL script file or a class
+[0:09:45] diagram.
+[0:09:46] Those might be good things to make,
+[0:09:47] but we're not going to make those right now.
+[0:09:49] Instead, we're going to make just a straight up CPP file.
+[0:09:53] OK.
+[0:09:54] So basically, I always forget to enter the name, don't I?
+[0:09:57] So basically we just have to give our C file a name and add it.
+[0:10:00] Now we will have a blank file that we can start typing into.
+[0:10:04] And that is what we will use to start programming in C.
+[0:10:07] Now, programming in C has not advanced much over the years,
+[0:10:11] unfortunately.
+[0:10:13] Obviously C and C++, they're both pretty old.
+[0:10:16] But I think C++ was sometime early 80s.
+[0:10:20] C was a good decade before that, I want to say.
+[0:10:23] And yet, just the same, even though they're so old,
+[0:10:27] the way in which you actually enter C code into a computer
+[0:10:31] and the way it is actually built is still almost the same
+[0:10:35] as it was back then.
+[0:10:36] You basically just have text files.
+[0:10:38] They're basic plain old text files,
+[0:10:41] less complicated than something
+[0:10:42] that you would type into Microsoft Word.
+[0:10:44] Like they literally don't even have annotation or anything.
+[0:10:47] They're just raw text.
+[0:10:49] And that raw text is then interpreted by the tools
+[0:10:54] to do the things that we need to do.
+[0:10:56] And that's done with the compiler and stuff
+[0:10:58] that we'll be talking about in a second.
+[0:11:00] But basically just understand that nothing we're going to do
+[0:11:02] is going to be anything other than entering text
+[0:11:04] into a computer.
+[0:11:06] OK.
+[0:11:07] So the first thing to do is to say, well, OK,
+[0:11:11] we haven't actually done anything here.
+[0:11:13] This is some text in a file.
+[0:11:18] And what you will notice is that this basically,
+[0:11:22] every time I type in here, there's a little yellow bar
+[0:11:24] that sort of appears next to it.
+[0:11:26] And that just tells you that these are new lines that you
+[0:11:28] have typed since you have saved.
+[0:11:30] And you can see that I've got a little star there that now
+[0:11:34] adds to it, just like in most applications that says,
+[0:11:36] this file has been modified since it has been saved.
+[0:11:39] Now, if I want to save it, I can just go to file save test.cpp.
+[0:11:43] Or if I want it some shorthand, I can hit Control S.
+[0:11:46] And there it saves it.
+[0:11:47] And you'll notice that the yellow bars now change to a green bar.
+[0:11:51] And what does a green bar mean?
+[0:11:52] Well, a green bar is basically something
+[0:11:54] that lets you know that although the file is saved,
+[0:11:57] there was still a change recently there.
+[0:11:59] And I believe, although I am not a frequent user
+[0:12:01] of Visual Studio, that it will basically
+[0:12:03] remove the green bar once we actually compile this
+[0:12:07] into a working program so that you know what changes you've
+[0:12:10] made since the last time you've updated your program.
+[0:12:13] OK.
+[0:12:14] So let's say I want to actually run the process of making something out of this text file.
+[0:12:20] Well, the thing that you do there is you say build solution.
+[0:12:23] And build solution will go through everything that we have in here.
+[0:12:27] And it will actually do the work necessary to make this in to a program.
+[0:12:32] And we'll talk about all those steps in a little while.
+[0:12:34] So when I hit build solution, you will notice that if I did not have an output window open,
+[0:12:39] it magically made one for me.
+[0:12:41] It just pops up. There's really nothing you can do about it.
+[0:12:44] And what it does is it prints out what happened when it tried to build the program.
+[0:12:51] So it starts out by giving me a line which says what it was trying to build.
+[0:12:55] So it says build started project test.
+[0:12:58] Now that's what we wanted. You can see in here we've essentially when it created our automatic project for us,
+[0:13:04] it created a solution called test and it put inside it one default project which is called test.
+[0:13:09] And the reason I call it a default project, you can see it's bold, is because you can
+[0:13:13] actually go in here and there's a thing called Set as Startup Project and some other things
+[0:13:18] like this.
+[0:13:19] There's basically a notion of what the project is you're going to build when you build
+[0:13:24] the solution.
+[0:13:25] Because we could actually stack other projects in here that build other programs, which
+[0:13:28] we don't all want to build and other sorts of nonsense like this.
+[0:13:32] Most of that is not really necessary when you're doing development unless you start
+[0:13:35] developing on a very large and complex project.
+[0:13:38] But if you're just building a game by yourself,
+[0:13:40] it's unlike you'll need to ever do anything like that.
+[0:13:43] And I often don't build anything from here.
+[0:13:45] So one of the things we're going to cover later
+[0:13:46] is how to build things without using this.
+[0:13:48] But that said, test is the project
+[0:13:51] that we will build when we do build solution.
+[0:13:53] And so what this was telling us here
+[0:13:55] is it was going to build that project.
+[0:13:57] And there's a configuration line which says debug win32.
+[0:14:01] And what the configuration means
+[0:14:04] is basically what sort of build it was trying to do.
+[0:14:07] Because as we'll see later on, there's actually
+[0:14:10] multiple ways you can build the same set of C code.
+[0:14:14] Some of them are designed to target different platforms.
+[0:14:17] For example, you may want to target a 32-bit copy of Windows
+[0:14:21] or a 64-bit copy of Windows.
+[0:14:23] And that would be part of the configuration.
+[0:14:25] You might also be trying to do things
+[0:14:28] that are based on a debug developer build, so something
+[0:14:32] that has a lot of test code compiled into it.
+[0:14:35] Special menus for you, the editor for the game
+[0:14:37] or something might be built in this mode.
+[0:14:40] But then there might be another build called
+[0:14:42] Release or Retail, depending on how you do your naming scheme,
+[0:14:46] which will build these things out.
+[0:14:48] And so basically, configuration is something
+[0:14:51] that affects the way in which these text files are actually
+[0:14:55] interpreted by the various things that we do in order
+[0:14:58] to get to an application that is somehow different
+[0:15:02] from the other configurations that we might build.
+[0:15:05] So now the next line you can see here is compiling.
+[0:15:08] And what that is, is compilation is the general term.
+[0:15:12] It's not a particularly specific term,
+[0:15:14] although we actually use it to mean something specific oftentimes.
+[0:15:16] It's actually a very general term that technically means moving
+[0:15:20] something from one format into another, basically.
+[0:15:23] It's sort of like a translation in some sense.
+[0:15:27] A compiler is something that parses a text file typically.
+[0:15:31] It turns it into something semantic.
+[0:15:33] It understands the meaning of that text file,
+[0:15:35] what we were trying to do with that text file.
+[0:15:37] And then it turns it into some other thing that we wanted.
+[0:15:42] Now, in this case, what it's going to do
+[0:15:44] is we're actually trying to get it to produce,
+[0:15:47] at the end of the day, an actual program that we can run.
+[0:15:50] It's executable, something that you would click on in Windows
+[0:15:53] to run, like with the little icon, dot exe, that thing.
+[0:15:57] We want to build that thing.
+[0:15:58] And in order to build that thing,
+[0:16:01] Basically, the text code that we write
+[0:16:03] has to be translated into something
+[0:16:05] that the computer can run.
+[0:16:07] And that is what the compilation step does.
+[0:16:09] And there's another step after compilation
+[0:16:11] that we'll talk about.
+[0:16:12] But the compilation step is basically
+[0:16:14] in charge of doing the majority of the work
+[0:16:16] to translate our text file from something humans read
+[0:16:20] into something that a CPU can read,
+[0:16:23] and specifically oftentimes a specific processor,
+[0:16:27] meaning the compilation will be
+[0:16:28] compiling from a text file into say x86 code or x64 code,
+[0:16:33] something for the actual CPU that you are trying to target,
+[0:16:37] not abstractly.
+[0:16:39] So given that, after we see the compilation line,
+[0:16:44] we know the compiler has started, and we now
+[0:16:46] go to a list of what files it's actually compiling.
+[0:16:49] Now we only have one file, which is test.cpp.
+[0:16:53] And so not surprisingly, it tries to compile that file.
+[0:16:56] Now you will note in front of all of these,
+[0:16:58] there is a little number with a sort of greater than symbol.
+[0:17:04] And what that is is totally irrelevant for the most part
+[0:17:08] to what you're going to be doing for development.
+[0:17:10] It's not really something you need to pay attention to,
+[0:17:13] but just in case you were wondering,
+[0:17:14] if you are on a machine that happens
+[0:17:17] to have a lot of processors.
+[0:17:18] So if I go in here, if I basically just
+[0:17:22] used the hotkey, one of my favorite hotkeys,
+[0:17:25] Control Shift Escape to bring up the Task Manager,
+[0:17:28] You will notice that this machine has a lot of processors.
+[0:17:32] In this thing called CPU usage history,
+[0:17:35] there is one of these for every logical processor
+[0:17:39] in the machine.
+[0:17:41] Now, a logical processor is, or I shouldn't say logical
+[0:17:44] processor, perhaps that's the wrong word.
+[0:17:47] I'm going to stick with logical processor.
+[0:17:48] Now, logical processor is not an individual processor.
+[0:17:51] It's basically a logical unit that can run code.
+[0:17:54] And there's two different kinds of these.
+[0:17:56] And we might as well talk about them now,
+[0:17:57] but I'm going to talk about them certainly more later on
+[0:18:01] in the actual series, not in this introductory series.
+[0:18:03] But basically, the way a processor is divided internally,
+[0:18:06] or the way your computer is divided internally,
+[0:18:08] obviously, there are actual physical processors in there.
+[0:18:11] So most people have one physical processor
+[0:18:13] in their machine, obviously.
+[0:18:15] But other machines have two or three or four,
+[0:18:18] maybe even dozens of processors in them.
+[0:18:20] Certainly not consumer boxes, but certain server types
+[0:18:24] might have 32 processors in a machine, for example.
+[0:18:27] Those physical processors obviously are chips they were made by Intel.
+[0:18:30] They are stuck in the machine.
+[0:18:32] They have a nice big old heat sink on them to compete to prevent them from overheating.
+[0:18:37] And when you power on your machine, they are what executes everything except the graphics code or things like the networking,
+[0:18:43] which is sometimes on separate cards or separate chips.
+[0:18:46] The CPU is what does all the work.
+[0:18:47] But in addition to being a physical unit,
+[0:18:52] the CPU itself is actually divided internally into processing units,
+[0:18:56] which actually can run code sort of separately.
+[0:19:00] Those are typically called cores.
+[0:19:02] So inside a single CPU, you might have four cores,
+[0:19:07] or eight cores, or something like this.
+[0:19:09] And you will see these oftentimes advertised in Intel advertising,
+[0:19:12] and of course more cores is better, but what is a core?
+[0:19:15] Well, a core is basically something that is capable
+[0:19:18] of doing the work of a standalone CPU for the most part.
+[0:19:22] It is something that would have been a CPU in the old days
+[0:19:25] when CPUs could only execute one thing at a time.
+[0:19:29] Now you have processors capable of executing multiple things
+[0:19:31] at a time.
+[0:19:32] And each one of those units is called a core inside.
+[0:19:36] And the cores typically have a bunch of things in them.
+[0:19:39] They have units capable of doing mathematics.
+[0:19:41] They have units capable of doing memory addressing
+[0:19:44] all these sorts of things.
+[0:19:45] And then they will talk to the memory in your system.
+[0:19:48] They'll talk to the bus.
+[0:19:50] They'll talk to all sorts of things in the system
+[0:19:52] in order to do their job.
+[0:19:53] by and large a core is the thing that actually does the computation, but even that is still not really
+[0:20:00] what you might call a logical processing unit nowadays. And the reason for that is they've subdivided that even further
+[0:20:08] down to things called hyper threads. And of course,
+[0:20:12] hyper threads are basically a thing where a processor's core
+[0:20:19] is actually able to maintain the state
+[0:20:23] of multiple cores as if it were multiple cores,
+[0:20:28] even though it is only capable
+[0:20:30] of executing any one given core at a time.
+[0:20:32] So for example, you think of a CPU core
+[0:20:36] as being able to remember, say, what it was running,
+[0:20:38] where it is in the program,
+[0:20:40] what the state of the things it was it was operating on,
+[0:20:42] these sorts of things,
+[0:20:43] and we'll get into what all of those are in detail later.
+[0:20:46] But a core is basically doing this work
+[0:20:48] of running an application.
+[0:20:50] that core can actually store multiple of those states,
+[0:20:54] almost like a multitasking operating system you can think of as
+[0:20:57] there's the task bar and it's got different tasks that it has.
+[0:21:01] Well, a core can actually do that tasking in a sense itself.
+[0:21:06] Even though it's only running one thing at a given time,
+[0:21:09] it could keep say four additional states that it can really quickly switch to.
+[0:21:16] And so what happens is those actually show up, often times,
+[0:21:20] in the operating system as a logical processing unit,
+[0:21:23] because to the operating system, they sort of look like a processor.
+[0:21:27] They are effectively running something,
+[0:21:30] even though only one of them on a particular core
+[0:21:33] is actually inflated at a given time.
+[0:21:34] Now, there's tons more to talk about there,
+[0:21:36] but I am prone to tangent, so I thought
+[0:21:38] I'd mention some of that when I booted up here.
+[0:21:40] So as you can see, there are a lot of logical processing
+[0:21:42] units on this.
+[0:21:43] this many processors in the actual machine. In fact I don't actually know
+[0:21:48] if I can go on here. I think, let me see, if this actually will tell us what kind
+[0:21:56] of processor it is. Yes, it is a Xeon. It is a two processor box, although it
+[0:22:03] doesn't actually tell me how many threads per, I mean how many cores per
+[0:22:06] processor it actually has. But we could go look up what a W5580 is and we
+[0:22:10] You could see how many it has, but I think it's probably only got maybe four per, I don't
+[0:22:15] know, I'm not really sure.
+[0:22:17] But anyway, each one of these would correspond basically to one individual, one of those
+[0:22:22] hyper threads, and it would show me basically how much usage that particular thread is
+[0:22:27] getting right now.
+[0:22:29] Okay, so hopefully that gives you a little bit of perspective on this.
+[0:22:33] I wonder too, you know what, nowadays they've kind of added to this thing.
+[0:22:37] I wonder too if there's any way I can get more information
+[0:22:40] about things like hyper threads on these.
+[0:22:43] Like if they even show hyper threads,
+[0:22:45] I feel like in the old days you could toggle this
+[0:22:47] and say whether you were showing processors
+[0:22:49] or logical processors.
+[0:22:50] I don't know.
+[0:22:51] I do not know.
+[0:22:55] No, it doesn't look like there's much here for that.
+[0:23:00] Yeah.
+[0:23:01] All right.
+[0:23:01] Well, anyway, that is not really relevant to what we're doing.
+[0:23:04] So I'm going to skip it.
+[0:23:04] But maybe later on we will go try
+[0:23:06] to find out how to get a little more information
+[0:23:09] and take a look at those things.
+[0:23:10] Anyway, so there are a lot of processors in this system.
+[0:23:13] And when you build something, obviously,
+[0:23:17] compilers can get a little slow.
+[0:23:18] And if you have a lot of things to compile,
+[0:23:20] they could take some time.
+[0:23:21] And so one of the things that compilers do
+[0:23:23] is they are multi-threaded sometimes,
+[0:23:25] depending on which one you're talking about.
+[0:23:27] And they will try to compile using more than one logical
+[0:23:31] processing unit.
+[0:23:31] So they'll try to use more of the CPU resources
+[0:23:36] to get the compile done faster.
+[0:23:37] But this little thing here represents, if I remember correctly,
+[0:23:41] it's been a long time since I've ever really used one of these.
+[0:23:43] It just lets you know a sequence number of basically which sort of spawn of the compiler
+[0:23:51] was reporting this message.
+[0:23:53] Because you may have multiple compilations going, multiple different CPUs doing compilations.
+[0:23:58] And I believe that basically just tells you which one you're looking at at that time.
+[0:24:03] So if we were to do a more complicated compilation with multiple files,
+[0:24:06] 3s 4s going on there as it spooled off jobs in a more complex fashion. But for
+[0:24:10] the moment we're only seeing ones because it only had one file to compile and
+[0:24:13] did not bother to launch extra threads to do that. Anyway, so this is the file
+[0:24:19] that was compiling and we will see here the first time we got an error. And
+[0:24:23] what an error is is an error means basically it was trying to read the
+[0:24:27] text file that we gave it and it did not like what it found. Now that is
+[0:24:31] unsurprising because I basically just typed a bunch of gibberish in here.
+[0:24:33] but what we can do is when we double click on this it will tell us where the
+[0:24:37] problem is. It will then stop basically what it's doing. So when you have errors
+[0:24:42] it will list the errors that it found, it will list them up usually to a
+[0:24:46] certain number of errors and usually that's parameterizable, but after it
+[0:24:49] gets to a certain number of errors it will stop the compilation and it will
+[0:24:52] basically just report that it failed the compilation and you can see it
+[0:24:56] says one errors here and it says zero succeeded one failed and you know
+[0:25:01] It lets us know if they're ones that it skipped because it
+[0:25:03] didn't think it needed to do any work, that sort of thing.
+[0:25:06] And it'll also save a build log for us,
+[0:25:07] which are pretty useless most of the time.
+[0:25:10] But if you want to look at the build log,
+[0:25:12] basically it saves an HTML file that
+[0:25:14] has sort of a log of what happened in the build for,
+[0:25:17] I guess, for posterity.
+[0:25:18] Or if you want to do some kind of thing where you save
+[0:25:21] build logs or do other kinds of stuff with that.
+[0:25:23] Maybe you are running these in some way
+[0:25:25] that you're viewing remotely.
+[0:25:26] There's reasons for build logs,
+[0:25:27] but we're certainly not going to have any use for it.
+[0:25:30] OK.
+[0:25:31] So that rather exciting process there where we just hit build
+[0:25:34] and we get an error is what we're going to be doing
+[0:25:37] in order to produce an executable.
+[0:25:38] And in order to get to the next step of actually producing
+[0:25:41] an executable, what we are going to have to do
+[0:25:45] is we are going to have to give it some code that it actually
+[0:25:49] understands.
+[0:25:50] And basically, I'm going to type in some wrote code now.
+[0:25:55] And then I'm going to explain to you sort of what it does.
+[0:25:57] It's sort of the simplest thing
+[0:25:59] that we can possibly type in to get to the next stage.
+[0:26:02] And here it is.
+[0:26:05] So if I now try to build this, you will notice,
+[0:26:10] and don't worry, we'll get to this in a second,
+[0:26:13] you will notice that what it does is it gets past
+[0:26:16] that step we were before.
+[0:26:17] We got to test.cpp.
+[0:26:19] And it actually was able to sort of move past that
+[0:26:22] and move on to doing other things.
+[0:26:24] Now, it tried to launch the Microsoft resource compiler.
+[0:26:28] And that was because we have a resource files thing in here
+[0:26:31] and it created this project for us
+[0:26:33] and it seems we're gonna have them.
+[0:26:34] A resource compiler is nothing fancy.
+[0:26:36] It sounds a lot better than it is.
+[0:26:38] You're like, oh, resource compiler.
+[0:26:39] I could compile my game's resource with that.
+[0:26:40] Not very likely, and you probably don't want to do that
+[0:26:44] for myriad reasons, but what the resource compiler
+[0:26:47] actually does is the resource compiler does things
+[0:26:50] like packing up an icon for your application
+[0:26:54] and sticking it in somewhere where Windows can find it
+[0:26:59] in the executable so that it can display it
+[0:27:00] next year executable and things like that.
+[0:27:02] So it is something that you do need to know how to do.
+[0:27:04] Eventually, but right now we don't care at all.
+[0:27:06] Obviously it didn't need to actually do anything,
+[0:27:08] so it finished that up.
+[0:27:09] But then it got to the step that I actually wanted
+[0:27:10] to talk about, which is linking.
+[0:27:13] Now what linking is, is linking is sort of a back half
+[0:27:19] to this compilation process.
+[0:27:21] Now what we could do, a compiler certainly could take a text file
+[0:27:26] and it could directly make an executable out of it
+[0:27:28] if that text file contained everything that it needed
+[0:27:30] to define the executable.
+[0:27:31] But what usually happens more often, and partly for legacy reasons
+[0:27:37] at this point, but what can you do?
+[0:27:41] What happens more often is you have a lot of text files.
+[0:27:44] So the code for a game could be hundreds of thousands
+[0:27:46] of lines of code.
+[0:27:47] It could be split up into lots of these CPP files
+[0:27:49] that we're going to learn how to write here.
+[0:27:52] And in order to quote unquote save compilation time
+[0:27:57] and various other reasons, what it often
+[0:28:00] wants to do is be able to compile each file
+[0:28:02] into an intermediate file doing one part of the compilation
+[0:28:06] process, one part of the producing executable.
+[0:28:08] And that intermediate file will basically
+[0:28:10] be the process that takes the text
+[0:28:12] and turns it into mostly code that the CPU connects to you.
+[0:28:16] but there are a bunch of things that aren't quite done yet,
+[0:28:20] then those intermediate files don't always have to be updated.
+[0:28:23] They only have to be updated when the particular source file
+[0:28:26] that they came from changed.
+[0:28:27] So for example, this test.cpp, if I don't change test.cpp,
+[0:28:31] it won't have to recompile test.cpp.
+[0:28:33] If I had tons of other files, foo.cpp, bar.cpp,
+[0:28:36] all these other CPP files, and I changed just one of them,
+[0:28:39] it would only have to do the recompilation on just one
+[0:28:41] of them.
+[0:28:41] But since all of them have to be pulled in and made
+[0:28:44] into an executable at the end, they basically
+[0:28:47] have a second stage to the compilation process,
+[0:28:49] which is called linking.
+[0:28:50] And that's what this line does here.
+[0:28:52] And what linking is about is linking
+[0:28:54] is about gathering all of that processing together,
+[0:28:57] all of those intermediate files, and basically resolving
+[0:29:01] the places where they point to each other.
+[0:29:05] So I may do a bunch of things in test.cpp
+[0:29:09] that are going to call out and or reference to,
+[0:29:13] or use data from other CPP files that I compiled.
+[0:29:19] And since the compiler is only looking
+[0:29:22] at each individual CPP file as it goes and compiles them,
+[0:29:25] it can't resolve those references.
+[0:29:27] It can't tell where the things are
+[0:29:30] that things are pointed to because it's only
+[0:29:31] seeing one individual file.
+[0:29:33] And so what the linker does in this link stage,
+[0:29:36] there's a thing called a linker that gets executed
+[0:29:38] separate from the compiler.
+[0:29:40] And what it is, is it is something
+[0:29:42] that gathers all those together, resolves the references,
+[0:29:45] packages this into one EXE, which you can then ship.
+[0:29:50] Now, when I say which you can then ship,
+[0:29:53] that was the good old days.
+[0:29:55] There's a lot of reasons why you can't actually just ship it,
+[0:29:58] thanks to Microsoft and their Tyler's pursuit
+[0:30:00] of making building applications complicated.
+[0:30:02] But I'm gonna hold off on that from now
+[0:30:05] so that we can focus on just the basics of the process
+[0:30:08] since it's a lot to absorb
+[0:30:10] and I don't wanna overcomplicate it
+[0:30:11] more than it already is.
+[0:30:13] Okay.
+[0:30:14] So in the linking stage,
+[0:30:16] you will see that we have gotten to our next error.
+[0:30:18] And that error is this line right here.
+[0:30:21] You'll notice that it doesn't give me a line number
+[0:30:23] and that is because Microsoft's linker
+[0:30:25] is not particularly good.
+[0:30:27] I don't know if they fixed this
+[0:30:28] in one of the more modern versions,
+[0:30:29] but even as of 2008,
+[0:30:32] their linker never bothered to tell you
+[0:30:34] where your errors are.
+[0:30:35] So all you get is which function
+[0:30:38] it was referenced in, if that makes sense.
+[0:30:41] So basically, you will know very little.
+[0:30:45] You'll know what file maybe made the error possibly,
+[0:30:48] and you'll know what function was causing the problem,
+[0:30:51] or things like that.
+[0:30:52] And we'll kind of get to what all those mean
+[0:30:54] and how to suss them out later.
+[0:30:55] But basically, you get very cryptic error message
+[0:30:57] for a linker.
+[0:30:57] Fortunately, most of the time, linker errors
+[0:31:00] are simpler errors than compiler errors,
+[0:31:02] so it's not too hard to figure out what they mean.
+[0:31:06] So looking at this error, what it says
+[0:31:08] is unresolved external symbol underscore win main at 16,
+[0:31:13] reference and function t main CRT startup.
+[0:31:16] It then goes on to tell us that that was a fatal error.
+[0:31:19] So there was one unresolved external.
+[0:31:22] And now what that means, just what I was just saying,
+[0:31:24] an unresolved external, what external means in this case
+[0:31:27] is external to the compilation unit
+[0:31:30] in which it was being used.
+[0:31:32] So when I compile test.cpp or something,
+[0:31:35] it's got a corresponding file that the compiler produced
+[0:31:38] that the linker is then pulling in,
+[0:31:40] things that are external to that file are called externals.
+[0:31:43] And when you see one unresolved external,
+[0:31:45] it means that it came across one of these
+[0:31:48] that it couldn't resolve.
+[0:31:49] It couldn't find any actual definition of that
+[0:31:52] anywhere else in the other file.
+[0:31:53] So what can it do?
+[0:31:54] It can't finish linking
+[0:31:56] because it can't figure out
+[0:31:57] what it was supposed to do there.
+[0:32:00] So again, we get an error.
+[0:32:01] This time it says two errors,
+[0:32:02] but really it was only one error.
+[0:32:04] But that's just the way I guess it decided
+[0:32:06] to print it out.
+[0:32:07] what the second error is, but hey, what are you going to do?
+[0:32:11] Anyway, now that we see what our link error is,
+[0:32:15] we can start to debug it.
+[0:32:17] So what actually happens if you think about it
+[0:32:20] when you run an executable, there
+[0:32:22] is something kind of complicated that has to occur,
+[0:32:25] which is that Windows is actually the program that's
+[0:32:29] running on your machine.
+[0:32:30] So the processor in your machine is executing Windows.
+[0:32:33] And now we have built something
+[0:32:35] that we would like Windows to start executing.
+[0:32:38] But Windows and our program were not linked together, right?
+[0:32:44] This linking step that I just explained where, hey,
+[0:32:46] we can write some stuff and it pulls it all together
+[0:32:48] and it references each other and everyone's happy.
+[0:32:51] It makes sense if we typed in all the code.
+[0:32:54] But if we only typed in some code that
+[0:32:57] has to be started by Windows or started
+[0:33:00] by some operating system, well, how does it know where
+[0:33:02] to start?
+[0:33:03] How does it actually get started?
+[0:33:05] And the answer to that is basically that the linking process,
+[0:33:09] even though it seems like we're going to finish it here in a minute,
+[0:33:12] is never actually really finished in an executable,
+[0:33:16] unless what you're building is the whole operating system.
+[0:33:19] If you are building a kernel that runs the entire machine,
+[0:33:23] then in some sense you've built the entire program
+[0:33:25] and linking can resolve all externals.
+[0:33:27] And even that maybe isn't totally true,
+[0:33:30] because even in that case, there is a BIOS in your computer,
+[0:33:33] And that BIAS has to know how to load something
+[0:33:37] and start executing it, which is the kernel that's on the disk.
+[0:33:39] So it's complicated if you actually
+[0:33:42] want to go all the way down to the bottom
+[0:33:44] and open up the Russian nesting dolls all the way down
+[0:33:46] to what's actually happening in your machine
+[0:33:48] when you actually turn it on.
+[0:33:50] But assuming that you're already running a program like Windows,
+[0:33:54] that's an operating system set up to run executable content,
+[0:33:58] the question is, how does Windows actually know where to start?
+[0:34:01] How does it know what to even do with this file?
+[0:34:04] And the answer is that executable file formats.
+[0:34:07] Executables are files on your disk, just like a bitmap
+[0:34:10] or anything else.
+[0:34:12] The executable file format is basically set up
+[0:34:14] in a way that Windows understands
+[0:34:16] so that it can open it and read it
+[0:34:18] and read out of it information
+[0:34:21] that tells it where to actually start executing.
+[0:34:25] So when Windows wants to run some of your code,
+[0:34:28] it basically can load that file into memory,
+[0:34:31] Do some work on it that it needs to do,
+[0:34:33] which we'll talk about again in a little bit.
+[0:34:35] And then it will use information that
+[0:34:37] was put in the executable by this linker, in fact,
+[0:34:41] which tells it where in the file we wanted it to actually
+[0:34:45] start executing.
+[0:34:46] So in memory, where should it actually
+[0:34:48] jump to to actually start executing it?
+[0:34:50] Tell the CPU, here's where the code is.
+[0:34:52] Go run it.
+[0:34:54] And the answer to that is, oh, sorry.
+[0:34:58] I shouldn't say the answer to that.
+[0:34:59] The way in which we tell the linker where we want it to tell windows where to start is
+[0:35:06] that we use a predefined name and we name something that name so that it can find it
+[0:35:13] in our code.
+[0:35:14] Now that's not entirely true because we actually could go into the linker itself and there
+[0:35:20] are settings which we could modify that would tell it to use some other name, for
+[0:35:24] example, Foo here.
+[0:35:26] But most of the time, nobody actually does code that way.
+[0:35:29] Most people, people just use the default name.
+[0:35:32] And that default name is actually, well, I'm going to say it's WinMain.
+[0:35:40] As we'll see in a second, it's not actually WinMain, but I don't want to spoil the surprise.
+[0:35:43] So I'm going to say that it's WinMain for now.
+[0:35:46] And what you can actually do if you, you know, you're not going to probably remember
+[0:35:50] a lot of this stuff that I'm saying, and I totally respect that.
+[0:35:53] I don't remember all this stuff all the time either.
+[0:35:56] I always am looking things up on MSDN, which I will show you in a second.
+[0:36:01] If you type WinMain into your Google search box,
+[0:36:05] you will get the first hit as this site called msdn.microsoft.com,
+[0:36:09] which we are going to be using a lot as we learn to program C in Windows
+[0:36:13] because it is basically a repository for all of the stuff that
+[0:36:17] is Windows-specific about programming.
+[0:36:20] And since we're going to be programming in Windows for a while,
+[0:36:22] that matters to us because we are constantly going to have to look things
+[0:36:25] up at least in the first couple of weeks, look up things that tell us how to interface
+[0:36:30] with the operating system. Now in here you can see the definition of WinMain, the documentation
+[0:36:36] for it, it tells us a bunch of stuff. If you are a beginning C programmer you will understand
+[0:36:40] none of this, and that is okay. One of the things I am definitely going to do in
+[0:36:45] this series is go over things many times, we're going to go over things in depth.
+[0:36:48] So you don't have to worry about the fact that a lot of the stuff that we're
+[0:36:51] going to do may not be completely understandable to you at the moment. I will always try to
+[0:36:57] explain as much as you need to know then and then we will go into more detail later as
+[0:37:01] necessary because I don't want to get too bogged down. I do want to get bogged down fairly
+[0:37:05] often but I don't want to get too bogged down. And you can also email me anytime
+[0:37:09] you have a question and we will try to work those questions into future editions
+[0:37:13] of the series. So this right here is what is called a function prototype and we're
+[0:37:20] going to be dealing with these a lot.
+[0:37:21] But basically what it does is it tells you
+[0:37:25] the way in which a particular piece of code
+[0:37:28] needs to start executing.
+[0:37:30] And we'll get into a lot of stuff with these later.
+[0:37:33] So I won't belabor the point.
+[0:37:34] But basically this is the predefined entry point
+[0:37:37] that we will be getting called at when we start executing.
+[0:37:41] And so if we want to define it in our C program,
+[0:37:44] we have to basically do something like this.
+[0:37:47] We have to go in and define this just the way that they did in here.
+[0:37:52] And when we define this, the linker will now see this symbol, this wind main symbol.
+[0:37:57] And it will know that that is the place that we wanted our execution for Windows to start.
+[0:38:05] Now, if I go to build again, and you'll see there's a shortcut to it here, which is F7.
+[0:38:09] So it's good to learn this because you build programs a lot.
+[0:38:12] If I build it with F7, you'll notice one other thing that happened here.
+[0:38:17] before we get into errors and such.
+[0:38:19] One other thing that happened here is
+[0:38:20] it saved the file automatically.
+[0:38:22] I don't know if you noticed the green line,
+[0:38:24] the yellow line turning green.
+[0:38:26] One of the things that happens by default
+[0:38:28] in the setup for Microsoft Visual Studio
+[0:38:33] is that when you build something,
+[0:38:34] it will save files that are unsaved.
+[0:38:36] That's actually something you can change here
+[0:38:37] in the tools options.
+[0:38:39] If you want to change that stuff,
+[0:38:41] there's things in here that affect things like that.
+[0:38:44] I don't happen to remember exactly where that one is.
+[0:38:46] I think it might be in documents, but I don't know.
+[0:38:52] Maybe it's in build projects.
+[0:38:53] I have no idea where it is.
+[0:38:55] You will have to hunt for it, my friends,
+[0:38:57] because I have no idea where that actually is.
+[0:39:00] But let's see.
+[0:39:04] There it is.
+[0:39:05] Before building, save all changes.
+[0:39:08] And you can set that to other things,
+[0:39:10] like don't save whatever.
+[0:39:11] So that's just a customization you're liking,
+[0:39:13] but you will notice that is why you didn't have
+[0:39:15] before I built it. So if I hit F7 it builds the file and you will see that we have gotten some errors here.
+[0:39:21] And the errors are because we have started to use window-specific things
+[0:39:26] and window-specific things aren't defined by default in our C code.
+[0:39:31] So what we have to do is we have to bring in something that defines them.
+[0:39:35] And again don't worry too much about this because we were about to discuss it in detail.
+[0:39:38] I just want to finish this one process first before we go back here.
+[0:39:41] So I have done that and now you will see, oh, lovely.
+[0:39:47] And I suppose I will have to remove these for a moment
+[0:39:50] to also build this.
+[0:39:52] Yes, fabulous.
+[0:39:53] I'm gonna put those back in
+[0:39:54] because I wanted to talk about those.
+[0:39:56] I was hoping they would be allowed.
+[0:39:57] Okay, so that did a successful build
+[0:40:01] but I wanna break this into two parts
+[0:40:02] because I can't leave these in declarations in there
+[0:40:05] until, if I want to actually build it.
+[0:40:08] So this particular definition basically
+[0:40:12] uses a bunch of words that Windows has defined themselves.
+[0:40:16] And we're going to talk a lot about how we define those things
+[0:40:18] and things later.
+[0:40:19] But I wanted to just point out some of them quickly.
+[0:40:22] These things are all stuff that Windows
+[0:40:25] defined that are specific to Windows.
+[0:40:27] They're all things that you won't probably ever actually
+[0:40:30] see if you're programming in a higher level language.
+[0:40:33] I've never really programmed in C sharp specifically.
+[0:40:36] So maybe some of this stuff still creeps through.
+[0:40:39] That's entirely possible.
+[0:40:40] But a lot of higher level languages
+[0:40:42] obscure the underlying things that
+[0:40:44] are happening in the Windows code.
+[0:40:45] And so you never will actually see them.
+[0:40:48] But when we are programming in C, and specifically
+[0:40:51] when we program in low level C, that we
+[0:40:53] want to directly interface with Windows as much as possible
+[0:40:56] to avoid any sort of intermediaries,
+[0:40:59] we will have to deal with a lot of these.
+[0:41:01] Now, I'll get into what these specifically mean in a bit,
+[0:41:04] but you will see words like this.
+[0:41:06] L P stir. Now what is L P stir mean? What what does that mean? Even an experienced C programmer
+[0:41:12] who's never programmed in Windows before would not know what LP stir meant. So it is not the
+[0:41:17] fact that I haven't explained what this definition is or how any of this stuff in this file
+[0:41:21] works. That is why you don't understand it if you're beginning if you get a program
+[0:41:24] or serve program C. This is actually complete gobbledygook to a experienced C programmer
+[0:41:30] who hasn't actually ever programmed Windows before because these are things that Windows
+[0:41:34] made up. They made them up to use to reference specific things in their
+[0:41:39] operating system which we will have to interface with. An h instance, for example,
+[0:41:43] is a running program. It's something that refers to a running program. An LP
+[0:41:48] stirrer is something that is a pointer to a string, like a string of
+[0:41:52] characters, like some text, for example. And you will notice something that
+[0:41:57] occurs in these that is kind of frustrating. These weird little h's
+[0:42:01] Because, hey, instance, well, that makes some sense.
+[0:42:04] That's English, right?
+[0:42:05] I mean, that makes some sense to you.
+[0:42:07] It's an instance of a program.
+[0:42:09] STR, that kind of makes some sense.
+[0:42:11] It could be like a string, STR string, that makes sense.
+[0:42:14] But like LP and H, and it's repeated over here.
+[0:42:18] OK, PREV instance, previous instance,
+[0:42:20] that makes sense, instance, that makes sense.
+[0:42:22] CMD line, command line, I can read this
+[0:42:24] even if I don't understand anything
+[0:42:26] about programming, it's English.
+[0:42:27] But these weird little things here, H and LP,
+[0:42:30] Those are confusing. Well, where did they come from? The answer is they come from something a long long time ago in Windows history
+[0:42:37] Called Hungarian notation and if you want to know if that's racist
+[0:42:40] Well, it probably is it's just nobody ever complained about it being racist because most people aren't racist against Hungarians
+[0:42:47] I don't think they're not a typically
+[0:42:49] Oppressed class here in Washington State. So probably no one got upset about it
+[0:42:54] But to be honest with you it's pretty racist to call it Hungarian notation
+[0:42:56] The reason it was called Hungarian notation is because the guy who introduced it was Hungarian.
+[0:43:02] I think it was Charles Simonyi. I don't actually know. I don't remember who it was, but Hungarian notation is the sort of antiquated at this point, I hope,
+[0:43:13] notion that you should prefix everything that you ever type into a programming language with some characters that tell you what the thing actually is.
+[0:43:23] So some kind of notion of what the thing is.
+[0:43:27] P in this case was pointer.
+[0:43:29] I think L was long, meaning it was a pointer
+[0:43:33] that was into memory in the old 16 bit days
+[0:43:35] that was outside the page.
+[0:43:37] I don't even remember.
+[0:43:38] I'm not gonna pretend
+[0:43:39] because I didn't even program much 16 bit windows.
+[0:43:41] So I don't, at this point, my memory of what LP stands for
+[0:43:44] is completely gone.
+[0:43:45] H is handle.
+[0:43:46] It means something that you would use to talk
+[0:43:49] to windows in an opaque way about something.
+[0:43:52] And you will see these littered everywhere.
+[0:43:53] They are super annoying because they really just do not help
+[0:43:57] and they make things harder to read.
+[0:43:59] I cannot emphasize enough, please don't do this.
+[0:44:01] This is a terrible idea.
+[0:44:03] What can I say?
+[0:44:04] Now, you will see in modern code, some people still
+[0:44:08] do a variant of this.
+[0:44:10] They will do things like P foo if something
+[0:44:14] is a pointer to foo, which we'll talk about in a while.
+[0:44:16] They'll do M foo if something is a member, which
+[0:44:19] is if you're doing object-oriented programming, which
+[0:44:21] we won't really cover.
+[0:44:21] So you'll never find out what that is,
+[0:44:23] but you can go watch someone else's programming stream
+[0:44:26] to learn about that.
+[0:44:27] Anyway, that's what these annoying things are.
+[0:44:29] And you can pretty much ignore them most of the time,
+[0:44:31] although if you know how to read it, it does help you.
+[0:44:33] If you just happen to try to decipher something
+[0:44:36] in Windows that's somewhat obtuse,
+[0:44:38] maybe you can use that to help you.
+[0:44:39] So there is that.
+[0:44:41] Anyway, the part that I want to talk about
+[0:44:44] before we get into explaining exactly what all this code
+[0:44:47] does and how C works sort of at a basic level is these things right here.
+[0:44:54] So what you will find if you actually look at Windows Code is you will see
+[0:44:59] that there's a lot of annotation in it that is not actually designed to be
+[0:45:03] processed in C necessarily, but that is designed to be processed by something
+[0:45:07] else, say a documentation system that also reads the same files or what's
+[0:45:11] called a middle compiler, which is a thing that is used to produce secondary
+[0:45:15] files for object-linketing and embedding and all this other Windows crap.
+[0:45:19] We don't care about any of that stuff, but you will see things like this that
+[0:45:25] annotate some of the functions that you call, and basically what this means in
+[0:45:29] is it's telling you what direction the data is flowing. Now it's not actually
+[0:45:35] something we want to have in here when we actually define it, it's strictly for
+[0:45:38] their header files, but when you see it when you look at MSDN you will see
+[0:45:42] it there and that is what that means. It means that this is something that is going to Windows.
+[0:45:47] It's being passed into Windows as opposed to an out parameter which is something that would be passed out to you, back from Windows.
+[0:45:55] And we will look at those, we will see those working many times as we go through getting a Windows program going obviously.
+[0:46:03] Okay, so I'm going to go in here and delete those because you don't want to leave those in, I guess.
+[0:46:08] I guess. I've never actually tried before to leave the man.
+[0:46:11] I was kind of hoping you could just so that you could just cut and paste directly,
+[0:46:13] but I guess you can't. So when we build,
+[0:46:15] we now have a successfully building program.
+[0:46:19] And what this does is this means we actually have produced an executable
+[0:46:23] file and if we want to, we can actually run the executable.
+[0:46:27] So in here, you can see there was build solution, right?
+[0:46:32] But in debug, in the debug menu,
+[0:46:35] you will also see that there is a way to actually run the program,
+[0:46:39] which is start debugging.
+[0:46:41] And that will actually run our program and off we go.
+[0:46:44] That was our program.
+[0:46:46] Did you love it?
+[0:46:47] I know it's very exciting.
+[0:46:49] So I know it seems strange, but that actually did run our program.
+[0:46:52] Our program doesn't do anything, so it just started it and then exited it.
+[0:46:56] But you can also see here some debug information that was printed out
+[0:46:59] by the actual startup code, which is telling us some things.
+[0:47:03] I'm sorry, but this is actually by the debugger, which is actually telling us some things for example
+[0:47:07] It's telling us that it loaded test.ac and it tried to produce some debug you know loads of debugging information for it
+[0:47:12] It loaded some other things that it depends on so and so forth. So we actually did run our program. Isn't that exciting?
+[0:47:18] Well, let's complete that before I explain what everything does
+[0:47:21] with one
+[0:47:23] Simple thing that we can actually see
+[0:47:33] Very exciting
+[0:47:35] We are going to run this and oh no, we are not oh man. I get to explain everything tonight
+[0:47:44] So as you can see now, the program that, as I modified, added one line to it, and now it actually prints out as part of its behavior to the debug output, it prints out a string that we wrote.
+[0:47:57] Very exciting. I know that you are all very excited. I am very excited as well about this, and I think it is safe to say that once I explain how this works, you are so on your way to creating a game with Windows.
+[0:48:09] game with Windows. I mean, if you can print something out to the debug window, how much
+[0:48:13] more work could it even be to make a game? Certainly not much. Well, maybe it's a little
+[0:48:21] more. But I'm sure we'll be able to cover it all in future episodes. So, now that we
+[0:48:26] have a working Windows program, even though it really doesn't do very much, let's go
+[0:48:31] through and see what everything did. I'd like to start first with the thing that
+[0:48:35] I typed in that couldn't actually be called by Windows because it was just a sub function,
+[0:48:39] didn't actually do anything, and wasn't in the format that it wanted in terms of linking
+[0:48:44] us.
+[0:48:46] What this is in C is a function definition.
+[0:48:50] Now hopefully most people are coming from other programming languages or have a passing
+[0:48:54] familiarity with what a function is, so I won't belabor the point too much.
+[0:48:59] But basically what a function is, is it something, it's sort of a reusable piece
+[0:49:04] of a program.
+[0:49:05] something where I can put some code in, I can put some stuff in that it can do, and
+[0:49:10] then I can use it anywhere I want to.
+[0:49:13] So anytime I want to basically go do the things that the function does, I can do what's
+[0:49:18] called a function call, and I can call into it.
+[0:49:22] Now without actually explaining the signature quite yet, we can actually see this in action
+[0:49:29] by moving the line that printed stuff out up into my function that I had defined
+[0:49:35] Now, when I run, you will notice I no longer get the print out.
+[0:49:40] You know, it's not there.
+[0:49:42] So, too bad.
+[0:49:44] How do I actually do it?
+[0:49:45] Well, I just function call that function,
+[0:49:48] and now the things that it does get done where the function call occurred.
+[0:49:52] And you can see now our printout is back.
+[0:49:55] So, basically, what a function is, is it's something that holds some code for us in a way that we can reuse.
+[0:50:02] And coding is about reuse a lot.
+[0:50:04] There's a lot of stuff in coding that has to do with sort of building little pieces that then work together to make a program.
+[0:50:11] It's very, very difficult if you were to sit down and write the entire program in one function.
+[0:50:15] That would be really, really difficult to do.
+[0:50:18] And there's a lot of reasons why you would not want to do that, which hopefully will come apparent as we go on.
+[0:50:22] But that is what a function is.
+[0:50:24] And now you'll notice our function has a couple parts to it.
+[0:50:28] The first thing it has is this word void.
+[0:50:30] What the word void means there is this section before the name of the function, which is foo.
+[0:50:35] This section here tells us if the function returns anything.
+[0:50:41] And what that means is when this function is called by somebody, when someone asks it to do the work,
+[0:50:47] does it provide anything back to that caller, to the person who invokes it?
+[0:50:53] And there's actually more ways that you can actually have that happen than just this,
+[0:50:58] But this is the most basic way.
+[0:51:01] What void means in C is basically nothing.
+[0:51:05] It's like saying, I don't provide anything back.
+[0:51:09] I am not going to give you something when you call me.
+[0:51:13] So the void in front of foo just says,
+[0:51:16] this function produces no value for its caller.
+[0:51:18] It does not actually return anything to the person who calls it.
+[0:51:24] The next part of our function declaration, as you can see here,
+[0:51:27] In parentheses is another void and what that is is sort of the opposite of the return part.
+[0:51:33] It's what does this function expect to get from the person who calls it?
+[0:51:37] So what things are going to be sent down to this function in order to get it to do the work that it needs to do?
+[0:51:45] And as you can see it's also void which means nothing.
+[0:51:48] This is a function that returns nothing and takes nothing.
+[0:51:51] And of course, that makes perfect sense given the fact that output debug string just prints out a string.
+[0:51:57] It doesn't need anything to do its work.
+[0:52:00] So that is our function.
+[0:52:03] Now, ooh, didn't mean to collapse it.
+[0:52:05] You can see these little plus and minuses here allow you to collapse functions if you're trying to, I don't know, make things more legible.
+[0:52:10] So after that, which is basically the thing that tells us, it's called the function prototype or the function signature, this right here.
+[0:52:19] This is called a function signature or prototype.
+[0:52:25] And what it does is basically,
+[0:52:29] it defines the circumstances, if you will,
+[0:52:31] for how this function is called.
+[0:52:33] What does it take?
+[0:52:33] What does it return?
+[0:52:35] We then have the function body, right?
+[0:52:37] This part right here is the function body.
+[0:52:39] Oh, and I will note this right here,
+[0:52:42] these two little slashes,
+[0:52:44] are just something that says,
+[0:52:45] I'm about to type some stuff
+[0:52:46] that's just a note to myself.
+[0:52:47] It's a comment.
+[0:52:48] It has nothing to do with the code,
+[0:52:51] but it has something to do with my thought process.
+[0:52:54] And so C allows me to do that anywhere I want to.
+[0:52:57] C and C++ have two style of comments.
+[0:52:59] There's this kind, which are bracketed by these little guys,
+[0:53:05] which is a lot like HTML.
+[0:53:06] If you ever program an HTML, you've
+[0:53:08] got these two things that you can
+[0:53:11] use to enclose things as a comment that
+[0:53:15] doesn't actually get processed.
+[0:53:16] So that's something that does it there.
+[0:53:17] And that basically says from here,
+[0:53:19] Everything ignore until you see one of these, right?
+[0:53:21] So it can be multiple lines and all that stuff.
+[0:53:24] This kind is a kind that was introduced with C++.
+[0:53:28] And what that does is it says,
+[0:53:29] ignore everything to the end of the line,
+[0:53:31] but as soon as you get to the end of the line,
+[0:53:32] start processing again.
+[0:53:33] And that's just basically to cut down on some typing.
+[0:53:35] It means you didn't have to type one of these at the end.
+[0:53:37] It's a little convenience.
+[0:53:39] It's not really that important,
+[0:53:40] but you'll find that it's more convenient
+[0:53:42] as you start to type them in.
+[0:53:44] So anyway, that's the prototype of my function.
+[0:53:46] And this is the body.
+[0:53:47] The body of the function is what it actually executes.
+[0:53:52] So when this function is invoked, this
+[0:53:55] is the code that will occur.
+[0:53:57] And everything in between these two curly braces
+[0:54:00] are things that will occur.
+[0:54:02] So all the code that we put in here
+[0:54:04] will occur on invocation of the function.
+[0:54:08] So pretty simple, right?
+[0:54:10] Not much to it.
+[0:54:11] And you can see you really don't
+[0:54:13] need much else to understand what our function actually
+[0:54:15] does, the code inside the function.
+[0:54:17] It's awfully simple because all it does is it calls another function a function
+[0:54:21] We didn't define called output debug string a and I'm gonna talk about what the a is in a second
+[0:54:28] Anyway, as you can see when I want to call a function the syntax actually looks something like the prototype of the function
+[0:54:35] These parentheses here much like they defined what I was going to take
+[0:54:39] These parentheses contain the things that I'm going to pass to the function.
+[0:54:46] So in this case, I didn't take anything. But output debug string takes a string.
+[0:54:51] And in C, the way that you define a basic string, just a simple string, is you put quotes, double quotes.
+[0:54:58] Anything in between the double quotes is part of the string.
+[0:55:01] So this is a string that I have made, and I am passing it to output debug string so that it can print it out.
+[0:55:07] Output debug string is a function that works with the operating system in order to actually send stuff to our debug output stream
+[0:55:15] Which the debugger captures and prints over here now?
+[0:55:18] We'll talk a little bit more about that although debugging services on windows is probably not something
+[0:55:22] We're going to cover in too much deep detail
+[0:55:23] But I will talk a little bit more about how that stuff works more in-depth after we kind of go through and are more comfortable with
+[0:55:28] Just basic c code
+[0:55:30] Okay, so after that function is called you'll notice there's a semi colon a
+[0:55:35] A semicolon is a way in C of telling the compiler that you're finished with a particular logical line of code.
+[0:55:42] Now, it's not a particularly useful piece of syntax. It is a relatively useless piece of syntax.
+[0:55:50] A lot of languages don't need semicolons, and a lot of languages only need semicolons once in a while,
+[0:55:55] or end of line delimiters, I should say it once in a while, end of statement delimiters.
+[0:55:59] But basically all it does in C and C++ is let the compiler know that the things on that line
+[0:56:05] the things that were part of a logical piece of code have now concluded and so there might be more things on here that are
+[0:56:12] Part of this logical line of code and we'll sort of see more of those later
+[0:56:14] But basically the semi colon says that's the end and that's called a statement
+[0:56:19] One line of code like that's terminated by a semi colon
+[0:56:22] Because it could actually go on for longer the end of line the actual end of the text line
+[0:56:27] doesn't really mean anything in C++.
+[0:56:30] It's not like Python or languages
+[0:56:32] where white space means something.
+[0:56:34] In general, like this white space here
+[0:56:36] that I used to indent to put this thing
+[0:56:39] so I could see that it was part of this function more easily,
+[0:56:41] that's purely my decision.
+[0:56:42] C doesn't care, C++ doesn't care about that.
+[0:56:45] Similarly, it doesn't care about this white space.
+[0:56:48] Basically the only time C were to care about white space
+[0:56:50] would be if you were to insert it into something
+[0:56:53] that was supposed to be a single name.
+[0:56:54] White space does break up names in C.
+[0:56:58] And so basically, outputDbug stringA would not work.
+[0:57:01] If I were to compile this, you would see that it would say
+[0:57:04] that it doesn't know what outputDbug is.
+[0:57:07] And the reason is because it saw the space
+[0:57:08] and thought that that was a complete name,
+[0:57:10] that it should start to look and see what it means,
+[0:57:12] and it can't do that.
+[0:57:13] So I'm going to get rid of that
+[0:57:14] and go back to where we were.
+[0:57:16] So anyway, that is basically how a line of code looks
+[0:57:20] in C inside a function.
+[0:57:23] Now, let's go down to our more complicated function over here,
+[0:57:26] the one that Windows calls.
+[0:57:28] So if you look here, it's got a whole lot of decoration on it,
+[0:57:31] a lot more than we have here.
+[0:57:33] It's got something called int at the beginning.
+[0:57:34] Now we know that that is the place
+[0:57:37] where the return value goes,
+[0:57:38] where the thing that comes back from the function is placed.
+[0:57:42] This, in this case, int in C is a special keyword.
+[0:57:46] It means integer.
+[0:57:47] So much like void is a special keyword in C
+[0:57:50] that tells it nothing.
+[0:57:52] int is a special keyword that says an integer value is going to come back.
+[0:57:55] A number, basically a whole number, negative 5, 12, something like this,
+[0:58:01] is going to be returned from this function to whoever calls it whenever they call it.
+[0:58:07] Callback is a piece of syntactic icing,
+[0:58:13] which actually expands to something else entirely.
+[0:58:18] It is what we call macro in C, and we'll look at those a little bit later on
+[0:58:21] when I dive into this windows.h file.
+[0:58:23] And basically what it does is it expands
+[0:58:26] to some special decoration that are used
+[0:58:29] only in Windows,
+[0:58:32] only for this particular Windows call point.
+[0:58:34] And it's decoration that tells the linker
+[0:58:38] and the compiler that this function is special.
+[0:58:42] It is a function that must adhere to a special convention
+[0:58:46] because since Windows was not compiled
+[0:58:49] as part of our program
+[0:58:49] and our program is not compiled as part of Windows,
+[0:58:53] they will have to agree on how functions are called,
+[0:58:57] if that makes sense.
+[0:58:58] They will have to agree on a convention.
+[0:59:00] And we'll talk about that a little more
+[0:59:01] when we start to talk about exactly
+[0:59:02] how C actually generates this code.
+[0:59:05] But I think that'll probably be next video.
+[0:59:09] So anyway, put that in the back of your mind for now,
+[0:59:11] but suffice to say this is a special macro
+[0:59:13] that we're going to look at in the future
+[0:59:14] that tells the compiler and the linker
+[0:59:17] that this is a special function,
+[0:59:19] not like our run in the mill function.
+[0:59:20] And then it has certain constraints
+[0:59:22] that have to be met when it is compiled.
+[0:59:24] We then have the parameters to the function,
+[0:59:26] the things that the caller provides.
+[0:59:28] These are things that are being passed into the function
+[0:59:30] that the function can use.
+[0:59:31] We didn't use any, we said void here,
+[0:59:33] but WinMain uses a few.
+[0:59:37] I shouldn't say it uses a few.
+[0:59:38] It has access to a few.
+[0:59:41] The first one, this h instance,
+[0:59:43] is actually just a handle to ourselves.
+[0:59:46] What it is, is it's basically a handle that we can use
+[0:59:50] when we're talking to Windows again,
+[0:59:51] if we should need to talk to Windows,
+[0:59:53] to refer to our running program.
+[0:59:56] So for example, let's say we need to do something
+[0:59:58] that is very Windows-specific, a very Windows-specific service,
+[1:00:00] and we're going to ask the Windows kernel,
+[1:00:02] hey, we need you to do something
+[1:00:04] to our running executable.
+[1:00:06] We need you to tell us about the memory that it's using,
+[1:00:08] or we're gonna access the debug heap.
+[1:00:10] We're gonna do some stuff,
+[1:00:11] and we're specifically referencing this copy,
+[1:00:15] our copy in memory of our executable code.
+[1:00:18] That is what this handle does.
+[1:00:20] It is a handle that we can pass back to Windows
+[1:00:23] to refer to ourselves.
+[1:00:24] Now it turns out you don't really need to actually
+[1:00:27] remember this or use it very often
+[1:00:28] because most of the time you can get it by back channel
+[1:00:31] but we'll cover that later too.
+[1:00:32] Prev Instance you can completely ignore.
+[1:00:34] It is a legacy thing.
+[1:00:36] You will never need it in game programming.
+[1:00:38] It's basically something that you needed to use
+[1:00:41] in older versions of Windows sometimes
+[1:00:43] in order to do things that had to do with previous runs of your program or things like this,
+[1:00:48] previous versions of your program that were running in memory and so on.
+[1:00:52] This right here, much like this string that we created, this is the first thing we have
+[1:00:58] actually printed string, this LPster LP command line is basically what got sent to us when
+[1:01:06] we were run.
+[1:01:08] Now the interesting thing about that is although it's called LP command line and is referring
+[1:01:14] to it as if we're going to call something from a command line which we have not talked
+[1:01:17] about yet and which you may have no idea what it is but I will show you briefly what it
+[1:01:22] actually is.
+[1:01:23] If you go into all programs you can go to a thing called accessories and in accessories
+[1:01:29] there is a command prompt.
+[1:01:32] If you go to that you will get this thing.
+[1:01:35] This is a command line and we will be talking about how to use it later.
+[1:01:38] But what it allows you to do is it allows you to run things
+[1:01:41] like I can run notepad, for example, from it.
+[1:01:44] It allows you to run things, and you can pass stuff to them
+[1:01:47] on here that they will receive.
+[1:01:49] Now, of course, if I tried to pass that,
+[1:01:51] it'd be like, I don't know what you're talking about,
+[1:01:53] because notepad doesn't want to hear any of that.
+[1:01:55] But when you look at this, you'll think, oh, LP command
+[1:01:57] line.
+[1:01:58] Well, I don't really need that, because my thing is not
+[1:02:00] going to be called from that command line.
+[1:02:02] And we just talked about it at the very beginning of this
+[1:02:04] episode, the fact that we're not
+[1:02:05] going to be building a console application or a command line
+[1:02:07] application.
+[1:02:08] So I don't care about that.
+[1:02:09] Well, not exactly true.
+[1:02:11] If you go in here and you open up something,
+[1:02:14] let's say, a notepad itself, and I go to properties,
+[1:02:18] you will notice that there's a bunch of stuff in here.
+[1:02:21] Well, this target line, this thing that says target,
+[1:02:25] it actually allows you to put the command line after here.
+[1:02:29] So it's entirely possible to ship Windows programs
+[1:02:31] that are not run from the command line,
+[1:02:33] that will never be run from the command line
+[1:02:34] because no one will ever run them there
+[1:02:36] that still take a command line.
+[1:02:38] And so it's important to know that that's there.
+[1:02:41] Now, there's other ways to get at that too,
+[1:02:42] but again, we'll talk about some of those later.
+[1:02:44] But that's what that's passing in.
+[1:02:46] And finally, int and command show
+[1:02:49] is basically a parameter that gets back again
+[1:02:51] to this sort of properties thing.
+[1:02:54] I don't even know if it's still there.
+[1:02:57] So I'm just gonna see if it is.
+[1:03:00] And advanced, no.
+[1:03:03] Details, compatibility, I don't know.
+[1:03:09] There it is, nevermind, it was on the home thing all the time.
+[1:03:12] Now you'd notice that for legacy reasons,
+[1:03:14] there's no one who almost no one ever uses this,
+[1:03:16] but there is still a dropdown that says
+[1:03:18] whether you want to run a particular application
+[1:03:20] minimized or maximized or just in the normal window
+[1:03:23] that it would open if it wasn't told
+[1:03:24] to do anything specific.
+[1:03:25] Well, that gets passed to you right here,
+[1:03:28] end command show.
+[1:03:29] And that is basically a number that corresponds to which of those things was selected.
+[1:03:35] And we'll look at that in a little more detail later.
+[1:03:38] It's not particularly exciting, but you know, you might as well, it's there.
+[1:03:41] So anyway, those are the things that we are passing when we start up.
+[1:03:44] And then we have another function body just like we had up here.
+[1:03:46] And we call a function just like this called a function.
+[1:03:49] And that function is our own function.
+[1:03:50] And it does output debug string.
+[1:03:53] That is a complete C program with a function calling in even.
+[1:03:57] but that you don't quite know everything about because there's things in here that are defined elsewhere.
+[1:04:03] And so the question becomes, well, you know, if I was to do this, if I was to just run that,
+[1:04:11] you will notice that I couldn't do it because it says that foo identifier was not found, right?
+[1:04:18] Because I deleted that from my program.
+[1:04:21] And when we get to the... well, okay, you know what? I should mention one other thing.
+[1:04:27] You may wonder at this point, since there was no Foo, why wasn't that a linker error instead of a compilation error?
+[1:04:33] Because this is a compilation error. Remember I said in the past, a linker is the thing that gathers things up into one piece
+[1:04:40] so that they can essentially be taken and made into, you know, and have their references sort of recombined
+[1:04:50] and all point to each other in the proper way.
+[1:04:52] So you would think that that error would come then, right?
+[1:04:55] Why does it come during compilation?
+[1:04:56] Because it should have come at the step
+[1:04:58] when people try to resolve references.
+[1:04:59] Well, the reason for that,
+[1:05:01] and this is actually a good thing to bring up,
+[1:05:03] I'm happy that I remembered that.
+[1:05:08] One of the reasons that that happens is because C
+[1:05:12] and C++ are languages in which you are never allowed
+[1:05:15] to use something which has not been defined yet.
+[1:05:18] In C, there were looser restrictions on this.
+[1:05:21] And so some things in C would work even if you didn't define them yet.
+[1:05:25] In C++, they tightened that down.
+[1:05:27] They tightened the ratchet on that.
+[1:05:28] So you always have to define things before they are called.
+[1:05:31] Since this isn't defined, it can't be called.
+[1:05:34] Now that may lead to you wondering, well,
+[1:05:36] if you can't actually call something unless it's defined,
+[1:05:42] well, how are there ever unresolved external symbols at link time?
+[1:05:46] It doesn't even make any sense.
+[1:05:47] And the answer to that is C allows you to do what's called a forward declaration.
+[1:05:52] Functions are split into two parts essentially.
+[1:05:54] They are split into a declaration and a definition.
+[1:05:59] Now a definition is the full thing.
+[1:06:02] It's the full function.
+[1:06:03] It has the prototype and it's got the body.
+[1:06:05] So it actually is the thing that you need if you wanted to run it.
+[1:06:09] But you can instead make just what's called a declaration and a declaration
+[1:06:14] looks like this.
+[1:06:15] It is the first part.
+[1:06:16] And you know what? Let's make another function.
+[1:06:19] I'm sorry, another comment.
+[1:06:20] Function declaration.
+[1:06:23] Function definition.
+[1:06:26] Maybe I'll do it this way.
+[1:06:29] Don't you just love the pretty green comments?
+[1:06:31] They're so lovely.
+[1:06:32] Anyway, inside here, we basically have the same exact stuff
+[1:06:37] that we had here.
+[1:06:39] But instead of it actually providing the body,
+[1:06:42] it just puts the semicolon and ends.
+[1:06:44] It basically uses that I'm done semicolon marker
+[1:06:47] to say, I'm not actually going to tell you the body.
+[1:06:49] I'm just going to tell you the signature.
+[1:06:51] And once you have that signature, you
+[1:06:55] will see that I can actually build.
+[1:06:57] And you'll notice that now our compiler has become a link error.
+[1:07:00] And the reason it became a link error is because now it's
+[1:07:02] legal to call the function during compilation.
+[1:07:05] And the compiler will just assume
+[1:07:08] that since it has all the information it
+[1:07:10] needs to call the function, which is the signature,
+[1:07:12] it knows what it needs to pass.
+[1:07:13] It knows what it will get back.
+[1:07:14] It just goes ahead and does the compilation
+[1:07:17] necessary to produce that call and leaves essentially a marker in there that says,
+[1:07:21] hey, linker, when you find this function,
+[1:07:24] please patch it in here because I would like to call it. All right.
+[1:07:28] So, wow, this is a,
+[1:07:31] this is quite the, the laryngitis inducing stream.
+[1:07:34] I'm going to have to talk quieter, I guess from now on. Anyway.
+[1:07:39] So, uh, we actually fully defined our function.
+[1:07:43] So we have a fully buildable program.
+[1:07:45] But who defined this function?
+[1:07:48] For that matter, who defined this stuff?
+[1:07:51] You'll notice that these things in
+[1:07:52] blue that are automatically being syntax
+[1:07:55] highlighted by Visual Studio,
+[1:07:57] these things in blue,
+[1:07:59] they are keywords, they are built into the compiler.
+[1:08:01] You can actually type these in along with say the brackets,
+[1:08:04] the semicolons, the parentheses.
+[1:08:06] These are part of the language.
+[1:08:08] They will work anywhere.
+[1:08:09] They will work on any C compiler that you ever want to use.
+[1:08:13] But all this stuff, where did that come from?
+[1:08:15] That's not in the second power.
+[1:08:16] You'll notice it's not turning blue.
+[1:08:17] It is not a keyword.
+[1:08:18] I can tell you that.
+[1:08:21] And neither is this guy.
+[1:08:22] And we didn't define that function, so where did it come from?
+[1:08:25] The answer is this defined that function.
+[1:08:28] So we're going to get to the last line here,
+[1:08:30] and then we're going to wrap it up for tonight,
+[1:08:32] because I want to try and keep these to roughly an hour,
+[1:08:35] and we are about at an hour in 10 minutes.
+[1:08:37] So OK.
+[1:08:40] This is a line which says, I want you to go find this file.
+[1:08:45] It is actually a file name.
+[1:08:47] It could have a complete path if you wanted, whatever.
+[1:08:51] It could be a full on, you know, anything,
+[1:08:53] any file name you want to put in there.
+[1:08:55] Although in general, most of the time you use forward
+[1:08:58] slashes, even though you're on Windows,
+[1:08:59] because forward slashes work for includes,
+[1:09:02] no matter where you are,
+[1:09:03] whereas back slashes only work on Windows,
+[1:09:05] but that's minutia.
+[1:09:06] Anyway, point being, it's a file name,
+[1:09:08] any file on the drive, you can include.
+[1:09:11] And really all it means for all intents and purposes
+[1:09:14] is go get this file and stick the entire contents of it
+[1:09:19] right here.
+[1:09:20] So this essentially makes our very simple program,
+[1:09:24] that's only a dozen or so lines long,
+[1:09:26] it actually makes this a very long program
+[1:09:29] because it goes and puts this file.
+[1:09:32] Oh, I should tell you how to do that.
+[1:09:34] If you right click on one and it knows where to find it,
+[1:09:37] you can go open document and it will jump right to that file, which is kind of nice.
+[1:09:42] Okay, so this is windows.h, which is the file that we included.
+[1:09:45] Now it may not look like much.
+[1:09:47] It may look like a bunch of gobbledygook, but relatively minor gobbledygook.
+[1:09:50] It's not.
+[1:09:51] It's absolutely massive.
+[1:09:52] And the reason for that is it's all just a bunch of more includes.
+[1:09:56] It's going to include this, right?
+[1:09:58] It's going to go down here and it's going to include this.
+[1:10:02] And it's going to include all of these things, right?
+[1:10:06] Who knows? You'd have to go interpret all the crazy stuff in there to even know what it's including.
+[1:10:10] And all of those things include more things.
+[1:10:13] Half of these things have includes in them as well.
+[1:10:15] This one includes this one.
+[1:10:17] So there's a huge nightmare.
+[1:10:19] I'm going to go ahead and close these with this little X,
+[1:10:21] so I don't actually need these to be open.
+[1:10:22] But anyway, pound including this, pound includes windows.h,
+[1:10:27] which pounds includes all kinds of stuff from the operating systems include files.
+[1:10:33] And those include files are designed to define a bunch of functions like these that you used to interface with Windows and a bunch of special macros and types and other things that we'll get into next week that are designed for you to be able to receive information from Windows as well.
+[1:10:50] And so that is who defined this, that is who defined all of these things, and that is why this is a complete program because without it it would not be.
+[1:10:59] Alright, now I think that's a good place to stop because the next step here is
+[1:11:05] we're going to start to look at exactly how this program worked. We're going to
+[1:11:08] step into the assembly language that was actually generated. We're going to look at
+[1:11:12] how linking actually works. We're going to talk about the C runtime library and
+[1:11:15] we're going to look at why I said win main was actually a little bit of a
+[1:11:22] misdirection. Why it's not really the entry point for your program even though
+[1:11:28] So I said it was the entry point for the program and it sure seems to have been the
+[1:11:31] entry point for the program.
+[1:11:34] All that we will get to tomorrow, I believe, as we further continue our introduction to
+[1:11:41] see programming on Windows.
+[1:11:42] I hope you have enjoyed this stream and I am going to stop the recording now, but
+[1:11:49] I will continue to take questions on the live stream and I will split those into
+[1:11:56] a separate recording.

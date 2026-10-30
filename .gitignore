@@ -1,0 +1,29 @@
+# Build output (MSVC)
+build/
+*.obj
+*.exe
+*.pdb
+*.ilk
+*.idb
+*.exp
+*.lib
+*.map
+*.i
+x64/
+Debug/
+Release/
+.vs/
+*.sln.docstates
+*.vcxproj.user
+
+# Media (keep videos out of git)
+*.mp4
+*.mkv
+*.wav
+
+# Claude Code local-only settings
+.claude/settings.local.json
+
+# OS
+.DS_Store
+Thumbs.db
