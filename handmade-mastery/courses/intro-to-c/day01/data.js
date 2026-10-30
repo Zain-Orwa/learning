@@ -768,6 +768,10 @@ window.STUDY.how = `<h2>How this page works</h2>
 <li><b>Answer.</b> Answer the questions before you see any explanation. "Copy for Claude" copies the question and your answer so any Claude account can grade it.</li>
 <li><b>Explain → Experiment → Read code → Flashcards → Why it matters.</b> The rest of the part, one step at a time.</li>
 <li><b>Break.</b> After each part: a short break (5 min), and a longer one (15 min) after every 3 parts. Or stop for today.</li></ol>
+<h3>Your time, your schedule</h3>
+<p><b>Saturday and Sunday are study days.</b> Each session starts with “How much time do you have today?”. Pick 30 min to 3 h, and the page plans what fits (reviews first, then parts, about 1.3 × video minutes + 30 min each), shows a countdown, and warns you 10 minutes before the end so you stop at a clean point. <b>Monday to Friday are review days:</b> a notification at 12:48 brings your due reviews and 2 interview questions.</p>
+<h3>Interview corner</h3>
+<p>Many parts end with a real interview question: how an interviewer asks it, the follow-ups, and what a strong answer includes. Answer out loud, then write it. You're graded strictly in %. These questions join your reviews, and when an area has enough of them, Claude runs a mock interview (<code>/interview</code>).</p>
 <h3>Coming back</h3>
 <p>The page saves your exact place in this browser, down to the second in the video. Next time it says <b>Welcome back</b>, offers a quick card warm-up, and continues where you stopped.</p>
 <p>When you stop for today, press <b>Copy position</b> and paste it to Claude (<code>/study</code>), so it can save your place in <code>journey/STATE.md</code> for every account and machine.</p>
@@ -830,4 +834,69 @@ const T = {
   mistake:"Thinking `#include <windows.h>` adds Windows's code to your program. It adds only declarations; the code lives in Windows's DLLs."}
 };
 window.STUDY.blocks.forEach(b=>Object.assign(b, T[b.id]||{}));
+})();
+
+/* ---- interview corner: real interview-style questions on this day's material ----
+   Each: q (how an interviewer asks it), area, level, followups, strong (checklist with % weights = 100),
+   redflags, source, grows (optional: the answer gets bigger later in the course). */
+(function(){
+const IV = {
+ b02:[{area:"os-windows",level:"junior",
+  q:"On Windows, what's the difference between a console application and a GUI application? Can one .exe be both?",
+  followups:["Where is that difference stored?","What happens if you build a GUI program as a console program?"],
+  strong:[["It's decided at build time by a flag in the .exe header (the subsystem: CONSOLE or WINDOWS)",35],["Console: Windows gives the program a text console; GUI: no console, the program makes its own windows",30],["The subsystem also decides which start function the startup code calls (main vs WinMain)",20],["Not cleanly both: on Windows one .exe is one or the other (there are workarounds)",15]],
+  redflags:["Saying the difference is only whether it uses printf"],
+  source:"Common Windows-programming interview question; the subsystem appears in every PE header (`dumpbin /headers`)."}],
+ b03:[{area:"toolchain",level:"junior",
+  q:"What's the difference between a Debug build and a Release build?",
+  followups:["Why is it harder to step through a Release build in the debugger?","Why might a bug appear only in Release?"],
+  strong:[["Debug: no (or few) optimizations; Release: optimized for speed",35],["Debug keeps full debug information, so each line maps simply to machine code and the debugger can follow it",25],["Debug often includes extra checks and developer-only code (test code, debug menus, editors)",20],["Same source, different output: the configuration also picks the platform (x86/x64)",20]],
+  redflags:["\"Release is just Debug without the debugger\""],
+  source:"Classic C/C++ interview question; appears in many game-studio interview reports."}],
+ b04:[{area:"cpu",level:"junior",
+  q:"What's the difference between a CPU core, a hardware thread (hyperthread) and a logical processor? Does hyperthreading double performance?",
+  followups:["Task Manager shows 16 logical processors on a 2-socket machine. How many cores could that be?"],
+  strong:[["A core is a full execution engine inside the chip; one chip has several cores",30],["A hardware thread is an extra saved thread state on one core; the core runs both through the same execution units",30],["The OS counts each hardware thread as a logical processor (sockets × cores × threads per core)",20],["No, it doesn't double: the threads share the core's units; it helps mostly by filling idle time (e.g. waiting on memory)",20]],
+  redflags:["Treating a hyperthread as a full core"],
+  source:"Common systems / performance interview question (game studios ask about cores and threads before multithreading questions)."}],
+ b05:[{area:"toolchain",level:"junior",
+  q:"Explain the difference between a compiler error and a linker error, with one example of each.",
+  followups:["What does \"unresolved external symbol\" mean, and how would you fix it?","Why do C and C++ compile files separately and link them later?"],
+  strong:[["The compiler works on one .cpp (translation unit) at a time and makes an object file; its errors are about the text: syntax, unknown names, types",30],["The linker joins all object files and libraries, resolves names between them and writes the .exe; its errors are about symbols",30],["Example compile error: using a name that was never declared / a missing semicolon",10],["Example link error: a function declared and called but never defined, or a missing library (unresolved external)",20],["Why separate: only changed files need recompiling",10]],
+  redflags:["Trying to fix a linker error by changing syntax"],
+  source:"Classic C/C++ interview question (compilation vs. linking; \"undefined reference / unresolved external\")."}],
+ b06:[{area:"os-windows",level:"junior",
+  q:"What happens, step by step, when you double-click an .exe on Windows, until the program's code starts running?",
+  followups:["Who decides where execution starts?","Is WinMain really the first code that runs?"],
+  strong:[["The .exe is a file in a known format (PE) with headers Windows reads",25],["Windows loads the code and data into memory (and does some fix-up work)",25],["The linker stored an entry point address in the header; Windows makes the CPU jump there",30],["The linker found that start function by a predefined name; it can be changed with a linker option",20]],
+  redflags:["\"Windows just runs main()\" with no idea how it finds it"],
+  source:"Very common interview question in many forms (\"what happens when you run a program\").",
+  grows:"Your answer grows later: the C runtime startup (Intro to C Day 2) and virtual memory/loading (Day 5)."}],
+ b07:[{area:"os-windows",level:"junior",
+  q:"What is a handle in an operating-system API? Why does Windows give you handles instead of pointers to its own data?",
+  followups:["Give two examples of Windows handles."],
+  strong:[["A handle is an opaque value that refers to an object the OS manages",35],["You pass it back to the OS to ask for something on that object",25],["The OS keeps its real data private: you can't read or break it, and it can change the details without breaking programs",25],["Examples: HINSTANCE (your running program), HWND (a window), file handles",15]],
+  redflags:["Saying a handle is just a pointer you can dereference"],
+  source:"Common Windows / OS interview question."}],
+ b10:[{area:"toolchain",level:"junior",
+  q:"Why must a program and the operating system agree on a calling convention when the OS calls a function in your program?",
+  followups:["How does WinMain's declaration show that agreement?"],
+  strong:[["They were compiled separately, so the rules for passing arguments and returning values must match exactly",50],["If they don't match, arguments land in the wrong places and the program breaks",25],["WinMain is marked CALLBACK, a macro that selects the convention Windows expects",25]],
+  redflags:["Thinking the compiler can figure it out automatically across the OS boundary"],
+  source:"Systems interview topic (ABI / calling conventions).",
+  grows:"The details (registers, stack) come later in the course, when Casey covers calling conventions."}],
+ b11:[{area:"c-language",level:"junior",
+  q:"What's the difference between a declaration and a definition in C?",
+  followups:["You call a function that is declared but never defined. Do you get a compile error or a link error? Why?","Where do declarations usually live, and why?"],
+  strong:[["A declaration says a function exists and how to call it (signature, ends with ;)",30],["A definition is the signature plus the body: the actual code",30],["A declaration is enough for the compiler to generate the call; the linker later connects it to a definition",25],["Declared but never defined gives a link error (unresolved external), not a compile error",15]],
+  redflags:["Mixing up the two, or saying a declaration creates code"],
+  source:"Classic C/C++ interview question (\"declare vs define\")."}],
+ b12:[{area:"c-language",level:"junior",
+  q:"What does #include actually do? And what's the preprocessor?",
+  followups:["Why can including a big header like windows.h slow your build?","Does #include <windows.h> add Windows's code to your program?"],
+  strong:[["#include pastes the whole content of the named file at that spot, before compilation",35],["The preprocessor is a text pass that runs before the compiler proper and handles # lines",25],["Includes nest, so one header can pull in tens of thousands of lines (slower builds)",20],["Headers add declarations; the real code lives elsewhere (e.g. Windows's DLLs), connected by the linker",20]],
+  redflags:["Thinking #include links a library"],
+  source:"Classic C/C++ interview question."}]
+};
+window.STUDY.blocks.forEach(b=>{ if(IV[b.id]) b.interview=IV[b.id]; });
 })();

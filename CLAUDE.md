@@ -57,7 +57,23 @@ everything else), so both machines can edit safely.
 
 **The learning method** (five principles, strict grading, mentor behavior,
 lesson template, review schedule) is in `docs/learning-method.md`. Read it
-once per session.
+once per session. **Interview preparation** (areas, drills, mock interviews)
+is in `docs/interview-prep.md`.
+
+## Schedule: flexible, set by Zain
+
+- **Study days: Saturday and Sunday** (new material). No fixed hours.
+- **Review days: Monday to Friday.** The daily task (12:48 Europe/Berlin)
+  asks due reviews plus 2 interview questions.
+- **"start"** (any day): Zain says *start*, usually with how much time he has
+  ("start, 1h30"). If he gives no time, ask. Then:
+  1. Reviews due first (keep them to about 15% of the time).
+  2. Continue exactly where he stopped (`journey/STATE.md` → Study position,
+     or the study page).
+  3. Plan only what fits the time; say the plan in 2–3 lines. A part takes
+     about 1.3 × its video minutes + 30 minutes (the page shows estimates).
+  4. Last 10 minutes: interview corner, save the position, commit and push.
+  The study page has the same planner ("How much time do you have today?").
 
 ## Subjects
 
@@ -66,8 +82,8 @@ once per session.
 | `handmade-mastery/` | Casey Muratori: *Intro to C on Windows* → *Handmade Hero* | Setting up |
 
 To add a subject: create a folder with its own `CLAUDE.md`, `README.md`,
-`journey/STATE.md`, `journey/DECISIONS.md` and `journey/REVIEWS.md`, and add
-a row to this table. The daily review task checks every subject's `REVIEWS.md`.
+`journey/STATE.md`, `journey/DECISIONS.md`, `journey/REVIEWS.md` and
+`journey/INTERVIEWS.md`, and add a row to this table. The daily review task checks every subject's `REVIEWS.md`.
 
 ## Commands (skills in `.claude/skills/`)
 
@@ -75,3 +91,4 @@ a row to this table. The daily review task checks every subject's `REVIEWS.md`.
 |---|---|
 | `/study` | Study session: saves the page position, grades, parked questions, builds kits |
 | `/review` | Spaced-review session: asks about everything due in `REVIEWS.md`, grades in %, reschedules |
+| `/interview` | Interview practice: drill, mini mock, area mock or full interview day; real-interviewer style, strict debrief |

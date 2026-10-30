@@ -126,6 +126,14 @@ textarea{min-height:88px;resize:vertical}
 .miss{margin:6px 0 0;padding-left:20px}
 .guessbox{border:1px solid var(--ip);border-radius:8px;padding:12px 14px;margin:12px 0;background:color-mix(in srgb,var(--ip) 8%,var(--panel))}
 .guessbox h3{margin:0 0 4px;font-size:16px}
+.plan{border:1px solid var(--rule);background:var(--panel);border-radius:8px;padding:12px 16px;margin-bottom:16px}
+.plan b{font-family:var(--f-display)}
+.plan ol{margin:6px 0 0;padding-left:20px}
+.plan.warn{border-color:var(--warn);background:color-mix(in srgb,var(--warn) 10%,var(--panel))}
+.timechips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+#timer{font-family:var(--f-mono);background:var(--ip);color:var(--ip-ink);border-radius:4px;padding:1px 8px}
+#timer.low{background:var(--bad);color:#fff}
+.ivq{border-left:4px solid var(--link)}
 details.model{margin-top:8px} details.model summary{cursor:pointer;color:var(--muted);font-size:14px}
 .card{margin:14px 0}
 .card .face{border:1px solid var(--rule);border-radius:10px;min-height:150px;padding:22px;display:flex;flex-direction:column;justify-content:center;background:var(--panel)}
@@ -168,7 +176,7 @@ td.mono{font-family:var(--f-mono);font-size:13px;white-space:nowrap}
       <div class="eyebrow" id="eyebrow"></div>
       <h1 id="h1"></h1>
     </div>
-    <div class="meter" aria-live="polite"><span id="pct">0%</span><span class="bar"><i id="pctbar" style="width:0"></i></span><span id="saved" class="small">saved in this browser</span></div>
+    <div class="meter" aria-live="polite"><span id="pct">0%</span><span class="bar"><i id="pctbar" style="width:0"></i></span><span id="saved" class="small">saved in this browser</span><span id="timer" class="small" hidden></span></div>
   </header>
   <nav class="tabs" id="tabs" aria-label="Sections"></nav>
   <main id="view"></main>
@@ -196,12 +204,12 @@ const md = s=>esc(s).replace(/`([^`]+)`/g,"<code>$1</code>").replace(/\*\*([^*]+
 $("#eyebrow").textContent=D.eyebrow||""; $("#h1").textContent=D.title||document.title;
 
 /* ---------- state + persistence ---------- */
-const FRESH={v:2,cur:D.blocks[0].id,step:"watch",tab:"path",done:{},completed:{},vt:{},recall:{},cmp:{},guess:{},rfb:{},cdate:{},park:{},answers:{},fb:{},cards:{},notes:{},speed:1,lastVisit:0,sessionParts:0,brk:null,stopped:false};
+const FRESH={v:2,cur:D.blocks[0].id,step:"watch",tab:"path",done:{},completed:{},vt:{},recall:{},cmp:{},guess:{},rfb:{},cdate:{},ivans:{},ivfb:{},session:null,park:{},answers:{},fb:{},cards:{},notes:{},speed:1,lastVisit:0,sessionParts:0,brk:null,stopped:false};
 let S=JSON.parse(JSON.stringify(FRESH));
 const LS=D.storageKey||"study-kit";
 try{const raw=localStorage.getItem(LS); if(raw) S=Object.assign(S,JSON.parse(raw));}catch(e){}
 let welcome = S.lastVisit && (Date.now()-S.lastVisit>30*60*1000) && Object.keys(S.done).length>0;
-if(welcome){S.sessionParts=0; S.brk=null; S.stopped=false;}
+if(welcome){S.sessionParts=0; S.brk=null; S.stopped=false; S.session=null;}
 S.lastVisit=Date.now();
 let dbRef=null, saveT=null;
 function save(){
@@ -318,7 +326,7 @@ document.addEventListener("keydown",e=>{
 });
 
 /* ---------- tabs ---------- */
-const TABS=[["path","Study path"],["review","Review"],["parked","Parked"],["tools","Toolbox"],["how","How to study"]];
+const TABS=[["path","Study path"],["review","Review"],["interview","Interview"],["parked","Parked"],["tools","Toolbox"],["how","How to study"]];
 function renderTabs(){
   const due=dueCards().length;
   $("#tabs").innerHTML=TABS.map(([k,l])=>`<button data-tab="${k}" aria-pressed="${S.tab===k}">${l}${k==="review"&&due?`<span class="badge">${due}</span>`:""}</button>`).join("");
@@ -331,7 +339,7 @@ function stackHTML(cur){
   const items=D.blocks.map((x,i)=>{
     const n=blockDone(x),t=stepsFor(x).length;
     if(i>f) return `<li><div class="locked"><span></span><span><span class="t">Part ${i+1}</span><span class="ts">locked</span></span><span class="ck">🔒︎</span></div></li>`;
-    return `<li><button data-blk="${x.id}" aria-current="${x.id===cur}"><span class="arrow"></span><span><span class="t">${i+1}. ${esc(x.title)}</span><span class="ts">${x.start}–${x.end}</span></span><span class="ck ${n===t?"full":""}">${n===t?"done":n+"/"+t}</span></button></li>`;
+    return `<li><button data-blk="${x.id}" aria-current="${x.id===cur}"><span class="arrow"></span><span><span class="t">${i+1}. ${esc(x.title)}</span><span class="ts">${x.start}–${x.end}${n<t?` · ~${n?estLeft(x):est(x)} min`:""}</span></span><span class="ck ${n===t?"full":""}">${n===t?"done":n+"/"+t}</span></button></li>`;
   });
   if(D.qa){ const open=allDone(); items.push(open?`<li><button data-blk="__qa" aria-current="${cur==="__qa"}"><span class="arrow"></span><span><span class="t">Q&amp;A</span><span class="ts">${esc(D.qa.label||"after the video")}</span></span><span class="ck"></span></button></li>`
     :`<li><div class="locked"><span></span><span><span class="t">Q&amp;A</span><span class="ts">locked</span></span><span class="ck">🔒︎</span></div></li>`); }
@@ -344,6 +352,68 @@ function welcomeHTML(){
   return `<div class="welcome"><b>Welcome back.</b> You stopped at ${where}.
   ${due?`<div class="row"><button class="btn" data-go="warmup">Warm up: ${due} card${due>1?"s":""} due</button><button class="btn ghost" data-go="continue">Skip warm-up, continue</button></div>`:`<div class="row"><button class="btn" data-go="continue">Continue</button></div>`}</div>`;
 }
+/* ---------- time: estimates and the session planner ---------- */
+const est=b=>{const [st,en]=range(b);return Math.round((en-st)/60*1.3+30)};
+const estLeft=b=>Math.max(5,Math.round(est(b)*(1-blockDone(b)/stepsFor(b).length)));
+function sessionActive(){const x=S.session;return x&&(Date.now()-x.start)<(x.min*60000+3*3600000)}
+function minsLeft(){const x=S.session;return x?Math.round((x.start+x.min*60000-Date.now())/60000):null}
+function planHTML(){
+  if(S.brk||S.stopped||allDone()) return "";
+  if(!sessionActive()) return `<div class="plan"><b>How much time do you have today?</b> I'll plan what fits and tell you when to wrap up.
+    <div class="timechips">${[30,45,60,90,120,180].map(m=>`<button class="btn ghost small" data-sess="${m}">${m<60?m+" min":(m/60)+" h"}</button>`).join("")}<button class="btn ghost small" data-sess="0">No limit</button></div></div>`;
+  const x=S.session, left=minsLeft(), due=dueCards().length;
+  if(!x.min) return "";
+  let budget=Math.max(0,left-10), items=[];
+  if(due){const w=Math.min(Math.ceil(due*0.6),Math.round(x.min*0.15)||3);items.push(`Warm-up: ${due} review card${due>1?"s":""} (~${w} min)`);budget-=w;}
+  let i=frontier(), first=true;
+  while(i<D.blocks.length){const b=D.blocks[i],need=first?estLeft(b):est(b);
+    if(need>budget&&!first) break;
+    items.push(`${first&&blockDone(b)?"Finish":"Do"} Part ${i+1}: ${esc(b.title)} (~${need} min)${need>budget?" — may not fit fully; stop at the end of a step":""}`);
+    budget-=need; first=false; i++; if(budget<=0) break;}
+  items.push("Last 10 min: Interview corner, then Stop for today → Copy position");
+  const warn=left<=10;
+  return `<div class="plan ${warn?"warn":""}"><b>${warn?(left>0?`${left} min left: finish this step, then press “Finish part” or Stop for today.`:"Time's up. Finish this step and stop for today."):`Today's plan (${x.min>=60?(x.min/60)+" h":x.min+" min"})`}</b>
+    ${warn?"":`<ol>${items.map(t=>`<li>${t}</li>`).join("")}</ol>`}
+    <div class="row"><button class="btn ghost small" data-sess="reset">Change time</button>${warn?`<button class="btn small" data-go="stop">Stop for today</button>`:""}</div></div>`;
+}
+let warned=false;
+function updateTimer(){
+  const el=$("#timer"); if(!el) return;
+  if(!sessionActive()||!S.session.min){el.hidden=true;return}
+  const l=minsLeft(); el.hidden=false; el.textContent=l>0?`${l} min left`:"time's up"; el.classList.toggle("low",l<=10);
+  if(l<=10&&!warned){warned=true;toast("10 minutes left. Finish this step, then stop.");}
+}
+setInterval(updateTimer,30000);
+
+/* ---------- interview corner ---------- */
+function ivBlock(b,qi,iv,withGrade){
+  const id=b.id+":"+qi, fb=S.ivfb[id];
+  return `<div class="q ivq"><div class="qn">INTERVIEW · ${esc(iv.level||"junior")} · ${esc(iv.area||"")}</div><div class="qt">“${md(iv.q)}”</div>
+  ${withGrade?`<p class="small muted">Answer out loud first, like in a real interview. Then write it.</p>
+  <textarea data-iv="${id}" placeholder="My answer…">${esc(S.ivans[id]||"")}</textarea>
+  <div class="row">${sample?`<button class="btn" data-ivcheck="${id}">Grade me like an interviewer</button>`:`<button class="btn ghost" data-ivcopy="${id}">Copy for Claude to grade</button>`}</div>
+  <div class="copybox" id="ivcb-${id}"></div><div id="ivfb-${id}">${fb?renderScore(fb):""}</div>`:(fb?renderScore(fb):`<p class="small muted">Not answered yet.</p>`)}
+  ${(iv.followups||[]).length?`<details class="model"><summary>Follow-ups the interviewer asks next</summary><ul>${iv.followups.map(f=>`<li>${md(f)}</li>`).join("")}</ul></details>`:""}
+  <details class="model"><summary>What a strong answer includes</summary><ul>${(iv.strong||[]).map(([t,p])=>`<li>${md(t)} <span class="muted">(${p}%)</span></li>`).join("")}</ul>
+  ${(iv.redflags||[]).length?`<p class="small"><b>Red flags:</b> ${iv.redflags.map(md).join("; ")}</p>`:""}</details>
+  ${iv.grows?`<p class="small muted">${md(iv.grows)}</p>`:""}<p class="small muted">${md(iv.source||"")}</p></div>`;
+}
+function ivPrompt(b,iv,ans){
+  return `Act as a technical interviewer at a game or systems company, grading a junior candidate's answer. ${GRADE_RULES} Use the checklist as the 100% answer. The guiding question should be the follow-up a real interviewer would ask.
+Only expect what the course has covered so far: ${blockContext(b)}
+INTERVIEW QUESTION: ${iv.q}
+CHECKLIST (with weights): ${(iv.strong||[]).map(([t,p])=>t+" ("+p+"%)").join("; ")}
+RED FLAGS: ${(iv.redflags||[]).join("; ")||"none"}
+CANDIDATE ANSWER: ${ans}`;
+}
+function renderInterviewTab(){
+  const open=D.blocks.filter(b=>S.completed[b.id]&&(b.interview||[]).length);
+  const locked=D.blocks.filter(b=>!S.completed[b.id]&&(b.interview||[]).length).length;
+  return `<section class="block"><h2>Interview</h2><p class="pane">Real interview questions about what you've studied. They join your spaced reviews, and once an area has enough of them, Claude runs a mock interview (<code>/interview</code>).</p>
+  ${open.length?open.map(b=>`<h3>Part ${idxOf(b)+1}: ${esc(b.title)}</h3>`+b.interview.map((iv,i)=>ivBlock(b,i,iv,false)).join("")).join(""):`<p class="muted">No questions yet. They unlock as you finish parts.</p>`}
+  ${locked?`<p class="small muted">${locked} more part${locked>1?"s":""} with interview questions unlock as you study.</p>`:""}</section>`;
+}
+
 function renderPath(){
   if(S.brk) return renderBreak();
   if(S.stopped) return renderStopped();
@@ -352,7 +422,7 @@ function renderPath(){
   if(!unlocked(b)){b=D.blocks[Math.min(frontier(),D.blocks.length-1)];S.cur=b.id;S.step="watch";}
   const steps=stepsFor(b); if(!steps.find(([k])=>k===S.step)||!stepOpen(b,S.step)) S.step=steps.find(([k])=>!(S.done[b.id]||{})[k])?.[0]||"watch";
   const d=S.done[b.id]||{}, idx=idxOf(b);
-  return welcomeHTML()+`<div class="grid">${stackHTML(b.id)}
+  return welcomeHTML()+planHTML()+`<div class="grid">${stackHTML(b.id)}
   <section class="block" aria-labelledby="bt">
     <div class="bhead"><div><div class="eyebrow">Part ${idx+1} of ${D.blocks.length}</div><h2 id="bt">${esc(b.title)}</h2></div><span class="tsr">▶ ${b.start} – ${b.end}</span></div>
     <div class="steps" role="tablist">${steps.map(([k,l])=>`<button role="tab" data-step="${k}" aria-selected="${S.step===k}" class="${d[k]?"done":""}" ${stepOpen(b,k)?"":"disabled"}>${l}</button>`).join("")}</div>
@@ -404,7 +474,7 @@ function renderStep(b,k){
     + (b.mistake?`<div class="callout later"><b>Common beginner mistake:</b> ${md(b.mistake)}</div>`:"");
   if(k==="experiment") return b.experiment;
   if(k==="code") return b.code;
-  if(k==="why") return b.why;
+  if(k==="why") return b.why + ((b.interview||[]).length?`<h3>Interview corner</h3><p class="small muted">How a real interviewer could ask about this part. It joins your reviews and your mock interviews.</p>`+b.interview.map((iv,i)=>ivBlock(b,i,iv,true)).join(""):"");
   if(k==="ask") return renderAsk(b);
   if(k==="cards") return `<p class="muted small">Say the answer out loud before you flip. Finishing this step adds these ${b.cards.length} cards to Review.</p>`+
     b.cards.map(c=>`<div class="card"><div class="face"><div class="side">Front</div><div class="txt">${md(c[0])}</div><details class="model"><summary>Flip</summary><p>${md(c[1])}</p></details></div></div>`).join("");
@@ -522,7 +592,8 @@ function render(){
   playerBlock=null;
   renderTabs();
   const p=progress(); $("#pct").textContent=p+"%"; $("#pctbar").style.width=p+"%";
-  $("#view").innerHTML = S.tab==="path"?renderPath():S.tab==="review"?renderReview():S.tab==="parked"?renderParked():S.tab==="tools"?renderTools():renderHow();
+  $("#view").innerHTML = S.tab==="path"?renderPath():S.tab==="review"?renderReview():S.tab==="interview"?renderInterviewTab():S.tab==="parked"?renderParked():S.tab==="tools"?renderTools():renderHow();
+  updateTimer();
   const slot=$("#vslot");
   if(slot){ playerBlock=blockById(S.cur); slot.replaceWith(vw); vw.querySelector(".pend").hidden=true; seekResume(); ptick(); }
   const drop=$("#drop");
@@ -558,7 +629,7 @@ $("#view").addEventListener("click",async e=>{
     if(g==="warmup"){welcome=true;S.tab="review";revQueue=null;save();render();return}
     if(g==="startbreak"){S.brk.until=Date.now()+(+t.dataset.min)*60000;save();render();return}
     if(g==="afterbreak"){if(S.sessionParts%LONG_EVERY===0&&S.brk&&S.brk.until)S.sessionParts=0;S.brk=null;save();render();window.scrollTo({top:0});return}
-    if(g==="stop"){S.brk=null;S.stopped=true;save();render();return}
+    if(g==="stop"){S.brk=null;S.stopped=true;S.session=null;save();render();return}
     if(g==="resume"){S.stopped=false;save();render();return}
     if(g==="copypos"){copy(positionText(),$("#poscb"));return}
   }
@@ -566,6 +637,14 @@ $("#view").addEventListener("click",async e=>{
   if(t.dataset.step){S.step=t.dataset.step;save();render();return}
   if(t.id==="markNext"){welcome=false;goNextStep();return}
   if(t.id==="parkgo"){addPark();return}
+  if(t.dataset.sess){const v=t.dataset.sess;if(v==="reset"){S.session=null;}else{S.session={start:Date.now(),min:+v};warned=false;}welcome=false;save();render();return}
+  if(t.dataset.ivcopy||t.dataset.ivcheck){const id=t.dataset.ivcopy||t.dataset.ivcheck,[bid,qi]=id.split(":"),b=blockById(bid),iv=b.interview[+qi],ans=(S.ivans[id]||"").trim();
+    if(!ans){toast("Write your answer first");return}
+    if(t.dataset.ivcopy){copy(ivPrompt(b,iv,ans),$("#ivcb-"+CSS.escape(id)));return}
+    t.disabled=true;const box=$("#ivfb-"+CSS.escape(id));box.innerHTML=`<div class="fb muted">Thinking…</div>`;
+    try{const r=await sample.json(ivPrompt(b,iv,ans)+"\n"+JSON_SHAPE);S.ivfb[id]=normFb(r);save();box.innerHTML=renderScore(S.ivfb[id]);}
+    catch(err){box.innerHTML=`<div class="fb">Couldn't grade this time. Open “What a strong answer includes”.</div>`}
+    finally{t.disabled=false}return}
   if(t.id==="guessgo"||t.id==="guessnone"){const v=t.id==="guessnone"?"":($("#guessin").value.trim());if(t.id==="guessgo"&&!v){toast("Write a guess, or press “I have no idea”");return}S.guess[S.cur]=v;save();render();return}
   if(t.id==="rcopy"||t.id==="rcheck"){const b=blockById(S.cur),txt=(S.recall[b.id]||"").trim();if(!txt){toast("Write your recall first");return}
     const strip=h=>String(h||"").replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim();
@@ -599,6 +678,7 @@ $("#view").addEventListener("click",async e=>{
 $("#view").addEventListener("input",e=>{
   const a=e.target.dataset.ans; if(a){S.answers[a]=e.target.value;save()}
   const r=e.target.dataset.recall; if(r){S.recall[r]=e.target.value;save()}
+  const v=e.target.dataset.iv; if(v){S.ivans[v]=e.target.value;save()}
 });
 async function checkAnswer(id,btn){
   const [bid,qi]=id.split("?"); const b=blockById(bid), q=b.questions[+qi]; const ans=(S.answers[id]||"").trim();

@@ -81,4 +81,6 @@ every 6 months, forever.**
 - Reviews ask *new* questions in different words where possible, not the same
   question every time, so he learns the idea, not the sentence.
 - The log is the subject's `journey/REVIEWS.md`. A daily scheduled task
-  (13:00 Europe/Berlin) prepares due reviews and notifies him.
+  (12:48 Europe/Berlin) prepares due reviews (plus 2 interview questions on
+  weekdays) and notifies him.
+- Interview questions are review units too (`iv-…`). See `docs/interview-prep.md`.

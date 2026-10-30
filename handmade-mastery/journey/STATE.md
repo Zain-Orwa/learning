@@ -17,8 +17,10 @@ _Last updated: 2026-10-31_
   - [x] Learning method from Zain's "learning machine" video: `docs/learning-method.md`
   - [x] Strict % grading, guess-first, graded Recall, one-sentence idea / analogy / common mistake in the page
   - [x] Spaced reviews: `journey/REVIEWS.md` + `tools/reviews.py` + `/review`; `/study` adds finished parts
-  - [x] Daily review scheduled task "Daily review", every day 12:48 Europe/Berlin, cloud, automatic approval, push notification (id `trig_015H7qGd7zXdGP9ACCUadnzw`, lives on the Claude account that created it on 2026-10-31)
-  - [ ] Learner tries Day 1 Part 1 with the page on the Mac (planned: 2026-11-01)
+  - [x] Daily review scheduled task "Daily review", every day 12:48 Europe/Berlin (weekdays: reviews + 2 interview questions; weekends: reviews + study-day reminder), cloud, automatic approval, push notification (id `trig_015H7qGd7zXdGP9ACCUadnzw`, lives on the Claude account that created it on 2026-10-31)
+  - [x] Flexible schedule: weekends = study ("start" + time, page planner with countdown); weekdays = reviews + interview drill
+  - [x] Interview track: interview corner per part, Interview tab, `/interview`, `journey/INTERVIEWS.md`, `tools/reviews.py areas`; Day 1 has 9 interview questions
+  - [ ] Learner tries Day 1 Part 1 with the page on the Mac (planned: Sunday 2026-11-01)
 
 ## Windows tools: all installed and verified (2026-10-30)
 - Visual Studio Community 2026 with the C++ workload (MSVC 14.51). Test: a

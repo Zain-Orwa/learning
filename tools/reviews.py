@@ -13,6 +13,10 @@ Usage (run from the repo root):
   python3 tools/reviews.py grade <subject> <unit-id> <score 0-100> [--date YYYY-MM-DD]
       Record a review score and move the unit to its next date.
   python3 tools/reviews.py list <subject>
+  python3 tools/reviews.py areas
+      Interview readiness per area (units whose id starts with "iv-" and
+      whose title starts with "[area]"): question count, average latest score,
+      and which mock interview is due.
 """
 import datetime as dt
 import pathlib
@@ -118,6 +122,27 @@ def main(argv):
         r["history"] = (r["history"] + " " if r["history"] else "") + f"{d.isoformat()}:{score}%"
         store(subj, rows)
         print(f"{unit}: {score}% -> {'passed' if score >= PASS else 'back to 1 day'}; next review {r['next']} ({r['stage']}).")
+    elif cmd == "areas":
+        stats = {}
+        for subj in subjects():
+            for r in load(subj):
+                if not r["unit"].startswith("iv-") or not r["title"].startswith("["):
+                    continue
+                area = r["title"][1:r["title"].index("]")]
+                a = stats.setdefault(area, {"n": 0, "scores": []})
+                a["n"] += 1
+                if r["last"].endswith("%"):
+                    a["scores"].append(int(r["last"][:-1]))
+        if not stats:
+            print("No interview questions in the logs yet.")
+        for area, a in sorted(stats.items()):
+            avg = round(sum(a["scores"]) / len(a["scores"])) if a["scores"] else None
+            mock = ""
+            if a["n"] >= 15 and avg is not None and avg >= 60:
+                mock = "-> AREA MOCK INTERVIEW due (60 min)"
+            elif a["n"] >= 8:
+                mock = "-> mini mock interview due (25 min)"
+            print(f"{area}\t{a['n']} questions\tanswered {len(a['scores'])}\tavg {str(avg) + '%' if avg is not None else '–'}\t{mock}")
     elif cmd == "list":
         for r in load(args[0]):
             print(f"{r['unit']}\t{r['stage']}\tnext {r['next']}\tlast {r['last']}\t{r['title']}")

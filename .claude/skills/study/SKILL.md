@@ -22,7 +22,13 @@ When the learner uses the page, Claude's jobs are:
   its **Completed** list that isn't in `journey/REVIEWS.md` yet, add a review
   unit (run from the repo root), using the part's completion date:
   `python3 tools/reviews.py add handmade-mastery icd01-p03 "Intro C D1 · <part title>" courses/intro-to-c/day01#b03 --date <date>`
-  (unit id: course short name + day + part number). Then commit and push.
+  (unit id: course short name + day + part number). Also add each of that
+  part's interview questions (its `interview` list in `data.js`):
+  `python3 tools/reviews.py add handmade-mastery iv-icd01-b05-0 "[toolchain] <question>" courses/intro-to-c/day01#b05/iv0 --date <date>`.
+  Then commit and push.
+- **"start" + time:** follow the root `CLAUDE.md` section *Schedule*: reviews
+  first, continue from the saved position, plan what fits, last 10 minutes
+  for the interview corner and saving.
 - **Grade answers** he pastes from "Copy for Claude to check" (follow the text he pastes).
 - **Answer parked questions** he pastes, inside the episode's scope.
 - **Build kits:** new episodes and Q&A parts (section 1 below).

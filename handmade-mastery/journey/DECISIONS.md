@@ -104,3 +104,20 @@ Newest at the bottom. Each entry: date, decision, why.
 - Pass = 80%+. Below 80%: short re-teach, back to 1 day.
 - Log: `journey/REVIEWS.md`, only edited with `tools/reviews.py` (dates computed, not guessed).
 - Daily review task at ~13:00 Europe/Berlin (Zain's choice: midday, Central Europe).
+
+## 2026-10-31: Flexible schedule
+- **Study days: Saturday and Sunday.** No fixed hours. Zain says "start" plus how much time
+  he has; Claude and the study page plan what fits (reviews first, about 15% of the time;
+  a part ≈ 1.3 × video minutes + 30 min), with a countdown and a 10-minute warning.
+- **Monday to Friday: review days.** The daily task asks due reviews + 2 interview questions.
+
+## 2026-10-31: Interview preparation
+- Goal: be ready for real game/systems interviews when the course ends.
+- Researched what game and systems interviews actually ask (build pipeline, memory,
+  CPU/caches, data structures, vector math, debugging); sources in `docs/interview-prep.md`.
+- Questions come only from studied material: an `interview` list per part in `data.js`
+  (as asked, follow-ups, strong-answer checklist with %, red flags, source).
+- They become spaced-review units (`iv-…`) and feed weekday drills, mini mocks (area has 8+),
+  area mocks (15+ and 60%+ average), and full interview days at course milestones.
+- `/interview` runs them as a real interviewer (no hints, follow-ups) with a strict debrief and
+  a hiring-style verdict; history in `journey/INTERVIEWS.md`; readiness via `tools/reviews.py areas`.

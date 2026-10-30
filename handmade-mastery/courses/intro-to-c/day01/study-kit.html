@@ -128,6 +128,14 @@ textarea{min-height:88px;resize:vertical}
 .miss{margin:6px 0 0;padding-left:20px}
 .guessbox{border:1px solid var(--ip);border-radius:8px;padding:12px 14px;margin:12px 0;background:color-mix(in srgb,var(--ip) 8%,var(--panel))}
 .guessbox h3{margin:0 0 4px;font-size:16px}
+.plan{border:1px solid var(--rule);background:var(--panel);border-radius:8px;padding:12px 16px;margin-bottom:16px}
+.plan b{font-family:var(--f-display)}
+.plan ol{margin:6px 0 0;padding-left:20px}
+.plan.warn{border-color:var(--warn);background:color-mix(in srgb,var(--warn) 10%,var(--panel))}
+.timechips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+#timer{font-family:var(--f-mono);background:var(--ip);color:var(--ip-ink);border-radius:4px;padding:1px 8px}
+#timer.low{background:var(--bad);color:#fff}
+.ivq{border-left:4px solid var(--link)}
 details.model{margin-top:8px} details.model summary{cursor:pointer;color:var(--muted);font-size:14px}
 .card{margin:14px 0}
 .card .face{border:1px solid var(--rule);border-radius:10px;min-height:150px;padding:22px;display:flex;flex-direction:column;justify-content:center;background:var(--panel)}
@@ -170,7 +178,7 @@ td.mono{font-family:var(--f-mono);font-size:13px;white-space:nowrap}
       <div class="eyebrow" id="eyebrow"></div>
       <h1 id="h1"></h1>
     </div>
-    <div class="meter" aria-live="polite"><span id="pct">0%</span><span class="bar"><i id="pctbar" style="width:0"></i></span><span id="saved" class="small">saved in this browser</span></div>
+    <div class="meter" aria-live="polite"><span id="pct">0%</span><span class="bar"><i id="pctbar" style="width:0"></i></span><span id="saved" class="small">saved in this browser</span><span id="timer" class="small" hidden></span></div>
   </header>
   <nav class="tabs" id="tabs" aria-label="Sections"></nav>
   <main id="view"></main>
@@ -948,6 +956,10 @@ window.STUDY.how = `<h2>How this page works</h2>
 <li><b>Answer.</b> Answer the questions before you see any explanation. "Copy for Claude" copies the question and your answer so any Claude account can grade it.</li>
 <li><b>Explain → Experiment → Read code → Flashcards → Why it matters.</b> The rest of the part, one step at a time.</li>
 <li><b>Break.</b> After each part: a short break (5 min), and a longer one (15 min) after every 3 parts. Or stop for today.</li></ol>
+<h3>Your time, your schedule</h3>
+<p><b>Saturday and Sunday are study days.</b> Each session starts with “How much time do you have today?”. Pick 30 min to 3 h, and the page plans what fits (reviews first, then parts, about 1.3 × video minutes + 30 min each), shows a countdown, and warns you 10 minutes before the end so you stop at a clean point. <b>Monday to Friday are review days:</b> a notification at 12:48 brings your due reviews and 2 interview questions.</p>
+<h3>Interview corner</h3>
+<p>Many parts end with a real interview question: how an interviewer asks it, the follow-ups, and what a strong answer includes. Answer out loud, then write it. You're graded strictly in %. These questions join your reviews, and when an area has enough of them, Claude runs a mock interview (<code>/interview</code>).</p>
 <h3>Coming back</h3>
 <p>The page saves your exact place in this browser, down to the second in the video. Next time it says <b>Welcome back</b>, offers a quick card warm-up, and continues where you stopped.</p>
 <p>When you stop for today, press <b>Copy position</b> and paste it to Claude (<code>/study</code>), so it can save your place in <code>journey/STATE.md</code> for every account and machine.</p>
@@ -1012,6 +1024,71 @@ const T = {
 window.STUDY.blocks.forEach(b=>Object.assign(b, T[b.id]||{}));
 })();
 
+/* ---- interview corner: real interview-style questions on this day's material ----
+   Each: q (how an interviewer asks it), area, level, followups, strong (checklist with % weights = 100),
+   redflags, source, grows (optional: the answer gets bigger later in the course). */
+(function(){
+const IV = {
+ b02:[{area:"os-windows",level:"junior",
+  q:"On Windows, what's the difference between a console application and a GUI application? Can one .exe be both?",
+  followups:["Where is that difference stored?","What happens if you build a GUI program as a console program?"],
+  strong:[["It's decided at build time by a flag in the .exe header (the subsystem: CONSOLE or WINDOWS)",35],["Console: Windows gives the program a text console; GUI: no console, the program makes its own windows",30],["The subsystem also decides which start function the startup code calls (main vs WinMain)",20],["Not cleanly both: on Windows one .exe is one or the other (there are workarounds)",15]],
+  redflags:["Saying the difference is only whether it uses printf"],
+  source:"Common Windows-programming interview question; the subsystem appears in every PE header (`dumpbin /headers`)."}],
+ b03:[{area:"toolchain",level:"junior",
+  q:"What's the difference between a Debug build and a Release build?",
+  followups:["Why is it harder to step through a Release build in the debugger?","Why might a bug appear only in Release?"],
+  strong:[["Debug: no (or few) optimizations; Release: optimized for speed",35],["Debug keeps full debug information, so each line maps simply to machine code and the debugger can follow it",25],["Debug often includes extra checks and developer-only code (test code, debug menus, editors)",20],["Same source, different output: the configuration also picks the platform (x86/x64)",20]],
+  redflags:["\"Release is just Debug without the debugger\""],
+  source:"Classic C/C++ interview question; appears in many game-studio interview reports."}],
+ b04:[{area:"cpu",level:"junior",
+  q:"What's the difference between a CPU core, a hardware thread (hyperthread) and a logical processor? Does hyperthreading double performance?",
+  followups:["Task Manager shows 16 logical processors on a 2-socket machine. How many cores could that be?"],
+  strong:[["A core is a full execution engine inside the chip; one chip has several cores",30],["A hardware thread is an extra saved thread state on one core; the core runs both through the same execution units",30],["The OS counts each hardware thread as a logical processor (sockets × cores × threads per core)",20],["No, it doesn't double: the threads share the core's units; it helps mostly by filling idle time (e.g. waiting on memory)",20]],
+  redflags:["Treating a hyperthread as a full core"],
+  source:"Common systems / performance interview question (game studios ask about cores and threads before multithreading questions)."}],
+ b05:[{area:"toolchain",level:"junior",
+  q:"Explain the difference between a compiler error and a linker error, with one example of each.",
+  followups:["What does \"unresolved external symbol\" mean, and how would you fix it?","Why do C and C++ compile files separately and link them later?"],
+  strong:[["The compiler works on one .cpp (translation unit) at a time and makes an object file; its errors are about the text: syntax, unknown names, types",30],["The linker joins all object files and libraries, resolves names between them and writes the .exe; its errors are about symbols",30],["Example compile error: using a name that was never declared / a missing semicolon",10],["Example link error: a function declared and called but never defined, or a missing library (unresolved external)",20],["Why separate: only changed files need recompiling",10]],
+  redflags:["Trying to fix a linker error by changing syntax"],
+  source:"Classic C/C++ interview question (compilation vs. linking; \"undefined reference / unresolved external\")."}],
+ b06:[{area:"os-windows",level:"junior",
+  q:"What happens, step by step, when you double-click an .exe on Windows, until the program's code starts running?",
+  followups:["Who decides where execution starts?","Is WinMain really the first code that runs?"],
+  strong:[["The .exe is a file in a known format (PE) with headers Windows reads",25],["Windows loads the code and data into memory (and does some fix-up work)",25],["The linker stored an entry point address in the header; Windows makes the CPU jump there",30],["The linker found that start function by a predefined name; it can be changed with a linker option",20]],
+  redflags:["\"Windows just runs main()\" with no idea how it finds it"],
+  source:"Very common interview question in many forms (\"what happens when you run a program\").",
+  grows:"Your answer grows later: the C runtime startup (Intro to C Day 2) and virtual memory/loading (Day 5)."}],
+ b07:[{area:"os-windows",level:"junior",
+  q:"What is a handle in an operating-system API? Why does Windows give you handles instead of pointers to its own data?",
+  followups:["Give two examples of Windows handles."],
+  strong:[["A handle is an opaque value that refers to an object the OS manages",35],["You pass it back to the OS to ask for something on that object",25],["The OS keeps its real data private: you can't read or break it, and it can change the details without breaking programs",25],["Examples: HINSTANCE (your running program), HWND (a window), file handles",15]],
+  redflags:["Saying a handle is just a pointer you can dereference"],
+  source:"Common Windows / OS interview question."}],
+ b10:[{area:"toolchain",level:"junior",
+  q:"Why must a program and the operating system agree on a calling convention when the OS calls a function in your program?",
+  followups:["How does WinMain's declaration show that agreement?"],
+  strong:[["They were compiled separately, so the rules for passing arguments and returning values must match exactly",50],["If they don't match, arguments land in the wrong places and the program breaks",25],["WinMain is marked CALLBACK, a macro that selects the convention Windows expects",25]],
+  redflags:["Thinking the compiler can figure it out automatically across the OS boundary"],
+  source:"Systems interview topic (ABI / calling conventions).",
+  grows:"The details (registers, stack) come later in the course, when Casey covers calling conventions."}],
+ b11:[{area:"c-language",level:"junior",
+  q:"What's the difference between a declaration and a definition in C?",
+  followups:["You call a function that is declared but never defined. Do you get a compile error or a link error? Why?","Where do declarations usually live, and why?"],
+  strong:[["A declaration says a function exists and how to call it (signature, ends with ;)",30],["A definition is the signature plus the body: the actual code",30],["A declaration is enough for the compiler to generate the call; the linker later connects it to a definition",25],["Declared but never defined gives a link error (unresolved external), not a compile error",15]],
+  redflags:["Mixing up the two, or saying a declaration creates code"],
+  source:"Classic C/C++ interview question (\"declare vs define\")."}],
+ b12:[{area:"c-language",level:"junior",
+  q:"What does #include actually do? And what's the preprocessor?",
+  followups:["Why can including a big header like windows.h slow your build?","Does #include <windows.h> add Windows's code to your program?"],
+  strong:[["#include pastes the whole content of the named file at that spot, before compilation",35],["The preprocessor is a text pass that runs before the compiler proper and handles # lines",25],["Includes nest, so one header can pull in tens of thousands of lines (slower builds)",20],["Headers add declarations; the real code lives elsewhere (e.g. Windows's DLLs), connected by the linker",20]],
+  redflags:["Thinking #include links a library"],
+  source:"Classic C/C++ interview question."}]
+};
+window.STUDY.blocks.forEach(b=>{ if(IV[b.id]) b.interview=IV[b.id]; });
+})();
+
 </script>
 <script>
 (function(){
@@ -1031,12 +1108,12 @@ const md = s=>esc(s).replace(/`([^`]+)`/g,"<code>$1</code>").replace(/\*\*([^*]+
 $("#eyebrow").textContent=D.eyebrow||""; $("#h1").textContent=D.title||document.title;
 
 /* ---------- state + persistence ---------- */
-const FRESH={v:2,cur:D.blocks[0].id,step:"watch",tab:"path",done:{},completed:{},vt:{},recall:{},cmp:{},guess:{},rfb:{},cdate:{},park:{},answers:{},fb:{},cards:{},notes:{},speed:1,lastVisit:0,sessionParts:0,brk:null,stopped:false};
+const FRESH={v:2,cur:D.blocks[0].id,step:"watch",tab:"path",done:{},completed:{},vt:{},recall:{},cmp:{},guess:{},rfb:{},cdate:{},ivans:{},ivfb:{},session:null,park:{},answers:{},fb:{},cards:{},notes:{},speed:1,lastVisit:0,sessionParts:0,brk:null,stopped:false};
 let S=JSON.parse(JSON.stringify(FRESH));
 const LS=D.storageKey||"study-kit";
 try{const raw=localStorage.getItem(LS); if(raw) S=Object.assign(S,JSON.parse(raw));}catch(e){}
 let welcome = S.lastVisit && (Date.now()-S.lastVisit>30*60*1000) && Object.keys(S.done).length>0;
-if(welcome){S.sessionParts=0; S.brk=null; S.stopped=false;}
+if(welcome){S.sessionParts=0; S.brk=null; S.stopped=false; S.session=null;}
 S.lastVisit=Date.now();
 let dbRef=null, saveT=null;
 function save(){
@@ -1153,7 +1230,7 @@ document.addEventListener("keydown",e=>{
 });
 
 /* ---------- tabs ---------- */
-const TABS=[["path","Study path"],["review","Review"],["parked","Parked"],["tools","Toolbox"],["how","How to study"]];
+const TABS=[["path","Study path"],["review","Review"],["interview","Interview"],["parked","Parked"],["tools","Toolbox"],["how","How to study"]];
 function renderTabs(){
   const due=dueCards().length;
   $("#tabs").innerHTML=TABS.map(([k,l])=>`<button data-tab="${k}" aria-pressed="${S.tab===k}">${l}${k==="review"&&due?`<span class="badge">${due}</span>`:""}</button>`).join("");
@@ -1166,7 +1243,7 @@ function stackHTML(cur){
   const items=D.blocks.map((x,i)=>{
     const n=blockDone(x),t=stepsFor(x).length;
     if(i>f) return `<li><div class="locked"><span></span><span><span class="t">Part ${i+1}</span><span class="ts">locked</span></span><span class="ck">🔒︎</span></div></li>`;
-    return `<li><button data-blk="${x.id}" aria-current="${x.id===cur}"><span class="arrow"></span><span><span class="t">${i+1}. ${esc(x.title)}</span><span class="ts">${x.start}–${x.end}</span></span><span class="ck ${n===t?"full":""}">${n===t?"done":n+"/"+t}</span></button></li>`;
+    return `<li><button data-blk="${x.id}" aria-current="${x.id===cur}"><span class="arrow"></span><span><span class="t">${i+1}. ${esc(x.title)}</span><span class="ts">${x.start}–${x.end}${n<t?` · ~${n?estLeft(x):est(x)} min`:""}</span></span><span class="ck ${n===t?"full":""}">${n===t?"done":n+"/"+t}</span></button></li>`;
   });
   if(D.qa){ const open=allDone(); items.push(open?`<li><button data-blk="__qa" aria-current="${cur==="__qa"}"><span class="arrow"></span><span><span class="t">Q&amp;A</span><span class="ts">${esc(D.qa.label||"after the video")}</span></span><span class="ck"></span></button></li>`
     :`<li><div class="locked"><span></span><span><span class="t">Q&amp;A</span><span class="ts">locked</span></span><span class="ck">🔒︎</span></div></li>`); }
@@ -1179,6 +1256,68 @@ function welcomeHTML(){
   return `<div class="welcome"><b>Welcome back.</b> You stopped at ${where}.
   ${due?`<div class="row"><button class="btn" data-go="warmup">Warm up: ${due} card${due>1?"s":""} due</button><button class="btn ghost" data-go="continue">Skip warm-up, continue</button></div>`:`<div class="row"><button class="btn" data-go="continue">Continue</button></div>`}</div>`;
 }
+/* ---------- time: estimates and the session planner ---------- */
+const est=b=>{const [st,en]=range(b);return Math.round((en-st)/60*1.3+30)};
+const estLeft=b=>Math.max(5,Math.round(est(b)*(1-blockDone(b)/stepsFor(b).length)));
+function sessionActive(){const x=S.session;return x&&(Date.now()-x.start)<(x.min*60000+3*3600000)}
+function minsLeft(){const x=S.session;return x?Math.round((x.start+x.min*60000-Date.now())/60000):null}
+function planHTML(){
+  if(S.brk||S.stopped||allDone()) return "";
+  if(!sessionActive()) return `<div class="plan"><b>How much time do you have today?</b> I'll plan what fits and tell you when to wrap up.
+    <div class="timechips">${[30,45,60,90,120,180].map(m=>`<button class="btn ghost small" data-sess="${m}">${m<60?m+" min":(m/60)+" h"}</button>`).join("")}<button class="btn ghost small" data-sess="0">No limit</button></div></div>`;
+  const x=S.session, left=minsLeft(), due=dueCards().length;
+  if(!x.min) return "";
+  let budget=Math.max(0,left-10), items=[];
+  if(due){const w=Math.min(Math.ceil(due*0.6),Math.round(x.min*0.15)||3);items.push(`Warm-up: ${due} review card${due>1?"s":""} (~${w} min)`);budget-=w;}
+  let i=frontier(), first=true;
+  while(i<D.blocks.length){const b=D.blocks[i],need=first?estLeft(b):est(b);
+    if(need>budget&&!first) break;
+    items.push(`${first&&blockDone(b)?"Finish":"Do"} Part ${i+1}: ${esc(b.title)} (~${need} min)${need>budget?" — may not fit fully; stop at the end of a step":""}`);
+    budget-=need; first=false; i++; if(budget<=0) break;}
+  items.push("Last 10 min: Interview corner, then Stop for today → Copy position");
+  const warn=left<=10;
+  return `<div class="plan ${warn?"warn":""}"><b>${warn?(left>0?`${left} min left: finish this step, then press “Finish part” or Stop for today.`:"Time's up. Finish this step and stop for today."):`Today's plan (${x.min>=60?(x.min/60)+" h":x.min+" min"})`}</b>
+    ${warn?"":`<ol>${items.map(t=>`<li>${t}</li>`).join("")}</ol>`}
+    <div class="row"><button class="btn ghost small" data-sess="reset">Change time</button>${warn?`<button class="btn small" data-go="stop">Stop for today</button>`:""}</div></div>`;
+}
+let warned=false;
+function updateTimer(){
+  const el=$("#timer"); if(!el) return;
+  if(!sessionActive()||!S.session.min){el.hidden=true;return}
+  const l=minsLeft(); el.hidden=false; el.textContent=l>0?`${l} min left`:"time's up"; el.classList.toggle("low",l<=10);
+  if(l<=10&&!warned){warned=true;toast("10 minutes left. Finish this step, then stop.");}
+}
+setInterval(updateTimer,30000);
+
+/* ---------- interview corner ---------- */
+function ivBlock(b,qi,iv,withGrade){
+  const id=b.id+":"+qi, fb=S.ivfb[id];
+  return `<div class="q ivq"><div class="qn">INTERVIEW · ${esc(iv.level||"junior")} · ${esc(iv.area||"")}</div><div class="qt">“${md(iv.q)}”</div>
+  ${withGrade?`<p class="small muted">Answer out loud first, like in a real interview. Then write it.</p>
+  <textarea data-iv="${id}" placeholder="My answer…">${esc(S.ivans[id]||"")}</textarea>
+  <div class="row">${sample?`<button class="btn" data-ivcheck="${id}">Grade me like an interviewer</button>`:`<button class="btn ghost" data-ivcopy="${id}">Copy for Claude to grade</button>`}</div>
+  <div class="copybox" id="ivcb-${id}"></div><div id="ivfb-${id}">${fb?renderScore(fb):""}</div>`:(fb?renderScore(fb):`<p class="small muted">Not answered yet.</p>`)}
+  ${(iv.followups||[]).length?`<details class="model"><summary>Follow-ups the interviewer asks next</summary><ul>${iv.followups.map(f=>`<li>${md(f)}</li>`).join("")}</ul></details>`:""}
+  <details class="model"><summary>What a strong answer includes</summary><ul>${(iv.strong||[]).map(([t,p])=>`<li>${md(t)} <span class="muted">(${p}%)</span></li>`).join("")}</ul>
+  ${(iv.redflags||[]).length?`<p class="small"><b>Red flags:</b> ${iv.redflags.map(md).join("; ")}</p>`:""}</details>
+  ${iv.grows?`<p class="small muted">${md(iv.grows)}</p>`:""}<p class="small muted">${md(iv.source||"")}</p></div>`;
+}
+function ivPrompt(b,iv,ans){
+  return `Act as a technical interviewer at a game or systems company, grading a junior candidate's answer. ${GRADE_RULES} Use the checklist as the 100% answer. The guiding question should be the follow-up a real interviewer would ask.
+Only expect what the course has covered so far: ${blockContext(b)}
+INTERVIEW QUESTION: ${iv.q}
+CHECKLIST (with weights): ${(iv.strong||[]).map(([t,p])=>t+" ("+p+"%)").join("; ")}
+RED FLAGS: ${(iv.redflags||[]).join("; ")||"none"}
+CANDIDATE ANSWER: ${ans}`;
+}
+function renderInterviewTab(){
+  const open=D.blocks.filter(b=>S.completed[b.id]&&(b.interview||[]).length);
+  const locked=D.blocks.filter(b=>!S.completed[b.id]&&(b.interview||[]).length).length;
+  return `<section class="block"><h2>Interview</h2><p class="pane">Real interview questions about what you've studied. They join your spaced reviews, and once an area has enough of them, Claude runs a mock interview (<code>/interview</code>).</p>
+  ${open.length?open.map(b=>`<h3>Part ${idxOf(b)+1}: ${esc(b.title)}</h3>`+b.interview.map((iv,i)=>ivBlock(b,i,iv,false)).join("")).join(""):`<p class="muted">No questions yet. They unlock as you finish parts.</p>`}
+  ${locked?`<p class="small muted">${locked} more part${locked>1?"s":""} with interview questions unlock as you study.</p>`:""}</section>`;
+}
+
 function renderPath(){
   if(S.brk) return renderBreak();
   if(S.stopped) return renderStopped();
@@ -1187,7 +1326,7 @@ function renderPath(){
   if(!unlocked(b)){b=D.blocks[Math.min(frontier(),D.blocks.length-1)];S.cur=b.id;S.step="watch";}
   const steps=stepsFor(b); if(!steps.find(([k])=>k===S.step)||!stepOpen(b,S.step)) S.step=steps.find(([k])=>!(S.done[b.id]||{})[k])?.[0]||"watch";
   const d=S.done[b.id]||{}, idx=idxOf(b);
-  return welcomeHTML()+`<div class="grid">${stackHTML(b.id)}
+  return welcomeHTML()+planHTML()+`<div class="grid">${stackHTML(b.id)}
   <section class="block" aria-labelledby="bt">
     <div class="bhead"><div><div class="eyebrow">Part ${idx+1} of ${D.blocks.length}</div><h2 id="bt">${esc(b.title)}</h2></div><span class="tsr">▶ ${b.start} – ${b.end}</span></div>
     <div class="steps" role="tablist">${steps.map(([k,l])=>`<button role="tab" data-step="${k}" aria-selected="${S.step===k}" class="${d[k]?"done":""}" ${stepOpen(b,k)?"":"disabled"}>${l}</button>`).join("")}</div>
@@ -1239,7 +1378,7 @@ function renderStep(b,k){
     + (b.mistake?`<div class="callout later"><b>Common beginner mistake:</b> ${md(b.mistake)}</div>`:"");
   if(k==="experiment") return b.experiment;
   if(k==="code") return b.code;
-  if(k==="why") return b.why;
+  if(k==="why") return b.why + ((b.interview||[]).length?`<h3>Interview corner</h3><p class="small muted">How a real interviewer could ask about this part. It joins your reviews and your mock interviews.</p>`+b.interview.map((iv,i)=>ivBlock(b,i,iv,true)).join(""):"");
   if(k==="ask") return renderAsk(b);
   if(k==="cards") return `<p class="muted small">Say the answer out loud before you flip. Finishing this step adds these ${b.cards.length} cards to Review.</p>`+
     b.cards.map(c=>`<div class="card"><div class="face"><div class="side">Front</div><div class="txt">${md(c[0])}</div><details class="model"><summary>Flip</summary><p>${md(c[1])}</p></details></div></div>`).join("");
@@ -1357,7 +1496,8 @@ function render(){
   playerBlock=null;
   renderTabs();
   const p=progress(); $("#pct").textContent=p+"%"; $("#pctbar").style.width=p+"%";
-  $("#view").innerHTML = S.tab==="path"?renderPath():S.tab==="review"?renderReview():S.tab==="parked"?renderParked():S.tab==="tools"?renderTools():renderHow();
+  $("#view").innerHTML = S.tab==="path"?renderPath():S.tab==="review"?renderReview():S.tab==="interview"?renderInterviewTab():S.tab==="parked"?renderParked():S.tab==="tools"?renderTools():renderHow();
+  updateTimer();
   const slot=$("#vslot");
   if(slot){ playerBlock=blockById(S.cur); slot.replaceWith(vw); vw.querySelector(".pend").hidden=true; seekResume(); ptick(); }
   const drop=$("#drop");
@@ -1393,7 +1533,7 @@ $("#view").addEventListener("click",async e=>{
     if(g==="warmup"){welcome=true;S.tab="review";revQueue=null;save();render();return}
     if(g==="startbreak"){S.brk.until=Date.now()+(+t.dataset.min)*60000;save();render();return}
     if(g==="afterbreak"){if(S.sessionParts%LONG_EVERY===0&&S.brk&&S.brk.until)S.sessionParts=0;S.brk=null;save();render();window.scrollTo({top:0});return}
-    if(g==="stop"){S.brk=null;S.stopped=true;save();render();return}
+    if(g==="stop"){S.brk=null;S.stopped=true;S.session=null;save();render();return}
     if(g==="resume"){S.stopped=false;save();render();return}
     if(g==="copypos"){copy(positionText(),$("#poscb"));return}
   }
@@ -1401,6 +1541,14 @@ $("#view").addEventListener("click",async e=>{
   if(t.dataset.step){S.step=t.dataset.step;save();render();return}
   if(t.id==="markNext"){welcome=false;goNextStep();return}
   if(t.id==="parkgo"){addPark();return}
+  if(t.dataset.sess){const v=t.dataset.sess;if(v==="reset"){S.session=null;}else{S.session={start:Date.now(),min:+v};warned=false;}welcome=false;save();render();return}
+  if(t.dataset.ivcopy||t.dataset.ivcheck){const id=t.dataset.ivcopy||t.dataset.ivcheck,[bid,qi]=id.split(":"),b=blockById(bid),iv=b.interview[+qi],ans=(S.ivans[id]||"").trim();
+    if(!ans){toast("Write your answer first");return}
+    if(t.dataset.ivcopy){copy(ivPrompt(b,iv,ans),$("#ivcb-"+CSS.escape(id)));return}
+    t.disabled=true;const box=$("#ivfb-"+CSS.escape(id));box.innerHTML=`<div class="fb muted">Thinking…</div>`;
+    try{const r=await sample.json(ivPrompt(b,iv,ans)+"\n"+JSON_SHAPE);S.ivfb[id]=normFb(r);save();box.innerHTML=renderScore(S.ivfb[id]);}
+    catch(err){box.innerHTML=`<div class="fb">Couldn't grade this time. Open “What a strong answer includes”.</div>`}
+    finally{t.disabled=false}return}
   if(t.id==="guessgo"||t.id==="guessnone"){const v=t.id==="guessnone"?"":($("#guessin").value.trim());if(t.id==="guessgo"&&!v){toast("Write a guess, or press “I have no idea”");return}S.guess[S.cur]=v;save();render();return}
   if(t.id==="rcopy"||t.id==="rcheck"){const b=blockById(S.cur),txt=(S.recall[b.id]||"").trim();if(!txt){toast("Write your recall first");return}
     const strip=h=>String(h||"").replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim();
@@ -1434,6 +1582,7 @@ $("#view").addEventListener("click",async e=>{
 $("#view").addEventListener("input",e=>{
   const a=e.target.dataset.ans; if(a){S.answers[a]=e.target.value;save()}
   const r=e.target.dataset.recall; if(r){S.recall[r]=e.target.value;save()}
+  const v=e.target.dataset.iv; if(v){S.ivans[v]=e.target.value;save()}
 });
 async function checkAnswer(id,btn){
   const [bid,qi]=id.split("?"); const b=blockById(bid), q=b.questions[+qi]; const ans=(S.answers[id]||"").trim();
