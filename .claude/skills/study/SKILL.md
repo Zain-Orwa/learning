@@ -18,14 +18,20 @@ at the end of each part, locks future parts, has a parking lot for questions,
 breaks between parts, and remembers the exact place in the browser.
 When the learner uses the page, Claude's jobs are:
 - **Save the position.** When he pastes a "Save my study position" block,
-  copy it into `journey/STATE.md` under **Study position**, commit and push.
+  copy it into `journey/STATE.md` under **Study position**. For every part in
+  its **Completed** list that isn't in `journey/REVIEWS.md` yet, add a review
+  unit (run from the repo root), using the part's completion date:
+  `python3 tools/reviews.py add handmade-mastery icd01-p03 "Intro C D1 · <part title>" courses/intro-to-c/day01#b03 --date <date>`
+  (unit id: course short name + day + part number). Then commit and push.
 - **Grade answers** he pastes from "Copy for Claude to check" (follow the text he pastes).
 - **Answer parked questions** he pastes, inside the episode's scope.
 - **Build kits:** new episodes and Q&A parts (section 1 below).
 Use the chat loop in section 2 only when he studies without the page.
 
-## 0. Find the position
+## 0. Reviews first, then the position
 1. `git pull --rebase`.
+1b. Run `python3 tools/reviews.py due`. If anything is due, run the
+   `/review` session first (`.claude/skills/review/SKILL.md`), then continue here.
 2. Read the subject's `journey/STATE.md`, section **Study position**
    (course, day, section number, step). If it is missing, ask which episode.
 3. If the learner says "where was I?" or comes back after a break: give a
@@ -45,7 +51,11 @@ Claude can't watch video. It works from text:
   with blocks, parked, tools, title, storageKey, course, video, qa), then build
   the page: `python3 tools/study-kit/build.py courses/<course>/dayNN`.
   Never hand-edit `study-kit.html`; edit `data.js` or `tools/study-kit/engine.html`
-  and rebuild. Also write `cards.tsv`. If the kit already exists, use its blocks as the sections.
+  and rebuild. Every block follows the lesson template in `docs/learning-method.md`:
+  `guess` (question before watching), `oneLiner`, `analogy`, `mistake`, plus
+  summary, watchFor, explain, experiment, questions, cards, code, why.
+  End the kit build with a **self-check** for the learner: list what you could
+  not verify (tool versions, claims not found in the transcript). Also write `cards.tsv`. If the kit already exists, use its blocks as the sections.
 - Show the learner the section list (number, time range, title) once. Save it.
 
 ## 2. The chat loop (when he studies without the page), one section at a time
@@ -56,14 +66,17 @@ in one message.
    and the pause point (`pauseAt` in the kit) with what to think about there.
    Tell him: if he gets distracted, come back and type `/study`.
 2. **Predict/answer.** After he says done: 2 to 3 questions from the kit's
-   Answer step. He answers first. Grade each one: right / partly / wrong, with the timestamp to rewatch if wrong.
+   Answer step. He answers first. Grade each one strictly in percent (Score: N%,
+   what's right, what's missing for 100% with % per piece, one guiding question;
+   see `docs/learning-method.md`), with the timestamp to rewatch.
 3. **Explain gaps.** Explain only what his answers show he missed. Short.
    Use the kit's Explain notes. Park anything Casey says comes later.
 4. **Do.** One hands-on task from the kit's Experiment step. Code tasks are
    for the Windows PC; he writes the code. Review it, don't rewrite it.
 5. **Cards.** Point to this section's cards in `cards.tsv` (or add missing ones).
 6. **Save and move on.** Update **Study position** in `STATE.md`
-   (next section, step = Watch). Then go back to step 1 for the next section.
+   (next section, step = Watch) and add the finished section to `REVIEWS.md`
+   with `tools/reviews.py add`. Then go back to step 1 for the next section.
 
 ## 3. After the last section
 1. **Q&A sections** run through the same loop.

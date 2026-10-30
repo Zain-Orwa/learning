@@ -119,6 +119,13 @@ textarea{min-height:88px;resize:vertical}
 .fb{margin-top:10px;padding:10px 12px;border-radius:6px;background:var(--chip);white-space:pre-wrap}
 .verdict{font-family:var(--f-mono);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em}
 .v-correct{color:var(--good)} .v-partial{color:var(--warn)} .v-missing{color:var(--bad)}
+.score{display:flex;align-items:center;gap:10px;font-family:var(--f-mono);font-weight:600}
+.score .sbar{flex:0 1 180px;height:8px;background:var(--rule);border-radius:4px;overflow:hidden}
+.score .sbar i{display:block;height:100%}
+.fb.fbs{white-space:normal}
+.miss{margin:6px 0 0;padding-left:20px}
+.guessbox{border:1px solid var(--ip);border-radius:8px;padding:12px 14px;margin:12px 0;background:color-mix(in srgb,var(--ip) 8%,var(--panel))}
+.guessbox h3{margin:0 0 4px;font-size:16px}
 details.model{margin-top:8px} details.model summary{cursor:pointer;color:var(--muted);font-size:14px}
 .card{margin:14px 0}
 .card .face{border:1px solid var(--rule);border-radius:10px;min-height:150px;padding:22px;display:flex;flex-direction:column;justify-content:center;background:var(--panel)}
@@ -189,7 +196,7 @@ const md = s=>esc(s).replace(/`([^`]+)`/g,"<code>$1</code>").replace(/\*\*([^*]+
 $("#eyebrow").textContent=D.eyebrow||""; $("#h1").textContent=D.title||document.title;
 
 /* ---------- state + persistence ---------- */
-const FRESH={v:2,cur:D.blocks[0].id,step:"watch",tab:"path",done:{},completed:{},vt:{},recall:{},cmp:{},park:{},answers:{},fb:{},cards:{},notes:{},speed:1,lastVisit:0,sessionParts:0,brk:null,stopped:false};
+const FRESH={v:2,cur:D.blocks[0].id,step:"watch",tab:"path",done:{},completed:{},vt:{},recall:{},cmp:{},guess:{},rfb:{},cdate:{},park:{},answers:{},fb:{},cards:{},notes:{},speed:1,lastVisit:0,sessionParts:0,brk:null,stopped:false};
 let S=JSON.parse(JSON.stringify(FRESH));
 const LS=D.storageKey||"study-kit";
 try{const raw=localStorage.getItem(LS); if(raw) S=Object.assign(S,JSON.parse(raw));}catch(e){}
@@ -366,7 +373,13 @@ function renderStep(b,k){
       `<div class="drop" id="drop"><p><b>Load the video once per visit.</b> The page plays only this part and stops at ${b.end}.</p>
        <p class="small muted">${D.video&&D.video.file?`File: <code>${esc(D.video.file)}</code>. `:""}It stays on your computer; nothing is uploaded.</p>
        <label class="btn" for="vfile">Choose video file</label><input type="file" id="vfile" accept="video/*" hidden><p class="small muted">or drag the file here</p></div>`;
+    const gq=guessQ(b);
+    if(S.guess[b.id]===undefined) return `<p><b>Part ${idxOf(b)+1}: ${b.start} → ${b.end}</b> (${fmt(en-st)})</p>
+    <div class="guessbox"><h3>Guess first</h3><p class="small muted">Before you watch, guess. Being wrong is fine: a guess makes your brain wait for the answer, so it sticks better.</p>
+    <p><b>${md(gq)}</b></p><textarea id="guessin" placeholder="My guess…"></textarea>
+    <div class="row"><button class="btn" id="guessgo">Lock in my guess, then watch</button><button class="btn ghost" id="guessnone">I have no idea</button></div></div>`;
     return `<p><b>Watch ${b.start} → ${b.end}</b> (${fmt(en-st)}). ${md(b.summary)}</p>
+    <p class="small muted">Your guess: “${esc(S.guess[b.id]||"no idea")}”. Watch for the answer.</p>
     ${loader}
     <div class="park" id="parkbox"><h3>Parking lot</h3><p class="small muted">Want to search something? Don't leave. Write it here and keep watching. We look at it after this part.</p>
     <div class="row"><input type="text" id="parkin" placeholder="e.g. what does LPSTR stand for?" autocomplete="off"><button class="btn small" id="parkgo">Park it</button></div>
@@ -380,11 +393,15 @@ function renderStep(b,k){
     const shown=S.cmp[b.id];
     return `<p><b>Without looking back:</b> what did Casey explain in this part? Write 3–5 short points in your own words.</p>
     <textarea data-recall="${b.id}" placeholder="1. …">${esc(S.recall[b.id]||"")}</textarea>
-    <div class="row"><button class="btn ghost" id="cmp">${shown?"Hide":"Compare with the notes"}</button></div>
+    <div class="row">${sample?`<button class="btn" id="rcheck">Grade my recall</button>`:`<button class="btn ghost" id="rcopy">Copy for Claude to grade</button>`}<button class="btn ghost" id="cmp">${shown?"Hide":"Compare with the notes"}</button></div>
+    <div class="copybox" id="rcb"></div><div id="rfb">${S.rfb[b.id]?renderScore(S.rfb[b.id]):""}</div>
     <div id="cmpbox" ${shown?"":"hidden"}><div class="callout"><b>What the part covers:</b> ${md(b.summary)}<ol>${b.watchFor.map(w=>`<li>${md(w)}</li>`).join("")}</ol></div></div>
     <div class="park"><h3>Your parking lot</h3>${(S.park[b.id]||[]).length?`<p class="small muted">Answer now only if it's about this part. If Casey covers it later, keep it for later.</p><ul class="plist" id="plist">${parkItems(b,true)}</ul>`:`<p class="small muted">Empty. Nothing pulled you away. Good.</p>`}</div>`;
   }
-  if(k==="explain") return b.explain + (b.prereq?`<div class="callout"><b>Prerequisite, explained now:</b> ${b.prereq}</div>`:"");
+  if(k==="explain") return (b.oneLiner?`<div class="callout"><b>The idea in one sentence:</b> ${md(b.oneLiner)}</div>`:"")
+    + (b.analogy?`<p><b>Real-life picture:</b> ${md(b.analogy)}</p>`:"")
+    + b.explain + (b.prereq?`<div class="callout"><b>Prerequisite, explained now:</b> ${b.prereq}</div>`:"")
+    + (b.mistake?`<div class="callout later"><b>Common beginner mistake:</b> ${md(b.mistake)}</div>`:"");
   if(k==="experiment") return b.experiment;
   if(k==="code") return b.code;
   if(k==="why") return b.why;
@@ -393,6 +410,20 @@ function renderStep(b,k){
     b.cards.map(c=>`<div class="card"><div class="face"><div class="side">Front</div><div class="txt">${md(c[0])}</div><details class="model"><summary>Flip</summary><p>${md(c[1])}</p></details></div></div>`).join("");
   return "";
 }
+function guessQ(b){return b.guess||b.questions[0].q}
+const GRADE_RULES=`Grade STRICTLY, in percent. Score = how much of the full correct answer the student gave. A vague or half-right point gets partial credit. A wrong statement costs points even if the rest is right. List what is right, and every missing or wrong piece with the percent it is worth, so right + missing = 100. Do NOT reveal the full answer: if below 100, ask ONE guiding question that leads the student to the missing piece. If the gap is something Casey explains in the video, give the time range to rewatch. Simple English.`;
+function scoreColor(n){return n>=90?"var(--good)":n>=60?"var(--warn)":"var(--bad)"}
+function renderScore(fb){
+  if(fb.verdict&&fb.score===undefined) return renderFb(fb);
+  const n=Math.max(0,Math.min(100,Math.round(+fb.score||0)));
+  return `<div class="fb fbs"><div class="score">Score: ${n}%<span class="sbar"><i style="width:${n}%;background:${scoreColor(n)}"></i></span></div>
+  ${fb.right?`<p style="margin:8px 0 0"><b>Right:</b> ${esc(fb.right)}</p>`:""}
+  ${(fb.missing||[]).length?`<p style="margin:8px 0 0"><b>Missing or wrong for 100%:</b></p><ul class="miss">${fb.missing.map(m=>`<li>${esc(m.point)} <span class="muted">(${Math.round(+m.pct||0)}%)</span></li>`).join("")}</ul>`:""}
+  ${fb.guide?`<p style="margin:8px 0 0"><b>Guiding question:</b> ${esc(fb.guide)}</p>`:""}
+  ${fb.rewatch?`<p class="small muted" style="margin:6px 0 0">Rewatch: ${esc(fb.rewatch)}</p>`:""}</div>`;
+}
+function normFb(r){return {score:Math.max(0,Math.min(100,Math.round(+r.score||0))),right:String(r.right||""),missing:Array.isArray(r.missing)?r.missing.slice(0,8).map(m=>({point:String(m.point||m||""),pct:+m.pct||0})):[],guide:String(r.guide||""),rewatch:String(r.rewatch||"")}}
+const JSON_SHAPE=`Reply with only JSON: {"score":0-100,"right":"...","missing":[{"point":"...","pct":number}],"guide":"one guiding question, or empty if 100","rewatch":"m:ss-m:ss or empty"}`;
 function parkItems(b,actions){
   return (S.park[b.id]||[]).map((p,i)=>`<li><span class="at">${fmt(p.at)}</span><span class="txt">${esc(p.t)}</span>
    ${p.status!=="open"?`<span class="chip ${p.status}">${p.status==="later"?"later":"answered"}</span>`:""}
@@ -400,7 +431,9 @@ function parkItems(b,actions){
    <div class="pans small" id="pans-${i}" style="flex-basis:100%">${p.ans?esc(p.ans):""}</div>`:""}</li>`).join("");
 }
 function renderAsk(b){
-  return `<p class="muted small">Answer from memory first, in your own words. Then check. A wrong answer you wrote teaches you more than a right one you only read.</p>`+
+  const g=S.guess[b.id];
+  return `<p class="muted small">Answer from memory first, in your own words. Then check. Grading is strict: you get a score in %, and what's missing for 100%.</p>`+
+  (b.guess&&g!==undefined?`<div class="guessbox"><h3>Your guess before watching</h3><p>${md(b.guess)}</p><p>You guessed: “${esc(g||"no idea")}”. Were you right? What changed?</p></div>`:"")+
   b.questions.map((q,i)=>{const id=b.id+"?"+i, fb=S.fb[id];
     return `<div class="q"><div class="qn">Q${i+1}${q.t?` · from ${q.t}`:""}</div><div class="qt">${md(q.q)}</div>
     <textarea data-ans="${id}" placeholder="Your answer…">${esc(S.answers[id]||"")}</textarea>
@@ -408,7 +441,8 @@ function renderAsk(b){
     ${q.hint?`<button class="btn ghost" data-hint="${id}">Hint</button>`:""}</div>
     <div class="small muted" id="hint-${id}" hidden>${md(q.hint||"")}</div>
     <div class="copybox" id="cb-${id}"></div>
-    <div id="fb-${id}">${fb?renderFb(fb):""}</div>
+    ${!b.guess&&i===0&&g!==undefined?`<p class="small muted">Before watching you guessed: “${esc(g||"no idea")}”.</p>`:""}
+    <div id="fb-${id}">${fb?renderScore(fb):""}</div>
     <details class="model"><summary>Show model answer</summary><p>${md(q.a)}</p></details></div>`}).join("")+
   (sample?`<div style="margin-top:18px;border-top:1px solid var(--rule);padding-top:14px"><h3>Stuck? Ask about this part</h3>
   <div class="chatlog" id="chatlog">${(S.notes[b.id]||[]).map(m=>`<div class="msg ${m.r==="user"?"u":"a"}">${esc(m.c)}</div>`).join("")}</div>
@@ -439,13 +473,14 @@ function renderStopped(){
   <p class="small muted">So every Claude account and machine knows your place: press <b>Copy position</b> and paste it to Claude with <code>/study</code>. Claude saves it in <code>journey/STATE.md</code>.</p>
   <div class="row" style="justify-content:center"><button class="btn" data-go="copypos">Copy position</button><button class="btn ghost" data-go="resume">Actually, keep going</button></div><div class="copybox" id="poscb"></div></section>`;
 }
+function completedList(){return D.blocks.filter(b=>S.completed[b.id]).map(b=>`${b.id} ${S.cdate[b.id]||"?"}`).join(", ")||"none"}
 function positionText(){
   const f=frontier(), b=blockById(S.cur), d=new Date().toISOString().slice(0,10);
   const step=(STEPS.find(([k])=>k===S.step)||[])[1]||"Watch";
-  if(allDone()) return `/study\nSave my study position:\n## Study position\n- Course: ${D.course||D.title}\n- Section: all ${D.blocks.length} parts done; next is the Q&A\n- Step: Q&A\n- Updated: ${d}`;
+  if(allDone()) return `/study\nSave my study position:\n## Study position\n- Course: ${D.course||D.title}\n- Section: all ${D.blocks.length} parts done; next is the Q&A\n- Step: Q&A\n- Completed (part id, date): ${completedList()}\n- Updated: ${d}`;
   const nb=(S.brk||S.stopped)?D.blocks[f]:b, i=idxOf(nb), st=(S.brk||S.stopped)?"Watch":step;
   const into=S.vt[nb.id]?Math.max(0,S.vt[nb.id]-secs(nb.start)):0;
-  return `/study\nSave my study position:\n## Study position\n- Course: ${D.course||D.title}\n- Section: ${i+1} of ${D.blocks.length} ("${nb.title}", ${nb.start}-${nb.end})\n- Step: ${st}${into>1?` (video at ${fmt(into)} into the part, episode time ${fmt(secs(nb.start)+into)})`:""}\n- Parts done: ${Object.keys(S.completed).length}\n- Updated: ${d}`;
+  return `/study\nSave my study position:\n## Study position\n- Course: ${D.course||D.title}\n- Section: ${i+1} of ${D.blocks.length} ("${nb.title}", ${nb.start}-${nb.end})\n- Step: ${st}${into>1?` (video at ${fmt(into)} into the part, episode time ${fmt(secs(nb.start)+into)})`:""}\n- Parts done: ${Object.keys(S.completed).length}\n- Completed (part id, date): ${completedList()}\n- Updated: ${d}`;
 }
 function tickBreak(){
   const el=$("#bclock"); if(!el||!S.brk||!S.brk.until){clearInterval(brkTimer);brkTimer=null;return}
@@ -503,7 +538,7 @@ function goNextStep(){
   const st=stepsFor(b),i=st.findIndex(([k])=>k===S.step);
   if(i<st.length-1){S.step=st[i+1][0];}
   else{
-    S.completed[b.id]=true; S.sessionParts=(S.sessionParts||0)+1;
+    S.completed[b.id]=true; S.cdate[b.id]=new Date().toISOString().slice(0,10); S.sessionParts=(S.sessionParts||0)+1;
     const nb=D.blocks[idxOf(b)+1];
     if(nb){S.cur=nb.id;S.step="watch";S.brk={from:b.id,until:null};}
     else{S.cur=D.qa?"__qa":b.id; toast("Last part finished");}
@@ -531,6 +566,16 @@ $("#view").addEventListener("click",async e=>{
   if(t.dataset.step){S.step=t.dataset.step;save();render();return}
   if(t.id==="markNext"){welcome=false;goNextStep();return}
   if(t.id==="parkgo"){addPark();return}
+  if(t.id==="guessgo"||t.id==="guessnone"){const v=t.id==="guessnone"?"":($("#guessin").value.trim());if(t.id==="guessgo"&&!v){toast("Write a guess, or press “I have no idea”");return}S.guess[S.cur]=v;save();render();return}
+  if(t.id==="rcopy"||t.id==="rcheck"){const b=blockById(S.cur),txt=(S.recall[b.id]||"").trim();if(!txt){toast("Write your recall first");return}
+    const strip=h=>String(h||"").replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim();
+    const ref=`What the part covers: ${b.summary}\nKey points: ${b.watchFor.map(w=>w.replace(/[*`]/g,"")).join(" | ")}\nNotes: ${strip(b.explain).slice(0,2500)}`;
+    if(t.id==="rcopy"){copy(`Grade my recall of a video part (I wrote it from memory). ${GRADE_RULES}\n\nVideo: "${D.title}", part "${b.title}" (${b.start}-${b.end})\nReference:\n${ref}\n\nMy recall:\n${txt}`,$("#rcb"));return}
+    t.disabled=true;$("#rfb").innerHTML=`<div class="fb muted">Thinking…</div>`;
+    try{const r=await sample.json(`A student watched one part of a programming video and wrote, from memory, what it covered. ${GRADE_RULES} Judge coverage of the key points and correctness, not English.\n${blockContext(b)}\nREFERENCE:\n${ref}\n\nSTUDENT RECALL:\n${txt}\n\n${JSON_SHAPE}`);
+      S.rfb[b.id]=normFb(r);save();$("#rfb").innerHTML=renderScore(S.rfb[b.id]);}
+    catch(err){$("#rfb").innerHTML=`<div class="fb">Couldn't grade this time. Try “Compare with the notes”.</div>`}
+    finally{t.disabled=false}return}
   if(t.id==="cmp"){S.cmp[S.cur]=!S.cmp[S.cur];save();$("#cmpbox").hidden=!S.cmp[S.cur];t.textContent=S.cmp[S.cur]?"Hide":"Compare with the notes";return}
   if(t.dataset.pset){const [i,st]=t.dataset.pset.split(":");const b=blockById(S.cur);S.park[b.id][+i].status=st;save();$("#plist").innerHTML=parkItems(b,true);return}
   if(t.dataset.pcopy){const b=blockById(S.cur),p=S.park[b.id][+t.dataset.pcopy];copy(`I'm studying "${D.title}", part "${b.title}" (${b.start}-${b.end}). While watching I parked this question at ${fmt(p.at)} into the part: "${p.t}". Answer it briefly in simple English. If Casey covers it later in the series, just say so and give a one-line preview.`,$("#pans-"+t.dataset.pcopy));return}
@@ -539,7 +584,7 @@ $("#view").addEventListener("click",async e=>{
     catch(err){out.textContent=err.text||"Couldn't answer this time. Try again later.";t.disabled=false}return}
   if(t.dataset.hint){$("#hint-"+CSS.escape(t.dataset.hint)).hidden=false;return}
   if(t.dataset.copyq){const [bid,qi]=t.dataset.copyq.split("?"),b=blockById(bid),q=b.questions[+qi];
-    copy(`Check my answer. Grade my understanding, not my wording. Tell me what's missing in 2–4 short sentences, simple English, then ask me one follow-up question. Don't teach topics Casey hasn't covered yet.\n\nVideo: "${D.title}", part "${b.title}" (${b.start}-${b.end})\nQuestion: ${q.q}\nReference answer: ${q.a}\nMy answer: ${S.answers[t.dataset.copyq]||"(empty)"}`,$("#cb-"+CSS.escape(t.dataset.copyq)));return}
+    copy(`Check my answer. ${GRADE_RULES} Don't teach topics Casey hasn't covered yet.\n\nVideo: "${D.title}", part "${b.title}" (${b.start}-${b.end})\nQuestion: ${q.q}\nReference answer (don't show it to me unless I ask): ${q.a}\nMy answer: ${S.answers[t.dataset.copyq]||"(empty)"}`,$("#cb-"+CSS.escape(t.dataset.copyq)));return}
   if(t.dataset.check){checkAnswer(t.dataset.check,t);return}
   if(t.id==="flip"){revShow=true;render();return}
   if(t.dataset.rate){rateCard(revQueue.shift(),+t.dataset.rate);revShow=false;render();return}
@@ -567,10 +612,10 @@ QUESTION: ${q.q}
 REFERENCE ANSWER: ${q.a}
 STUDENT ANSWER: ${ans}
 
-Grade understanding, not wording. Say exactly what is missing or wrong in 2-4 short sentences. If correct, add one sentence that deepens it without going beyond this part. Then give one short follow-up question on the same idea.
-Reply with only JSON: {"verdict":"correct"|"partial"|"missing","feedback":"...","followup":"..."}`;
-  try{const r=await sample.json(prompt);const fb={verdict:["correct","partial","missing"].includes(r.verdict)?r.verdict:"partial",feedback:String(r.feedback||""),followup:String(r.followup||"")};
-    S.fb[id]=fb;save();box.innerHTML=renderFb(fb);}
+${GRADE_RULES} Grade understanding, not wording or English.
+${JSON_SHAPE}`;
+  try{const r=await sample.json(prompt);const fb=normFb(r);
+    S.fb[id]=fb;save();box.innerHTML=renderScore(fb);}
   catch(err){box.innerHTML=`<div class="fb">${err&&err.code==="not_granted"?"Checking needs permission to use Claude. Open the model answer instead.":err&&err.code==="rate_limited"?"Too many checks at once. Try again in a minute.":"Couldn't check this time. Try again, or open the model answer."}</div>`}
   finally{btn.disabled=false}
 }

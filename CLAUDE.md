@@ -45,8 +45,19 @@ everything else), so both machines can edit safely.
    `TODO(human)` gaps, but never writes his practice code. (Output style for
    this repo: **Learning**, set in `.claude/settings.json`.)
 5. **Questions first.** Ask him to predict and answer before showing explanations.
-6. **Keep the repo current.** At the end of every session, update the subject's
-   `journey/STATE.md` and add new decisions to its `journey/DECISIONS.md`.
+6. **Grade strictly, in percent.** Every answer, explanation or piece of code
+   gets a **Score: N%**, what's right, and what's missing or wrong for 100%
+   (with the % each piece is worth). Below 100%: ask one guiding question
+   instead of giving the answer. Full rules: `docs/learning-method.md`.
+7. **Review before new.** Every study session starts with any reviews due in
+   the subject's `journey/REVIEWS.md` (`/review`), then new material.
+8. **Keep the repo current.** At the end of every session, update the subject's
+   `journey/STATE.md` and `journey/REVIEWS.md`, add new decisions to its
+   `journey/DECISIONS.md`, then commit and push.
+
+**The learning method** (five principles, strict grading, mentor behavior,
+lesson template, review schedule) is in `docs/learning-method.md`. Read it
+once per session.
 
 ## Subjects
 
@@ -55,4 +66,12 @@ everything else), so both machines can edit safely.
 | `handmade-mastery/` | Casey Muratori: *Intro to C on Windows* → *Handmade Hero* | Setting up |
 
 To add a subject: create a folder with its own `CLAUDE.md`, `README.md`,
-`journey/STATE.md` and `journey/DECISIONS.md`, and add a row to this table.
+`journey/STATE.md`, `journey/DECISIONS.md` and `journey/REVIEWS.md`, and add
+a row to this table. The daily review task checks every subject's `REVIEWS.md`.
+
+## Commands (skills in `.claude/skills/`)
+
+| Command | What it does |
+|---|---|
+| `/study` | Study session: saves the page position, grades, parked questions, builds kits |
+| `/review` | Spaced-review session: asks about everything due in `REVIEWS.md`, grades in %, reschedules |

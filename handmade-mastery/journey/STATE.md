@@ -1,6 +1,6 @@
 # Current state
 
-_Last updated: 2026-10-30_
+_Last updated: 2026-10-31_
 
 ## Setup
 - Step 1, choose the toolset: **done**.
@@ -14,7 +14,11 @@ _Last updated: 2026-10-30_
 - Step 3, the study routine: **built** (2026-10-30).
   - [x] Study page: video player that plays one part and stops, locked parts, parking lot, recall, breaks, welcome back, Copy position
   - [x] `/study` updated: the page guides; Claude saves position, grades, answers parked questions, builds kits
-  - [ ] Learner tries Day 1 Part 1 with the page on the Mac and says if it works
+  - [x] Learning method from Zain's "learning machine" video: `docs/learning-method.md`
+  - [x] Strict % grading, guess-first, graded Recall, one-sentence idea / analogy / common mistake in the page
+  - [x] Spaced reviews: `journey/REVIEWS.md` + `tools/reviews.py` + `/review`; `/study` adds finished parts
+  - [x] Daily review scheduled task (~13:00 Europe/Berlin)
+  - [ ] Learner tries Day 1 Part 1 with the page on the Mac (planned: 2026-11-01)
 
 ## Windows tools: all installed and verified (2026-10-30)
 - Visual Studio Community 2026 with the C++ workload (MSVC 14.51). Test: a

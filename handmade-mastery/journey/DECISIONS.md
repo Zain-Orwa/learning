@@ -82,3 +82,25 @@ Newest at the bottom. Each entry: date, decision, why.
   each one reduce mind wandering (Szpunar, Khan & Schacter, PNAS 2013).
 - One shared engine (`tools/study-kit/engine.html`) + one `data.js` per episode,
   built with `tools/study-kit/build.py`.
+
+## 2026-10-31: Learning method from the "learning machine" video
+- Zain shared a video (Sintech channel, built on YouMind) on learning with AI.
+  We adopted its method, adapted to our tools (written up in `docs/learning-method.md`):
+  - **Five principles** (Dunlosky et al. 2013): guess before you know, test yourself,
+    spaced repetition, apply immediately, explain in your own words.
+  - **Strict grading in percent**: score, what's right, what's missing for 100% with %
+    per piece, one guiding question instead of the answer.
+  - **Mentor behavior**: review before new material, Socratic hints, a summary and review dates at the end.
+  - **Lesson template** per part: guess first, one-sentence idea, real-life analogy,
+    common beginner mistake, questions, apply, explain. Kits end with a self-check of
+    what couldn't be verified.
+  - **Scheduled review task** so he never forgets that a review is due.
+- Not adopted: the YouMind platform itself. Claude Code + this repo + scheduled
+  tasks already do the same, and keep everything in his own GitHub.
+
+## 2026-10-31: Review schedule
+- 1 day → 3 days → 1 week → 2 weeks → 1 month → 3 months → 6 months → every 6 months.
+  (He asked for 1d, 1w, 1m, 3m, 6m; we added 3d and 2w as the video and memory research do.)
+- Pass = 80%+. Below 80%: short re-teach, back to 1 day.
+- Log: `journey/REVIEWS.md`, only edited with `tools/reviews.py` (dates computed, not guessed).
+- Daily review task at ~13:00 Europe/Berlin (Zain's choice: midday, Central Europe).

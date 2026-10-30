@@ -776,3 +776,58 @@ window.STUDY.how = `<h2>How this page works</h2>
 <li><b>Recall before reading</b>: pulling ideas out of memory is what makes them stay.</li>
 <li><b>Spaced review</b>: cards come back after 1 day, about 6 days, then longer.</li>
 <li><b>Staying in scope</b>: when Casey says "later", it goes to the Parked tab.</li></ul>`;
+
+/* ---- lesson-template fields (guess first, one sentence, analogy, common mistake) ---- */
+(function(){
+const T = {
+ b01:{guess:"What do you think a compiler does, in one sentence?",
+  oneLiner:"Handmade Hero builds a whole game in C, and on Windows you first have to install a C compiler (Visual Studio).",
+  analogy:"A compiler is like a translator for a trip abroad: Windows doesn't come with one, so you bring your own.",
+  mistake:"Installing Visual Studio without the \"Desktop development with C++\" workload. Then there's no `cl.exe`."},
+ b02:{guess:"Why might Windows need to know, before a program even starts, whether it's a console program or a program with a window?",
+  oneLiner:"A project is a list of plain-text source files plus settings, and on Windows it's built as either a console program or a windowed program.",
+  analogy:"A solution is a binder, each project in it is a recipe card, and the .cpp files are the plain-paper pages of the recipe.",
+  mistake:"Making a Console project and then wondering why the linker wants `main` instead of `WinMain`. The subsystem setting doesn't match your code."},
+ b03:{guess:"When you press Build, what do you think your text file gets turned into?",
+  oneLiner:"Compiling translates human-readable C text into machine code for one specific kind of CPU.",
+  analogy:"Compiling is like translating a book: the same story becomes French for x64 or Japanese for ARM. A French reader can't read the Japanese edition.",
+  mistake:"Thinking an .exe built for x64 runs on any computer, for example an ARM Mac."},
+ b04:{guess:"A PC has 2 CPU chips, but Task Manager shows 16 CPU graphs. Guess why.",
+  oneLiner:"One chip holds several cores, each core can run more than one hardware thread, and Windows counts each thread as a logical processor.",
+  analogy:"A core is a cook. Hyperthreading gives one cook two order tickets: while one dish waits in the oven, the cook works on the other. Two tickets, still one cook.",
+  mistake:"Thinking 16 logical processors means 16 times the speed. Hyperthreads share one core's hardware."},
+ b05:{guess:"A game has 100 .cpp files and you change one. What would you want the build to redo, and why?",
+  oneLiner:"The compiler turns each .cpp into an object file on its own; the linker joins them, connects the names between them, and writes the .exe.",
+  analogy:"Each chapter of a book is written separately, with notes like \"see chapter 7\". The linker is the editor who binds the chapters and fills in the real page numbers.",
+  mistake:"Trying to fix a linker error (LNK…) by editing syntax. Linker errors are about a missing definition or library, not about how a line is written."},
+ b06:{guess:"Windows didn't compile your program. So how could it know where in your .exe to start running?",
+  oneLiner:"The linker writes the address of the start function (found by its name) into the .exe header, and Windows jumps there after loading the file.",
+  analogy:"An .exe is a parcel with a label. Windows reads the label (the header), unpacks the parcel into memory, and the label says where to start reading.",
+  mistake:"Believing WinMain is the very first code that runs. It isn't, and Casey explains why on Day 2."},
+ b07:{guess:"Guess what the H in HINSTANCE and the LP in LPSTR stand for.",
+  oneLiner:"HINSTANCE and LPSTR are Windows's own type names written in Hungarian notation: H means handle, LP means (long) pointer.",
+  analogy:"A handle is a coat-check ticket: the ticket isn't your coat, but you hand it back to get the coat.",
+  mistake:"Copying Hungarian prefixes into your own code because Windows uses them. Casey says don't."},
+ b08:{guess:"If you write a function but never call it, does its code run? Why or why not?",
+  oneLiner:"A function is a named, reusable block of code: its signature says what goes in and out, and its body runs only when it's called.",
+  analogy:"A function is a recipe card. Writing the card cooks nothing; food appears only when someone says \"make recipe foo now\" (a call).",
+  mistake:"Defining a function and expecting it to run without calling it."},
+ b09:{guess:"Does C care if you put a whole function on one line? What kind of space would break your code?",
+  oneLiner:"A semicolon ends a statement; whitespace only separates tokens, so it matters only when it splits a name.",
+  analogy:"Spaces in C are like spaces between words: add as many as you want between words, but a space inside a word makes two words.",
+  mistake:"Forgetting a `;` and then looking at the wrong line: the error is often reported on the next line."},
+ b10:{guess:"WinMain returns an int. Who do you think receives that number, and what is it for?",
+  oneLiner:"WinMain returns an int exit code, is marked CALLBACK so it matches the way Windows calls functions, and receives four values about how the program was started.",
+  analogy:"WinMain is a form with fixed fields: Windows fills in four boxes, you must reply in the agreed format (CALLBACK), and you hand back a number (the exit code).",
+  mistake:"Ignoring what `int` promises. A function that says it returns `int` should return one (`return 0;`)."},
+ b11:{guess:"You call a function that is only declared, with no body anywhere. Compiler error or linker error? Guess.",
+  oneLiner:"A declaration tells the compiler how to call a function; only a definition gives the linker a body to connect the call to.",
+  analogy:"A declaration is a phone-book entry: it lets you dial. The definition is the person who answers. No person, and the call fails at the end (link error).",
+  mistake:"Mixing up a declaration (ends with `;`, no body) with a definition (has a `{ }` body)."},
+ b12:{guess:"You never wrote OutputDebugStringA or HINSTANCE. Where do you think those names come from?",
+  oneLiner:"#include pastes another file's text in place, and windows.h brings in the declarations of everything Windows provides.",
+  analogy:"#include is like photocopying a reference sheet and stapling it into your notes at that exact spot.",
+  mistake:"Thinking `#include <windows.h>` adds Windows's code to your program. It adds only declarations; the code lives in Windows's DLLs."}
+};
+window.STUDY.blocks.forEach(b=>Object.assign(b, T[b.id]||{}));
+})();

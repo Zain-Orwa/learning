@@ -32,7 +32,7 @@ This file adds what is specific to this subject. Then read
 |---|---|---|
 | 1 | Choose the toolset | **Done** (2026-10-30). See `docs/toolset.md` |
 | 2 | Create the repo and the handoff files | **Done** (2026-10-30). Cloned on both machines |
-| 3 | The study routine | **Built** (2026-10-30): study page with video player + `/study`. Learner tries it on Day 1 Part 1 |
+| 3 | The study routine | **Built** (2026-10-30/31): study page with video player, strict % grading, `/study`, `/review`, daily review task. Learner tries it on Day 1 Part 1 |
 | 4+ | Not decided yet | Decide together, one step at a time |
 
 ## Machines
@@ -65,6 +65,7 @@ CLAUDE.md                 this file: subject handoff (root CLAUDE.md = general r
 README.md                 human overview of this subject
 journey/STATE.md          where we are now and the next action  ← update every session
 journey/DECISIONS.md      dated log of every decision and why
+journey/REVIEWS.md        spaced-review log (edit only with ../tools/reviews.py)
 docs/toolset.md           each tool: purpose, machine, install, config, status
 courses/<course>/dayNN/   materials per episode
     data.js                 the lesson content (source)
