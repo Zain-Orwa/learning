@@ -4,13 +4,13 @@ _Last updated: 2026-10-30_
 
 ## Setup
 - Step 1, choose the toolset: **done**.
-- Step 2, create the repo and handoff files: **in progress**.
+- Step 2, create the repo and handoff files: **done** (2026-10-30).
   - [x] Repo renamed to `learning` (for every subject); this course lives in `handmade-mastery/`
   - [x] Repo structure, CLAUDE.md, toolset doc, decision log
   - [x] Day 1 study kit, transcript and cards moved into `courses/intro-to-c/day01/`
   - [x] Pushed to GitHub: https://github.com/Zain-Orwa/learning (private)
   - [x] Cloned on the Windows PC at `C:\Users\orwaz\learning`
-  - [ ] Cloned on the Mac (`~/learning`)
+  - [x] Cloned on the Mac (learner says it is there; run `git pull --rebase` on the Mac to get today's commits)
 - Step 3: not decided yet.
 
 ## Windows tools: all installed and verified (2026-10-30)
@@ -36,4 +36,4 @@ See `docs/toolset.md`, section "Mac M1".
   via an API key, or with another provider, or skip it for now?
 
 ## Next action
-Finish Step 2: clone the repo on the Mac (`~/learning`).
+Step 3: decide together what comes next (likely: start Intro to C Day 1).
