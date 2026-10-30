@@ -8,7 +8,7 @@ _Last updated: 2026-10-30_
   - [x] Repo renamed to `learning` (for every subject); this course lives in `handmade-mastery/`
   - [x] Repo structure, CLAUDE.md, toolset doc, decision log
   - [x] Day 1 study kit, transcript and cards moved into `courses/intro-to-c/day01/`
-  - [ ] Push to GitHub (private repo)
+  - [x] Pushed to GitHub: https://github.com/Zain-Orwa/learning (private)
   - [ ] Learner clones it on the Mac and on the Windows PC
 - Step 3: not decided yet.
 
@@ -20,4 +20,4 @@ _Last updated: 2026-10-30_
   via an API key, or with another provider, or skip it for now?
 
 ## Next action
-Finish Step 2: Zain creates an empty private GitHub repo `learning`; Claude pushes; then clone it on both machines.
+Finish Step 2: clone the repo on the Mac (`~/learning`) and the Windows PC (`C:\learning`).

@@ -31,7 +31,7 @@ This file adds what is specific to this subject. Then read
 | Step | What | Status |
 |---|---|---|
 | 1 | Choose the toolset | **Done** (2026-10-30). See `docs/toolset.md` |
-| 2 | Create the repo and the handoff files | **In progress.** Built as the `learning` repo (this is its first subject); needs pushing to GitHub |
+| 2 | Create the repo and the handoff files | **In progress.** `learning` repo pushed to GitHub (this is its first subject); clone on both machines next |
 | 3+ | Not decided yet | Decide together, one step at a time |
 
 ## Machines
