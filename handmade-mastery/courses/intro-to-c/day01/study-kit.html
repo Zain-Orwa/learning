@@ -22,6 +22,7 @@
   --paper:#13171c; --panel:#1a1f26; --ink:#e3e7ea; --muted:#9aa4ad; --rule:#2c333c;
   --ip:#e8b923; --ip-ink:#1e1600; --link:#8fb0ff; --code-bg:#0f1317; --good:#6cc48f; --warn:#e0a35a; --bad:#ec7f7f; --chip:#242b33; --screen:#07090b; --screen-ink:#e3e7ea; color-scheme:dark}
 *{box-sizing:border-box}
+[hidden]{display:none!important} /* the hidden attribute must beat any display rule (e.g. the end-of-part screen) */
 body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.6;margin:0}
 a{color:var(--link)}
 button,input,textarea,select{font:inherit;color:inherit}
@@ -171,6 +172,14 @@ td.mono{font-family:var(--f-mono);font-size:13px;white-space:nowrap}
 .copybox{margin-top:8px}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:6px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:20}
 .toast.on{opacity:1}
+.gq{margin:14px 0}
+.gq .qt{font-weight:600;margin:4px 0 8px}
+.gq .qn{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.gmine{border-left:3px solid var(--ip);padding:6px 12px;border-radius:0 6px 6px 0;background:color-mix(in srgb,var(--ip) 7%,var(--panel));white-space:pre-wrap}
+.cover{background:var(--screen);color:var(--screen-ink);border-radius:8px;aspect-ratio:16/9;max-width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:16px;margin:12px 0}
+.cover b{font-family:var(--f-display);font-size:22px}
+.cover .btn{background:var(--ip);color:var(--ip-ink);border-color:var(--ip)}
+.nudge{border-left:4px solid var(--warn);background:color-mix(in srgb,var(--warn) 10%,var(--panel));padding:8px 12px;border-radius:0 6px 6px 0;margin:12px 0}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
@@ -952,12 +961,13 @@ window.STUDY.qa = {
 };
 window.STUDY.how = `<h2>How this page works</h2>
 <p>The page guides you through the video <b>one part at a time</b>. Only the current part is open. The others are locked until you finish it.</p>
-<div class="loop"><span class="on">Watch</span><span>Recall</span><span>Answer</span><span>Explain</span><span>Experiment</span><span>Read code</span><span>Flashcards</span><span>Why it matters</span></div>
+<div class="loop"><span class="on">Guess</span><span>Watch</span><span>Recall</span><span>Answer</span><span>Explain</span><span>Experiment</span><span>Read code</span><span>Flashcards</span><span>Why it matters</span></div>
 <ol>
+<li><b>Guess.</b> First, look back: write one or two sentences about the previous part, from memory. Then guess the answers to this part's 2 or 3 key questions. Being wrong is fine. The video stays covered until you lock in your guesses, and then you can't change them.</li>
 <li><b>Watch.</b> Load the video file once per visit. The player plays only this part and <b>stops by itself</b> at the end. You can't run ahead.</li>
 <li><b>Parking lot.</b> Want to search something while watching? Don't leave. Write it in the parking lot and keep watching. You'll see it again in Recall.</li>
 <li><b>Recall.</b> Write what Casey explained, from memory. Then compare with the notes and handle your parked questions.</li>
-<li><b>Answer.</b> Answer the questions before you see any explanation. "Copy for Claude" copies the question and your answer so any Claude account can grade it.</li>
+<li><b>Answer.</b> Answer the questions before you see any explanation. Your guesses appear next to them, so you see what changed. "Copy for Claude" copies the question and your answer so any Claude account can grade it.</li>
 <li><b>Explain → Experiment → Read code → Flashcards → Why it matters.</b> The rest of the part, one step at a time.</li>
 <li><b>Break.</b> After each part: a short break (5 min), and a longer one (15 min) after every 3 parts. Or stop for today.</li></ol>
 <h3>Your time, your schedule</h3>
@@ -969,6 +979,8 @@ window.STUDY.how = `<h2>How this page works</h2>
 <p>Started with <code>./study</code>, everything is automatic: the video loads by itself, Claude grades inside the page, your progress and reviews are saved into the repo, and <b>Stop for today</b> pushes to GitHub. (Opened as a plain file, use <b>Copy position</b> instead.)</p>
 <h3>Why it's built like this</h3>
 <ul><li><b>Short parts + questions after each one</b> reduce daydreaming and improve learning from lecture videos (Szpunar, Khan &amp; Schacter, 2013).</li>
+<li><b>Guessing before watching</b> (prequestions) helps you learn from video, even on questions you weren't asked (Carpenter &amp; Toftness, 2017).</li>
+<li><b>Looking back first</b>: recalling the previous part helps you learn the next one (Pastötter &amp; Bäuml, 2014).</li>
 <li><b>Recall before reading</b>: pulling ideas out of memory is what makes them stay.</li>
 <li><b>Spaced review</b>: cards come back after 1 day, about 6 days, then longer.</li>
 <li><b>Staying in scope</b>: when Casey says "later", it goes to the Parked tab.</li></ul>`;
@@ -976,51 +988,51 @@ window.STUDY.how = `<h2>How this page works</h2>
 /* ---- lesson-template fields (guess first, one sentence, analogy, common mistake) ---- */
 (function(){
 const T = {
- b01:{guess:"What do you think a compiler does, in one sentence?",
+ b01:{pre:[1],guess:"What do you think a compiler does, in one sentence?",
   oneLiner:"Handmade Hero builds a whole game in C, and on Windows you first have to install a C compiler (Visual Studio).",
   analogy:"A compiler is like a translator for a trip abroad: Windows doesn't come with one, so you bring your own.",
   mistake:"Installing Visual Studio without the \"Desktop development with C++\" workload. Then there's no `cl.exe`."},
- b02:{guess:"Why might Windows need to know, before a program even starts, whether it's a console program or a program with a window?",
+ b02:{pre:[2, 3],guess:"Why might Windows need to know, before a program even starts, whether it's a console program or a program with a window?",
   oneLiner:"A project is a list of plain-text source files plus settings, and on Windows it's built as either a console program or a windowed program.",
   analogy:"A solution is a binder, each project in it is a recipe card, and the .cpp files are the plain-paper pages of the recipe.",
   mistake:"Making a Console project and then wondering why the linker wants `main` instead of `WinMain`. The subsystem setting doesn't match your code."},
- b03:{guess:"When you press Build, what do you think your text file gets turned into?",
+ b03:{pre:[2],guess:"When you press Build, what do you think your text file gets turned into?",
   oneLiner:"Compiling translates human-readable C text into machine code for one specific kind of CPU.",
   analogy:"Compiling is like translating a book: the same story becomes French for x64 or Japanese for ARM. A French reader can't read the Japanese edition.",
   mistake:"Thinking an .exe built for x64 runs on any computer, for example an ARM Mac."},
- b04:{guess:"A PC has 2 CPU chips, but Task Manager shows 16 CPU graphs. Guess why.",
+ b04:{pre:[2],guess:"A PC has 2 CPU chips, but Task Manager shows 16 CPU graphs. Guess why.",
   oneLiner:"One chip holds several cores, each core can run more than one hardware thread, and Windows counts each thread as a logical processor.",
   analogy:"A core is a cook. Hyperthreading gives one cook two order tickets: while one dish waits in the oven, the cook works on the other. Two tickets, still one cook.",
   mistake:"Thinking 16 logical processors means 16 times the speed. Hyperthreads share one core's hardware."},
- b05:{guess:"A game has 100 .cpp files and you change one. What would you want the build to redo, and why?",
+ b05:{pre:[1, 4],guess:"A game has 100 .cpp files and you change one. What would you want the build to redo, and why?",
   oneLiner:"The compiler turns each .cpp into an object file on its own; the linker joins them, connects the names between them, and writes the .exe.",
   analogy:"Each chapter of a book is written separately, with notes like \"see chapter 7\". The linker is the editor who binds the chapters and fills in the real page numbers.",
   mistake:"Trying to fix a linker error (LNK…) by editing syntax. Linker errors are about a missing definition or library, not about how a line is written."},
- b06:{guess:"Windows didn't compile your program. So how could it know where in your .exe to start running?",
+ b06:{pre:[0, 2],guess:"Windows didn't compile your program. So how could it know where in your .exe to start running?",
   oneLiner:"The linker writes the address of the start function (found by its name) into the .exe header, and Windows jumps there after loading the file.",
   analogy:"An .exe is a parcel with a label. Windows reads the label (the header), unpacks the parcel into memory, and the label says where to start reading.",
   mistake:"Believing WinMain is the very first code that runs. It isn't, and Casey explains why on Day 2."},
- b07:{guess:"Guess what the H in HINSTANCE and the LP in LPSTR stand for.",
+ b07:{pre:[2, 3],guess:"Guess what the H in HINSTANCE and the LP in LPSTR stand for.",
   oneLiner:"HINSTANCE and LPSTR are Windows's own type names written in Hungarian notation: H means handle, LP means (long) pointer.",
   analogy:"A handle is a coat-check ticket: the ticket isn't your coat, but you hand it back to get the coat.",
   mistake:"Copying Hungarian prefixes into your own code because Windows uses them. Casey says don't."},
- b08:{guess:"If you write a function but never call it, does its code run? Why or why not?",
+ b08:{pre:[0, 2],guess:"If you write a function but never call it, does its code run? Why or why not?",
   oneLiner:"A function is a named, reusable block of code: its signature says what goes in and out, and its body runs only when it's called.",
   analogy:"A function is a recipe card. Writing the card cooks nothing; food appears only when someone says \"make recipe foo now\" (a call).",
   mistake:"Defining a function and expecting it to run without calling it."},
- b09:{guess:"Does C care if you put a whole function on one line? What kind of space would break your code?",
+ b09:{pre:[1],guess:"Does C care if you put a whole function on one line? What kind of space would break your code?",
   oneLiner:"A semicolon ends a statement; whitespace only separates tokens, so it matters only when it splits a name.",
   analogy:"Spaces in C are like spaces between words: add as many as you want between words, but a space inside a word makes two words.",
   mistake:"Forgetting a `;` and then looking at the wrong line: the error is often reported on the next line."},
- b10:{guess:"WinMain returns an int. Who do you think receives that number, and what is it for?",
+ b10:{pre:[1, 4],guess:"WinMain returns an int. Who do you think receives that number, and what is it for?",
   oneLiner:"WinMain returns an int exit code, is marked CALLBACK so it matches the way Windows calls functions, and receives four values about how the program was started.",
   analogy:"WinMain is a form with fixed fields: Windows fills in four boxes, you must reply in the agreed format (CALLBACK), and you hand back a number (the exit code).",
   mistake:"Ignoring what `int` promises. A function that says it returns `int` should return one (`return 0;`)."},
- b11:{guess:"You call a function that is only declared, with no body anywhere. Compiler error or linker error? Guess.",
+ b11:{pre:[0],guess:"You call a function that is only declared, with no body anywhere. Compiler error or linker error? Guess.",
   oneLiner:"A declaration tells the compiler how to call a function; only a definition gives the linker a body to connect the call to.",
   analogy:"A declaration is a phone-book entry: it lets you dial. The definition is the person who answers. No person, and the call fails at the end (link error).",
   mistake:"Mixing up a declaration (ends with `;`, no body) with a definition (has a `{ }` body)."},
- b12:{guess:"You never wrote OutputDebugStringA or HINSTANCE. Where do you think those names come from?",
+ b12:{pre:[1],guess:"You never wrote OutputDebugStringA or HINSTANCE. Where do you think those names come from?",
   oneLiner:"#include pastes another file's text in place, and windows.h brings in the declarations of everything Windows provides.",
   analogy:"#include is like photocopying a reference sheet and stapling it into your notes at that exact spot.",
   mistake:"Thinking `#include <windows.h>` adds Windows's code to your program. It adds only declarations; the code lives in Windows's DLLs."}
@@ -1214,7 +1226,7 @@ window.STUDY.blocks.forEach(b=>{ if(DBG[b.id]) b.debug=DBG[b.id]; });
 (function(){
 const D = window.STUDY;
 const STEPS = [
-  ["watch","Watch"],["recall","Recall"],["ask","Answer"],["explain","Explain"],["experiment","Experiment"],
+  ["guess","Guess"],["watch","Watch"],["recall","Recall"],["ask","Answer"],["explain","Explain"],["experiment","Experiment"],
   ["code","Read code"],["cards","Flashcards"],["why","Why it matters"]
 ];
 const SHORT_BREAK=5, LONG_BREAK=15, LONG_EVERY=3; // minutes; a long break after every 3 parts
@@ -1228,10 +1240,11 @@ const md = s=>esc(s).replace(/`([^`]+)`/g,"<code>$1</code>").replace(/\*\*([^*]+
 $("#eyebrow").textContent=D.eyebrow||""; $("#h1").textContent=D.title||document.title;
 
 /* ---------- state + persistence ---------- */
-const FRESH={v:2,cur:D.blocks[0].id,step:"watch",tab:"path",done:{},completed:{},vt:{},recall:{},cmp:{},guess:{},rfb:{},cdate:{},ivans:{},ivfb:{},dbgs:{},dbgans:{},dbgfb:{},session:null,park:{},answers:{},fb:{},cards:{},notes:{},speed:1,lastVisit:0,sessionParts:0,brk:null,stopped:false};
+const FRESH={v:2,cur:D.blocks[0].id,step:"guess",tab:"path",done:{},completed:{},vt:{},recall:{},cmp:{},guess:{},guesses:{},lb:{},lbShow:{},rfb:{},cdate:{},ivans:{},ivfb:{},dbgs:{},dbgans:{},dbgfb:{},session:null,park:{},answers:{},fb:{},cards:{},notes:{},speed:1,lastVisit:0,sessionParts:0,brk:null,stopped:false};
 let S=JSON.parse(JSON.stringify(FRESH));
 const LS=D.storageKey||"study-kit";
 try{const raw=localStorage.getItem(LS); if(raw) S=Object.assign(S,JSON.parse(raw));}catch(e){}
+migrate();
 const localLast=S.lastVisit||0;
 S.stopped=false; // opening the page again always means "continue"
 let welcome = S.lastVisit && (Date.now()-S.lastVisit>30*60*1000) && Object.keys(S.done).length>0;
@@ -1271,7 +1284,7 @@ helperSample.json=async input=>(await helperCall(input,true)).data;
     const ping=await (await fetch("/api/ping")).json(); if(!ping.ok) return;
     const remote=await (await fetch("/api/progress?kit="+encodeURIComponent(kitPath))).json();
     if(remote&&remote.lastVisit&&remote.lastVisit>=localLast){
-      S=Object.assign(JSON.parse(JSON.stringify(FRESH)),remote);
+      S=Object.assign(JSON.parse(JSON.stringify(FRESH)),remote); migrate();
       S.stopped=false;
       welcome=(Date.now()-remote.lastVisit>30*60*1000)&&Object.keys(S.done).length>0;
       if(welcome){S.sessionParts=0;S.brk=null;S.stopped=false;S.session=null;}
@@ -1291,7 +1304,7 @@ function setSaved(t){$("#saved").textContent=t}
     const id=await user.id(); if(!id) return;
     dbRef=db.collection("data/users/"+id).doc("progress-"+LS);
     const snap=await dbRef.get();
-    if(snap.exists){ const remote=JSON.parse(snap.data().json||"{}"); if((remote.lastVisit||0)>(S.lastVisit||0)-60000){S=Object.assign(S,remote); safeRender();} }
+    if(snap.exists){ const remote=JSON.parse(snap.data().json||"{}"); if((remote.lastVisit||0)>(S.lastVisit||0)-60000){S=Object.assign(S,remote); migrate(); safeRender();} }
     setSaved("saved to your account");
   }catch(e){dbRef=null}
 })();
@@ -1308,7 +1321,22 @@ async function copy(text,box){
 /* ---------- helpers ---------- */
 const blockById=id=>D.blocks.find(b=>b.id===id);
 const idxOf=b=>D.blocks.indexOf(b);
-function stepsFor(b){return STEPS.filter(([k])=>["watch","recall","ask","cards"].includes(k)||b[k])}
+/* ---------- guesses: the part's main guess plus the key questions listed in b.pre ---------- */
+function migrate(){S.guesses=S.guesses||{};S.lb=S.lb||{};S.lbShow=S.lbShow||{};Object.keys(S.guess||{}).forEach(id=>{if(!S.guesses[id])S.guesses[id]=[S.guess[id]]});}
+function guessList(b){
+  const out=[]; if(b.guess) out.push({q:b.guess,qi:null});
+  (b.pre||[]).forEach(i=>{if(b.questions[i]) out.push({q:b.questions[i].q,qi:i})});
+  if(!out.length) out.push({q:b.questions[0].q,qi:0});
+  return out;
+}
+function lookBackFor(b){
+  const i=idxOf(b);
+  if(i>0){const p=D.blocks[i-1];return {label:`Part ${i}: ${p.title}`,answer:p.oneLiner||p.summary};}
+  return D.lookBack||null; // part 1: the previous video, when the kit sets window.STUDY.lookBack = {label, answer}
+}
+const guessDone=b=>!!(S.done[b.id]||{}).guess;
+let nudge=null;
+function stepsFor(b){return STEPS.filter(([k])=>["guess","watch","recall","ask","cards"].includes(k)||b[k])}
 function blockDone(b){const d=S.done[b.id]||{};return stepsFor(b).filter(([k])=>d[k]).length}
 function frontier(){const i=D.blocks.findIndex(b=>!S.completed[b.id]);return i===-1?D.blocks.length:i}
 const allDone=()=>frontier()>=D.blocks.length;
@@ -1510,8 +1538,8 @@ function renderPath(){
   if(S.stopped) return renderStopped();
   if(S.cur==="__qa") return welcomeHTML()+`<div class="grid">${stackHTML("__qa")}<section class="block"><div class="eyebrow">After the video</div><h2>Q&amp;A</h2><div class="pane">${D.qa.html}<div id="nextbox"></div></div></section></div>`;
   let b=blockById(S.cur)||D.blocks[0];
-  if(!unlocked(b)){b=D.blocks[Math.min(frontier(),D.blocks.length-1)];S.cur=b.id;S.step="watch";}
-  const steps=stepsFor(b); if(!steps.find(([k])=>k===S.step)||!stepOpen(b,S.step)) S.step=steps.find(([k])=>!(S.done[b.id]||{})[k])?.[0]||"watch";
+  if(!unlocked(b)){b=D.blocks[Math.min(frontier(),D.blocks.length-1)];S.cur=b.id;S.step="guess";}
+  const steps=stepsFor(b); if(!steps.find(([k])=>k===S.step)||!stepOpen(b,S.step)) S.step=steps.find(([k])=>!(S.done[b.id]||{})[k])?.[0]||"guess";
   const d=S.done[b.id]||{}, idx=idxOf(b);
   return welcomeHTML()+planHTML()+`<div class="grid">${stackHTML(b.id)}
   <section class="block" aria-labelledby="bt">
@@ -1523,11 +1551,13 @@ function renderPath(){
 }
 function nextLabel(b){
   const st=stepsFor(b), last=st[st.length-1][0]===S.step, d=(S.done[b.id]||{})[S.step];
+  if(S.step==="guess") return d?"Next step →":"Lock in my guesses → Watch";
   if(S.step==="watch") return d?"Next step →":"I watched it → Recall";
   if(last) return idxOf(b)===D.blocks.length-1?"Finish the last part":"Finish part, take a break";
   return d?"Next step →":"Mark done, next step →";
 }
 function renderStep(b,k){
+  if(k==="guess") return renderGuess(b);
   if(k==="watch"){
     const [st,en]=range(b);
     const loader = videoURL ? `<div id="vslot"></div>` :
@@ -1535,13 +1565,10 @@ function renderStep(b,k){
        <p class="small muted">${D.video&&D.video.file?`File: <code>${esc(D.video.file)}</code>. `:""}It stays on your computer; nothing is uploaded.</p>
        <label class="btn" for="vfile">Choose video file</label><input type="file" id="vfile" accept="video/*" hidden><p class="small muted">or drag the file here</p>
        ${videoFolder?`<p class="small"><b>Tip:</b> put <code>${esc(D.video.file)}</code> in <code>${esc(videoFolder)}</code> and it loads by itself next time.</p>`:""}</div>`;
-    const gq=guessQ(b);
-    if(S.guess[b.id]===undefined) return `<p><b>Part ${idxOf(b)+1}: ${b.start} → ${b.end}</b> (${fmt(en-st)})</p>
-    <div class="guessbox"><h3>Guess first</h3><p class="small muted">Before you watch, guess. Being wrong is fine: a guess makes your brain wait for the answer, so it sticks better.</p>
-    <p><b>${md(gq)}</b></p><textarea id="guessin" placeholder="My guess…"></textarea>
-    <div class="row"><button class="btn" id="guessgo">Lock in my guess, then watch</button><button class="btn ghost" id="guessnone">I have no idea</button></div></div>`;
+    if(!guessDone(b)) return `<div class="cover"><b>The video is covered</b><span>Make your guesses first. Then the video opens.</span><button class="btn" data-step="guess">Go to Guess</button></div>`;
+    const gl=guessList(b), mine=S.guesses[b.id]||[];
     return `<p><b>Watch ${b.start} → ${b.end}</b> (${fmt(en-st)}). ${md(b.summary)}</p>
-    <p class="small muted">Your guess: “${esc(S.guess[b.id]||"no idea")}”. Watch for the answer.</p>
+    <details class="watchfor"><summary class="small">Your ${gl.length>1?gl.length+" guesses":"guess"}: watch for the answer${gl.length>1?"s":""}</summary><ol>${gl.map((g,i)=>`<li>${md(g.q)}<br><span class="muted small">You: “${esc(mine[i]||"no idea")}”</span></li>`).join("")}</ol></details>
     ${loader}
     <div class="park" id="parkbox"><h3>Parking lot</h3><p class="small muted">Want to search something? Don't leave. Write it here and keep watching. We look at it after this part.</p>
     <div class="row"><input type="text" id="parkin" placeholder="e.g. what does LPSTR stand for?" autocomplete="off"><button class="btn small" id="parkgo">Park it</button></div>
@@ -1572,7 +1599,30 @@ function renderStep(b,k){
     b.cards.map(c=>`<div class="card"><div class="face"><div class="side">Front</div><div class="txt">${md(c[0])}</div><details class="model"><summary>Flip</summary><p>${md(c[1])}</p></details></div></div>`).join("");
   return "";
 }
-function guessQ(b){return b.guess||b.questions[0].q}
+function renderGuess(b){
+  const [st,en]=range(b), gl=guessList(b), mine=S.guesses[b.id]||[], lb=lookBackFor(b);
+  if(guessDone(b)) return `<p><b>Locked in before you watched.</b> You can't change these now. In <b>Answer</b> you'll see if you were right.</p>`
+    + (lb&&(S.lb[b.id]||"").trim()?`<div class="gq"><div class="qn">LOOK BACK · ${esc(lb.label)}</div><div class="gmine">${esc(S.lb[b.id])}</div></div>`:"")
+    + gl.map((g,i)=>`<div class="gq"><div class="qn">GUESS ${i+1}</div><div class="qt">${md(g.q)}</div><div class="gmine">${(mine[i]||"").trim()?esc(mine[i]):`<span class="muted">no idea</span>`}</div></div>`).join("");
+  return `<p><b>Part ${idxOf(b)+1}: ${b.start} → ${b.end}</b> (${fmt(en-st)}). The video stays covered until you lock in your guesses.</p>`
+    + (lb?`<div class="park"><h3>Look back first</h3><p class="small muted">Before something new, pull the last part out of memory. One or two sentences, no looking.</p>
+    <p><b>${esc(lb.label)}</b>: what was it about?</p><textarea data-lb="${b.id}" placeholder="From memory…">${esc(S.lb[b.id]||"")}</textarea>
+    <div class="row"><button class="btn ghost small" data-lbshow="${b.id}">${S.lbShow[b.id]?"Hide":"Compare"}</button></div>
+    <div class="callout" id="lbans" ${S.lbShow[b.id]?"":"hidden"}><b>In one sentence:</b> ${md(lb.answer)}</div></div>`:"")
+    + `<div class="guessbox"><h3>Guess first</h3><p class="small muted">${gl.length>1?`${gl.length} key questions from this part. `:""}Being wrong is fine: a guess makes your brain wait for the answer, so it sticks better. Leave a box empty only if you really have no idea.</p>
+    ${gl.map((g,i)=>`<div class="gq"><div class="qt">${gl.length>1?(i+1)+". ":""}${md(g.q)}</div><textarea data-gs="${b.id}:${i}" placeholder="My guess…">${esc(mine[i]||"")}</textarea></div>`).join("")}</div>`
+    + (nudge&&nudge.id===b.id?`<div class="nudge">${esc(nudge.text)} Press the button again to watch anyway.</div>`:"");
+}
+function lockGuesses(b){
+  const gl=guessList(b), mine=S.guesses[b.id]||[], lb=lookBackFor(b);
+  const empty=gl.filter((g,i)=>!(mine[i]||"").trim()).length, lbEmpty=!!lb&&!(S.lb[b.id]||"").trim();
+  if((empty||lbEmpty)&&!(nudge&&nudge.id===b.id)){
+    const parts=[]; if(lbEmpty) parts.push("The look-back is empty.");
+    if(empty) parts.push(empty===gl.length?(gl.length>1?"All your guesses are empty.":"Your guess is empty."):`${empty} of ${gl.length} guesses ${empty>1?"are":"is"} empty.`);
+    nudge={id:b.id,text:parts.join(" ")+" A wrong guess helps more than no guess."}; render(); $(".nudge")?.scrollIntoView({block:"center"}); return false;
+  }
+  nudge=null; return true;
+}
 const GRADE_RULES=`Grade STRICTLY, in percent. Score = how much of the full correct answer the student gave. A vague or half-right point gets partial credit. A wrong statement costs points even if the rest is right. List what is right, and every missing or wrong piece with the percent it is worth, so right + missing = 100. Do NOT reveal the full answer: if below 100, ask ONE guiding question that leads the student to the missing piece. If the gap is something Casey explains in the video, give the time range to rewatch. Simple English.`;
 function scoreColor(n){return n>=90?"var(--good)":n>=60?"var(--warn)":"var(--bad)"}
 function renderScore(fb){
@@ -1593,9 +1643,10 @@ function parkItems(b,actions){
    <div class="pans small" id="pans-${i}" style="flex-basis:100%">${p.ans?esc(p.ans):""}</div>`:""}</li>`).join("");
 }
 function renderAsk(b){
-  const g=S.guess[b.id];
+  const gl=guessList(b), mine=S.guesses[b.id]||[], had=guessDone(b)||mine.some(x=>(x||"").trim());
+  const top=gl.map((g,i)=>({g,i})).filter(x=>x.g.qi===null);
   return `<p class="muted small">Answer from memory first, in your own words. Then check. Grading is strict: you get a score in %, and what's missing for 100%.</p>`+
-  (b.guess&&g!==undefined?`<div class="guessbox"><h3>Your guess before watching</h3><p>${md(b.guess)}</p><p>You guessed: “${esc(g||"no idea")}”. Were you right? What changed?</p></div>`:"")+
+  (had&&top.length?`<div class="guessbox"><h3>Your guess before watching</h3>${top.map(({g,i})=>`<p>${md(g.q)}</p><p>You guessed: “${esc(mine[i]||"no idea")}”. Were you right? What changed?</p>`).join("")}</div>`:"")+
   b.questions.map((q,i)=>{const id=b.id+"?"+i, fb=S.fb[id];
     return `<div class="q"><div class="qn">Q${i+1}${q.t?` · from ${q.t}`:""}</div><div class="qt">${md(q.q)}</div>
     <textarea data-ans="${id}" placeholder="Your answer…">${esc(S.answers[id]||"")}</textarea>
@@ -1603,7 +1654,7 @@ function renderAsk(b){
     ${q.hint?`<button class="btn ghost" data-hint="${id}">Hint</button>`:""}</div>
     <div class="small muted" id="hint-${id}" hidden>${md(q.hint||"")}</div>
     <div class="copybox" id="cb-${id}"></div>
-    ${!b.guess&&i===0&&g!==undefined?`<p class="small muted">Before watching you guessed: “${esc(g||"no idea")}”.</p>`:""}
+    ${had&&gl.findIndex(x=>x.qi===i)>=0?`<p class="small muted">Before watching you guessed: “${esc(mine[gl.findIndex(x=>x.qi===i)]||"no idea")}”.</p>`:""}
     <div id="fb-${id}">${fb?renderScore(fb):""}</div>
     <details class="model"><summary>Show model answer</summary><p>${md(q.a)}</p></details></div>`}).join("")+
   (sample?`<div style="margin-top:18px;border-top:1px solid var(--rule);padding-top:14px"><h3>Stuck? Ask about this part</h3>
@@ -1655,9 +1706,9 @@ async function showNext(){
 }
 function positionBlock(){
   const f=frontier(), b=blockById(S.cur), d=new Date().toISOString().slice(0,10);
-  const step=(STEPS.find(([k])=>k===S.step)||[])[1]||"Watch";
+  const step=(STEPS.find(([k])=>k===S.step)||[])[1]||"Guess";
   if(allDone()) return `## Study position\n- Course: ${D.course||D.title}\n- Section: all ${D.blocks.length} parts done; next is the Q&A\n- Step: Q&A\n- Completed (part id, date): ${completedList()}\n- Updated: ${d}`;
-  const nb=(S.brk||S.stopped)?D.blocks[f]:b, i=idxOf(nb), st=(S.brk||S.stopped)?"Watch":step;
+  const nb=(S.brk||S.stopped)?D.blocks[f]:b, i=idxOf(nb), st=(S.brk||S.stopped)?"Guess":step;
   const into=S.vt[nb.id]?Math.max(0,S.vt[nb.id]-secs(nb.start)):0;
   return `## Study position\n- Course: ${D.course||D.title}\n- Section: ${i+1} of ${D.blocks.length} ("${nb.title}", ${nb.start}-${nb.end})\n- Step: ${st}${into>1?` (video at ${fmt(into)} into the part, episode time ${fmt(secs(nb.start)+into)})`:""}\n- Parts done: ${Object.keys(S.completed).length}\n- Completed (part id, date): ${completedList()}\n- Updated: ${d}`;
 }
@@ -1721,7 +1772,7 @@ function goNextStep(){
   else{
     S.completed[b.id]=true; S.cdate[b.id]=new Date().toISOString().slice(0,10); S.sessionParts=(S.sessionParts||0)+1;
     const nb=D.blocks[idxOf(b)+1];
-    if(nb){S.cur=nb.id;S.step="watch";S.brk={from:b.id,until:null};}
+    if(nb){S.cur=nb.id;S.step="guess";S.brk={from:b.id,until:null};}
     else{S.cur=D.qa?"__qa":b.id; toast("Last part finished");}
   }
   save();render();window.scrollTo({top:0});
@@ -1743,9 +1794,9 @@ $("#view").addEventListener("click",async e=>{
     if(g==="resume"){S.stopped=false;save();render();return}
     if(g==="copypos"){copy(positionText(),$("#poscb"));return}
   }
-  if(t.dataset.blk){welcome=false;S.cur=t.dataset.blk;const b=blockById(S.cur);S.step=b?(stepsFor(b).find(([k])=>!(S.done[b.id]||{})[k])||["watch"])[0]:"watch";save();render();$(".block")?.scrollIntoView({block:"start"});return}
+  if(t.dataset.blk){welcome=false;S.cur=t.dataset.blk;const b=blockById(S.cur);S.step=b?(stepsFor(b).find(([k])=>!(S.done[b.id]||{})[k])||["guess"])[0]:"guess";save();render();$(".block")?.scrollIntoView({block:"start"});return}
   if(t.dataset.step){S.step=t.dataset.step;save();render();return}
-  if(t.id==="markNext"){welcome=false;goNextStep();return}
+  if(t.id==="markNext"){welcome=false;const cb=blockById(S.cur);if(cb&&S.step==="guess"&&!guessDone(cb)&&!lockGuesses(cb))return;goNextStep();return}
   if(t.id==="parkgo"){addPark();return}
   if(t.dataset.sess){const v=t.dataset.sess;if(v==="reset"){S.session=null;}else{S.session={start:Date.now(),min:+v};warned=false;}welcome=false;save();render();return}
   if(t.dataset.dbgstart){S.dbgs[t.dataset.dbgstart]=Date.now();save();render();return}
@@ -1764,7 +1815,7 @@ $("#view").addEventListener("click",async e=>{
     try{const r=await sample.json(ivPrompt(b,iv,ans)+"\n"+JSON_SHAPE);S.ivfb[id]=normFb(r);save();box.innerHTML=renderScore(S.ivfb[id]);}
     catch(err){box.innerHTML=`<div class="fb">Couldn't grade this time. Open “What a strong answer includes”.</div>`}
     finally{t.disabled=false}return}
-  if(t.id==="guessgo"||t.id==="guessnone"){const v=t.id==="guessnone"?"":($("#guessin").value.trim());if(t.id==="guessgo"&&!v){toast("Write a guess, or press “I have no idea”");return}S.guess[S.cur]=v;save();render();return}
+  if(t.dataset.lbshow){const id=t.dataset.lbshow;if(!S.lbShow[id]&&!(S.lb[id]||"").trim()){toast("Write it from memory first");return}S.lbShow[id]=!S.lbShow[id];save();$("#lbans").hidden=!S.lbShow[id];t.textContent=S.lbShow[id]?"Hide":"Compare";return}
   if(t.id==="rcopy"||t.id==="rcheck"){const b=blockById(S.cur),txt=(S.recall[b.id]||"").trim();if(!txt){toast("Write your recall first");return}
     const strip=h=>String(h||"").replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim();
     const ref=`What the part covers: ${b.summary}\nKey points: ${b.watchFor.map(w=>w.replace(/[*`]/g,"")).join(" | ")}\nNotes: ${strip(b.explain).slice(0,2500)}`;
@@ -1799,6 +1850,8 @@ $("#view").addEventListener("input",e=>{
   const r=e.target.dataset.recall; if(r){S.recall[r]=e.target.value;save()}
   const v=e.target.dataset.iv; if(v){S.ivans[v]=e.target.value;save()}
   const g=e.target.dataset.dbg; if(g){S.dbgans[g]=e.target.value;save()}
+  const gs=e.target.dataset.gs; if(gs){const [bid,gi]=gs.split(":");(S.guesses[bid]=S.guesses[bid]||[])[+gi]=e.target.value;nudge=null;save()}
+  const lbk=e.target.dataset.lb; if(lbk){S.lb[lbk]=e.target.value;save()}
 });
 async function checkAnswer(id,btn){
   const [bid,qi]=id.split("?"); const b=blockById(bid), q=b.questions[+qi]; const ans=(S.answers[id]||"").trim();

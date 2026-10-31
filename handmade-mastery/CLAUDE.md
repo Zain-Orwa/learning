@@ -86,7 +86,9 @@ tools/study-kit/          page engine, build script, serve.py (the ./study helpe
 One page per episode, opened in a browser on the Mac. It plays the episode's
 video file **one part at a time** (parts cut at the guide's topic timestamps),
 stops by itself at the end of each part and locks the parts ahead.
-Each part has 8 steps: **Watch** (player + parking lot for questions) →
+Each part has 9 steps: **Guess** (look back at the previous part from memory, then guess the answers
+to 2–3 key questions; the video stays covered until the guesses are locked in, and then they can't
+change) → **Watch** (player + parking lot for questions) →
 **Recall** (write from memory, compare, handle parked questions) → **Answer**
 (questions tied to timestamps) → **Explain** → **Experiment** → **Read code** →
 **Flashcards** → **Why it matters**. Between parts there's a break screen
@@ -110,6 +112,10 @@ with browser storage and "Copy position".
 Files per day: `data.js` (all content, `window.STUDY`) → built into
 `study-kit.html` by `python3 tools/study-kit/build.py courses/<course>/dayNN`.
 The shared engine is `tools/study-kit/engine.html`. Never hand-edit the built page.
+Guess fields per part: `guess` (the main guess question) and `pre` (indexes into `questions` that are
+also asked as guesses; pick the 1–2 most important). Part 1's look back uses
+`window.STUDY.lookBack = {label, answer}` (the previous video in one sentence); later parts look back
+at the part before automatically.
 Video files stay outside git (e.g. `~/learning-videos/` on the Mac).
 
 ## Study sessions: `/study`

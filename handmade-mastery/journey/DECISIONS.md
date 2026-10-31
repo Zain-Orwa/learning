@@ -140,3 +140,16 @@ Newest at the bottom. Each entry: date, decision, why.
 - Phone: "Debug challenge" scheduled task Mon/Wed/Fri/Sun 18:45 Berlin.
 - Multi-account: tasks belong to one account; definitions + prompts are stored in the repo
   (`docs/scheduled-tasks.md`, `.claude/skills/reminders/`); `/reminders` recreates them on another account.
+
+## 2026-10-31: Guess step before every part
+- Zain's request: guessing comes first, as its own step, with more than one question, and a
+  short look back at the previous part before starting a new one.
+- Step order: Guess → Watch → Recall → Answer → Explain → Experiment → Read code → Flashcards →
+  Why it matters.
+- Guess = look back at the previous part (1–2 sentences, then compare with its one-sentence idea)
+  + the main guess + 1–2 key questions (`pre` in `data.js`). The video stays covered until the
+  guesses are locked in; after that they can't change. Answer shows each guess next to its question.
+- Why: prequestions improve learning from video, also on questions not asked (Carpenter & Toftness,
+  2017); recalling earlier material improves learning of new material (Pastötter & Bäuml, 2014).
+- Fixed the same day: the end-of-part screen covered the video, because its CSS `display:flex` beat
+  the `hidden` attribute. The engine now has `[hidden]{display:none!important}`.

@@ -12,7 +12,7 @@ Szpunar, Khan & Schacter (2013) on short video parts with questions in between.
 
 | # | Principle | Where it lives in our system |
 |---|---|---|
-| 1 | **Guess before you know.** Answer a question before the explanation, even if wrong. The brain then waits for the answer and keeps it better. | Study page: **Guess first** box before each part's video. Questions before explanations, always. |
+| 1 | **Guess before you know.** Answer a question before the explanation, even if wrong. The brain then waits for the answer and keeps it better. | Study page: **Guess** step before each part's video (look back at the previous part, then 2–3 guesses; the video stays covered until they're locked in). Questions before explanations, always. |
 | 2 | **Test yourself instead of rereading.** Pull it out of memory without looking. Tiring, and that's what makes it stick. | **Recall** step after each part; **Answer** step; flashcards. |
 | 3 | **Spaced repetition.** Come back after days, then weeks, then months. | `journey/REVIEWS.md` + the daily review scheduled task + `/review`. |
 | 4 | **Apply immediately.** Build something real and see the result. | **Experiment** step; code on the Windows PC. |
@@ -55,7 +55,10 @@ Example:
 
 ## Lesson template (each part of a study kit)
 
-1. **Guess first**: one question before watching.
+1. **Guess first**: look back at the previous part from memory, then guess the answers to 2–3 key
+   questions (the main `guess` plus the most important `questions`, listed in `pre`) before watching.
+   Prequestions help learning from video (Carpenter & Toftness, 2017), and recalling the previous
+   part helps learning the next one (Pastötter & Bäuml, 2014).
 2. **Watch** the part (the page stops the video at the end).
 3. **Recall**: explain it in your own words; graded strictly.
 4. **The idea in one sentence.**

@@ -66,8 +66,11 @@ Claude can't watch video. It works from text:
   in `data.js`, mark the kit `"built": true` in `courses/playlist.json`, and
   set `video.file` to the file name he keeps in `~/learning-videos`.
   Every block follows the lesson template in `docs/learning-method.md`:
-  `guess` (question before watching), `oneLiner`, `analogy`, `mistake`, plus
+  `guess` (main question before watching), `pre` (indexes of the 1–2 most important
+  `questions`, also asked as guesses), `oneLiner`, `analogy`, `mistake`, plus
   summary, watchFor, explain, experiment, questions, cards, code, why.
+  For Day 2 and later, set `window.STUDY.lookBack = {label, answer}` (the previous video in
+  one sentence), so Part 1 starts with a look back.
   End the kit build with a **self-check** for the learner: list what you could
   not verify (tool versions, claims not found in the transcript). Also write `cards.tsv`. If the kit already exists, use its blocks as the sections.
 - Show the learner the section list (number, time range, title) once. Save it.
@@ -76,6 +79,8 @@ Claude can't watch video. It works from text:
 Give each step, then **stop and wait** for the learner. Never give two steps
 in one message.
 
+0. **Guess.** Ask him to recall the previous part in 1–2 sentences, then ask the part's guess
+   questions (`guess` + the `questions` listed in `pre`). Wait for his answers before step 1.
 1. **Watch.** "Watch `start`–`end`: <title>." Add 1 to 2 things to watch for
    and the pause point (`pauseAt` in the kit) with what to think about there.
    Tell him: if he gets distracted, come back and type `/study`.
