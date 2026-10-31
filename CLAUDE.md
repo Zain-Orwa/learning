@@ -74,6 +74,10 @@ is in `docs/interview-prep.md`.
      about 1.3 × its video minutes + 30 minutes (the page shows estimates).
   4. Last 10 minutes: interview corner, save the position, commit and push.
   The study page has the same planner ("How much time do you have today?").
+  **On the Mac, "start" means:** run `./study` from the repo root in the
+  background (it pulls, starts the helper and opens the page). The page then
+  plays the video, grades, saves and pushes by itself. Claude stays available
+  in the chat for questions.
 
 ## Subjects
 

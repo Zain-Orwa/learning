@@ -937,6 +937,8 @@ window.STUDY.title = "Intro to C on Windows, Day 1";
 window.STUDY.eyebrow = "Handmade Hero prelude · Casey Muratori · 72 min";
 window.STUDY.storageKey = "intro-c-day01";
 window.STUDY.course = "intro-to-c, Day 01";
+window.STUDY.unitPrefix = "icd01";
+window.STUDY.unitLabel = "Intro C D1";
 window.STUDY.cardTag = "intro-c::day01";
 window.STUDY.video = { file: "Intro_to_C_on_Windows_-_Day_1.mp4", length: "1:11:58" };
 window.STUDY.qa = {
@@ -962,7 +964,7 @@ window.STUDY.how = `<h2>How this page works</h2>
 <p>Many parts end with a real interview question: how an interviewer asks it, the follow-ups, and what a strong answer includes. Answer out loud, then write it. You're graded strictly in %. These questions join your reviews, and when an area has enough of them, Claude runs a mock interview (<code>/interview</code>).</p>
 <h3>Coming back</h3>
 <p>The page saves your exact place in this browser, down to the second in the video. Next time it says <b>Welcome back</b>, offers a quick card warm-up, and continues where you stopped.</p>
-<p>When you stop for today, press <b>Copy position</b> and paste it to Claude (<code>/study</code>), so it can save your place in <code>journey/STATE.md</code> for every account and machine.</p>
+<p>Started with <code>./study</code>, everything is automatic: the video loads by itself, Claude grades inside the page, your progress and reviews are saved into the repo, and <b>Stop for today</b> pushes to GitHub. (Opened as a plain file, use <b>Copy position</b> instead.)</p>
 <h3>Why it's built like this</h3>
 <ul><li><b>Short parts + questions after each one</b> reduce daydreaming and improve learning from lecture videos (Szpunar, Khan &amp; Schacter, 2013).</li>
 <li><b>Recall before reading</b>: pulling ideas out of memory is what makes them stay.</li>
@@ -1112,6 +1114,8 @@ const FRESH={v:2,cur:D.blocks[0].id,step:"watch",tab:"path",done:{},completed:{}
 let S=JSON.parse(JSON.stringify(FRESH));
 const LS=D.storageKey||"study-kit";
 try{const raw=localStorage.getItem(LS); if(raw) S=Object.assign(S,JSON.parse(raw));}catch(e){}
+const localLast=S.lastVisit||0;
+S.stopped=false; // opening the page again always means "continue"
 let welcome = S.lastVisit && (Date.now()-S.lastVisit>30*60*1000) && Object.keys(S.done).length>0;
 if(welcome){S.sessionParts=0; S.brk=null; S.stopped=false; S.session=null;}
 S.lastVisit=Date.now();
@@ -1121,7 +1125,45 @@ function save(){
   try{localStorage.setItem(LS,JSON.stringify(S));}catch(e){}
   clearTimeout(saveT);
   if(dbRef) saveT=setTimeout(()=>{dbRef.set({json:JSON.stringify(S),at:Date.now()}).then(()=>setSaved("saved to your account")).catch(()=>setSaved("saved in this browser"));},1500);
+  if(helperReady) saveT=setTimeout(()=>{postHelper("/api/progress").then(r=>{setSaved("saved in your repo");if(r&&r.addedReviews&&r.addedReviews.length)toast(r.addedReviews.length+" items added to your review schedule");}).catch(()=>setSaved("saved in this browser"));},1500);
 }
+/* ---------- helper mode: ./study runs a small local helper (serve.py) ---------- */
+const HELPER_PAGE=/^https?:$/.test(location.protocol)&&!window.claude;
+const kitPath=decodeURIComponent(location.pathname).replace(/^\/courses\//,"").replace(/\/study-kit\.html$/,"");
+let helperReady=false, videoFolder=null;
+function helperMeta(){
+  return {kit:kitPath,unitPrefix:D.unitPrefix||D.storageKey,unitLabel:D.unitLabel||D.title,
+    completedParts:D.blocks.filter(b=>S.completed[b.id]).map(b=>({id:b.id,n:idxOf(b)+1,title:b.title,date:S.cdate[b.id]||new Date().toISOString().slice(0,10),interview:(b.interview||[]).map(iv=>({area:iv.area,q:iv.q}))}))};
+}
+function postHelper(url,extra){
+  S.finished=allDone();
+  return fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(Object.assign({meta:helperMeta(),state:S,position:positionBlock()},extra||{}))}).then(r=>r.json());
+}
+async function helperCall(input,json){
+  const prompt=typeof input==="string"?input:input.map(m=>(m.role==="user"?"STUDENT: ":"TUTOR: ")+m.content).join("\n\n");
+  const r=await (await fetch("/api/claude",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt,json})})).json();
+  if(r.error) throw {code:"upstream_error",message:r.error,text:r.text};
+  return r;
+}
+const helperSample=async(input,opts={})=>{const r=await helperCall(input,false);opts.onText&&opts.onText({text:r.text,delta:r.text});return {text:r.text,truncated:false}};
+helperSample.json=async input=>(await helperCall(input,true)).data;
+(async()=>{
+  if(!HELPER_PAGE) return;
+  try{
+    const ping=await (await fetch("/api/ping")).json(); if(!ping.ok) return;
+    const remote=await (await fetch("/api/progress?kit="+encodeURIComponent(kitPath))).json();
+    if(remote&&remote.lastVisit&&remote.lastVisit>=localLast){
+      S=Object.assign(JSON.parse(JSON.stringify(FRESH)),remote);
+      S.stopped=false;
+      welcome=(Date.now()-remote.lastVisit>30*60*1000)&&Object.keys(S.done).length>0;
+      if(welcome){S.sessionParts=0;S.brk=null;S.stopped=false;S.session=null;}
+    }
+    if(ping.claude) sample=helperSample;
+    if(D.video&&D.video.file){const v=await (await fetch("/api/video?file="+encodeURIComponent(D.video.file))).json();
+      if(v.exists){videoURL="/video/"+encodeURIComponent(D.video.file);vid.src=videoURL;} else videoFolder=v.folder;}
+    helperReady=true; setSaved("saved in your repo"); save(); safeRender();
+  }catch(e){}
+})();
 function setSaved(t){$("#saved").textContent=t}
 (async()=>{
   try{
@@ -1321,7 +1363,7 @@ function renderInterviewTab(){
 function renderPath(){
   if(S.brk) return renderBreak();
   if(S.stopped) return renderStopped();
-  if(S.cur==="__qa") return welcomeHTML()+`<div class="grid">${stackHTML("__qa")}<section class="block"><div class="eyebrow">After the video</div><h2>Q&amp;A</h2><div class="pane">${D.qa.html}</div></section></div>`;
+  if(S.cur==="__qa") return welcomeHTML()+`<div class="grid">${stackHTML("__qa")}<section class="block"><div class="eyebrow">After the video</div><h2>Q&amp;A</h2><div class="pane">${D.qa.html}<div id="nextbox"></div></div></section></div>`;
   let b=blockById(S.cur)||D.blocks[0];
   if(!unlocked(b)){b=D.blocks[Math.min(frontier(),D.blocks.length-1)];S.cur=b.id;S.step="watch";}
   const steps=stepsFor(b); if(!steps.find(([k])=>k===S.step)||!stepOpen(b,S.step)) S.step=steps.find(([k])=>!(S.done[b.id]||{})[k])?.[0]||"watch";
@@ -1346,7 +1388,8 @@ function renderStep(b,k){
     const loader = videoURL ? `<div id="vslot"></div>` :
       `<div class="drop" id="drop"><p><b>Load the video once per visit.</b> The page plays only this part and stops at ${b.end}.</p>
        <p class="small muted">${D.video&&D.video.file?`File: <code>${esc(D.video.file)}</code>. `:""}It stays on your computer; nothing is uploaded.</p>
-       <label class="btn" for="vfile">Choose video file</label><input type="file" id="vfile" accept="video/*" hidden><p class="small muted">or drag the file here</p></div>`;
+       <label class="btn" for="vfile">Choose video file</label><input type="file" id="vfile" accept="video/*" hidden><p class="small muted">or drag the file here</p>
+       ${videoFolder?`<p class="small"><b>Tip:</b> put <code>${esc(D.video.file)}</code> in <code>${esc(videoFolder)}</code> and it loads by itself next time.</p>`:""}</div>`;
     const gq=guessQ(b);
     if(S.guess[b.id]===undefined) return `<p><b>Part ${idxOf(b)+1}: ${b.start} → ${b.end}</b> (${fmt(en-st)})</p>
     <div class="guessbox"><h3>Guess first</h3><p class="small muted">Before you watch, guess. Being wrong is fine: a guess makes your brain wait for the answer, so it sticks better.</p>
@@ -1443,18 +1486,35 @@ function renderBreak(){
 function renderStopped(){
   const f=frontier(), nb=D.blocks[f];
   return `<section class="block center"><div class="eyebrow">Saved</div><h2>Good session.</h2>
-  <p>${nb?`Next time you start at <b>Part ${f+1}: ${esc(nb.title)}</b>.`:"Next time: the Q&amp;A and your review cards."} Everything is saved in this browser. You can close this tab.</p>
-  <p class="small muted">So every Claude account and machine knows your place: press <b>Copy position</b> and paste it to Claude with <code>/study</code>. Claude saves it in <code>journey/STATE.md</code>.</p>
-  <div class="row" style="justify-content:center"><button class="btn" data-go="copypos">Copy position</button><button class="btn ghost" data-go="resume">Actually, keep going</button></div><div class="copybox" id="poscb"></div></section>`;
+  <p>${nb?`Next time you start at <b>Part ${f+1}: ${esc(nb.title)}</b>.`:"Next time: the next video and your review cards."}</p>
+  ${helperReady?`<p id="syncmsg" class="small">Saving to your repo and pushing to GitHub…</p><div id="nextbox"></div>
+  <div class="row" style="justify-content:center"><button class="btn ghost" data-go="resume">Actually, keep going</button></div></section>`
+  :`<p class="small muted">Everything is saved in this browser. So every Claude account and machine knows your place: press <b>Copy position</b> and paste it to Claude with <code>/study</code>.</p>
+  <div class="row" style="justify-content:center"><button class="btn" data-go="copypos">Copy position</button><button class="btn ghost" data-go="resume">Actually, keep going</button></div><div class="copybox" id="poscb"></div></section>`}`;
 }
 function completedList(){return D.blocks.filter(b=>S.completed[b.id]).map(b=>`${b.id} ${S.cdate[b.id]||"?"}`).join(", ")||"none"}
-function positionText(){
+function positionText(){return "/study\nSave my study position:\n"+positionBlock()}
+async function finishSync(){
+  const el=$("#syncmsg");
+  try{clearTimeout(saveT);const r=await postHelper("/api/finish",{message:`Study session ${new Date().toISOString().slice(0,10)}: ${D.unitLabel||D.title}, ${Object.keys(S.completed).length}/${D.blocks.length} parts`});
+    if(el) el.innerHTML=r.ok?`<b>✓ ${esc(r.message)}</b>${r.addedReviews&&r.addedReviews.length?` ${r.addedReviews.length} new items in your review schedule.`:""} You can close this tab.`
+      :`${esc(r.message||"Couldn't push.")} Your progress is saved in the repo; it will be pushed next time.`;
+  }catch(e){ if(el) el.textContent="The helper isn't running, so nothing was pushed. Start it with ./study and press Stop again."; }
+  showNext();
+}
+async function showNext(){
+  const box=$("#nextbox"); if(!box||!helperReady||!allDone()) return;
+  try{const r=await (await fetch("/api/next?kit="+encodeURIComponent(kitPath))).json(); const n=r.next;
+    box.innerHTML=!n?`<p>That's the last video in the playlist.</p>`:n.built?`<p class="row" style="justify-content:center"><a class="btn" href="/courses/${n.kit}/study-kit.html">Next video: ${esc(n.title)} →</a></p>`
+      :`<p><b>Next video: ${esc(n.title)}.</b> Its study kit isn't built yet. ${n.video?`Put <code>${esc(n.video)}</code> in your videos folder, then t`:"Get the video, then t"}ell Claude Code: “build the kit for ${esc(n.title)}”.</p>`;}catch(e){}
+}
+function positionBlock(){
   const f=frontier(), b=blockById(S.cur), d=new Date().toISOString().slice(0,10);
   const step=(STEPS.find(([k])=>k===S.step)||[])[1]||"Watch";
-  if(allDone()) return `/study\nSave my study position:\n## Study position\n- Course: ${D.course||D.title}\n- Section: all ${D.blocks.length} parts done; next is the Q&A\n- Step: Q&A\n- Completed (part id, date): ${completedList()}\n- Updated: ${d}`;
+  if(allDone()) return `## Study position\n- Course: ${D.course||D.title}\n- Section: all ${D.blocks.length} parts done; next is the Q&A\n- Step: Q&A\n- Completed (part id, date): ${completedList()}\n- Updated: ${d}`;
   const nb=(S.brk||S.stopped)?D.blocks[f]:b, i=idxOf(nb), st=(S.brk||S.stopped)?"Watch":step;
   const into=S.vt[nb.id]?Math.max(0,S.vt[nb.id]-secs(nb.start)):0;
-  return `/study\nSave my study position:\n## Study position\n- Course: ${D.course||D.title}\n- Section: ${i+1} of ${D.blocks.length} ("${nb.title}", ${nb.start}-${nb.end})\n- Step: ${st}${into>1?` (video at ${fmt(into)} into the part, episode time ${fmt(secs(nb.start)+into)})`:""}\n- Parts done: ${Object.keys(S.completed).length}\n- Completed (part id, date): ${completedList()}\n- Updated: ${d}`;
+  return `## Study position\n- Course: ${D.course||D.title}\n- Section: ${i+1} of ${D.blocks.length} ("${nb.title}", ${nb.start}-${nb.end})\n- Step: ${st}${into>1?` (video at ${fmt(into)} into the part, episode time ${fmt(secs(nb.start)+into)})`:""}\n- Parts done: ${Object.keys(S.completed).length}\n- Completed (part id, date): ${completedList()}\n- Updated: ${d}`;
 }
 function tickBreak(){
   const el=$("#bclock"); if(!el||!S.brk||!S.brk.until){clearInterval(brkTimer);brkTimer=null;return}
@@ -1505,6 +1565,7 @@ function render(){
     drop.addEventListener("dragover",e=>{e.preventDefault();drop.classList.add("over")}); drop.addEventListener("dragleave",()=>drop.classList.remove("over"));
     drop.addEventListener("drop",e=>{e.preventDefault();drop.classList.remove("over");loadVideo(e.dataTransfer.files[0])}); }
   if(S.brk&&S.brk.until&&!brkTimer) brkTimer=setInterval(tickBreak,500);
+  if($("#nextbox")&&!S.stopped) showNext();
 }
 function goNextStep(){
   const b=blockById(S.cur); if(!b) return;
@@ -1533,7 +1594,7 @@ $("#view").addEventListener("click",async e=>{
     if(g==="warmup"){welcome=true;S.tab="review";revQueue=null;save();render();return}
     if(g==="startbreak"){S.brk.until=Date.now()+(+t.dataset.min)*60000;save();render();return}
     if(g==="afterbreak"){if(S.sessionParts%LONG_EVERY===0&&S.brk&&S.brk.until)S.sessionParts=0;S.brk=null;save();render();window.scrollTo({top:0});return}
-    if(g==="stop"){S.brk=null;S.stopped=true;S.session=null;save();render();return}
+    if(g==="stop"){S.brk=null;S.stopped=true;S.session=null;save();render();if(helperReady)finishSync();return}
     if(g==="resume"){S.stopped=false;save();render();return}
     if(g==="copypos"){copy(positionText(),$("#poscb"));return}
   }
@@ -1600,7 +1661,7 @@ ${GRADE_RULES} Grade understanding, not wording or English.
 ${JSON_SHAPE}`;
   try{const r=await sample.json(prompt);const fb=normFb(r);
     S.fb[id]=fb;save();box.innerHTML=renderScore(fb);}
-  catch(err){box.innerHTML=`<div class="fb">${err&&err.code==="not_granted"?"Checking needs permission to use Claude. Open the model answer instead.":err&&err.code==="rate_limited"?"Too many checks at once. Try again in a minute.":"Couldn't check this time. Try again, or open the model answer."}</div>`}
+  catch(err){box.innerHTML=`<div class="fb">${err&&err.code==="not_granted"?"Checking needs permission to use Claude. Open the model answer instead.":err&&err.code==="rate_limited"?"Too many checks at once. Try again in a minute.":esc(err&&err.message||"Couldn't check this time.")+" Try again, or open the model answer."}</div>`}
   finally{btn.disabled=false}
 }
 async function chat(){

@@ -749,6 +749,8 @@ window.STUDY.title = "Intro to C on Windows, Day 1";
 window.STUDY.eyebrow = "Handmade Hero prelude · Casey Muratori · 72 min";
 window.STUDY.storageKey = "intro-c-day01";
 window.STUDY.course = "intro-to-c, Day 01";
+window.STUDY.unitPrefix = "icd01";
+window.STUDY.unitLabel = "Intro C D1";
 window.STUDY.cardTag = "intro-c::day01";
 window.STUDY.video = { file: "Intro_to_C_on_Windows_-_Day_1.mp4", length: "1:11:58" };
 window.STUDY.qa = {
@@ -774,7 +776,7 @@ window.STUDY.how = `<h2>How this page works</h2>
 <p>Many parts end with a real interview question: how an interviewer asks it, the follow-ups, and what a strong answer includes. Answer out loud, then write it. You're graded strictly in %. These questions join your reviews, and when an area has enough of them, Claude runs a mock interview (<code>/interview</code>).</p>
 <h3>Coming back</h3>
 <p>The page saves your exact place in this browser, down to the second in the video. Next time it says <b>Welcome back</b>, offers a quick card warm-up, and continues where you stopped.</p>
-<p>When you stop for today, press <b>Copy position</b> and paste it to Claude (<code>/study</code>), so it can save your place in <code>journey/STATE.md</code> for every account and machine.</p>
+<p>Started with <code>./study</code>, everything is automatic: the video loads by itself, Claude grades inside the page, your progress and reviews are saved into the repo, and <b>Stop for today</b> pushes to GitHub. (Opened as a plain file, use <b>Copy position</b> instead.)</p>
 <h3>Why it's built like this</h3>
 <ul><li><b>Short parts + questions after each one</b> reduce daydreaming and improve learning from lecture videos (Szpunar, Khan &amp; Schacter, 2013).</li>
 <li><b>Recall before reading</b>: pulling ideas out of memory is what makes them stay.</li>

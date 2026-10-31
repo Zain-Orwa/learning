@@ -65,6 +65,14 @@ Every tool we use, what it's for, which machine it runs on, and how to set it up
 
 ## Mac M1 (study station; never compiles course code)
 
+### [ ] The study helper (`./study`): needs only Claude Code + Python 3
+- Python 3 comes with Apple's command line tools (`xcode-select --install` if `python3` is missing).
+- Put the episode videos in `~/learning-videos/` with the names in
+  `handmade-mastery/courses/playlist.json` (e.g. `Intro_to_C_on_Windows_-_Day_1.mp4`).
+- Start a session: `cd ~/learning && ./study`. The page opens by itself. Leave the
+  Terminal window open while you study.
+- Git must be able to push from the Mac (it asks for your GitHub login the first time).
+
 ### [ ] Claude Code (Mac)
 - **Install:** `curl -fsSL https://claude.ai/install.sh | bash`
   (or `brew install --cask claude-code`).

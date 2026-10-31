@@ -1,0 +1,6 @@
+#!/bin/sh
+# Start a study session: pulls the latest repo, starts the study helper and opens the page.
+# Usage: ./study            (from the learning repo folder)
+cd "$(dirname "$0")" || exit 1
+git pull --rebase -q || echo "(couldn't pull; continuing with the local copy)"
+exec python3 handmade-mastery/tools/study-kit/serve.py "$@"

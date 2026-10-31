@@ -8,3 +8,4 @@
 *.md  text eol=lf
 *.html text eol=lf
 *.tsv text eol=lf
+study text eol=lf

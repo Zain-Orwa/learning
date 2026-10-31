@@ -69,12 +69,14 @@ journey/REVIEWS.md        spaced-review log (edit only with ../tools/reviews.py)
 docs/toolset.md           each tool: purpose, machine, install, config, status
 courses/<course>/dayNN/   materials per episode
     data.js                 the lesson content (source)
-    study-kit.html          built page: open in a browser, plays the video part by part
+    study-kit.html          built page (served by ./study), plays the video part by part
+    progress.json           his progress on this kit, written by the helper (committed)
+courses/playlist.json     the order of videos (kit, title, video file, built yes/no)
     transcript.txt          timestamped transcript of the episode
     cards.tsv               Anki cards (tab-separated: front, back, tags)
 code/                     the learner's own handwritten code (Windows)
 tools/transcribe/         how transcripts are made
-tools/study-kit/          page engine + build script for study kits
+tools/study-kit/          page engine, build script, serve.py (the ./study helper)
 ../.claude/settings.json  repo root: Claude Code settings (Learning style)
 ../.vscode/settings.json  repo root: editor settings (AI autocomplete off)
 ```
@@ -92,6 +94,18 @@ Each part has 8 steps: **Watch** (player + parking lot for questions) →
 (browser storage), greets him with "Welcome back" plus a card warm-up, and
 "Copy position" produces the block that `/study` saves into `STATE.md`.
 Tabs: Review (spaced repetition), Parked, Toolbox, How to study.
+
+**How Zain starts (Mac):** `./study` from the repo root (or Claude Code runs it
+in the background when he says "start"). It runs `tools/study-kit/serve.py`, a
+small local helper on http://localhost:8765 that: opens the current video's kit
+(from `courses/playlist.json`), plays the video straight from `~/learning-videos`
+(no file picking), saves progress into the repo (`courses/<kit>/progress.json`
+and the **Study position** in `journey/STATE.md`), adds finished parts and their
+interview questions to `journey/REVIEWS.md`, grades answers inside the page
+with Claude Code (`claude -p`, his normal Claude login, no copy-paste), and on
+**Stop for today** commits and pushes. When a video is done, the page points to
+the next playlist item. Opened as a plain file (no helper), the page still works
+with browser storage and "Copy position".
 
 Files per day: `data.js` (all content, `window.STUDY`) → built into
 `study-kit.html` by `python3 tools/study-kit/build.py courses/<course>/dayNN`.

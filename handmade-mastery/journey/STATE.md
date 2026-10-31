@@ -20,7 +20,8 @@ _Last updated: 2026-10-31_
   - [x] Daily review scheduled task "Daily review", every day 12:48 Europe/Berlin (weekdays: reviews + 2 interview questions; weekends: reviews + study-day reminder), cloud, automatic approval, push notification (id `trig_015H7qGd7zXdGP9ACCUadnzw`, lives on the Claude account that created it on 2026-10-31)
   - [x] Flexible schedule: weekends = study ("start" + time, page planner with countdown); weekdays = reviews + interview drill
   - [x] Interview track: interview corner per part, Interview tab, `/interview`, `journey/INTERVIEWS.md`, `tools/reviews.py areas`; Day 1 has 9 interview questions
-  - [ ] Learner tries Day 1 Part 1 with the page on the Mac (planned: Sunday 2026-11-01)
+  - [x] Automation: `./study` helper (auto video, grading in the page via Claude Code, progress + reviews + STATE saved to the repo, push on Stop), playlist for the next videos
+  - [ ] Learner tries Day 1 Part 1 with `./study` on the Mac
 
 ## Windows tools: all installed and verified (2026-10-30)
 - Visual Studio Community 2026 with the C++ workload (MSVC 14.51). Test: a
@@ -35,7 +36,8 @@ _Last updated: 2026-10-31_
 - Editor: VS Code for Intro to C. Revisit at the start of Handmade Hero (see DECISIONS.md).
 
 ## Mac tools: not installed yet
-See `docs/toolset.md`, section "Mac M1".
+Needed for the first session: Claude Code (logged in), the videos folder
+`~/learning-videos/` with the Day 1 video, and `./study`. See `docs/toolset.md`, section "Mac M1".
 
 ## Study position
 - Course: intro-to-c, Day 01

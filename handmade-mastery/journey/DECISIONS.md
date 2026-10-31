@@ -121,3 +121,11 @@ Newest at the bottom. Each entry: date, decision, why.
   area mocks (15+ and 60%+ average), and full interview days at course milestones.
 - `/interview` runs them as a real interviewer (no hints, follow-ups) with a strict debrief and
   a hiring-style verdict; history in `journey/INTERVIEWS.md`; readiness via `tools/reviews.py areas`.
+
+## 2026-10-31: Automated study sessions (`./study`)
+- Zain doesn't want to copy and paste. `./study` starts a local helper (`serve.py`,
+  Python standard library only, listens on 127.0.0.1) that serves the page, plays the
+  video from `~/learning-videos`, grades with Claude Code headless (`claude -p`, his
+  subscription login), writes progress/STATE/REVIEWS into the repo, and pushes on Stop.
+- Why a browser: the page is a local file; the browser is only the window and video player.
+- `courses/playlist.json` orders the videos; the page points to the next one when a video is done.

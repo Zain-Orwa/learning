@@ -16,7 +16,12 @@ Each episode has a page: `courses/<course>/dayNN/study-kit.html` (open it in a
 browser on the Mac). It plays the video **one part at a time**, stops by itself
 at the end of each part, locks future parts, has a parking lot for questions,
 breaks between parts, and remembers the exact place in the browser.
-When the learner uses the page, Claude's jobs are:
+**Start it with `./study`** (repo root, run in the background on the Mac). The
+helper (`tools/study-kit/serve.py`) serves the page, loads the video from
+`~/learning-videos`, grades inside the page through `claude -p`, saves progress
+and the Study position into the repo, adds reviews, and commits + pushes on
+"Stop for today". With the helper running, there is nothing to paste.
+When the learner uses the page without the helper, Claude's jobs are:
 - **Save the position.** When he pastes a "Save my study position" block,
   copy it into `journey/STATE.md` under **Study position**. For every part in
   its **Completed** list that isn't in `journey/REVIEWS.md` yet, add a review
@@ -57,7 +62,10 @@ Claude can't watch video. It works from text:
   with blocks, parked, tools, title, storageKey, course, video, qa), then build
   the page: `python3 tools/study-kit/build.py courses/<course>/dayNN`.
   Never hand-edit `study-kit.html`; edit `data.js` or `tools/study-kit/engine.html`
-  and rebuild. Every block follows the lesson template in `docs/learning-method.md`:
+  and rebuild. Set `unitPrefix` (e.g. `icd02`) and `unitLabel` (e.g. `Intro C D2`)
+  in `data.js`, mark the kit `"built": true` in `courses/playlist.json`, and
+  set `video.file` to the file name he keeps in `~/learning-videos`.
+  Every block follows the lesson template in `docs/learning-method.md`:
   `guess` (question before watching), `oneLiner`, `analogy`, `mistake`, plus
   summary, watchFor, explain, experiment, questions, cards, code, why.
   End the kit build with a **self-check** for the learner: list what you could
