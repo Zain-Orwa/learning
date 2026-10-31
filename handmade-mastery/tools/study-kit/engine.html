@@ -96,6 +96,8 @@ textarea{min-height:88px;resize:vertical}
 .pctl{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;padding:8px 12px;font-family:var(--f-mono);font-size:13px}
 .pctl button{background:transparent;border:1px solid #3a434d;color:var(--screen-ink);border-radius:5px;padding:4px 10px;cursor:pointer;font-family:var(--f-mono);font-size:13px}
 .pctl button:hover{border-color:#6b7682}
+.pctl button{display:inline-flex;align-items:center;justify-content:center;gap:2px;min-width:38px;min-height:32px}
+.pctl svg{width:18px;height:18px;fill:currentColor}
 .pbar{flex:1 1 160px;height:10px;background:#2a3139;border-radius:5px;cursor:pointer;position:relative;overflow:hidden;min-width:120px}
 .pbar i{position:absolute;inset:0 auto 0 0;background:var(--ip);border-radius:5px}
 .pend{position:absolute;inset:0;background:rgba(7,9,11,.86);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:16px}
@@ -339,11 +341,13 @@ TOPICS CASEY PARKS FOR LATER (do not teach these; say they come later): ${(D.par
 
 /* ---------- the video player (one element, kept alive across renders) ---------- */
 let videoURL=null, playerBlock=null, lastSave=0;
+const svg=d=>`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"/></svg>`;
+const ICON={play:svg("M8 5v14l11-7z"),pause:svg("M6 5h4v14H6zM14 5h4v14h-4z"),back:svg("M12 5V2L7 6l5 4V7a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z"),replay:svg("M6 6h2v12H6zM9.5 12l8.5 6V6z"),fs:svg("M5 5h5v2H7v3H5zM14 5h5v5h-2V7h-3zM5 14h2v3h3v2H5zM17 14h2v5h-5v-2h3z")};
 const vw=document.createElement("div"); vw.className="player";
 vw.innerHTML=`<video playsinline preload="metadata"></video>
-<div class="pctl"><button data-v="play" aria-label="Play or pause">Play</button><button data-v="back" aria-label="Back 10 seconds">−10s</button>
+<div class="pctl"><button data-v="play" aria-label="Play" title="Play (Space)">${ICON.play}</button><button data-v="back" aria-label="Back 10 seconds" title="Back 10 seconds">${ICON.back}<span>10</span></button>
 <span class="pbar" role="slider" aria-label="Position in this part" tabindex="0"><i></i></span><span class="ptime">0:00 / 0:00</span>
-<button data-v="speed" aria-label="Playback speed">1×</button><button data-v="replay">Replay part</button><button data-v="fs">Full screen</button></div>
+<button data-v="speed" aria-label="Playback speed" title="Speed">1×</button><button data-v="replay" aria-label="Replay this part" title="Replay this part">${ICON.replay}</button><button data-v="fs" aria-label="Full screen" title="Full screen">${ICON.fs}</button></div>
 <div class="pend" hidden><b>End of this part</b><span>The video stops here. Now recall what you just saw.</span><div class="row"><button class="btn" data-v="next">Next: Recall →</button><button class="btn ghost" data-v="replay">Replay part</button></div></div>`;
 const vid=vw.querySelector("video");
 const range=b=>[secs(b.start),secs(b.end)];
@@ -355,7 +359,7 @@ function ptick(){
   const t=Math.min(Math.max(vid.currentTime,st),en);
   vw.querySelector(".pbar i").style.width=((t-st)/(en-st)*100)+"%";
   vw.querySelector(".ptime").textContent=fmt(t-st)+" / "+fmt(en-st);
-  vw.querySelector('[data-v="play"]').textContent=vid.paused?"Play":"Pause";
+  const pb=vw.querySelector('[data-v="play"]'), st2=vid.paused?"play":"pause"; if(pb.dataset.icon!==st2){pb.dataset.icon=st2;pb.innerHTML=ICON[st2];pb.setAttribute("aria-label",vid.paused?"Play":"Pause");pb.title=vid.paused?"Play (Space)":"Pause (Space)";}
   if(Date.now()-lastSave>3000){lastSave=Date.now();S.vt[b.id]=t;save();}
 }
 (function loop(){ if(!vid.paused) ptick(); requestAnimationFrame(loop); })();
