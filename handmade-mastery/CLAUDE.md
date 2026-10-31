@@ -53,7 +53,7 @@ This file adds what is specific to this subject. Then read
 | Debug | Visual Studio debugger now; RAD Debugger (open source) later |
 | Code tutor | Claude Code, Learning output style; a custom "Casey tutor" style may follow |
 | Concept teaching, practice, knowledge graph | LearnHarness (open source; the learner forked it). **Open:** needs an Anthropic API key (pay per use); a Claude subscription doesn't cover it |
-| Visual explanations | Manim via Claude Code's Manim skill (Mac), only for hard ideas |
+| Visual explanations | Manim through the repo skill `/animate` (renders on the Mac; one-time setup `tools/animate/setup-mac.sh`), only for hard ideas |
 | Memory | Anki with FSRS. Cards live in the repo as `cards.tsv` per day |
 | Speed | Daily blank-file rebuild drill; speedtyper.dev as optional warm-up |
 | Episode lesson format | One HTML study kit per episode (see below) |
@@ -115,7 +115,8 @@ The shared engine is `tools/study-kit/engine.html`. Never hand-edit the built pa
 Guess fields per part: `guess` (the main guess question) and `pre` (indexes into `questions` that are
 also asked as guesses; pick the 1–2 most important). Part 1's look back uses
 `window.STUDY.lookBack = {label, answer}` (the previous video in one sentence); later parts look back
-at the part before automatically.
+at the part before automatically. A part can also have `anim: "anim/<name>.mp4"` (a Manim video
+made with `/animate`); the Explain step shows it first.
 Video files stay outside git (e.g. `~/learning-videos/` on the Mac).
 
 ## Study sessions: `/study`

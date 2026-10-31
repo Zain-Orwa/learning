@@ -110,16 +110,17 @@ Every tool we use, what it's for, which machine it runs on, and how to set it up
   LearnHarness learning history (read-only).
 
 ### [ ] Manim: animated explanations
-- **Install (macOS):**
-  ```sh
-  curl -LsSf https://astral.sh/uv/install.sh | sh
-  uv python install
-  brew install cairo pkg-config
-  uv init manimations && cd manimations && uv add manim
-  uv run manim checkhealth
-  ```
-  LaTeX (MacTeX) is optional; only needed for math formulas.
-- **Claude Code skill:** `npx skills add https://github.com/davila7/claude-code-templates --skill manim`
+- **One-time setup (Mac), from the repo root:** `./tools/animate/setup-mac.sh`
+  It installs uv (if missing), cairo + pkg-config (Homebrew) and Manim 0.22 into
+  `tools/animate/.venv`, then renders a short test video (`tools/animate/example.mp4`).
+  Tick this box when the test video plays.
+- **Making one:** the repo skill `/animate` (`.claude/skills/animate/SKILL.md`) writes the
+  scene, renders it with `tools/animate/render.sh`, and adds it to the study page's Explain
+  step. It replaces the third-party Manim skill planned before, so every Claude account
+  gets it from the repo.
+- **Where it renders:** only on the Mac. Cloud sessions can't install Manim (PyPI is blocked
+  there); they write the scene and the Mac renders it. Still pictures are drawn in the chat.
+- LaTeX (MacTeX) is optional; only needed for math formulas.
 - **Rule:** only for hard ideas (memory, the stack, pixels, vectors, collisions), not every episode.
 
 ### [ ] Optional: speedtyper.dev

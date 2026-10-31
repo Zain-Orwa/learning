@@ -178,6 +178,8 @@ td.mono{font-family:var(--f-mono);font-size:13px;white-space:nowrap}
 .cover b{font-family:var(--f-display);font-size:22px}
 .cover .btn{background:var(--ip);color:var(--ip-ink);border-color:var(--ip)}
 .nudge{border-left:4px solid var(--warn);background:color-mix(in srgb,var(--warn) 10%,var(--panel));padding:8px 12px;border-radius:0 6px 6px 0;margin:12px 0}
+.anim{margin:12px 0}
+.anim video{display:block;width:100%;max-width:100%;border-radius:8px;background:#000}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
@@ -562,7 +564,8 @@ function renderStep(b,k){
     <div id="cmpbox" ${shown?"":"hidden"}><div class="callout"><b>What the part covers:</b> ${md(b.summary)}<ol>${b.watchFor.map(w=>`<li>${md(w)}</li>`).join("")}</ol></div></div>
     <div class="park"><h3>Your parking lot</h3>${(S.park[b.id]||[]).length?`<p class="small muted">Answer now only if it's about this part. If Casey covers it later, keep it for later.</p><ul class="plist" id="plist">${parkItems(b,true)}</ul>`:`<p class="small muted">Empty. Nothing pulled you away. Good.</p>`}</div>`;
   }
-  if(k==="explain") return (b.oneLiner?`<div class="callout"><b>The idea in one sentence:</b> ${md(b.oneLiner)}</div>`:"")
+  if(k==="explain") return (b.anim?`<figure class="anim"><video src="${esc(b.anim)}" controls playsinline preload="metadata"></video></figure>`:"")
+    + (b.oneLiner?`<div class="callout"><b>The idea in one sentence:</b> ${md(b.oneLiner)}</div>`:"")
     + (b.analogy?`<p><b>Real-life picture:</b> ${md(b.analogy)}</p>`:"")
     + b.explain + (b.prereq?`<div class="callout"><b>Prerequisite, explained now:</b> ${b.prereq}</div>`:"")
     + (b.mistake?`<div class="callout later"><b>Common beginner mistake:</b> ${md(b.mistake)}</div>`:"");

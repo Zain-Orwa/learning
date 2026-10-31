@@ -27,3 +27,8 @@ Release/
 # OS
 .DS_Store
 Thumbs.db
+
+# Animations: Manim's working files stay local; finished lesson animations are committed
+tools/animate/.venv/
+tools/animate/media/
+!**/anim/*.mp4

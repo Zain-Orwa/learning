@@ -153,3 +153,12 @@ Newest at the bottom. Each entry: date, decision, why.
   2017); recalling earlier material improves learning of new material (Pastötter & Bäuml, 2014).
 - Fixed the same day: the end-of-part screen covered the video, because its CSS `display:flex` beat
   the `hidden` attribute. The engine now has `[hidden]{display:none!important}`.
+
+## 2026-10-31: Animations ready to use (Manim, `/animate`)
+- Zain wants animations available whenever he asks, without setting anything up at that moment.
+- The setup lives in the repo: `tools/animate/` (Manim 0.22 via uv; `setup-mac.sh` once;
+  `render.sh`) and the `/animate` skill. A repo skill instead of the third-party one: it travels
+  with the repo to every Claude account and follows our style and rules.
+- Renders on the Mac only: cloud sessions can't reach PyPI. Still pictures are drawn in the chat.
+- Lesson animations live in `courses/<course>/dayNN/anim/` and are committed (small mp4s);
+  the Explain step shows a part's `anim`.

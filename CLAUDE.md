@@ -102,3 +102,4 @@ To add a subject: create a folder with its own `CLAUDE.md`, `README.md`,
 | `/interview` | Interview practice: drill, mini mock, area mock or full interview day; real-interviewer style, strict debrief |
 | `/debug` | Debugging challenge from studied material: timed, graded with the debugging rubric |
 | `/reminders` | Create/update the phone reminders (daily review, debug challenge) on the current Claude account |
+| `/animate` | Animated explanation of a hard idea (Manim video, rendered on the Mac) or a quick drawing |
