@@ -24,7 +24,7 @@ Current owner: the Claude account that created them on 2026-10-31 (ids below).
 ## 2. Debug challenge
 - **When:** Monday, Wednesday, Friday and Sunday at 18:45 Europe/Berlin
   (`CRON_TZ=Europe/Berlin 45 18 * * 0,1,3,5`)
-- **Id on the current account:** see `journey/STATE.md`
+- **Id on the current account:** `trig_013u5WqvEma6ksmyvTh6PDjA`
 - **Does:** one debugging challenge from studied material (`/debug`), timed,
   graded with the debugging rubric, recorded, pushed.
 - **Prompt:** see `.claude/skills/reminders/debug-challenge.txt`

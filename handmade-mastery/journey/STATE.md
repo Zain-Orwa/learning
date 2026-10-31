@@ -23,6 +23,7 @@ _Last updated: 2026-10-31_
   - [x] Automation: `./study` helper (auto video, grading in the page via Claude Code, progress + reviews + STATE saved to the repo, push on Stop), playlist for the next videos
   - [x] Debugging track: `docs/debugging-track.md`, `/debug`, 8 Day 1 challenges (timed) in the page, `dbg-` review units
   - [x] Phone reminders stored in the repo (`docs/scheduled-tasks.md`, `/reminders` for other accounts)
+  - [x] "Debug challenge" scheduled task: Mon/Wed/Fri/Sun 18:45 Europe/Berlin, cloud, automatic approval, push (id `trig_013u5WqvEma6ksmyvTh6PDjA`, same account as the daily review)
   - [ ] Learner tries Day 1 Part 1 with `./study` on the Mac
 
 ## Windows tools: all installed and verified (2026-10-30)
