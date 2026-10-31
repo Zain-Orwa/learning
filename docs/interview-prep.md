@@ -37,6 +37,9 @@ Sources: [18 months of game programming interviews (r/gamedev)](https://www.redd
 (data structures and algorithms), `math` (vectors, matrices, intersections),
 `graphics`, `engine` (game loop, input, audio, assets, architecture),
 `debugging`. Other subjects add their own areas (e.g. `databases`).
+Debug challenges (`dbg-…` units) count toward the `debugging` area; the
+**bug-squash** mock (a broken project, 30–45 min, thinking out loud) follows
+`docs/debugging-track.md`.
 
 ## How questions are born
 

@@ -14,9 +14,9 @@ Usage (run from the repo root):
       Record a review score and move the unit to its next date.
   python3 tools/reviews.py list <subject>
   python3 tools/reviews.py areas
-      Interview readiness per area (units whose id starts with "iv-" and
-      whose title starts with "[area]"): question count, average latest score,
-      and which mock interview is due.
+      Readiness per area: interview units ("iv-…") and debug challenges
+      ("dbg-…", area "debugging"), whose titles start with "[area]":
+      question count, average latest score, and which mock interview is due.
 """
 import datetime as dt
 import pathlib
@@ -126,7 +126,7 @@ def main(argv):
         stats = {}
         for subj in subjects():
             for r in load(subj):
-                if not r["unit"].startswith("iv-") or not r["title"].startswith("["):
+                if not r["unit"].startswith(("iv-", "dbg-")) or not r["title"].startswith("["):
                     continue
                 area = r["title"][1:r["title"].index("]")]
                 a = stats.setdefault(area, {"n": 0, "scores": []})

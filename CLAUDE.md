@@ -58,13 +58,17 @@ everything else), so both machines can edit safely.
 **The learning method** (five principles, strict grading, mentor behavior,
 lesson template, review schedule) is in `docs/learning-method.md`. Read it
 once per session. **Interview preparation** (areas, drills, mock interviews)
-is in `docs/interview-prep.md`.
+is in `docs/interview-prep.md`. **Debugging mastery** (Agans' 9 rules, rubric,
+levels, challenge formats) is in `docs/debugging-track.md`. **Phone reminders**
+(scheduled tasks, one account only) are in `docs/scheduled-tasks.md`.
 
 ## Schedule: flexible, set by Zain
 
 - **Study days: Saturday and Sunday** (new material). No fixed hours.
 - **Review days: Monday to Friday.** The daily task (12:48 Europe/Berlin)
   asks due reviews plus 2 interview questions.
+- **Debug challenges:** Monday, Wednesday, Friday and Sunday at 18:45 Berlin
+  (scheduled task), plus one in the Experiment step of many parts.
 - **"start"** (any day): Zain says *start*, usually with how much time he has
   ("start, 1h30"). If he gives no time, ask. Then:
   1. Reviews due first (keep them to about 15% of the time).
@@ -96,3 +100,5 @@ To add a subject: create a folder with its own `CLAUDE.md`, `README.md`,
 | `/study` | Study session: saves the page position, grades, parked questions, builds kits |
 | `/review` | Spaced-review session: asks about everything due in `REVIEWS.md`, grades in %, reschedules |
 | `/interview` | Interview practice: drill, mini mock, area mock or full interview day; real-interviewer style, strict debrief |
+| `/debug` | Debugging challenge from studied material: timed, graded with the debugging rubric |
+| `/reminders` | Create/update the phone reminders (daily review, debug challenge) on the current Claude account |

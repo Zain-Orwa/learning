@@ -136,6 +136,8 @@ textarea{min-height:88px;resize:vertical}
 #timer{font-family:var(--f-mono);background:var(--ip);color:var(--ip-ink);border-radius:4px;padding:1px 8px}
 #timer.low{background:var(--bad);color:#fff}
 .ivq{border-left:4px solid var(--link)}
+.dbg{border-left:4px solid var(--bad)}
+.dbg .clock{font-family:var(--f-mono);font-size:13px;color:var(--muted)}
 details.model{margin-top:8px} details.model summary{cursor:pointer;color:var(--muted);font-size:14px}
 .card{margin:14px 0}
 .card .face{border:1px solid var(--rule);border-radius:10px;min-height:150px;padding:22px;display:flex;flex-direction:column;justify-content:center;background:var(--panel)}
@@ -1091,6 +1093,122 @@ const IV = {
 window.STUDY.blocks.forEach(b=>{ if(IV[b.id]) b.interview=IV[b.id]; });
 })();
 
+/* ---- debug challenges (level 1: build errors), shown in the Experiment step ----
+   Each: title, level, target (seconds), scenario (HTML), task, hint, strong (checklist with % = 100), cause. */
+(function(){
+const DBG = {
+ b05:[
+  {title:"The linker can't find WinMain", level:1, target:120,
+   scenario:`<p>The project is set up as a Windows (GUI) program. The build fails:</p>
+<pre><code>// test.cpp
+#include &lt;windows.h&gt;
+
+int CALLBACK winMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
+                     LPSTR lpCmdLine, int nCmdShow)
+{
+    OutputDebugStringA("hello\\n");
+    return 0;
+}</code></pre>
+<pre><code>error LNK2019: unresolved external symbol WinMain referenced in function "int __cdecl invoke_main(void)"
+fatal error LNK1120: 1 unresolved externals</code></pre>`,
+   task:"Find the root cause. Say which stage failed and why it's that stage, then give the smallest fix.",
+   hint:"Compare, letter by letter, the name the error asks for with the name in the code.",
+   strong:[["It's a link error (LNK): compiling succeeded, the linker failed",20],["The startup code (invoke_main) needs a symbol named exactly WinMain",20],["The code defines winMain with a lowercase w; C names are case-sensitive, so it's a different symbol",30],["Fix: rename it to WinMain (one letter); rebuild to confirm",20],["Process: read the exact symbol name in the error instead of guessing",10]],
+   cause:"`winMain` ≠ `WinMain`: names are case-sensitive, so no definition of WinMain exists for the linker."},
+  {title:"WinMain is there, but the linker wants main", level:1, target:150,
+   scenario:`<p>Same code as Casey's (with a correct <code>WinMain</code>), but in a new "Empty Project":</p>
+<pre><code>error LNK2019: unresolved external symbol main referenced in function "int __cdecl invoke_main(void)"</code></pre>`,
+   task:"WinMain is spelled correctly. Why does the linker want main? Give the fix and where you set it.",
+   hint:"Which project setting decides between a console program and a windowed program?",
+   strong:[["The project is built as a console program (subsystem CONSOLE)",30],["A console program's startup code calls main, not WinMain",30],["Fix: Project Properties → Linker → System → SubSystem = Windows (/SUBSYSTEM:WINDOWS)",30],["Rebuild to confirm",10]],
+   cause:"Subsystem mismatch: a CONSOLE build's startup code looks for `main`."}],
+ b08:[
+  {title:"It builds, it runs… and prints nothing", level:1, target:150,
+   scenario:`<pre><code>#include &lt;windows.h&gt;
+
+void foo(void)
+{
+    OutputDebugStringA("Hello!\\n");
+}
+
+int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
+                     LPSTR lpCmdLine, int nCmdShow)
+{
+    return 0;
+}</code></pre>
+<p>The build succeeds. He presses <b>Ctrl+F5</b>. The program starts and exits, and nothing appears in Visual Studio's Output window.</p>`,
+   task:"There are TWO separate reasons nothing shows up. Name both, and say how you'd check each one.",
+   hint:"One reason is in the code. The other is about how the program was started.",
+   strong:[["foo is defined but never called, so its body never runs",35],["Fix 1: call foo(); inside WinMain",15],["Ctrl+F5 runs without the debugger; OutputDebugStringA only shows when a debugger (or DebugView) is listening",35],["Check: run with F5 (debugger attached) or open DebugView",15]],
+   cause:"`foo` is never called, and Ctrl+F5 runs without a debugger to receive the output."}],
+ b09:[
+  {title:"The error points at the wrong line", level:1, target:120,
+   scenario:`<pre><code>1  void foo(void)
+2  {
+3      OutputDebugStringA("first\\n")
+4      OutputDebugStringA("second\\n");
+5  }</code></pre>
+<pre><code>test.cpp(4): error C2146: syntax error: missing ';' before identifier 'OutputDebugStringA'</code></pre>`,
+   task:"Line 4 looks perfect. Where is the real bug, and why does the compiler report line 4?",
+   hint:"How does the compiler know a statement has ended?",
+   strong:[["The missing ; is at the end of line 3",35],["Line breaks mean nothing in C; the compiler keeps reading the statement onto line 4",30],["It only notices the problem when it reaches the next token on line 4, so it reports there",25],["Lesson: when an error line looks fine, look at the line before",10]],
+   cause:"Missing `;` on line 3. The compiler only sees the problem at the next token, on line 4."},
+  {title:"identifier not found… but it's a Windows function", level:1, target:90,
+   scenario:`<pre><code>OutputDebug StringA("hi\\n");</code></pre>
+<pre><code>error C2065: 'OutputDebug': undeclared identifier
+error C2146: syntax error: missing ';' before identifier 'StringA'</code></pre>`,
+   task:"Root cause and fix?",
+   hint:"How many names does the compiler see here?",
+   strong:[["A space splits the name into two tokens: OutputDebug and StringA",50],["Neither exists, which causes both errors",25],["Fix: remove the space (OutputDebugStringA)",25]],
+   cause:"Whitespace inside a name splits it into two tokens."}],
+ b10:[
+  {title:"must return a value", level:1, target:90,
+   scenario:`<pre><code>int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
+                     LPSTR lpCmdLine, int nCmdShow)
+{
+    foo();
+}</code></pre>
+<pre><code>error C4716: 'WinMain': must return a value</code></pre>`,
+   task:"Casey's video builds this fine. Why does your compiler refuse, and what's the fix? What would the value be used for?",
+   hint:"Look at the word before CALLBACK.",
+   strong:[["WinMain promises to return an int",30],["The body never returns one; newer compilers treat this as an error",25],["Fix: return 0; at the end",25],["The value becomes the program's exit code (0 = success)",20]],
+   cause:"`int` return type but no `return` statement."}],
+ b11:[
+  {title:"Compile error first, then a link error", level:1, target:150,
+   scenario:`<p>Step 1:</p>
+<pre><code>int CALLBACK WinMain(HINSTANCE h, HINSTANCE p, LPSTR c, int n)
+{
+    foo();
+    return 0;
+}
+void fooo(void) { OutputDebugStringA("x\\n"); }</code></pre>
+<pre><code>error C3861: 'foo': identifier not found</code></pre>
+<p>He adds <code>void foo(void);</code> at the top. Step 2:</p>
+<pre><code>error LNK2019: unresolved external symbol "void __cdecl foo(void)" referenced in function WinMain</code></pre>`,
+   task:"Explain why adding a line changed a compile error into a link error. What's the real bug, and what's the right fix?",
+   hint:"What does a declaration give the compiler? What does the linker need?",
+   strong:[["Step 1: foo was never declared, so the compiler can't make the call (compile error)",25],["Step 2: the declaration is enough for the compiler, which leaves the call for the linker",25],["The linker finds no definition of foo, because the function is spelled fooo",30],["Fix: rename fooo to foo (keep the declaration, or define foo above WinMain)",20]],
+   cause:"The definition is misspelled (`fooo`). The declaration only moved the problem to the linker."}],
+ b12:[
+  {title:"Twenty errors from one missing line", level:1, target:120,
+   scenario:`<pre><code>void foo(void) { OutputDebugStringA("hi\\n"); }
+
+int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
+                     LPSTR lpCmdLine, int nCmdShow)
+{ foo(); return 0; }</code></pre>
+<pre><code>error C3861: 'OutputDebugStringA': identifier not found
+error C2146: syntax error: missing ';' before identifier 'WinMain'
+error C4430: missing type specifier - int assumed
+error C2061: syntax error: identifier 'HINSTANCE'
+... (16 more)</code></pre>`,
+   task:"What is the ONE root cause of all these errors? Which error do you fix first, and why?",
+   hint:"Which file declares HINSTANCE, CALLBACK and OutputDebugStringA?",
+   strong:[["#include <windows.h> is missing",40],["Without it, HINSTANCE, CALLBACK and OutputDebugStringA are unknown names, and every later line fails",25],["Fix the FIRST error first; later errors are often only side effects",25],["Rebuild: all errors disappear with one line",10]],
+   cause:"Missing `#include <windows.h>`: one cause, a cascade of errors."}]
+};
+window.STUDY.blocks.forEach(b=>{ if(DBG[b.id]) b.debug=DBG[b.id]; });
+})();
+
 </script>
 <script>
 (function(){
@@ -1110,7 +1228,7 @@ const md = s=>esc(s).replace(/`([^`]+)`/g,"<code>$1</code>").replace(/\*\*([^*]+
 $("#eyebrow").textContent=D.eyebrow||""; $("#h1").textContent=D.title||document.title;
 
 /* ---------- state + persistence ---------- */
-const FRESH={v:2,cur:D.blocks[0].id,step:"watch",tab:"path",done:{},completed:{},vt:{},recall:{},cmp:{},guess:{},rfb:{},cdate:{},ivans:{},ivfb:{},session:null,park:{},answers:{},fb:{},cards:{},notes:{},speed:1,lastVisit:0,sessionParts:0,brk:null,stopped:false};
+const FRESH={v:2,cur:D.blocks[0].id,step:"watch",tab:"path",done:{},completed:{},vt:{},recall:{},cmp:{},guess:{},rfb:{},cdate:{},ivans:{},ivfb:{},dbgs:{},dbgans:{},dbgfb:{},session:null,park:{},answers:{},fb:{},cards:{},notes:{},speed:1,lastVisit:0,sessionParts:0,brk:null,stopped:false};
 let S=JSON.parse(JSON.stringify(FRESH));
 const LS=D.storageKey||"study-kit";
 try{const raw=localStorage.getItem(LS); if(raw) S=Object.assign(S,JSON.parse(raw));}catch(e){}
@@ -1133,7 +1251,7 @@ const kitPath=decodeURIComponent(location.pathname).replace(/^\/courses\//,"").r
 let helperReady=false, videoFolder=null;
 function helperMeta(){
   return {kit:kitPath,unitPrefix:D.unitPrefix||D.storageKey,unitLabel:D.unitLabel||D.title,
-    completedParts:D.blocks.filter(b=>S.completed[b.id]).map(b=>({id:b.id,n:idxOf(b)+1,title:b.title,date:S.cdate[b.id]||new Date().toISOString().slice(0,10),interview:(b.interview||[]).map(iv=>({area:iv.area,q:iv.q}))}))};
+    completedParts:D.blocks.filter(b=>S.completed[b.id]).map(b=>({id:b.id,n:idxOf(b)+1,title:b.title,date:S.cdate[b.id]||new Date().toISOString().slice(0,10),interview:(b.interview||[]).map(iv=>({area:iv.area,q:iv.q})),debug:(b.debug||[]).map(c=>({title:c.title,level:c.level}))}))};
 }
 function postHelper(url,extra){
   S.finished=allDone();
@@ -1352,11 +1470,38 @@ CHECKLIST (with weights): ${(iv.strong||[]).map(([t,p])=>t+" ("+p+"%)").join("; 
 RED FLAGS: ${(iv.redflags||[]).join("; ")||"none"}
 CANDIDATE ANSWER: ${ans}`;
 }
+/* ---------- debug challenges ---------- */
+function dbgBlock(b,i,c,full){
+  const id=b.id+":"+i, st=S.dbgs[id], fb=S.dbgfb[id];
+  const head=`<div class="qn">DEBUG · level ${c.level} · target ${fmt(c.target||120)}</div><div class="qt">${md(c.title)}</div>`;
+  if(!full) return `<div class="q dbg">${head}${fb?renderScore(fb)+(fb.secs?`<p class="clock">Solved in ${fmt(fb.secs)} (target ${fmt(c.target||120)})</p>`:""):`<p class="small muted">Not tried yet.</p>`}</div>`;
+  if(!st) return `<div class="q dbg">${head}<p class="small muted">Read nothing yet. When you're ready, start the clock.</p><div class="row"><button class="btn" data-dbgstart="${id}">Start challenge</button></div></div>`;
+  return `<div class="q dbg">${head}${c.scenario}<p><b>Task:</b> ${md(c.task)}</p>
+  <textarea data-dbg="${id}" placeholder="Cause, how you found it, fix, how you'd verify…">${esc(S.dbgans[id]||"")}</textarea>
+  <div class="row">${sample?`<button class="btn" data-dbgcheck="${id}">Grade my debugging</button>`:`<button class="btn ghost" data-dbgcopy="${id}">Copy for Claude to grade</button>`}<span class="clock" data-clock="${id}">${fb&&fb.secs?`Solved in ${fmt(fb.secs)}`:""}</span></div>
+  ${c.hint?`<details class="model"><summary>Hint (costs nothing, but try first)</summary><p>${md(c.hint)}</p></details>`:""}
+  <div class="copybox" id="dbgcb-${id}"></div><div id="dbgfb-${id}">${fb?renderScore(fb):""}</div>
+  <details class="model"><summary>Solution checklist</summary><ul>${(c.strong||[]).map(([t,p])=>`<li>${md(t)} <span class="muted">(${p}%)</span></li>`).join("")}</ul><p class="small"><b>Root cause:</b> ${md(c.cause||"")}</p></details></div>`;
+}
+function dbgPrompt(b,c,ans,secs){
+  const strip=h=>String(h||"").replace(/<[^>]+>/g," ").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&").replace(/\s+/g," ").trim();
+  return `Grade a debugging challenge like a strict senior engineer in a debugging interview. ${GRADE_RULES} Use the solution checklist as the 100% answer, and reward a real debugging process (reading the exact error, a specific hypothesis, narrowing down, smallest fix, verifying). He took ${fmt(secs)} (target ${fmt(c.target||120)}); mention speed in one short sentence.
+Only expect what the course has covered so far: ${blockContext(b)}
+CHALLENGE: ${c.title}
+SCENARIO: ${strip(c.scenario)}
+TASK: ${c.task}
+SOLUTION CHECKLIST (with weights): ${(c.strong||[]).map(([t,p])=>t+" ("+p+"%)").join("; ")}
+ROOT CAUSE: ${c.cause||""}
+STUDENT ANSWER: ${ans}`;
+}
+setInterval(()=>{document.querySelectorAll("[data-clock]").forEach(el=>{const id=el.dataset.clock;if(S.dbgfb[id]&&S.dbgfb[id].secs)return;const st=S.dbgs[id];if(st)el.textContent="⏱ "+fmt((Date.now()-st)/1000);})},1000);
+
 function renderInterviewTab(){
   const open=D.blocks.filter(b=>S.completed[b.id]&&(b.interview||[]).length);
   const locked=D.blocks.filter(b=>!S.completed[b.id]&&(b.interview||[]).length).length;
   return `<section class="block"><h2>Interview</h2><p class="pane">Real interview questions about what you've studied. They join your spaced reviews, and once an area has enough of them, Claude runs a mock interview (<code>/interview</code>).</p>
   ${open.length?open.map(b=>`<h3>Part ${idxOf(b)+1}: ${esc(b.title)}</h3>`+b.interview.map((iv,i)=>ivBlock(b,i,iv,false)).join("")).join(""):`<p class="muted">No questions yet. They unlock as you finish parts.</p>`}
+  ${(()=>{const d=D.blocks.filter(b=>S.completed[b.id]&&(b.debug||[]).length);return d.length?`<h3>Debug challenges</h3>`+d.map(b=>b.debug.map((c,i)=>dbgBlock(b,i,c,false)).join("")).join(""):""})()}
   ${locked?`<p class="small muted">${locked} more part${locked>1?"s":""} with interview questions unlock as you study.</p>`:""}</section>`;
 }
 
@@ -1419,7 +1564,7 @@ function renderStep(b,k){
     + (b.analogy?`<p><b>Real-life picture:</b> ${md(b.analogy)}</p>`:"")
     + b.explain + (b.prereq?`<div class="callout"><b>Prerequisite, explained now:</b> ${b.prereq}</div>`:"")
     + (b.mistake?`<div class="callout later"><b>Common beginner mistake:</b> ${md(b.mistake)}</div>`:"");
-  if(k==="experiment") return b.experiment;
+  if(k==="experiment") return b.experiment + ((b.debug||[]).length?`<h3>Debug challenge</h3><p class="small muted">Find the real cause fast, with the smallest fix. Use the method: read the exact error, state a hypothesis, narrow it down, fix, verify. The clock starts when you press Start. (Error texts can differ slightly between compiler versions.)</p>`+b.debug.map((c,i)=>dbgBlock(b,i,c,true)).join(""):"");
   if(k==="code") return b.code;
   if(k==="why") return b.why + ((b.interview||[]).length?`<h3>Interview corner</h3><p class="small muted">How a real interviewer could ask about this part. It joins your reviews and your mock interviews.</p>`+b.interview.map((iv,i)=>ivBlock(b,i,iv,true)).join(""):"");
   if(k==="ask") return renderAsk(b);
@@ -1603,6 +1748,15 @@ $("#view").addEventListener("click",async e=>{
   if(t.id==="markNext"){welcome=false;goNextStep();return}
   if(t.id==="parkgo"){addPark();return}
   if(t.dataset.sess){const v=t.dataset.sess;if(v==="reset"){S.session=null;}else{S.session={start:Date.now(),min:+v};warned=false;}welcome=false;save();render();return}
+  if(t.dataset.dbgstart){S.dbgs[t.dataset.dbgstart]=Date.now();save();render();return}
+  if(t.dataset.dbgcopy||t.dataset.dbgcheck){const id=t.dataset.dbgcopy||t.dataset.dbgcheck,[bid,qi]=id.split(":"),b=blockById(bid),c=b.debug[+qi],ans=(S.dbgans[id]||"").trim();
+    if(!ans){toast("Write your answer first");return}
+    const secs=Math.round((Date.now()-(S.dbgs[id]||Date.now()))/1000);
+    if(t.dataset.dbgcopy){copy(dbgPrompt(b,c,ans,secs),$("#dbgcb-"+CSS.escape(id)));return}
+    t.disabled=true;const box=$("#dbgfb-"+CSS.escape(id));box.innerHTML=`<div class="fb muted">Thinking…</div>`;
+    try{const r=await sample.json(dbgPrompt(b,c,ans,secs)+"\n"+JSON_SHAPE);S.dbgfb[id]=Object.assign(normFb(r),{secs});save();box.innerHTML=renderScore(S.dbgfb[id]);const cl=document.querySelector(`[data-clock="${CSS.escape(id)}"]`);if(cl)cl.textContent=`Solved in ${fmt(secs)} (target ${fmt(c.target||120)})`;}
+    catch(err){box.innerHTML=`<div class="fb">${esc(err&&err.message||"Couldn't grade this time.")} Open the solution checklist.</div>`}
+    finally{t.disabled=false}return}
   if(t.dataset.ivcopy||t.dataset.ivcheck){const id=t.dataset.ivcopy||t.dataset.ivcheck,[bid,qi]=id.split(":"),b=blockById(bid),iv=b.interview[+qi],ans=(S.ivans[id]||"").trim();
     if(!ans){toast("Write your answer first");return}
     if(t.dataset.ivcopy){copy(ivPrompt(b,iv,ans),$("#ivcb-"+CSS.escape(id)));return}
@@ -1644,6 +1798,7 @@ $("#view").addEventListener("input",e=>{
   const a=e.target.dataset.ans; if(a){S.answers[a]=e.target.value;save()}
   const r=e.target.dataset.recall; if(r){S.recall[r]=e.target.value;save()}
   const v=e.target.dataset.iv; if(v){S.ivans[v]=e.target.value;save()}
+  const g=e.target.dataset.dbg; if(g){S.dbgans[g]=e.target.value;save()}
 });
 async function checkAnswer(id,btn){
   const [bid,qi]=id.split("?"); const b=blockById(bid), q=b.questions[+qi]; const ans=(S.answers[id]||"").trim();

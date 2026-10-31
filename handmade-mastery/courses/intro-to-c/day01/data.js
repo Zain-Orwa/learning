@@ -902,3 +902,119 @@ const IV = {
 };
 window.STUDY.blocks.forEach(b=>{ if(IV[b.id]) b.interview=IV[b.id]; });
 })();
+
+/* ---- debug challenges (level 1: build errors), shown in the Experiment step ----
+   Each: title, level, target (seconds), scenario (HTML), task, hint, strong (checklist with % = 100), cause. */
+(function(){
+const DBG = {
+ b05:[
+  {title:"The linker can't find WinMain", level:1, target:120,
+   scenario:`<p>The project is set up as a Windows (GUI) program. The build fails:</p>
+<pre><code>// test.cpp
+#include &lt;windows.h&gt;
+
+int CALLBACK winMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
+                     LPSTR lpCmdLine, int nCmdShow)
+{
+    OutputDebugStringA("hello\\n");
+    return 0;
+}</code></pre>
+<pre><code>error LNK2019: unresolved external symbol WinMain referenced in function "int __cdecl invoke_main(void)"
+fatal error LNK1120: 1 unresolved externals</code></pre>`,
+   task:"Find the root cause. Say which stage failed and why it's that stage, then give the smallest fix.",
+   hint:"Compare, letter by letter, the name the error asks for with the name in the code.",
+   strong:[["It's a link error (LNK): compiling succeeded, the linker failed",20],["The startup code (invoke_main) needs a symbol named exactly WinMain",20],["The code defines winMain with a lowercase w; C names are case-sensitive, so it's a different symbol",30],["Fix: rename it to WinMain (one letter); rebuild to confirm",20],["Process: read the exact symbol name in the error instead of guessing",10]],
+   cause:"`winMain` ≠ `WinMain`: names are case-sensitive, so no definition of WinMain exists for the linker."},
+  {title:"WinMain is there, but the linker wants main", level:1, target:150,
+   scenario:`<p>Same code as Casey's (with a correct <code>WinMain</code>), but in a new "Empty Project":</p>
+<pre><code>error LNK2019: unresolved external symbol main referenced in function "int __cdecl invoke_main(void)"</code></pre>`,
+   task:"WinMain is spelled correctly. Why does the linker want main? Give the fix and where you set it.",
+   hint:"Which project setting decides between a console program and a windowed program?",
+   strong:[["The project is built as a console program (subsystem CONSOLE)",30],["A console program's startup code calls main, not WinMain",30],["Fix: Project Properties → Linker → System → SubSystem = Windows (/SUBSYSTEM:WINDOWS)",30],["Rebuild to confirm",10]],
+   cause:"Subsystem mismatch: a CONSOLE build's startup code looks for `main`."}],
+ b08:[
+  {title:"It builds, it runs… and prints nothing", level:1, target:150,
+   scenario:`<pre><code>#include &lt;windows.h&gt;
+
+void foo(void)
+{
+    OutputDebugStringA("Hello!\\n");
+}
+
+int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
+                     LPSTR lpCmdLine, int nCmdShow)
+{
+    return 0;
+}</code></pre>
+<p>The build succeeds. He presses <b>Ctrl+F5</b>. The program starts and exits, and nothing appears in Visual Studio's Output window.</p>`,
+   task:"There are TWO separate reasons nothing shows up. Name both, and say how you'd check each one.",
+   hint:"One reason is in the code. The other is about how the program was started.",
+   strong:[["foo is defined but never called, so its body never runs",35],["Fix 1: call foo(); inside WinMain",15],["Ctrl+F5 runs without the debugger; OutputDebugStringA only shows when a debugger (or DebugView) is listening",35],["Check: run with F5 (debugger attached) or open DebugView",15]],
+   cause:"`foo` is never called, and Ctrl+F5 runs without a debugger to receive the output."}],
+ b09:[
+  {title:"The error points at the wrong line", level:1, target:120,
+   scenario:`<pre><code>1  void foo(void)
+2  {
+3      OutputDebugStringA("first\\n")
+4      OutputDebugStringA("second\\n");
+5  }</code></pre>
+<pre><code>test.cpp(4): error C2146: syntax error: missing ';' before identifier 'OutputDebugStringA'</code></pre>`,
+   task:"Line 4 looks perfect. Where is the real bug, and why does the compiler report line 4?",
+   hint:"How does the compiler know a statement has ended?",
+   strong:[["The missing ; is at the end of line 3",35],["Line breaks mean nothing in C; the compiler keeps reading the statement onto line 4",30],["It only notices the problem when it reaches the next token on line 4, so it reports there",25],["Lesson: when an error line looks fine, look at the line before",10]],
+   cause:"Missing `;` on line 3. The compiler only sees the problem at the next token, on line 4."},
+  {title:"identifier not found… but it's a Windows function", level:1, target:90,
+   scenario:`<pre><code>OutputDebug StringA("hi\\n");</code></pre>
+<pre><code>error C2065: 'OutputDebug': undeclared identifier
+error C2146: syntax error: missing ';' before identifier 'StringA'</code></pre>`,
+   task:"Root cause and fix?",
+   hint:"How many names does the compiler see here?",
+   strong:[["A space splits the name into two tokens: OutputDebug and StringA",50],["Neither exists, which causes both errors",25],["Fix: remove the space (OutputDebugStringA)",25]],
+   cause:"Whitespace inside a name splits it into two tokens."}],
+ b10:[
+  {title:"must return a value", level:1, target:90,
+   scenario:`<pre><code>int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
+                     LPSTR lpCmdLine, int nCmdShow)
+{
+    foo();
+}</code></pre>
+<pre><code>error C4716: 'WinMain': must return a value</code></pre>`,
+   task:"Casey's video builds this fine. Why does your compiler refuse, and what's the fix? What would the value be used for?",
+   hint:"Look at the word before CALLBACK.",
+   strong:[["WinMain promises to return an int",30],["The body never returns one; newer compilers treat this as an error",25],["Fix: return 0; at the end",25],["The value becomes the program's exit code (0 = success)",20]],
+   cause:"`int` return type but no `return` statement."}],
+ b11:[
+  {title:"Compile error first, then a link error", level:1, target:150,
+   scenario:`<p>Step 1:</p>
+<pre><code>int CALLBACK WinMain(HINSTANCE h, HINSTANCE p, LPSTR c, int n)
+{
+    foo();
+    return 0;
+}
+void fooo(void) { OutputDebugStringA("x\\n"); }</code></pre>
+<pre><code>error C3861: 'foo': identifier not found</code></pre>
+<p>He adds <code>void foo(void);</code> at the top. Step 2:</p>
+<pre><code>error LNK2019: unresolved external symbol "void __cdecl foo(void)" referenced in function WinMain</code></pre>`,
+   task:"Explain why adding a line changed a compile error into a link error. What's the real bug, and what's the right fix?",
+   hint:"What does a declaration give the compiler? What does the linker need?",
+   strong:[["Step 1: foo was never declared, so the compiler can't make the call (compile error)",25],["Step 2: the declaration is enough for the compiler, which leaves the call for the linker",25],["The linker finds no definition of foo, because the function is spelled fooo",30],["Fix: rename fooo to foo (keep the declaration, or define foo above WinMain)",20]],
+   cause:"The definition is misspelled (`fooo`). The declaration only moved the problem to the linker."}],
+ b12:[
+  {title:"Twenty errors from one missing line", level:1, target:120,
+   scenario:`<pre><code>void foo(void) { OutputDebugStringA("hi\\n"); }
+
+int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
+                     LPSTR lpCmdLine, int nCmdShow)
+{ foo(); return 0; }</code></pre>
+<pre><code>error C3861: 'OutputDebugStringA': identifier not found
+error C2146: syntax error: missing ';' before identifier 'WinMain'
+error C4430: missing type specifier - int assumed
+error C2061: syntax error: identifier 'HINSTANCE'
+... (16 more)</code></pre>`,
+   task:"What is the ONE root cause of all these errors? Which error do you fix first, and why?",
+   hint:"Which file declares HINSTANCE, CALLBACK and OutputDebugStringA?",
+   strong:[["#include <windows.h> is missing",40],["Without it, HINSTANCE, CALLBACK and OutputDebugStringA are unknown names, and every later line fails",25],["Fix the FIRST error first; later errors are often only side effects",25],["Rebuild: all errors disappear with one line",10]],
+   cause:"Missing `#include <windows.h>`: one cause, a cascade of errors."}]
+};
+window.STUDY.blocks.forEach(b=>{ if(DBG[b.id]) b.debug=DBG[b.id]; });
+})();

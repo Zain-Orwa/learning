@@ -129,3 +129,14 @@ Newest at the bottom. Each entry: date, decision, why.
   subscription login), writes progress/STATE/REVIEWS into the repo, and pushes on Stop.
 - Why a browser: the page is a local file; the browser is only the window and video player.
 - `courses/playlist.json` orders the videos; the page points to the next one when a video is done.
+
+## 2026-10-31: Debugging mastery track
+- Goal: master debugger, interview-ready. Method: David Agans' 9 rules; interview style:
+  Stripe-like bug squash, Amazon-like planted bugs (sources in `docs/debugging-track.md`).
+- Rubric: reproduce 15, evidence 20, hypothesis 20, narrowing 15, root cause 15, fix+verify 15; speed tracked.
+- Levels unlock with the course (Day 1 = build errors). Only studied material.
+- Challenges: a `debug` list per part in `data.js` (Day 1 has 8), shown in the Experiment step with
+  a start-to-solve clock; finished parts add `dbg-` review units. `/debug` any time.
+- Phone: "Debug challenge" scheduled task Mon/Wed/Fri/Sun 18:45 Berlin.
+- Multi-account: tasks belong to one account; definitions + prompts are stored in the repo
+  (`docs/scheduled-tasks.md`, `.claude/skills/reminders/`); `/reminders` recreates them on another account.

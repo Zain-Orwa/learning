@@ -126,7 +126,7 @@ def update_state_position(block):
 
 
 def add_reviews(meta):
-    """Add finished parts and their interview questions to journey/REVIEWS.md (skips ones already there)."""
+    """Add finished parts, their interview questions and debug challenges to journey/REVIEWS.md (skips ones already there)."""
     added = []
     tool = REPO / "tools" / "reviews.py"
     for part in meta.get("completedParts", []):
@@ -140,6 +140,12 @@ def add_reviews(meta):
             unit = f"iv-{meta['unitPrefix']}-{part['id']}-{i}"
             code, out = run([sys.executable, str(tool), "add", SUBJECT_NAME, unit,
                              f"[{iv['area']}] {iv['q']}", f"{src}/iv{i}", "--date", part["date"]])
+            if "Added" in out:
+                added.append(unit)
+        for i, dbg in enumerate(part.get("debug", [])):
+            unit = f"dbg-{meta['unitPrefix']}-{part['id']}-{i}"
+            code, out = run([sys.executable, str(tool), "add", SUBJECT_NAME, unit,
+                             f"[debugging] L{dbg.get('level', 1)} {dbg['title']}", f"{src}/dbg{i}", "--date", part["date"]])
             if "Added" in out:
                 added.append(unit)
     return added

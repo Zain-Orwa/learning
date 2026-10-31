@@ -21,6 +21,8 @@ _Last updated: 2026-10-31_
   - [x] Flexible schedule: weekends = study ("start" + time, page planner with countdown); weekdays = reviews + interview drill
   - [x] Interview track: interview corner per part, Interview tab, `/interview`, `journey/INTERVIEWS.md`, `tools/reviews.py areas`; Day 1 has 9 interview questions
   - [x] Automation: `./study` helper (auto video, grading in the page via Claude Code, progress + reviews + STATE saved to the repo, push on Stop), playlist for the next videos
+  - [x] Debugging track: `docs/debugging-track.md`, `/debug`, 8 Day 1 challenges (timed) in the page, `dbg-` review units
+  - [x] Phone reminders stored in the repo (`docs/scheduled-tasks.md`, `/reminders` for other accounts)
   - [ ] Learner tries Day 1 Part 1 with `./study` on the Mac
 
 ## Windows tools: all installed and verified (2026-10-30)
@@ -46,6 +48,9 @@ Needed for the first session: Claude Code (logged in), the videos folder
 - Step: Watch (not started)
 - Updated: 2026-10-30
 - Note: Day 1's Q&A is a separate recording; add it as extra sections when we get there.
+
+## Debugging log
+_(one line per challenge: date, bug class, score, time)_
 
 ## Course progress
 - Intro to C, Day 1: study kit ready, **not started**.
