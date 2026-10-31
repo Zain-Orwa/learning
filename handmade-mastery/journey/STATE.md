@@ -25,6 +25,7 @@ _Last updated: 2026-10-31_
   - [x] Phone reminders stored in the repo (`docs/scheduled-tasks.md`, `/reminders` for other accounts)
   - [x] "Debug challenge" scheduled task: Mon/Wed/Fri/Sun 18:45 Europe/Berlin, cloud, automatic approval, push (id `trig_013u5WqvEma6ksmyvTh6PDjA`, same account as the daily review)
   - [x] Guess step (2026-10-31): Guess is now the first step of every part (look back at the previous part + 2–3 guesses; the video stays covered until they're locked in). Fixed: the end-of-part screen no longer covers the video
+  - [x] Manim installed and tested on the Mac (2026-10-31): Manim 0.22.1 in `tools/animate/.venv`, uv, cairo + pkg-config; test video `tools/animate/example.mp4` rendered
   - [ ] Learner tries Day 1 Part 1 with `./study` on the Mac
 
 ## Windows tools: all installed and verified (2026-10-30)

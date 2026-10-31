@@ -24,6 +24,9 @@ Release/
 # Claude Code local-only settings
 .claude/settings.local.json
 
+# Python cache
+__pycache__/
+
 # OS
 .DS_Store
 Thumbs.db

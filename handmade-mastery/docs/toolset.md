@@ -109,7 +109,7 @@ Every tool we use, what it's for, which machine it runs on, and how to set it up
   LearnHarness repo into `~/.claude/skills/`. Claude Code can then read your
   LearnHarness learning history (read-only).
 
-### [ ] Manim: animated explanations
+### [x] Manim: animated explanations
 - **One-time setup (Mac), from the repo root:** `./tools/animate/setup-mac.sh`
   It installs uv (if missing), cairo + pkg-config (Homebrew) and Manim 0.22 into
   `tools/animate/.venv`, then renders a short test video (`tools/animate/example.mp4`).
