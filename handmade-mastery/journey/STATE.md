@@ -24,6 +24,7 @@ _Last updated: 2026-10-31_
   - [x] Debugging track: `docs/debugging-track.md`, `/debug`, 8 Day 1 challenges (timed) in the page, `dbg-` review units
   - [x] Phone reminders stored in the repo (`docs/scheduled-tasks.md`, `/reminders` for other accounts)
   - [x] "Debug challenge" scheduled task: Mon/Wed/Fri/Sun 18:45 Europe/Berlin, cloud, automatic approval, push (id `trig_013u5WqvEma6ksmyvTh6PDjA`, same account as the daily review)
+  - [x] Guess step (2026-10-31): Guess is now the first step of every part (look back at the previous part + 2–3 guesses; the video stays covered until they're locked in). Fixed: the end-of-part screen no longer covers the video
   - [ ] Learner tries Day 1 Part 1 with `./study` on the Mac
 
 ## Windows tools: all installed and verified (2026-10-30)
@@ -46,9 +47,10 @@ Needed for the first session: Claude Code (logged in), the videos folder
 ## Study position
 - Course: intro-to-c, Day 01
 - Section: 1 of 12 ("Why this series, and getting a compiler", 0:00-5:21)
-- Step: Watch (not started)
-- Updated: 2026-10-30
-- Note: Day 1's Q&A is a separate recording; add it as extra sections when we get there.
+- Step: Watch (video at 0:34 into the part, episode time 0:34)
+- Parts done: 0
+- Completed (part id, date): none
+- Updated: 2026-10-31
 
 ## Debugging log
 _(one line per challenge: date, bug class, score, time)_

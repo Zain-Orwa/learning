@@ -1,0 +1,47 @@
+{
+ "v": 2,
+ "cur": "b01",
+ "step": "watch",
+ "tab": "path",
+ "done": {
+  "b01": {
+   "guess": true
+  }
+ },
+ "completed": {},
+ "vt": {
+  "b01": 33.843131
+ },
+ "recall": {},
+ "cmp": {},
+ "guess": {
+  "b01": "Turns the code into machine code is acted like a translator"
+ },
+ "guesses": {
+  "b01": [
+   "Turns the code into machine code is acted like a translator.",
+   "I think we need an IDE, not only on Windows but in the most of the machine, and extra work in Windows because we need Windows environment that's only specific to windows as it's closed-source"
+  ]
+ },
+ "lb": {},
+ "lbShow": {},
+ "rfb": {},
+ "cdate": {},
+ "ivans": {},
+ "ivfb": {},
+ "dbgs": {},
+ "dbgans": {},
+ "dbgfb": {},
+ "session": null,
+ "park": {},
+ "answers": {},
+ "fb": {},
+ "cards": {},
+ "notes": {},
+ "speed": 1,
+ "lastVisit": 1793484196020,
+ "sessionParts": 0,
+ "brk": null,
+ "stopped": false,
+ "finished": false
+}
