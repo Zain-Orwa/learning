@@ -49,6 +49,12 @@ Every tool we use, what it's for, which machine it runs on, and how to set it up
   - Terminal-Icons and PSReadLine 2.4 (PowerShell Gallery), loaded in `$PROFILE`
     (`Documents\PowerShell\Microsoft.PowerShell_profile.ps1`).
   - Git Bash gets the same prompt from `~/.bashrc`.
+- **VS Code terminal fix (2026-10-31):** PowerShell 7 here is the Microsoft
+  Store version (in `WindowsApps`). VS Code didn't find it and opened the old
+  Windows PowerShell 5.1, which has a different profile file, so there were no
+  colors. Fix in VS Code user `settings.json`: a profile `"PowerShell 7"` with
+  `"path": "C:\\Users\\orwaz\\AppData\\Local\\Microsoft\\WindowsApps\\pwsh.exe"`,
+  set as `terminal.integrated.defaultProfile.windows`. Check: `$PSVersionTable.PSVersion` shows 7.x.
 - **Not set up on purpose:** loading the compiler (`cl`) in every terminal.
   Casey writes `shell.bat` for that in Handmade Hero Day 1; the learner writes it then.
 - **Installed:** 2026-10-30. Windows Terminal settings backup:

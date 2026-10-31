@@ -32,6 +32,7 @@ _Last updated: 2026-10-31_
 - DebugView and Coreinfo in `%USERPROFILE%\Tools\Sysinternals`.
 - Terminal: PowerShell 7.6 + Starship 1.27 + JetBrainsMono Nerd Font +
   Terminal-Icons + PSReadLine 2.4, tested and working. Details in `docs/toolset.md`.
+  VS Code terminal now opens PowerShell 7 too (fixed 2026-10-31, see toolset.md).
 - RAD Debugger: later, on purpose.
 - Editor: VS Code for Intro to C. Revisit at the start of Handmade Hero (see DECISIONS.md).
 
