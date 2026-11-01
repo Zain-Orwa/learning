@@ -1989,7 +1989,7 @@ function lockGuesses(b){
   }
   nudge=null; return true;
 }
-const GRADE_RULES=`Grade STRICTLY, in percent. Score = how much of the full correct answer the student gave. A vague or half-right point gets partial credit. A wrong statement costs points even if the rest is right. List what is right, and every missing or wrong piece with the percent it is worth, so right + missing = 100. Do NOT reveal the full answer: if below 100, ask ONE guiding question that leads the student to the missing piece. If the gap is something Casey explains in the video, give the time range to rewatch. Simple English.`;
+const GRADE_RULES=`Grade in percent, by MEANING, not wording. Score = how much of the main ideas of the correct answer the student showed. Split the correct answer into its key ideas, each with a weight. An idea counts fully when it is clearly there, in ANY words: synonyms, his own phrasing, a different order, simple English, spelling or grammar mistakes are all fine. Never require the reference's exact words or terms, unless the question asks for a specific name. Give partial credit only when the idea itself is vague or half-right, not because the words differ. A wrong statement costs points even if the rest is right. List what is right, and every missing or wrong piece with the percent it is worth, so right + missing = 100. Do NOT reveal the full answer: if below 100, ask ONE guiding question that leads the student to the missing piece. If the gap is something Casey explains in the video, give the time range to rewatch. Simple English.`;
 function scoreColor(n){return n>=90?"var(--good)":n>=60?"var(--warn)":"var(--bad)"}
 function renderScore(fb){
   if(fb.verdict&&fb.score===undefined) return renderFb(fb);

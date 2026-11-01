@@ -182,3 +182,6 @@ Newest at the bottom. Each entry: date, decision, why.
   in execution order (what, inputs and outputs, why), the pattern (declare before use, call and
   return, define once and use many times), and a "Try it in your head" question. Symbols in the
   normal text are said as words ("double slash", "backslash n", "C plus plus", video times as minutes).
+
+## 2026-11-01: Grading checks meaning, not wording
+- 2026-11-01: Grading checks meaning, not wording (synonyms, own words and simple English count fully when the idea is right).
