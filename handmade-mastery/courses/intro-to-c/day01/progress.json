@@ -1,22 +1,36 @@
 {
  "v": 2,
- "cur": "b01",
- "step": "explain",
+ "cur": "b02",
+ "step": "ask",
  "tab": "path",
  "done": {
   "b01": {
    "guess": true,
    "watch": true,
    "recall": true,
-   "ask": true
+   "ask": true,
+   "explain": true,
+   "experiment": true,
+   "code": true,
+   "cards": true,
+   "why": true
+  },
+  "b02": {
+   "guess": true,
+   "watch": true,
+   "recall": true
   }
  },
- "completed": {},
+ "completed": {
+  "b01": true
+ },
  "vt": {
-  "b01": 321
+  "b01": 321,
+  "b02": 733
  },
  "recall": {
-  "b01": "1. how you can code C program in Windows.\n2. what do you need as tools to Code a game using Windows machine.\n3. to able to code a game you need to get a text editor and compiler that is not come out of the box like linux we have to download that."
+  "b01": "1. how you can code C program in Windows.\n2. what do you need as tools to Code a game using Windows machine.\n3. to able to code a game you need to get a text editor and compiler that is not come out of the box like linux we have to download that.",
+  "b02": "1. Microsoft called the project explorer solution.\n2. coding in c just you need a row text without any annotation we can do that in word.\n3. coding in c/c++ hasn't developed so much same way to write a program from early days still the same.\n"
  },
  "cmp": {},
  "guess": {
@@ -26,10 +40,19 @@
   "b01": [
    "Turns the code into machine code is acted like a translator.",
    "I think we need an IDE, not only on Windows but in the most of the machine, and extra work in Windows because we need Windows environment that's only specific to windows as it's closed-source"
+  ],
+  "b02": [
+   "because this more about the legacy archt of windows.",
+   "is just project",
+   "the file that it ends with extension .c"
   ]
  },
- "lb": {},
- "lbShow": {},
+ "lb": {
+  "b02": "This series is about:\n1. the set up for gooding a game in C using Windows machine.\n2. getting Compiler so we can compile the code that we are going to write.\n3. some things Casey will not stop explain them later unless if there is need fro it. so this is like a preparation. "
+ },
+ "lbShow": {
+  "b02": true
+ },
  "rfb": {
   "b01": {
    "score": 35,
@@ -50,9 +73,47 @@
    ],
    "guide": "You said that on Windows you must download the compiler yourself. What is the name of the big Microsoft program that the compiler comes inside, and which edition of it did Casey choose (and which editions did he say to ignore)?",
    "rewatch": "1:38-4:00"
+  },
+  "b02": {
+   "score": 12,
+   "right": "You remembered that C source code is just raw text, with nothing hidden inside it. You also remembered the word 'solution', but you mixed it up with the panel (see below).",
+   "missing": [
+    {
+     "point": "The two Win32 project choices. Windows has an old split between command-line (console) programs and windowed programs.",
+     "pct": 20
+    },
+    {
+     "point": "One .exe cannot cleanly be both kinds. Casey does not care, because games do not need the command line.",
+     "pct": 15
+    },
+    {
+     "point": "He ticks 'Empty Project' and says why: so the wizard does not create code that you did not write.",
+     "pct": 15
+    },
+    {
+     "point": "Half right: 'solution' is Microsoft's word for a list of things to build. The Solution Explorer is just the panel that shows this list. The solution is not the explorer itself.",
+     "pct": 10
+    },
+    {
+     "point": "Wrong: you cannot use Word. Word saves hidden formatting inside the file. You need a plain text editor, like Notepad. Even the colors in Visual Studio are not saved in the file.",
+     "pct": 8
+    },
+    {
+     "point": "The colored bars in the editor margin: yellow means a change that is not saved yet. Green means saved, but changed since the last build.",
+     "pct": 15
+    },
+    {
+     "point": "Wrong: Casey does not say this in this part. The 'old' thing he talks about is the Windows split between console and windowed programs, not the C language staying the same.",
+     "pct": 5
+    }
+   ],
+   "guide": "When Casey picks the Win32 project, Windows makes him choose between two kinds of programs. What are the two kinds, why can't one .exe be both, and why does Casey not mind for a game?",
+   "rewatch": "6:03-7:50"
   }
  },
- "cdate": {},
+ "cdate": {
+  "b01": "2026-11-01"
+ },
  "ivans": {},
  "ivfb": {},
  "dbgs": {},
@@ -63,7 +124,9 @@
  "answers": {
   "b01?0": "so as a beginner also can follow along during the series, because he mentioned that he will not stop and explain basic things like what is ?: operators do. and addition to that is like a testing for the series.",
   "b01?1": "We need a compiler because in linux the compiler come with linux machine",
-  "b01?2": "visual studio express (community) because any one can download because it's free for the personal use.\n"
+  "b01?2": "visual studio express (community) because any one can download because it's free for the personal use.\n",
+  "b02?0": "I think Win32 Console is when you want to develop program that run on command line cl, but for project that where you run a program from a window.",
+  "b02?1": "because we are coding a game and a game in most cases uses a windowed application"
  },
  "fb": {
   "b01?0": {
@@ -121,9 +184,64 @@
    ],
    "guide": "Casey's list had several Express editions, and all of them were free. So why does he pick this one? What kind of program must it make from our C code?",
    "rewatch": "0:00-5:21"
+  },
+  "b02?0": {
+   "score": 30,
+   "right": "You have the main idea: a Console Application is a text program that runs in a command-line window, and a Win32 Project is a program that uses windows. (+30%)",
+   "missing": [
+    {
+     "point": "Your first point is a little vague. A windowed program does not 'run from a window'. It makes its own windows. Also, 'cl' is the name of the compiler. It is not the place where a console program runs.",
+     "pct": 10
+    },
+    {
+     "point": "The real difference is a flag stored inside the .exe file (the 'subsystem'). This flag tells Windows whether to give the program a console window when it starts.",
+     "pct": 35
+    },
+    {
+     "point": "The project type also changes which startup function name the build (the linker) expects to find in your code.",
+     "pct": 25
+    }
+   ],
+   "guide": "When you double-click a .exe file, how does Windows know if it should open a text console window for that program? Where might that choice be saved?",
+   "rewatch": "5:21-12:13"
+  },
+  "b02?1": {
+   "score": 75,
+   "right": "You got the main idea. We are making a game, and a game runs as a windowed program. So the windowed choice is the right one for Handmade Hero.",
+   "missing": [
+    {
+     "point": "Why the limitation costs nothing: Windows makes you pick only one type (console or windowed). A game never needs to be a command-line (console) program, so choosing windowed loses nothing. Your answer says what a game uses, but not why the rule doesn't hurt.",
+     "pct": 20
+    },
+    {
+     "point": "You said 'in most cases', which makes it weaker. For Handmade Hero, windowed is all the game needs.",
+     "pct": 5
+    }
+   ],
+   "guide": "An app must be either a console program or a windowed program, not both. What would Handmade Hero lose by not being a console program?",
+   "rewatch": "5:21-12:13"
   }
  },
- "cards": {},
+ "cards": {
+  "b01#0": {
+   "ease": 2.5,
+   "int": 0,
+   "reps": 0,
+   "due": 20759
+  },
+  "b01#1": {
+   "ease": 2.5,
+   "int": 0,
+   "reps": 0,
+   "due": 20759
+  },
+  "b01#2": {
+   "ease": 2.5,
+   "int": 0,
+   "reps": 0,
+   "due": 20759
+  }
+ },
  "notes": {
   "b01": [
    {
@@ -137,8 +255,8 @@
   ]
  },
  "speed": 1.25,
- "lastVisit": 1793560572281,
- "sessionParts": 0,
+ "lastVisit": 1793564983933,
+ "sessionParts": 1,
  "brk": null,
  "stopped": false,
  "finished": false

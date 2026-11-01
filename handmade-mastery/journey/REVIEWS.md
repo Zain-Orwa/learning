@@ -8,3 +8,4 @@ so the dates are always right. `/review` runs a review session.
 
 | Unit | Title | Source | Learned | Stage | Next due | Last | History |
 |---|---|---|---|---|---|---|---|
+| icd01-p01 | Intro C D1 · Why this series, and getting a compiler | courses/intro-to-c/day01#b01 | 2026-11-01 | 1d | 2026-11-02 | – |  |
