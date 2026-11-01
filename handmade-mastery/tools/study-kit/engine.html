@@ -182,6 +182,13 @@ td.mono{font-family:var(--f-mono);font-size:13px;white-space:nowrap}
 .nudge{border-left:4px solid var(--warn);background:color-mix(in srgb,var(--warn) 10%,var(--panel));padding:8px 12px;border-radius:0 6px 6px 0;margin:12px 0}
 .anim{margin:12px 0}
 .anim video{display:block;width:100%;max-width:100%;border-radius:8px;background:#000}
+.listen{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0 6px}
+.listen .btn{display:inline-flex;align-items:center;gap:6px}
+.listen svg{width:16px;height:16px;fill:currentColor}
+.inwords{border:1px dashed var(--rule);border-radius:6px;padding:8px 14px;margin:-4px 0 14px;background:var(--panel)}
+.inwords .k{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.inwords ol{margin:6px 0 0;padding-left:22px}
+.reading{background:color-mix(in srgb,var(--ip) 20%,transparent);border-radius:4px;box-shadow:0 0 0 4px color-mix(in srgb,var(--ip) 20%,transparent)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
@@ -342,7 +349,8 @@ TOPICS CASEY PARKS FOR LATER (do not teach these; say they come later): ${(D.par
 /* ---------- the video player (one element, kept alive across renders) ---------- */
 let videoURL=null, playerBlock=null, lastSave=0;
 const svg=d=>`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"/></svg>`;
-const ICON={play:svg("M8 5v14l11-7z"),pause:svg("M6 5h4v14H6zM14 5h4v14h-4z"),back:svg("M12 5V2L7 6l5 4V7a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z"),replay:svg("M6 6h2v12H6zM9.5 12l8.5 6V6z"),fs:svg("M5 5h5v2H7v3H5zM14 5h5v5h-2V7h-3zM5 14h2v3h3v2H5zM17 14h2v5h-5v-2h3z")};
+const ICON={play:svg("M8 5v14l11-7z"),pause:svg("M6 5h4v14H6zM14 5h4v14h-4z"),back:svg("M12 5V2L7 6l5 4V7a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z"),replay:svg("M6 6h2v12H6zM9.5 12l8.5 6V6z"),fs:svg("M5 5h5v2H7v3H5zM14 5h5v5h-2V7h-3zM5 14h2v3h3v2H5zM17 14h2v5h-5v-2h3z"),
+  stop:svg("M6 6h12v12H6z"),speak:svg("M3 9v6h4l5 5V4L7 9H3zM16.5 12A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z")};
 const vw=document.createElement("div"); vw.className="player";
 vw.innerHTML=`<video playsinline preload="metadata"></video>
 <div class="pctl"><button data-v="play" aria-label="Play" title="Play (Space)">${ICON.play}</button><button data-v="back" aria-label="Back 10 seconds" title="Back 10 seconds">${ICON.back}<span>10</span></button>
@@ -397,6 +405,87 @@ document.addEventListener("keydown",e=>{
   if(e.code==="Space"){e.preventDefault();vw.querySelector('[data-v="play"]').click()}
   if(e.code==="ArrowLeft"){e.preventDefault();const [st]=range(playerBlock);vid.currentTime=Math.max(st,vid.currentTime-5)}
 });
+
+/* ---------- listen: read the Explain / Read code step aloud ---------- */
+const TTS=("speechSynthesis" in window)&&window.SpeechSynthesisUtterance?window.speechSynthesis:null;
+let tts={segs:[],i:0,on:false,gen:0,q:[]}, voice=null;
+function pickVoice(){
+  if(!TTS) return;
+  const score=v=>(/premium/i.test(v.name)?50:0)+(/enhanced/i.test(v.name)?40:0)+(/siri/i.test(v.name)?30:0)
+    +(/^(Ava|Zoe|Evan|Samantha|Daniel|Karen|Moira|Serena|Allison|Tom)\b/.test(v.name)?10:0)+(/Google/.test(v.name)?8:0)
+    +(/en[-_]US/i.test(v.lang)?3:0)+(v.localService?2:0);
+  voice=TTS.getVoices().filter(v=>/^en/i.test(v.lang)).sort((a,b)=>score(b)-score(a))[0]||null;
+}
+if(TTS){pickVoice(); try{TTS.addEventListener("voiceschanged",pickVoice);}catch(e){}}
+function listenBar(){
+  if(!TTS) return `<p class="small muted">Listening isn't available in this browser. You can still read everything below.</p>`;
+  return `<div class="listen"><button class="btn small" data-tts="play" id="ttsplay">${ICON.speak}<span>Listen</span></button>
+  <button class="btn ghost small" data-tts="stop" id="ttsstop" aria-label="Stop" title="Stop" hidden>${ICON.stop}</button>
+  <button class="btn ghost small" data-tts="rate" aria-label="Reading speed" title="Reading speed">${S.ttsRate||1}×</button>
+  <span class="small muted" id="ttsinfo">Code is read as the “In words” version.</span></div>`;
+}
+function withWords(html,say){
+  if(!say||!say.length) return html;
+  let n=0;
+  return html.replace(/<\/pre>|<\/table>/g,m=>{const s=say[n++]; if(!s) return m;
+    const lines=Array.isArray(s)?s:String(s).split("\n");
+    return m+`<div class="inwords"><div class="k">In words</div><ol>${lines.map(l=>`<li class="ln">${md(l)}</li>`).join("")}</ol></div>`;});
+}
+function speakable(t){
+  return String(t).replace(/\s+/g," ")
+    .replace(/→|─▶|▶/g," to ").replace(/×/g," times ").replace(/−/g," minus ")
+    .replace(/\be\.g\./g,"for example").replace(/\bi\.e\./g,"that is").replace(/\bvs\./g,"versus")
+    .replace(/[└┘┐┌│├─┼▲]+/g," ")
+    .replace(/@(\d+)/g," at $1")
+    .replace(/\.(cpp|obj|exe|dll|lib|bat|h)\b/gi,(m,e)=>" dot "+e.toUpperCase().split("").join(" "))
+    .replace(/\b(LNK|C)(\d{4})\b/g,"$1 $2").replace(/\bLNK\b/g,"L N K")
+    .replace(/\bcl\b/g,"C L").replace(/\bx64\b/g,"x 64").replace(/\bx86\b/g,"x 86")
+    .replace(/\b(LP|H|P)(CSTR|STR|INSTANCE|WND|DC|VOID)\b/g,(m,a,b)=>a.split("").join(" ")+" "+(b==="INSTANCE"?"instance":b.split("").join(" ")))
+    .replace(/\b_+(?=[A-Za-z])/g,"").replace(/([A-Za-z])_+(?=\s|$)/g,"$1")
+    .replace(/([a-z])([A-Z])/g,"$1 $2")
+    .replace(/[;()]/g,", ").replace(/[{}<>#*`"“”\[\]\\|]/g," ")
+    .replace(/\s+/g," ").replace(/\s*,(\s*,)+/g,",").replace(/\s+([,.:!?])/g,"$1").replace(/,([.!?])/g,"$1").replace(/^[,\s]+|[,\s]+$/g,"").trim();
+}
+const sentences=t=>(t.match(/[^.!?]+[.!?]*\s*/g)||[t]).map(x=>x.trim()).filter(Boolean);
+function ttsSegments(){
+  const pane=$("#pane"); if(!pane) return [];
+  const els=[...pane.querySelectorAll("h3,p,li,.callout,.inwords .ln")].filter(el=>!el.closest("pre,table,.listen,details"));
+  return els.filter(el=>!els.some(o=>o!==el&&o.contains(el))).map(el=>({el,text:speakable(el.textContent)})).filter(x=>x.text);
+}
+function ttsSpeak(){
+  const seg=tts.segs[tts.i]; if(!seg){ttsStop(true);return}
+  document.querySelectorAll(".reading").forEach(e=>e.classList.remove("reading"));
+  seg.el.classList.add("reading");
+  const r=seg.el.getBoundingClientRect(); if(r.top<0||r.bottom>innerHeight) seg.el.scrollIntoView({block:"center",behavior:"smooth"});
+  const info=$("#ttsinfo"); if(info) info.textContent=`${tts.i+1} / ${tts.segs.length}`;
+  const g=tts.gen, parts=sentences(seg.text); let left=parts.length; tts.q=[];
+  parts.forEach(p=>{const u=new SpeechSynthesisUtterance(p); if(voice){u.voice=voice;u.lang=voice.lang;}else u.lang="en-US"; u.rate=S.ttsRate||1;
+    u.onend=u.onerror=()=>{if(g!==tts.gen)return; if(--left===0){tts.i++;ttsSpeak();}};
+    tts.q.push(u); TTS.speak(u);});
+}
+function ttsUi(finished){
+  const p=$("#ttsplay"),s=$("#ttsstop"),i=$("#ttsinfo"); if(!p) return;
+  p.innerHTML=tts.on?ICON.pause+"<span>Pause</span>":ICON.speak+"<span>"+(tts.segs.length&&tts.i>0?"Resume":"Listen")+"</span>";
+  s.hidden=!(tts.on||tts.i>0);
+  if(i&&!tts.on&&!tts.segs.length) i.textContent=finished?"Done. Press Listen to hear it again.":"Code is read as the “In words” version.";
+}
+function ttsStop(finished){
+  if(TTS){tts.gen++;TTS.cancel();}
+  tts={segs:[],i:0,on:false,gen:tts.gen,q:[]};
+  document.querySelectorAll(".reading").forEach(e=>e.classList.remove("reading"));
+  ttsUi(finished);
+}
+function ttsCmd(c){
+  if(!TTS) return;
+  if(c==="rate"){const r=[1,1.25,1.5,0.75];S.ttsRate=r[(r.indexOf(S.ttsRate||1)+1)%r.length];save();
+    const b=document.querySelector('[data-tts="rate"]'); if(b) b.textContent=S.ttsRate+"×";
+    if(tts.on){tts.gen++;TTS.cancel();ttsSpeak();} return;}
+  if(c==="stop"){ttsStop();return}
+  if(tts.on){tts.gen++;TTS.cancel();tts.on=false;ttsUi();return} // pause: keeps the place
+  if(!tts.segs.length||tts.i>=tts.segs.length){tts.segs=ttsSegments();tts.i=0;}
+  if(!tts.segs.length){toast("Nothing to read here");return}
+  tts.on=true; ttsUi(); ttsSpeak();
+}
 
 /* ---------- tabs ---------- */
 const TABS=[["path","Study path"],["review","Review"],["interview","Interview"],["parked","Parked"],["tools","Toolbox"],["how","How to study"]];
@@ -538,6 +627,10 @@ function nextLabel(b){
   return d?"Next step →":"Mark done, next step →";
 }
 function renderStep(b,k){
+  if(k==="explain"||k==="code") return listenBar()+withWords(renderStepRaw(b,k),(b.say||{})[k]);
+  return renderStepRaw(b,k);
+}
+function renderStepRaw(b,k){
   if(k==="guess") return renderGuess(b);
   if(k==="watch"){
     const [st,en]=range(b);
@@ -731,7 +824,7 @@ function renderHow(){return `<section class="block"><div class="pane">${D.how||"
 /* ---------- render + events ---------- */
 function render(){
   if(vw.isConnected){vid.pause();vw.remove();}
-  playerBlock=null;
+  playerBlock=null; ttsStop();
   renderTabs();
   const p=progress(); $("#pct").textContent=p+"%"; $("#pctbar").style.width=p+"%";
   $("#view").innerHTML = S.tab==="path"?renderPath():S.tab==="review"?renderReview():S.tab==="interview"?renderInterviewTab():S.tab==="parked"?renderParked():S.tab==="tools"?renderTools():renderHow();
@@ -767,6 +860,7 @@ function addPark(){
 $("#view").addEventListener("keydown",e=>{ if(e.target.id==="parkin"&&e.key==="Enter"){e.preventDefault();addPark();} });
 $("#view").addEventListener("click",async e=>{
   const t=e.target.closest("button"); if(!t) return;
+  if(t.dataset.tts){ttsCmd(t.dataset.tts);return}
   if(t.dataset.go){const g=t.dataset.go;
     if(g==="continue"){welcome=false;S.tab="path";save();render();return}
     if(g==="warmup"){welcome=true;S.tab="review";revQueue=null;save();render();return}

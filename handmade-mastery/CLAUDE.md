@@ -117,6 +117,10 @@ also asked as guesses; pick the 1–2 most important). Part 1's look back uses
 `window.STUDY.lookBack = {label, answer}` (the previous video in one sentence); later parts look back
 at the part before automatically. A part can also have `anim: "anim/<name>.mp4"` (a Manim video
 made with `/animate`); the Explain step shows it first.
+Explain and Read code have a **Listen** button (the browser's own voice). Every code block, diagram
+and table in those steps needs an **In words** version: `say: {explain: [[lines…], …], code: [[lines…], …]}`
+in `data.js`, one list of plain-English pseudocode lines per `<pre>`/`<table>`, in order. It shows
+under the code and is what Listen reads instead of the code.
 Video files stay outside git (e.g. `~/learning-videos/` on the Mac).
 
 ## Study sessions: `/study`

@@ -162,3 +162,12 @@ Newest at the bottom. Each entry: date, decision, why.
 - Renders on the Mac only: cloud sessions can't reach PyPI. Still pictures are drawn in the chat.
 - Lesson animations live in `courses/<course>/dayNN/anim/` and are committed (small mp4s);
   the Explain step shows a part's `anim`.
+
+## 2026-11-01: Listen button and "In words" pseudocode
+- Zain wants to listen to the explanations as well as read them, including code and diagrams.
+- Explain and Read code have a Listen button (browser speech: no setup, offline, works in the
+  pinned claude.ai page): play/pause, stop, speed 0.75–1.5×, and it highlights what it's reading.
+  It picks the best English voice on the machine (a downloaded Premium voice wins).
+- Code isn't read symbol by symbol. Every code block, diagram and table has an "In words" version
+  (`say` in `data.js`): specific pseudocode in plain English, shown under it and read aloud instead.
+- Fixed in Day 1, part 9: the tokenized line has five tokens, not six.

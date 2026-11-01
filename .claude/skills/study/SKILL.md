@@ -71,6 +71,9 @@ Claude can't watch video. It works from text:
   summary, watchFor, explain, experiment, questions, cards, code, why.
   For Day 2 and later, set `window.STUDY.lookBack = {label, answer}` (the previous video in
   one sentence), so Part 1 starts with a look back.
+  Also write `say` for every block: for each `<pre>` and `<table>` in `explain` and `code`, in order,
+  a list of short plain-English lines (specific pseudocode for code, a walk-through for diagrams and
+  tables). The page shows them as "In words" and the Listen button reads them instead of the code.
   End the kit build with a **self-check** for the learner: list what you could
   not verify (tool versions, claims not found in the transcript). Also write `cards.tsv`. If the kit already exists, use its blocks as the sections.
 - Show the learner the section list (number, time range, title) once. Save it.

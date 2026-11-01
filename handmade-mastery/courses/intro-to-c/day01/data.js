@@ -473,7 +473,7 @@ code:`<p>The one call statement, tokenized the way the compiler sees it:</p>
 <pre><code>OutputDebugStringA ( "This is the first thing we have actually printed.\\n" ) ;
 └──── name ──────┘ │ └──────────────── string literal ─────────────────┘ │ │
                    └ open paren                          close paren ──┘ └ end of statement</code></pre>
-<p>Six tokens. Every bit of whitespace between them could be removed, or doubled, and the program would be identical.</p>`,
+<p>Five tokens. Every bit of whitespace between them could be removed, or doubled, and the program would be identical.</p>`,
 why:`<p>Small block, durable payoff: when you know the compiler reads <i>tokens</i> separated by whitespace, error messages make sense. "Missing ';' before '}'" tells you exactly what the parser expected. Handmade Hero's code style (braces on their own lines, aligned parameters) is Casey's own choice, layered on top of rules that don't care.</p>`},
 
 /* ============ 10 ============ */
@@ -770,6 +770,7 @@ window.STUDY.how = `<h2>How this page works</h2>
 <li><b>Recall.</b> Write what Casey explained, from memory. Then compare with the notes and handle your parked questions.</li>
 <li><b>Answer.</b> Answer the questions before you see any explanation. Your guesses appear next to them, so you see what changed. "Copy for Claude" copies the question and your answer so any Claude account can grade it.</li>
 <li><b>Explain → Experiment → Read code → Flashcards → Why it matters.</b> The rest of the part, one step at a time.</li>
+<li><b>Listen.</b> Explain and Read code have a <b>Listen</b> button: it reads the step aloud and highlights what it's reading. Code, diagrams and tables are read as their <b>In words</b> version (plain-English pseudocode shown under them). For a more natural voice, download a Premium English voice in System Settings → Accessibility → Spoken Content.</li>
 <li><b>Break.</b> After each part: a short break (5 min), and a longer one (15 min) after every 3 parts. Or stop for today.</li></ol>
 <h3>Your time, your schedule</h3>
 <p><b>Saturday and Sunday are study days.</b> Each session starts with “How much time do you have today?”. Pick 30 min to 3 h, and the page plans what fits (reviews first, then parts, about 1.3 × video minutes + 30 min each), shows a countdown, and warns you 10 minutes before the end so you stop at a clean point. <b>Monday to Friday are review days:</b> a notification at 12:48 brings your due reviews and 2 interview questions.</p>
@@ -1020,4 +1021,129 @@ error C2061: syntax error: identifier 'HINSTANCE'
    cause:"Missing `#include <windows.h>`: one cause, a cascade of errors."}]
 };
 window.STUDY.blocks.forEach(b=>{ if(DBG[b.id]) b.debug=DBG[b.id]; });
+})();
+
+/* ---- "In words": spoken/readable pseudocode for every code block, diagram and table,
+   in the order they appear in the step (explain / code). The Listen button reads these instead of the code. ---- */
+(function(){
+const SAY = {
+ b01:{code:[[
+  "You type cl, the compiler's name, and press Enter.",
+  "Windows finds cl.exe and runs it.",
+  "It prints its name, Microsoft C/C++ Optimizing Compiler, and its version, for x64.",
+  "Then a usage line: cl, then options, then file names, then /link and the linker options.",
+  "Meaning: cl compiles, and everything after /link goes to the linker."]]},
+ b02:{code:[[
+  "The file holds one line of plain text: this is some text in a file.",
+  "It isn't C, so when you build, the compiler rejects it."]]},
+ b03:{code:[[
+  "Line 1: build started, for the project test, in the Debug configuration, for Win32.",
+  "Line 2: Compiling.",
+  "Line 3: the file being translated, test.cpp.",
+  "Line 4: an error in test.cpp, line 1. Its code starts with C, so the compiler found it.",
+  "Last line: the summary. 0 succeeded, 1 failed.",
+  "Rule: C plus a number is a compiler error. LNK plus a number is a linker error."]]},
+ b04:{explain:[[
+  "A machine has one or more sockets, and each socket holds one CPU chip.",
+  "Each chip has several cores. A core is a full engine that runs instructions.",
+  "Each core can hold two hardware threads, also called hyperthreads.",
+  "Windows counts each hardware thread as one logical processor.",
+  "Casey's machine: 2 chips, 4 cores each, 2 threads per core."]],
+  code:[[
+  "Logical processors = sockets × cores per socket × threads per core.",
+  "For Casey: 2 × 4 × 2 = 16.",
+  "For you: fill in your own three numbers from Task Manager."]]},
+ b05:{explain:[[
+  "For each .cpp file, on its own: the compiler turns it into a .obj file.",
+  "test.cpp becomes test.obj, foo.cpp becomes foo.obj, bar.cpp becomes bar.obj.",
+  "Then the linker takes all the .obj files, plus libraries like the C runtime and kernel32.lib.",
+  "It joins them into one program: test.exe."]],
+  code:[[
+  "Define a function named foo.",
+  "It returns nothing and takes nothing.",
+  "Its body, between the braces, is empty, so it does nothing."],[
+  "Step: linking.",
+  "Error LNK2019: unresolved external symbol _WinMain@16.",
+  "Who wants it? The function __tmainCRTStartup, in crtexew.obj, inside the library MSVCRTD.lib.",
+  "Final error LNK1120: 1 unresolved external. No .exe is made."]]},
+ b06:{code:[[
+  "Declare a function named WinMain that returns an int and uses the CALLBACK calling convention.",
+  "Input 1: hInstance, of type HINSTANCE, a handle to this program.",
+  "Input 2: hPrevInstance, also an HINSTANCE.",
+  "Input 3: lpCmdLine, of type LPSTR, a pointer to the command-line text.",
+  "Input 4: nCmdShow, an int.",
+  "Each input is marked _In_: data that flows in."]]},
+ b07:{explain:[[
+  "H means handle, an ID you hand back to Windows. Examples: HINSTANCE, HWND.",
+  "P means pointer, an address in memory. Example: PVOID.",
+  "LP means long pointer, from 16-bit Windows. Today it's just a pointer. Example: LPSTR.",
+  "STR means string, a run of characters.",
+  "n or i means a number. Example: nCmdShow."]],
+  code:[[
+  "Function WinMain, CALLBACK, returns an int. It takes four inputs.",
+  "hInstance: a handle to this running program.",
+  "hPrevInstance: old, always 0.",
+  "lpCmdLine: a pointer to the command-line text.",
+  "nCmdShow: a number for normal, minimized or maximized.",
+  "Body: empty."]]},
+ b08:{explain:[[
+  "Read the first line from left to right.",
+  "void: the return type. foo gives nothing back.",
+  "foo: the name.",
+  "void in parentheses: the parameters. foo takes nothing.",
+  "That first line is the signature, or prototype.",
+  "Then the body, between braces: call OutputDebugStringA with some text. It runs each time foo is called."]],
+  code:[[
+  "Paste in the Windows declarations: include windows.h.",
+  "Define foo, no inputs, no output: send the text “This is the first thing we have actually printed” to the debugger.",
+  "Define WinMain, the start function, with its four inputs.",
+  "In WinMain: call foo.",
+  "Order when it runs: Windows starts the program → startup code → WinMain → foo → OutputDebugStringA → back to foo → back to WinMain → the program ends."]]},
+ b09:{explain:[[
+  "Line 1: call foo, then call foo again. Two statements on one line, and that's fine.",
+  "Next: one call to OutputDebugStringA, split over three lines. One statement, also fine.",
+  "Rule: the semicolon ends a statement, not the line break."]],
+  code:[[
+  "The compiler cuts this line into five tokens.",
+  "Token 1: the name OutputDebugStringA.",
+  "Token 2: an open parenthesis.",
+  "Token 3: the string literal, the text in double quotes.",
+  "Token 4: a close parenthesis.",
+  "Token 5: the semicolon, which ends the statement."]]},
+ b10:{explain:[[
+  "hInstance: a handle to our own loaded program. A game passes it back to Windows when it makes its window.",
+  "hPrevInstance: left over from 16-bit Windows, always 0. Ignore it.",
+  "lpCmdLine: the text typed after the program's name. A game can use it for launch options, like a level name.",
+  "nCmdShow: a number meaning normal, minimized or maximized. It says how to first show the window."]],
+  code:[[
+  "Include the Windows declarations.",
+  "Function WinMain, with its four inputs, returns an int.",
+  "Print “Command line: ” to the debugger.",
+  "Print the command-line text we received, lpCmdLine.",
+  "Print a new line.",
+  "Return 42. That number becomes the program's exit code."]]},
+ b11:{explain:[[
+  "Line 1, a declaration: void foo(void) and a semicolon. It says foo exists and how to call it. No body.",
+  "Line 2, a definition: the same first line, plus a body in braces. That's the real code."],[
+  "Case 1: foo isn't declared at all. The compiler stops with an error, identifier not found. The linker never runs.",
+  "Case 2: foo is declared but has no body anywhere. The compiler is happy and notes that it needs foo. The linker fails: unresolved external.",
+  "Case 3: foo is declared and defined somewhere in the build. The compiler is happy, and the linker patches in foo's address."]],
+  code:[[
+  "Include the Windows declarations.",
+  "Declare foo: no inputs, no output, no body here.",
+  "Function WinMain, with its four inputs: call foo.",
+  "The compiler accepts the call, because of the declaration.",
+  "But no file defines foo, so the linker fails with LNK2019, unresolved external symbol foo."],[
+  "Define foo: send the text “This is the first thing we have actually printed” to the debugger.",
+  "Put this in any .cpp file of the build, and the program links."]]},
+ b12:{code:[[
+  "Paste in the Windows declarations: include windows.h. (Part 12)",
+  "Declare foo, so the compiler can make the call. (Part 11)",
+  "Define WinMain, the start function the startup code calls. It returns an int exit code and uses the CALLBACK convention. (Parts 6 and 10)",
+  "Its four inputs: this program's handle, an old value that's always 0, the command-line text, and how to show the window. (Parts 7 and 10)",
+  "In WinMain: call foo, then return 0. (Parts 8 and 10)",
+  "Define foo: send the text to the debugger. Its declaration comes from windows.h, and its code lives in kernel32.dll. (Part 8)",
+  "The build: compile → .obj → link → .exe with an entry point → Windows runs it."]]}
+};
+window.STUDY.blocks.forEach(b=>{ if(SAY[b.id]) b.say=SAY[b.id]; });
 })();
