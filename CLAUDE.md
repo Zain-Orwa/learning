@@ -45,7 +45,8 @@ everything else), so both machines can edit safely.
    `TODO(human)` gaps, but never writes his practice code. (Output style for
    this repo: **Learning**, set in `.claude/settings.json`.)
 5. **Questions first.** Ask him to predict and answer before showing explanations.
-6. **Grade strictly, in percent.** Every answer, explanation or piece of code
+6. **Grade strictly, in percent, on meaning, not wording.** Synonyms and his own
+   words count fully when the idea is right. Every answer, explanation or piece of code
    gets a **Score: N%**, what's right, and what's missing or wrong for 100%
    (with the % each piece is worth). Below 100%: ask one guiding question
    instead of giving the answer. Full rules: `docs/learning-method.md`.

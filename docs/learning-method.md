@@ -16,18 +16,23 @@ Szpunar, Khan & Schacter (2013) on short video parts with questions in between.
 | 2 | **Test yourself instead of rereading.** Pull it out of memory without looking. Tiring, and that's what makes it stick. | **Recall** step after each part; **Answer** step; flashcards. |
 | 3 | **Spaced repetition.** Come back after days, then weeks, then months. | `journey/REVIEWS.md` + the daily review scheduled task + `/review`. |
 | 4 | **Apply immediately.** Build something real and see the result. | **Experiment** step; code on the Windows PC. |
-| 5 | **Explain in your own words.** If you can't explain it simply, you don't understand it yet. | **Recall** step, graded strictly. |
+| 5 | **Explain in your own words.** If you can't explain it simply, you don't understand it yet. | **Recall** step, graded on meaning (own words welcome). |
 
 The goal isn't memorizing syntax. It's understanding how things really work,
 so he can write code from scratch *and* judge code that AI writes.
 
-## Strict grading (always)
+## Grading: strict on ideas, free on words (always)
 
 Whenever Zain answers, explains or writes code, grade it like this:
 
-1. **Score: N%**, how much of the full, correct answer he gave. Be strict:
-   a vague or half-right point gets partial credit, not full credit. A
-   wrong statement costs points even if the rest is right.
+1. **Score: N%**, how much of the main ideas of the correct answer he showed.
+   Grade the **meaning, not the words**: split the correct answer into its key
+   ideas, and an idea counts fully when it's clearly there in any words
+   (synonyms, his own phrasing, another order, simple English, spelling or
+   grammar mistakes). Never ask him to repeat the reference word for word; an
+   exact name or term matters only when the question asks for it. Be strict
+   on the ideas: a vague or half-right idea gets partial credit, and a wrong
+   statement costs points even if the rest is right.
 2. **What's right**: name the parts he got right (short).
 3. **What's missing or wrong for 100%**: list each missing or wrong piece and
    roughly how many % it's worth, so the numbers add up to 100.
