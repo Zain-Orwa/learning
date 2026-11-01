@@ -190,6 +190,9 @@ td.mono{font-family:var(--f-mono);font-size:13px;white-space:nowrap}
 .inwords{border:1px dashed var(--rule);border-radius:6px;padding:8px 14px;margin:-4px 0 14px;background:var(--panel)}
 .inwords .k{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .inwords ol{margin:6px 0 0;padding-left:22px}
+.inwords .iw{margin:6px 0 0}
+.inwords .try{border-top:1px dashed var(--rule);padding-top:6px;margin-top:8px}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .reading{background:color-mix(in srgb,var(--ip) 20%,transparent);border-radius:4px;box-shadow:0 0 0 4px color-mix(in srgb,var(--ip) 20%,transparent)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -980,7 +983,7 @@ window.STUDY.how = `<h2>How this page works</h2>
 <li><b>Recall.</b> Write what Casey explained, from memory. Then compare with the notes and handle your parked questions.</li>
 <li><b>Answer.</b> Answer the questions before you see any explanation. Your guesses appear next to them, so you see what changed. "Copy for Claude" copies the question and your answer so any Claude account can grade it.</li>
 <li><b>Explain → Experiment → Read code → Flashcards → Why it matters.</b> The rest of the part, one step at a time.</li>
-<li><b>Listen.</b> Explain and Read code have a <b>Listen</b> button: it reads the step aloud and highlights what it's reading. Code, diagrams and tables are read as their <b>In words</b> version (plain-English pseudocode shown under them). For a more natural voice, download a Premium English voice in System Settings → Accessibility → Spoken Content.</li>
+<li><b>Listen.</b> Explain and Read code have a <b>Listen</b> button: it reads the step aloud and highlights what it's reading. Code, diagrams and tables are read as their <b>In words</b> version (plain-English pseudocode shown under them). On the Mac it plays a natural voice (Kokoro, made offline). Where there is no audio file, the browser's own voice reads instead.</li>
 <li><b>Break.</b> After each part: a short break (5 min), and a longer one (15 min) after every 3 parts. Or stop for today.</li></ol>
 <h3>Your time, your schedule</h3>
 <p><b>Saturday and Sunday are study days.</b> Each session starts with “How much time do you have today?”. Pick 30 min to 3 h, and the page plans what fits (reviews first, then parts, about 1.3 × video minutes + 30 min each), shows a countdown, and warns you 10 minutes before the end so you stop at a clean point. <b>Monday to Friday are review days:</b> a notification at 12:48 brings your due reviews and 2 interview questions.</p>
@@ -1233,130 +1236,235 @@ error C2061: syntax error: identifier 'HINSTANCE'
 window.STUDY.blocks.forEach(b=>{ if(DBG[b.id]) b.debug=DBG[b.id]; });
 })();
 
-/* ---- "In words": spoken/readable pseudocode for every code block, diagram and table,
-   in the order they appear in the step (explain / code). The Listen button reads these instead of the code. ---- */
+/* ---- "In words": teaching pseudocode for every code block, diagram and table, in the order they
+   appear in the step (explain / code). Each one: goal (what it's for), steps (in execution order:
+   what each line does, its inputs and outputs, why it's there), pattern (when there is one) and
+   tryit (a prediction question). Shown under the code; the Listen button reads it instead of the code.
+   Stay inside what Casey has covered by that part, plain English, no symbols that sound bad aloud. ---- */
 (function(){
 const SAY = {
- b01:{code:[[
-  "You type cl, the compiler's name, and press Enter.",
-  "Windows finds cl.exe and runs it.",
-  "It prints its name, Microsoft C/C++ Optimizing Compiler, and its version, for x64.",
-  "Then a usage line: cl, then options, then file names, then /link and the linker options.",
-  "Meaning: cl compiles, and everything after /link goes to the linker."]]},
- b02:{code:[[
-  "The file holds one line of plain text: this is some text in a file.",
-  "It isn't C, so when you build, the compiler rejects it."]]},
- b03:{code:[[
-  "Line 1: build started, for the project test, in the Debug configuration, for Win32.",
-  "Line 2: Compiling.",
-  "Line 3: the file being translated, test.cpp.",
-  "Line 4: an error in test.cpp, line 1. Its code starts with C, so the compiler found it.",
-  "Last line: the summary. 0 succeeded, 1 failed.",
-  "Rule: C plus a number is a compiler error. LNK plus a number is a linker error."]]},
- b04:{explain:[[
-  "A machine has one or more sockets, and each socket holds one CPU chip.",
-  "Each chip has several cores. A core is a full engine that runs instructions.",
-  "Each core can hold two hardware threads, also called hyperthreads.",
-  "Windows counts each hardware thread as one logical processor.",
-  "Casey's machine: 2 chips, 4 cores each, 2 threads per core."]],
-  code:[[
-  "Logical processors = sockets × cores per socket × threads per core.",
-  "For Casey: 2 × 4 × 2 = 16.",
-  "For you: fill in your own three numbers from Task Manager."]]},
- b05:{explain:[[
-  "For each .cpp file, on its own: the compiler turns it into a .obj file.",
-  "test.cpp becomes test.obj, foo.cpp becomes foo.obj, bar.cpp becomes bar.obj.",
-  "Then the linker takes all the .obj files, plus libraries like the C runtime and kernel32.lib.",
-  "It joins them into one program: test.exe."]],
-  code:[[
-  "Define a function named foo.",
-  "It returns nothing and takes nothing.",
-  "Its body, between the braces, is empty, so it does nothing."],[
-  "Step: linking.",
-  "Error LNK2019: unresolved external symbol _WinMain@16.",
-  "Who wants it? The function __tmainCRTStartup, in crtexew.obj, inside the library MSVCRTD.lib.",
-  "Final error LNK1120: 1 unresolved external. No .exe is made."]]},
- b06:{code:[[
-  "Declare a function named WinMain that returns an int and uses the CALLBACK calling convention.",
-  "Input 1: hInstance, of type HINSTANCE, a handle to this program.",
-  "Input 2: hPrevInstance, also an HINSTANCE.",
-  "Input 3: lpCmdLine, of type LPSTR, a pointer to the command-line text.",
-  "Input 4: nCmdShow, an int.",
-  "Each input is marked _In_: data that flows in."]]},
- b07:{explain:[[
-  "H means handle, an ID you hand back to Windows. Examples: HINSTANCE, HWND.",
-  "P means pointer, an address in memory. Example: PVOID.",
-  "LP means long pointer, from 16-bit Windows. Today it's just a pointer. Example: LPSTR.",
-  "STR means string, a run of characters.",
-  "n or i means a number. Example: nCmdShow."]],
-  code:[[
-  "Function WinMain, CALLBACK, returns an int. It takes four inputs.",
-  "hInstance: a handle to this running program.",
-  "hPrevInstance: old, always 0.",
-  "lpCmdLine: a pointer to the command-line text.",
-  "nCmdShow: a number for normal, minimized or maximized.",
-  "Body: empty."]]},
- b08:{explain:[[
-  "Read the first line from left to right.",
-  "void: the return type. foo gives nothing back.",
-  "foo: the name.",
-  "void in parentheses: the parameters. foo takes nothing.",
-  "That first line is the signature, or prototype.",
-  "Then the body, between braces: call OutputDebugStringA with some text. It runs each time foo is called."]],
-  code:[[
-  "Paste in the Windows declarations: include windows.h.",
-  "Define foo, no inputs, no output: send the text “This is the first thing we have actually printed” to the debugger.",
-  "Define WinMain, the start function, with its four inputs.",
-  "In WinMain: call foo.",
-  "Order when it runs: Windows starts the program → startup code → WinMain → foo → OutputDebugStringA → back to foo → back to WinMain → the program ends."]]},
- b09:{explain:[[
-  "Line 1: call foo, then call foo again. Two statements on one line, and that's fine.",
-  "Next: one call to OutputDebugStringA, split over three lines. One statement, also fine.",
-  "Rule: the semicolon ends a statement, not the line break."]],
-  code:[[
-  "The compiler cuts this line into five tokens.",
-  "Token 1: the name OutputDebugStringA.",
-  "Token 2: an open parenthesis.",
-  "Token 3: the string literal, the text in double quotes.",
-  "Token 4: a close parenthesis.",
-  "Token 5: the semicolon, which ends the statement."]]},
- b10:{explain:[[
-  "hInstance: a handle to our own loaded program. A game passes it back to Windows when it makes its window.",
-  "hPrevInstance: left over from 16-bit Windows, always 0. Ignore it.",
-  "lpCmdLine: the text typed after the program's name. A game can use it for launch options, like a level name.",
-  "nCmdShow: a number meaning normal, minimized or maximized. It says how to first show the window."]],
-  code:[[
-  "Include the Windows declarations.",
-  "Function WinMain, with its four inputs, returns an int.",
-  "Print “Command line: ” to the debugger.",
-  "Print the command-line text we received, lpCmdLine.",
-  "Print a new line.",
-  "Return 42. That number becomes the program's exit code."]]},
- b11:{explain:[[
-  "Line 1, a declaration: void foo(void) and a semicolon. It says foo exists and how to call it. No body.",
-  "Line 2, a definition: the same first line, plus a body in braces. That's the real code."],[
-  "Case 1: foo isn't declared at all. The compiler stops with an error, identifier not found. The linker never runs.",
-  "Case 2: foo is declared but has no body anywhere. The compiler is happy and notes that it needs foo. The linker fails: unresolved external.",
-  "Case 3: foo is declared and defined somewhere in the build. The compiler is happy, and the linker patches in foo's address."]],
-  code:[[
-  "Include the Windows declarations.",
-  "Declare foo: no inputs, no output, no body here.",
-  "Function WinMain, with its four inputs: call foo.",
-  "The compiler accepts the call, because of the declaration.",
-  "But no file defines foo, so the linker fails with LNK2019, unresolved external symbol foo."],[
-  "Define foo: send the text “This is the first thing we have actually printed” to the debugger.",
-  "Put this in any .cpp file of the build, and the program links."]]},
- b12:{code:[[
-  "Paste in the Windows declarations: include windows.h. (Part 12)",
-  "Declare foo, so the compiler can make the call. (Part 11)",
-  "Define WinMain, the start function the startup code calls. It returns an int exit code and uses the CALLBACK convention. (Parts 6 and 10)",
-  "Its four inputs: this program's handle, an old value that's always 0, the command-line text, and how to show the window. (Parts 7 and 10)",
-  "In WinMain: call foo, then return 0. (Parts 8 and 10)",
-  "Define foo: send the text to the debugger. Its declaration comes from windows.h, and its code lives in kernel32.dll. (Part 8)",
-  "The build: compile → .obj → link → .exe with an entry point → Windows runs it."]]}
+ b01:{code:[{
+  goal:"Check that the compiler is installed, by running it with no files.",
+  steps:[
+   "You type cl and press Enter. cl is the name of Microsoft's C compiler.",
+   "Windows looks for a program called cl.exe and runs it. Input: nothing, because you gave it no file names.",
+   "Output, first line: its full name, the Microsoft C and C++ Optimizing Compiler, then its version and its target, x64. This proves the compiler is installed.",
+   "Output, second line: how to use it. The word cl, then options, then the files to compile, then slash link and options for the linker.",
+   "Then it stops, because it had nothing to compile."],
+  pattern:"A tool with no input prints how to use it. That's a quick way to check that a tool is installed.",
+  tryit:"You type link instead of cl. What do you expect to see?"}]},
+ b02:{code:[{
+  goal:"See that a source file is only plain text until the compiler reads it.",
+  steps:[
+   "The file test.cpp holds one line: this is some text in a file.",
+   "The editor saves it as plain characters. Nothing checks it yet.",
+   "The .cpp at the end of the name tells Visual Studio to give this file to the C compiler when you build.",
+   "This line isn't C, so the compiler will reject it. Part 3 shows that error."],
+  tryit:"You build now. Does the compiler complain about the whole file, or about one line? Which line?"}]},
+ b03:{code:[{
+  goal:"Read the build output line by line, to find what went wrong and which program found it.",
+  steps:[
+   "Line 1: build started. It names the project, test, and which build: Debug, for the Win32 platform.",
+   "Line 2: Compiling. The compiler starts translating source files.",
+   "Line 3: test.cpp. The file it is translating right now.",
+   "Line 4: an error in test.cpp, line 1. The error code starts with C, so the compiler found it. It's a syntax error: the text isn't valid C.",
+   "Last line: the summary. 0 succeeded, 1 failed. No program was made."],
+  pattern:"Read an error by its first letters. C and a number means a compiler error.",
+  tryit:"Your file has three lines of plain text. Which line number does the first error point at?"}]},
+ b04:{explain:[{
+  goal:"See where Windows' logical processors come from, from the biggest part to the smallest.",
+  steps:[
+   "Start with the whole machine.",
+   "The machine has one or more sockets. Each socket holds one physical CPU chip. Casey's machine has two.",
+   "Each chip has several cores. A core is a full engine that runs instructions, with its own math units and memory units.",
+   "Each core can hold two hardware threads, also called hyperthreads. A hardware thread is one saved state of what the core is running.",
+   "Windows counts each hardware thread as one logical processor."],
+  pattern:"Count from the top down: machine, socket, core, hardware thread.",
+  tryit:"A machine has one chip with 8 cores and 2 threads per core. How many logical processors does Windows show?"}],
+  code:[{
+  goal:"Work out how many logical processors a machine has.",
+  steps:[
+   "Inputs: the number of sockets, the cores in each socket, and the threads in each core.",
+   "Multiply the three numbers. The result is the number of logical processors.",
+   "Casey's machine: 2 sockets, times 4 cores, times 2 threads, gives 16.",
+   "Your machine: read the three numbers in Task Manager and fill them in."],
+  pattern:"Nested counts multiply, because each level repeats everything below it.",
+  tryit:"Casey turns hyperthreading off. How many logical processors are left?"}]},
+ b05:{explain:[{
+  goal:"See how several source files become one program.",
+  steps:[
+   "Start with three source files: test.cpp, foo.cpp and bar.cpp.",
+   "The compiler takes each file on its own and turns it into an object file: test.obj, foo.obj and bar.obj.",
+   "The linker takes all the object files, plus libraries such as the C runtime and kernel32.lib.",
+   "It joins them into one program, test.exe."],
+  pattern:"Compile each file separately, then link everything once.",
+  tryit:"You change only foo.cpp. Which file must be compiled again before linking?"}],
+  code:[{
+  goal:"Write the smallest possible function, so there is something to compile.",
+  steps:[
+   "Define a function named foo. The two void words say it takes nothing and gives nothing back. Part 8 explains them.",
+   "The opening brace starts its body.",
+   "The body is empty, so foo does nothing when it runs.",
+   "The closing brace ends it. The compiler turns this file into an object file, test.obj."],
+  tryit:"This file compiles with no errors. Will the program also link and run?"},{
+  goal:"Read a linker error, to find out what is missing and who wants it.",
+  steps:[
+   "Line 1: Linking. Compiling worked, and now the linker joins the pieces.",
+   "Line 2: error LNK2019, unresolved external symbol WinMain. The name has an underscore in front and at 16 at the end. Read it as WinMain. The linker can't find it in any object file or library.",
+   "Who asked for WinMain? The startup code: the function tmainCRTStartup, in crtexew.obj, inside the library MSVCRTD.lib. That's the C runtime.",
+   "Last line: fatal error LNK1120, one unresolved external. No .exe is made."],
+  pattern:"An error code that starts with LNK comes from the linker: something was asked for, but not found anywhere.",
+  tryit:"You add a function named WinMain to test.cpp and build again. Which of these lines go away?"}]},
+ b06:{code:[{
+  goal:"Learn the exact shape of WinMain, the function the startup code calls first.",
+  steps:[
+   "int: WinMain gives a whole number back when it ends. Part 10 explains what for.",
+   "CALLBACK: a word Windows needs on this function. Part 10 explains it too.",
+   "WinMain: the name the startup code looks for. That's why it must be spelled exactly like this.",
+   "Input 1, hInstance: a handle to this program.",
+   "Input 2, hPrevInstance: a second instance handle.",
+   "Input 3, lpCmdLine: the text typed after the program's name.",
+   "Input 4, nCmdShow: a number.",
+   "Each input starts with the mark In. Part 7 explains it.",
+   "This line ends with a semicolon and has no body. In your file, you put a body in braces there instead."],
+  pattern:"Match the name and the inputs exactly, because other code calls this function by that name.",
+  tryit:"You spell it Winmain, with a small m. Which program complains when you build?"}]},
+ b07:{explain:[{
+  goal:"Decode Windows type names from their first letters.",
+  steps:[
+   "H means handle: an ID that you pass back to Windows. Examples: HINSTANCE and HWND.",
+   "P means pointer: an address in memory. Example: PVOID.",
+   "LP means long pointer. It comes from 16-bit Windows. Today it's just a pointer. Example: LPSTR.",
+   "STR means string: a run of characters. So LPSTR is a pointer to a string.",
+   "n or i means a number. Example: nCmdShow."],
+  pattern:"Read a name as prefix plus meaning. Casey calls this habit a bad idea, but you need it to read Windows code.",
+  tryit:"Decode lpCmdLine from its first two letters. What kind of thing is it?"}],
+  code:[{
+  goal:"Read WinMain's four inputs and say what each one is, from its type.",
+  steps:[
+   "WinMain returns an int and carries the word CALLBACK. Both come back in part 10.",
+   "Input 1, hInstance, of type HINSTANCE. H means handle: this running program.",
+   "Input 2, hPrevInstance, also a handle. It's left over from old Windows and always 0 today.",
+   "Input 3, lpCmdLine, of type LPSTR. LP and STR mean a pointer to text: the command line.",
+   "Input 4, nCmdShow, of type int. n means number: show the window normal, minimized or maximized.",
+   "The body, between the braces, is empty. The program starts, does nothing and ends."],
+  pattern:"The type tells you what kind of thing it is. The name tells you what it's for.",
+  tryit:"Which of the four inputs could hold a level name that you typed when you started the game?"}]},
+ b08:{explain:[{
+  goal:"Read a function's first line, so you know how to call it.",
+  steps:[
+   "Read the first line from left to right.",
+   "The first word, void, is the return type: what foo gives back to its caller. void means nothing.",
+   "foo is the name. You use it to call the function.",
+   "The void in parentheses is the parameter list: what the caller must give foo. void means nothing again.",
+   "These three together are the signature, also called the prototype. They tell you how to call foo.",
+   "Then the body, between the braces: one call to OutputDebugStringA with some text. The body runs each time foo is called, and never runs if foo is never called."],
+  pattern:"Signature plus body is a definition.",
+  tryit:"A function gives back a number and takes nothing. Which word replaces the first void?"}],
+  code:[{
+  goal:"Print one line to the debugger, by putting the print inside our own function, foo, and calling foo from WinMain.",
+  steps:[
+   "Include windows.h. Before anything runs, the compiler pastes in Windows' list of names, so it knows OutputDebugStringA. Part 12 shows how this works.",
+   "Define foo. Input: nothing. Output: nothing. Defining foo does not run it. The compiler translates its body into machine code, but nothing runs it yet.",
+   "The program starts. Windows, through the startup code, calls WinMain and hands it four inputs. We don't use them yet.",
+   "WinMain calls foo. The CPU jumps into foo's body, and WinMain waits at that spot.",
+   "Inside foo, call OutputDebugStringA. Input: the text “This is the first thing we have actually printed”. Nothing comes back to foo, but the text appears in the debugger's Output window.",
+   "foo's body ends. Control goes back to WinMain, just after the call.",
+   "WinMain reaches its closing brace. It ends, and the program ends with it."],
+  pattern:"Call and return. A call jumps into a function, runs its body, then comes back to the line after the call. Also: define once, use many times.",
+  tryit:"You write the call to foo three times in WinMain. How many lines print? And how many if you delete all three calls?"}]},
+ b09:{explain:[{
+  goal:"See that semicolons, not line breaks, decide where a statement ends.",
+  steps:[
+   "Line 1: call foo, semicolon, call foo again, semicolon. Two statements on one line. That's fine.",
+   "Next: one call to OutputDebugStringA written over three lines. First the name and the open parenthesis, then the text, then the close parenthesis and the semicolon.",
+   "That's one statement, because it has only one semicolon. Also fine.",
+   "The compiler ignores line breaks and indentation between the pieces."],
+  pattern:"A semicolon ends a statement. Whitespace is free.",
+  tryit:"You write the call to foo three times on one line, each with its semicolon. How many statements is that, and how many times does foo run?"}],
+  code:[{
+  goal:"See the five pieces, called tokens, that the compiler reads in this one line.",
+  steps:[
+   "The compiler reads the line from left to right and cuts it into tokens.",
+   "Token 1: the name OutputDebugStringA. It says which function to call.",
+   "Token 2: the open parenthesis. The inputs start here.",
+   "Token 3: the string literal, the text between the double quotes. It's the input.",
+   "Token 4: the close parenthesis. The inputs end here.",
+   "Token 5: the semicolon. The statement ends here.",
+   "The spaces between tokens don't matter. You could remove them, or add more."],
+  pattern:"A call has the same shape as the function's first line: name, then the inputs in parentheses. Then a semicolon ends it.",
+  tryit:"You put a space inside the name, between Output and DebugStringA. How many tokens does the compiler see now?"}]},
+ b10:{explain:[{
+  goal:"Know what each WinMain input is, and what a game will use it for.",
+  steps:[
+   "hInstance: a handle to our own loaded program. A game passes it back to Windows when it creates its window.",
+   "hPrevInstance: left over from 16-bit Windows. Always 0 now. Ignore it.",
+   "lpCmdLine: the text typed after the program's name when it started. A game can read launch options from it, like a level name.",
+   "nCmdShow: a number meaning normal, minimized or maximized. It says how to show the window the first time."],
+  tryit:"You start the program by double-clicking it. What text do you expect in lpCmdLine?"}],
+  code:[{
+  goal:"Print the command line the program received, then end with the exit code 42.",
+  steps:[
+   "Include windows.h, so the compiler knows OutputDebugStringA. Part 12 explains how.",
+   "The program starts. Windows calls WinMain with four inputs. One of them, lpCmdLine, holds the text typed after the program's name.",
+   "Call OutputDebugStringA with the label “Command line”. It appears in the Output window.",
+   "Call OutputDebugStringA again, with lpCmdLine as its input. We pass along the text we received, so it prints right after the label.",
+   "Print a new line, so the next output starts on a fresh line.",
+   "Return 42. WinMain ends, and 42 goes back to Windows as the program's exit code."],
+  pattern:"Data in, data out. Inputs arrive as parameters, and the result leaves through return.",
+  tryit:"You start the program with the words hello world after its name. What does the Output window show?"}]},
+ b11:{explain:[{
+  goal:"Tell a declaration from a definition by their shape.",
+  steps:[
+   "Line 1: void foo, void in parentheses, then a semicolon. No body. This is a declaration. It says foo exists and how to call it.",
+   "Line 2: the same first line, followed by a body in braces. This is a definition: the declaration plus the real code."],
+  pattern:"Declare before use. To compile a call, the compiler only needs the declaration.",
+  tryit:"A line ends with a semicolon right after the close parenthesis. Is it a declaration or a definition?"},{
+  goal:"Predict what the compiler and the linker do, for each state of foo.",
+  steps:[
+   "Case 1: foo is not declared at all. The compiler stops with identifier not found. The linker never runs.",
+   "Case 2: foo is declared, but no file defines it. The compiler is happy and notes that it needs foo. The linker fails: unresolved external.",
+   "Case 3: foo is declared, and defined in some file of the build. The compiler is happy, and the linker fills in foo's address."],
+  pattern:"The compiler checks how you use a name. The linker checks that the name really exists somewhere.",
+  tryit:"foo is defined below WinMain, with no declaration above it. Which case is this, and which program complains?"}],
+  code:[{
+  goal:"Show that a declaration lets a call compile, even when no body exists anywhere.",
+  steps:[
+   "Include windows.h, the Windows declarations.",
+   "Declare foo: no inputs, no output, and no body here. Now the compiler knows how to call foo.",
+   "Define WinMain with its four inputs. The startup code will call it.",
+   "Inside WinMain, call foo. The compiler accepts it because of the declaration, and notes that foo's address must be filled in later.",
+   "The compiler makes the object file with no errors.",
+   "The linker searches every object file and library for foo's body. It finds none and fails with LNK2019, unresolved external symbol foo."],
+  pattern:"Declare before use. A declaration is a promise, and the linker checks the promise.",
+  tryit:"You delete the declaration line too. Which program complains now, and with which error?"},{
+  goal:"Keep the promise: give foo its body.",
+  steps:[
+   "Define foo: the same first line as the declaration, but with a body.",
+   "The body calls OutputDebugStringA with the text “This is the first thing we have actually printed”.",
+   "Put this in any .cpp file of the build. The compiler translates it into machine code in that file's object file.",
+   "Now the linker finds foo, fills in its address at the call, and the program links."],
+  pattern:"Define once, use many times. There is one definition, and any file with the declaration can call it.",
+  tryit:"The definition is now in foo.cpp, and WinMain is in test.cpp. How many object files does the linker join?"}]},
+ b12:{code:[{
+  goal:"Read the whole Day 1 program, and connect each line to the part that taught it.",
+  steps:[
+   "Include windows.h. Before compiling, the preprocessor pastes in Windows' declarations, such as OutputDebugStringA. Its code lives in kernel32.dll. Part 12.",
+   "Declare foo, so the compiler can compile a call to it before its body appears. Part 11.",
+   "Define WinMain, the function the startup code calls first. It returns an int exit code and uses the CALLBACK convention. Parts 6 and 10.",
+   "Its four inputs: this program's handle, an old value that's always 0, the command-line text, and how to show the window. Parts 7 and 10.",
+   "Define foo below WinMain: its body sends the text to the debugger. Part 8.",
+   "Build: the compiler turns this file into an object file. The linker joins it with the libraries into an .exe that starts in the startup code. Parts 3, 5 and 6.",
+   "Run: Windows loads the .exe and runs the startup code, which calls WinMain.",
+   "WinMain calls foo. foo calls OutputDebugStringA, and the text appears in the Output window. Then control comes back to WinMain. Part 8.",
+   "WinMain returns 0. That's the program's exit code, and the program ends. Part 10."],
+  pattern:"The three patterns of Day 1: compile then link, declare before use, and call and return.",
+  tryit:"You remove the include line. Which program fails first, and on which name?"}]}
 };
 window.STUDY.blocks.forEach(b=>{ if(SAY[b.id]) b.say=SAY[b.id]; });
 })();
+
+window.STUDY.audio = {"b01": {"explain": {"The idea in one sentence: Handmade Hero builds a whole game in C, and on Windows you first have to install a C compiler (Visual Studio).": "audio/b01-explain-1.mp3", "Real-life picture: A compiler is like a translator for a trip abroad: Windows doesn't come with one, so you bring your own.": "audio/b01-explain-2.mp3", "Day 1 is short on code and long on the toolchain: the chain of programs that turns text you type into something a CPU runs. That chain is the subject of the whole video. This first block just sets it up.": "audio/b01-explain-3.mp3", "What Casey actually says": "audio/b01-explain-4.mp3", "Handmade Hero is a full game written in C from scratch, live, explaining every decision.": "audio/b01-explain-5.mp3", "He won't pause the game series for basics, so this prelude covers them.": "audio/b01-explain-6.mp3", "Windows doesn't ship with a C compiler. You install Microsoft's, which comes inside Visual Studio.": "audio/b01-explain-7.mp3", "Update for today": "audio/b01-explain-8.mp3", "Casey downloads \"Visual Studio Express 2013 for Windows Desktop\" and records in Visual Studio 2008. Both are long gone. On Day 2 he tells viewers to switch to the free Community edition, and that's still the one to use. When the installer asks, pick the \"Desktop development with C++\" workload. That gives you the compiler (cl.exe), the linker (link.exe), the Windows headers and the debugger. The menus look different from 2008, but every idea in this video still applies exactly.": "audio/b01-explain-9.mp3", "Mental model to hold for the whole day: text file \u2192 compiler \u2192 object file \u2192 linker \u2192 .exe \u2192 Windows loads it \u2192 the CPU runs it. Every block below fills in one arrow.": "audio/b01-explain-10.mp3", "Common beginner mistake: Installing Visual Studio without the \"Desktop development with C++\" workload. Then there's no cl.exe.": "audio/b01-explain-11.mp3"}, "code": {"No code in this block. Here is the one-line toolchain check from the experiment, so you know what \"working\" looks like:": "audio/b01-code-1.mp3", "Goal: Check that the compiler is installed, by running it with no files.": "audio/b01-code-2.mp3", "Step 1. You type cl and press Enter. cl is the name of Microsoft's C compiler.": "audio/b01-code-3.mp3", "Step 2. Windows looks for a program called cl.exe and runs it. Input: nothing, because you gave it no file names.": "audio/b01-code-4.mp3", "Step 3. Output, first line: its full name, the Microsoft C and C++ Optimizing Compiler, then its version and its target, x64. This proves the compiler is installed.": "audio/b01-code-5.mp3", "Step 4. Output, second line: how to use it. The word cl, then options, then the files to compile, then slash link and options for the linker.": "audio/b01-code-6.mp3", "Step 5. Then it stops, because it had nothing to compile.": "audio/b01-code-7.mp3", "Pattern: A tool with no input prints how to use it. That's a quick way to check that a tool is installed.": "audio/b01-code-8.mp3", "Try it in your head: You type link instead of cl. What do you expect to see?": "audio/b01-code-9.mp3", "The version number tells you which compiler you have. The usage line already hints at the two stages: cl compiles, and anything after /link is handed to the linker.": "audio/b01-code-10.mp3"}}, "b02": {"explain": {"The idea in one sentence: A project is a list of plain-text source files plus settings, and on Windows it's built as either a console program or a windowed program.": "audio/b02-explain-1.mp3", "Real-life picture: A solution is a binder, each project in it is a recipe card, and the .cpp files are the plain-paper pages of the recipe.": "audio/b02-explain-2.mp3", "Console vs. windowed: the \"subsystem\"": "audio/b02-explain-3.mp3", "Every Windows .exe carries a flag in its header called the subsystem. CONSOLE means \"give me a text console window when I start\". WINDOWS means \"don't, I'll make my own windows\". This flag is what Casey means by \"you have to build an app as one or the other\". The two project types in the wizard mostly just set this flag, and with it which startup function name the linker expects. That second point turns into a real error in block 5.": "audio/b02-explain-4.mp3", "Solution vs. project": "audio/b02-explain-5.mp3", "A project describes how to build one output (one .exe or one library): which files and which settings.": "audio/b02-explain-6.mp3", "A solution is a container of projects. The bold one is the startup project, the one that runs when you press Start.": "audio/b02-explain-7.mp3", "For a one-person game, one solution holding one project is all you need. Casey says he'll soon stop using this machinery entirely.": "audio/b02-explain-8.mp3", "Source code is plain text": "audio/b02-explain-9.mp3", "A .cpp file is a sequence of characters, the same kind of file Notepad saves. Everything the tools do starts from reading that text. Nothing is hidden in the file. The colors you see in the editor are added by the editor and aren't stored anywhere.": "audio/b02-explain-10.mp3", ".cpp vs .c": "audio/b02-explain-11.mp3", "Casey names the file test.cpp, so the compiler treats it as C++. Handmade Hero is written in a \"C-style\" subset of C++: almost entirely plain C, using a few C++ conveniences. That matters once in today's video (block 11), when C++ is stricter than old C.": "audio/b02-explain-12.mp3", "Common beginner mistake: Making a Console project and then wondering why the linker wants main instead of WinMain. The subsystem setting doesn't match your code.": "audio/b02-explain-13.mp3"}, "code": {"Nothing compiles yet. This is the state of test.cpp when Casey first hits Build (around 12:20): just text with no meaning to C.": "audio/b02-code-1.mp3", "Goal: See that a source file is only plain text until the compiler reads it.": "audio/b02-code-2.mp3", "Step 1. The file test.cpp holds one line: this is some text in a file.": "audio/b02-code-3.mp3", "Step 2. The editor saves it as plain characters. Nothing checks it yet.": "audio/b02-code-4.mp3", "Step 3. The .cpp at the end of the name tells Visual Studio to give this file to the C compiler when you build.": "audio/b02-code-5.mp3", "Step 4. This line isn't C, so the compiler will reject it. Part 3 shows that error.": "audio/b02-code-6.mp3", "Try it in your head: You build now. Does the compiler complain about the whole file, or about one line? Which line?": "audio/b02-code-7.mp3", "Keep this file. In the next block it produces your first compiler error, on purpose.": "audio/b02-code-8.mp3"}}, "b03": {"explain": {"The idea in one sentence: Compiling translates human-readable C text into machine code for one specific kind of CPU.": "audio/b03-explain-1.mp3", "Real-life picture: Compiling is like translating a book: the same story becomes French for x64 or Japanese for ARM. A French reader can't read the Japanese edition.": "audio/b03-explain-2.mp3", "Configuration = which kind of build": "audio/b03-explain-3.mp3", "The same source can be built in several ways:": "audio/b03-explain-4.mp3", "Debug: no optimization, extra checks, full debug information. Each line of C maps simply to machine code, so the debugger can follow along.": "audio/b03-explain-5.mp3", "Release (Casey also says \"Retail\"): optimized, fast, much harder to step through.": "audio/b03-explain-6.mp3", "Platform: Win32 means 32-bit x86 code. x64 means 64-bit code. Same C, different machine instructions.": "audio/b03-explain-7.mp3", "What a compiler does": "audio/b03-explain-8.mp3", "Casey's definition: compilation means moving something from one format to another, like translating. A C compiler does three things:": "audio/b03-explain-9.mp3", "Parse: read the characters and work out the structure (this is a function, this is a call\u2026).": "audio/b03-explain-10.mp3", "Understand: check the meaning (does that name exist? do the types fit?). Compile errors come from steps 1 and 2.": "audio/b03-explain-11.mp3", "Emit: write out machine code, numbers that a particular CPU decodes as instructions.": "audio/b03-explain-12.mp3", "Prerequisite, explained now: what is \"machine code\" for \"a specific CPU\"? A CPU only does a small set of simple operations: copy this number, add these two, jump over there. Each operation is encoded as a few bytes. x64 chips (Intel, AMD) and ARM chips (phones, Apple M-series) use different encodings, so the same C produces different bytes for each. That's why the compiler has to know its target. You'll read this code, called assembly, on Intro to C Day 2.": "audio/b03-explain-13.mp3", "Common beginner mistake: Thinking an .exe built for x64 runs on any computer, for example an ARM Mac.": "audio/b03-explain-14.mp3"}, "code": {"What Casey's output window shows, annotated (the wording differs a little in modern VS):": "audio/b03-code-1.mp3", "Goal: Read the build output line by line, to find what went wrong and which program found it.": "audio/b03-code-2.mp3", "Step 1. Line 1: build started. It names the project, test, and which build: Debug, for the Win32 platform.": "audio/b03-code-3.mp3", "Step 2. Line 2: Compiling. The compiler starts translating source files.": "audio/b03-code-4.mp3", "Step 3. Line 3: test.cpp. The file it is translating right now.": "audio/b03-code-5.mp3", "Step 4. Line 4: an error in test.cpp, line 1. The error code starts with C, so the compiler found it. It's a syntax error: the text isn't valid C.": "audio/b03-code-6.mp3", "Step 5. Last line: the summary. 0 succeeded, 1 failed. No program was made.": "audio/b03-code-7.mp3", "Pattern: Read an error by its first letters. C and a number means a compiler error.": "audio/b03-code-8.mp3", "Try it in your head: Your file has three lines of plain text. Which line number does the first error point at?": "audio/b03-code-9.mp3", "Learn the C in C2146. In block 5 you'll see an LNK prefix instead, and that one letter tells you which stage failed.": "audio/b03-code-10.mp3"}}, "b04": {"explain": {"The idea in one sentence: One chip holds several cores, each core can run more than one hardware thread, and Windows counts each thread as a logical processor.": "audio/b04-explain-1.mp3", "Real-life picture: A core is a cook. Hyperthreading gives one cook two order tickets: while one dish waits in the oven, the cook works on the other. Two tickets, still one cook.": "audio/b04-explain-2.mp3", "The hierarchy": "audio/b04-explain-3.mp3", "Goal: See where Windows' logical processors come from, from the biggest part to the smallest.": "audio/b04-explain-4.mp3", "Step 1. Start with the whole machine.": "audio/b04-explain-5.mp3", "Step 2. The machine has one or more sockets. Each socket holds one physical CPU chip. Casey's machine has two.": "audio/b04-explain-6.mp3", "Step 3. Each chip has several cores. A core is a full engine that runs instructions, with its own math units and memory units.": "audio/b04-explain-7.mp3", "Step 4. Each core can hold two hardware threads, also called hyperthreads. A hardware thread is one saved state of what the core is running.": "audio/b04-explain-8.mp3", "Step 5. Windows counts each hardware thread as one logical processor.": "audio/b04-explain-9.mp3", "Pattern: Count from the top down: machine, socket, core, hardware thread.": "audio/b04-explain-10.mp3", "Try it in your head: A machine has one chip with 8 cores and 2 threads per core. How many logical processors does Windows show?": "audio/b04-explain-11.mp3", "Casey's machine has two Xeon W5580 chips. Each has 4 cores, and each core runs 2 hyperthreads, so 2 \u00d7 4 \u00d7 2 = 16 logical processors: the 16 little graphs in his Task Manager.": "audio/b04-explain-12.mp3", "One correction to keep in mind": "audio/b04-explain-13.mp3", "Casey describes a hyperthreaded core as running only one of its states \"at a given time\" and switching quickly. That's a fair first picture, and he says there's \"tons more to talk about\". On modern chips, instructions from both hardware threads are usually in flight in the same core at the same time, sharing its execution units. When one thread stalls (for example, waiting on memory), the other keeps those units busy. That's why a hyperthread doesn't count as a whole extra core: two threads on one core usually finish somewhat faster than one, but nowhere near twice as fast.": "audio/b04-explain-14.mp3", "Back to the build": "audio/b04-explain-15.mp3", "Compiling many files is easy to split up. Each .cpp can be compiled on its own (block 5 shows why), so the compiler can farm files out to different logical processors. The 1> prefix identifies which project build or job produced the line. With one file you only ever see 1>.": "audio/b04-explain-16.mp3", "Common beginner mistake: Thinking 16 logical processors means 16 times the speed. Hyperthreads share one core's hardware.": "audio/b04-explain-17.mp3"}, "code": {"No C code here. This is the \"code\" of the topic: the multiplication that turns Task Manager's numbers into a picture of your hardware.": "audio/b04-code-1.mp3", "Goal: Work out how many logical processors a machine has.": "audio/b04-code-2.mp3", "Step 1. Inputs: the number of sockets, the cores in each socket, and the threads in each core.": "audio/b04-code-3.mp3", "Step 2. Multiply the three numbers. The result is the number of logical processors.": "audio/b04-code-4.mp3", "Step 3. Casey's machine: 2 sockets, times 4 cores, times 2 threads, gives 16.": "audio/b04-code-5.mp3", "Step 4. Your machine: read the three numbers in Task Manager and fill them in.": "audio/b04-code-6.mp3", "Pattern: Nested counts multiply, because each level repeats everything below it.": "audio/b04-code-7.mp3", "Try it in your head: Casey turns hyperthreading off. How many logical processors are left?": "audio/b04-code-8.mp3"}}, "b05": {"explain": {"The idea in one sentence: The compiler turns each .cpp into an object file on its own; the linker joins them, connects the names between them, and writes the .exe.": "audio/b05-explain-1.mp3", "Real-life picture: Each chapter of a book is written separately, with notes like \"see chapter 7\". The linker is the editor who binds the chapters and fills in the real page numbers.": "audio/b05-explain-2.mp3", "Two stages, two kinds of error": "audio/b05-explain-3.mp3", "Goal: See how several source files become one program.": "audio/b05-explain-4.mp3", "Step 1. Start with three source files: test.cpp, foo.cpp and bar.cpp.": "audio/b05-explain-5.mp3", "Step 2. The compiler takes each file on its own and turns it into an object file: test.obj, foo.obj and bar.obj.": "audio/b05-explain-6.mp3", "Step 3. The linker takes all the object files, plus libraries such as the C runtime and kernel32.lib.": "audio/b05-explain-7.mp3", "Step 4. It joins them into one program, test.exe.": "audio/b05-explain-8.mp3", "Pattern: Compile each file separately, then link everything once.": "audio/b05-explain-9.mp3", "Try it in your head: You change only foo.cpp. Which file must be compiled again before linking?": "audio/b05-explain-10.mp3", "Compiler: works on one .cpp at a time, a translation unit. Output: an object file (.obj) holding mostly finished machine code plus a list of names it defines and names it needs but couldn't find in this file.": "audio/b05-explain-11.mp3", "Linker: reads all the .obj files and libraries, matches every \"needed\" name to a \"defined\" name, patches the real addresses into the code, and writes the .exe.": "audio/b05-explain-12.mp3", "Why split it? Casey's reason: if you change one file out of hundreds, only that file is recompiled. The linker then quickly stitches the old and new .obj files together. He adds that it's partly for legacy reasons. Handmade Hero later compiles everything as a single translation unit (a \"unity build\"), because for one person's project that's simply faster.": "audio/b05-explain-13.mp3", "Reading the error": "audio/b05-explain-14.mp3", "unresolved external symbol _WinMain@16 referenced in function _tmainCRTStartup": "audio/b05-explain-15.mp3", "symbol: a name the linker deals in (a function or a global variable).": "audio/b05-explain-16.mp3", "external: defined outside the translation unit that uses it.": "audio/b05-explain-17.mp3", "unresolved: the linker searched every .obj and library and found no definition.": "audio/b05-explain-18.mp3", "referenced in _tmainCRTStartup: someone else's code (startup code that comes with the compiler) calls WinMain. You didn't write that call. Casey promises at 35:40 that the reason is a surprise for Day 2.": "audio/b05-explain-19.mp3", "Prerequisite, explained now: what's the \"_\" and \"@16\"? On 32-bit Windows, functions using this calling style get their names decorated: a leading underscore, plus @ and the number of bytes of arguments. WinMain takes 4 arguments \u00d7 4 bytes = 16. That's all you need today. Calling conventions themselves are parked (block 10). On an x64 build there's no decoration, so modern VS prints something like unresolved external symbol WinMain referenced in function \"int __cdecl invoke_main(void)\". Same error, newer startup code.": "audio/b05-explain-20.mp3", "Common beginner mistake: Trying to fix a linker error (LNK\u2026) by editing syntax. Linker errors are about a missing definition or library, not about how a line is written.": "audio/b05-explain-21.mp3"}, "code": {"The \"rote code\" Casey types at 26:02. It's the smallest thing that gets past the compiler:": "audio/b05-code-1.mp3", "Goal: Write the smallest possible function, so there is something to compile.": "audio/b05-code-2.mp3", "Step 1. Define a function named foo. The two void words say it takes nothing and gives nothing back. Part 8 explains them.": "audio/b05-code-3.mp3", "Step 2. The opening brace starts its body.": "audio/b05-code-4.mp3", "Step 3. The body is empty, so foo does nothing when it runs.": "audio/b05-code-5.mp3", "Step 4. The closing brace ends it. The compiler turns this file into an object file, test.obj.": "audio/b05-code-6.mp3", "Try it in your head: This file compiles with no errors. Will the program also link and run?": "audio/b05-code-7.mp3", "It's valid C, so test.obj gets made. But nothing in it is called WinMain, so the linker fails:": "audio/b05-code-8.mp3", "Goal: Read a linker error, to find out what is missing and who wants it.": "audio/b05-code-9.mp3", "Step 1. Line 1: Linking. Compiling worked, and now the linker joins the pieces.": "audio/b05-code-10.mp3", "Step 2. Line 2: error LNK2019, unresolved external symbol WinMain. The name has an underscore in front and at 16 at the end. Read it as WinMain. The linker can't find it in any object file or library.": "audio/b05-code-11.mp3", "Step 3. Who asked for WinMain? The startup code: the function tmainCRTStartup, in crtexew.obj, inside the library MSVCRTD.lib. That's the C runtime.": "audio/b05-code-12.mp3", "Step 4. Last line: fatal error LNK1120, one unresolved external. No .exe is made.": "audio/b05-code-13.mp3", "Pattern: An error code that starts with LNK comes from the linker: something was asked for, but not found anywhere.": "audio/b05-code-14.mp3", "Try it in your head: You add a function named WinMain to test.cpp and build again. Which of these lines go away?": "audio/b05-code-15.mp3", "Notice crtexew.obj: the code that wants WinMain lives in a library you never asked for. That's the thread Casey pulls on Day 2.": "audio/b05-code-16.mp3"}}, "b06": {"explain": {"The idea in one sentence: The linker writes the address of the start function (found by its name) into the .exe header, and Windows jumps there after loading the file.": "audio/b06-explain-1.mp3", "Real-life picture: An .exe is a parcel with a label. Windows reads the label (the header), unpacks the parcel into memory, and the label says where to start reading.": "audio/b06-explain-2.mp3", "The handoff problem": "audio/b06-explain-3.mp3", "Linking (block 5) resolves every reference inside your program. But Windows was built years before your program, and the two were never linked together. So how does Windows know which byte of your code to run first?": "audio/b06-explain-4.mp3", "Answer: the executable file format": "audio/b06-explain-5.mp3", "An .exe is a file in a documented format, PE (Portable Executable) on Windows. Besides your machine code, its header carries data, including an AddressOfEntryPoint. Starting a program goes roughly like this:": "audio/b06-explain-6.mp3", "Windows opens the .exe and reads its headers.": "audio/b06-explain-7.mp3", "It maps the code and data into memory and does some fix-up work that Casey parks.": "audio/b06-explain-8.mp3", "It sets the CPU running at image base + AddressOfEntryPoint.": "audio/b06-explain-9.mp3", "The linker writes that address. To know which function you mean, it looks for a predefined name. For windowed programs, Casey says that name is WinMain. You can override it with a linker switch (/ENTRY, the \"Foo\" he mentions at 35:24), but almost nobody does.": "audio/b06-explain-10.mp3", "Turtles all the way down": "audio/b06-explain-11.mp3", "Only the very first code is truly self-contained. The firmware (BIOS or UEFI) loads the OS kernel. The kernel loads your program, using the same idea each time: a known format and a known place to start.": "audio/b06-explain-12.mp3", "Your new reference manual": "audio/b06-explain-13.mp3", "MSDN is now Microsoft Learn. Search \"WinMain function\" to find the page Casey reads. It's where you look up every Windows function in Handmade Hero. Casey's advice: nobody remembers this, everyone looks it up.": "audio/b06-explain-14.mp3", "Common beginner mistake: Believing WinMain is the very first code that runs. It isn't, and Casey explains why on Day 2.": "audio/b06-explain-15.mp3"}, "code": {"The WinMain prototype as Casey copies it from MSDN at around 37:44, with the annotations he removes in block 7:": "audio/b06-code-1.mp3", "Goal: Learn the exact shape of WinMain, the function the startup code calls first.": "audio/b06-code-2.mp3", "Step 1. int: WinMain gives a whole number back when it ends. Part 10 explains what for.": "audio/b06-code-3.mp3", "Step 2. CALLBACK: a word Windows needs on this function. Part 10 explains it too.": "audio/b06-code-4.mp3", "Step 3. WinMain: the name the startup code looks for. That's why it must be spelled exactly like this.": "audio/b06-code-5.mp3", "Step 4. Input 1, hInstance: a handle to this program.": "audio/b06-code-6.mp3", "Step 5. Input 2, hPrevInstance: a second instance handle.": "audio/b06-code-7.mp3", "Step 6. Input 3, lpCmdLine: the text typed after the program's name.": "audio/b06-code-8.mp3", "Step 7. Input 4, nCmdShow: a number.": "audio/b06-code-9.mp3", "Step 8. Each input starts with the mark In. Part 7 explains it.": "audio/b06-code-10.mp3", "Step 9. This line ends with a semicolon and has no body. In your file, you put a body in braces there instead.": "audio/b06-code-11.mp3", "Pattern: Match the name and the inputs exactly, because other code calls this function by that name.": "audio/b06-code-12.mp3", "Try it in your head: You spell it Winmain, with a small m. Which program complains when you build?": "audio/b06-code-13.mp3", "Pasted into test.cpp with a body, then built: the compiler stops at HINSTANCE. Nothing has told it what that word means. Block 12 shows the fix, #include <windows.h>, which Casey adds quickly at 39:35.": "audio/b06-code-14.mp3"}}, "b07": {"explain": {"The idea in one sentence: HINSTANCE and LPSTR are Windows's own type names written in Hungarian notation: H means handle, LP means (long) pointer.": "audio/b07-explain-1.mp3", "Real-life picture: A handle is a coat-check ticket: the ticket isn't your coat, but you hand it back to get the coat.": "audio/b07-explain-2.mp3", "Where these words come from": "audio/b07-explain-3.mp3", "Keywords like int and void belong to C itself. HINSTANCE, LPSTR and friends are names Windows defined in its header files. They're new names for basic types. If you don't know them, that's not a gap in your C. Windows made them up.": "audio/b07-explain-4.mp3", "Hungarian notation, decoded": "audio/b07-explain-5.mp3", "Goal: Decode Windows type names from their first letters.": "audio/b07-explain-6.mp3", "Step 1. H means handle: an ID that you pass back to Windows. Examples: HINSTANCE and HWND.": "audio/b07-explain-7.mp3", "Step 2. P means pointer: an address in memory. Example: PVOID.": "audio/b07-explain-8.mp3", "Step 3. LP means long pointer. It comes from 16-bit Windows. Today it's just a pointer. Example: LPSTR.": "audio/b07-explain-9.mp3", "Step 4. STR means string: a run of characters. So LPSTR is a pointer to a string.": "audio/b07-explain-10.mp3", "Step 5. n or i means a number. Example: nCmdShow.": "audio/b07-explain-11.mp3", "Pattern: Read a name as prefix plus meaning. Casey calls this habit a bad idea, but you need it to read Windows code.": "audio/b07-explain-12.mp3", "Try it in your head: Decode lpCmdLine from its first two letters. What kind of thing is it?": "audio/b07-explain-13.mp3", "Casey wasn't sure what L meant. The answer is the 16-bit-era \"long\" or \"far\" pointer that could reach outside the current memory segment. That distinction disappeared in 32-bit Windows, but the names stayed. That's Casey's point: the prefixes go stale and just add noise.": "audio/b07-explain-14.mp3", "Prerequisite, explained now: what's a handle? Windows owns the real data about your running program (its memory, its windows). It won't give you that data. It gives you a handle: a value meaning \"the thing Windows knows as #42\". You pass the handle back whenever you ask Windows to do something with that thing. It's like a coat-check ticket: useless on its own, and it means something only to the person who gave it to you.": "audio/b07-explain-15.mp3", "The _In_ annotations": "audio/b07-explain-16.mp3", "_In_ and _Out_ come from Microsoft's SAL (Source-code Annotation Language). They tell readers and analysis tools which way data flows: into Windows, or back out to you. They're not core C. Casey's \"middle compiler\" is the MIDL compiler, used for COM/OLE interface files. Casey deletes the annotations because the compiler rejected them in his setup. With windows.h included they usually compile, but they don't change what the program does.": "audio/b07-explain-17.mp3", "Common beginner mistake: Copying Hungarian prefixes into your own code because Windows uses them. Casey says don't.": "audio/b07-explain-18.mp3"}, "code": {"The prototype after Casey deletes the annotations at around 46:08, read line by line:": "audio/b07-code-1.mp3", "Goal: Read WinMain's four inputs and say what each one is, from its type.": "audio/b07-code-2.mp3", "Step 1. WinMain returns an int and carries the word CALLBACK. Both come back in part 10.": "audio/b07-code-3.mp3", "Step 2. Input 1, hInstance, of type HINSTANCE. H means handle: this running program.": "audio/b07-code-4.mp3", "Step 3. Input 2, hPrevInstance, also a handle. It's left over from old Windows and always 0 today.": "audio/b07-code-5.mp3", "Step 4. Input 3, lpCmdLine, of type LPSTR. LP and STR mean a pointer to text: the command line.": "audio/b07-code-6.mp3", "Step 5. Input 4, nCmdShow, of type int. n means number: show the window normal, minimized or maximized.": "audio/b07-code-7.mp3", "Step 6. The body, between the braces, is empty. The program starts, does nothing and ends.": "audio/b07-code-8.mp3", "Pattern: The type tells you what kind of thing it is. The name tells you what it's for.": "audio/b07-code-9.mp3", "Try it in your head: Which of the four inputs could hold a level name that you typed when you started the game?": "audio/b07-code-10.mp3", "Notice that Hungarian notation shows up twice: in the types (HINSTANCE, LPSTR) and in the parameter names (hInstance, lpCmdLine). Casey keeps the names in his code because they come straight from the docs.": "audio/b07-code-11.mp3"}}, "b08": {"explain": {"The idea in one sentence: A function is a named, reusable block of code: its signature says what goes in and out, and its body runs only when it's called.": "audio/b08-explain-1.mp3", "Real-life picture: A function is a recipe card. Writing the card cooks nothing; food appears only when someone says \"make recipe foo now\" (a call).": "audio/b08-explain-2.mp3", "Running under the debugger": "audio/b08-explain-3.mp3", "Start Debugging (F5) launches your .exe with the debugger attached. Your WinMain does nothing, returns, and the program ends, so all you see is the debugger's log of the DLLs Windows loaded for you.": "audio/b08-explain-4.mp3", "OutputDebugStringA": "audio/b08-explain-5.mp3", "A Windows function that sends a piece of text to whatever debugger is attached. Visual Studio shows it in the Output window. With no debugger attached, the text goes nowhere you can see. It's Handmade Hero's first logging tool.": "audio/b08-explain-6.mp3", "Functions": "audio/b08-explain-7.mp3", "Goal: Read a function's first line, so you know how to call it.": "audio/b08-explain-8.mp3", "Step 1. Read the first line from left to right.": "audio/b08-explain-9.mp3", "Step 2. The first word, void, is the return type: what foo gives back to its caller. void means nothing.": "audio/b08-explain-10.mp3", "Step 3. foo is the name. You use it to call the function.": "audio/b08-explain-11.mp3", "Step 4. The void in parentheses is the parameter list: what the caller must give foo. void means nothing again.": "audio/b08-explain-12.mp3", "Step 5. These three together are the signature, also called the prototype. They tell you how to call foo.": "audio/b08-explain-13.mp3", "Step 6. Then the body, between the braces: one call to OutputDebugStringA with some text. The body runs each time foo is called, and never runs if foo is never called.": "audio/b08-explain-14.mp3", "Pattern: Signature plus body is a definition.": "audio/b08-explain-15.mp3", "Try it in your head: A function gives back a number and takes nothing. Which word replaces the first void?": "audio/b08-explain-16.mp3", "Definition = prototype + body: the whole function.": "audio/b08-explain-17.mp3", "Call = foo(); runs the body at that spot, then continues after the call.": "audio/b08-explain-18.mp3", "Code inside a function that's never called never runs. That's what Casey's vanishing-output demo shows.": "audio/b08-explain-19.mp3", "What a call is at the CPU level (preview only): the CPU jumps to the function's first instruction and, at the end, jumps back to just after the call. How it remembers where \"back\" is uses the stack, which is parked for Intro to C Day 3. Today, just hold \"a call is a jump there and back\".": "audio/b08-explain-20.mp3", "Comments": "audio/b08-explain-21.mp3", "// ignores the rest of the line (added in C++, now in C too). /* \u2026 */ ignores everything between the markers, across lines. The compiler throws comments away. They're notes for people.": "audio/b08-explain-22.mp3", "Common beginner mistake: Defining a function and expecting it to run without calling it.": "audio/b08-explain-23.mp3"}, "code": {"The complete program at 54:00 (the string as on Casey's screen):": "audio/b08-code-1.mp3", "Goal: Print one line to the debugger, by putting the print inside our own function, foo, and calling foo from WinMain.": "audio/b08-code-2.mp3", "Step 1. Include windows.h. Before anything runs, the compiler pastes in Windows' list of names, so it knows OutputDebugStringA. Part 12 shows how this works.": "audio/b08-code-3.mp3", "Step 2. Define foo. Input: nothing. Output: nothing. Defining foo does not run it. The compiler translates its body into machine code, but nothing runs it yet.": "audio/b08-code-4.mp3", "Step 3. The program starts. Windows, through the startup code, calls WinMain and hands it four inputs. We don't use them yet.": "audio/b08-code-5.mp3", "Step 4. WinMain calls foo. The CPU jumps into foo's body, and WinMain waits at that spot.": "audio/b08-code-6.mp3", "Step 5. Inside foo, call OutputDebugStringA. Input: the text \u201cThis is the first thing we have actually printed\u201d. Nothing comes back to foo, but the text appears in the debugger's Output window.": "audio/b08-code-7.mp3", "Step 6. foo's body ends. Control goes back to WinMain, just after the call.": "audio/b08-code-8.mp3", "Step 7. WinMain reaches its closing brace. It ends, and the program ends with it.": "audio/b08-code-9.mp3", "Pattern: Call and return. A call jumps into a function, runs its body, then comes back to the line after the call. Also: define once, use many times.": "audio/b08-code-10.mp3", "Try it in your head: You write the call to foo three times in WinMain. How many lines print? And how many if you delete all three calls?": "audio/b08-code-11.mp3", "Read it in execution order: Windows \u2192 (startup code) \u2192 WinMain \u2192 foo \u2192 OutputDebugStringA \u2192 back to foo \u2192 back to WinMain \u2192 WinMain ends \u2192 the program exits.": "audio/b08-code-12.mp3", "The \\n at the end is a newline. Escape sequences are covered on Intro to C Day 2 (14:35). Casey's WinMain has no return line. A modern compiler may warn, or refuse with \"must return a value\". If yours does, add return 0; as WinMain's last line. It promises an int, so it should hand one back.": "audio/b08-code-13.mp3"}}, "b09": {"explain": {"The idea in one sentence: A semicolon ends a statement; whitespace only separates tokens, so it matters only when it splits a name.": "audio/b09-explain-1.mp3", "Real-life picture: Spaces in C are like spaces between words: add as many as you want between words, but a space inside a word makes two words.": "audio/b09-explain-2.mp3", "Strings (the Day 1 level)": "audio/b09-explain-3.mp3", "\"like this\" is a string literal: text the compiler stores inside your program, which you can pass to functions. What a string really is in memory (bytes, a terminating zero, a pointer to the first character) is built up on Day 2 and Day 3. For now: double quotes make text you can hand to a function.": "audio/b09-explain-4.mp3", "Statements and semicolons": "audio/b09-explain-5.mp3", "A statement is one complete instruction to the program, like a call. C needs a ; to know where each one ends, because line breaks don't count:": "audio/b09-explain-6.mp3", "Goal: See that semicolons, not line breaks, decide where a statement ends.": "audio/b09-explain-7.mp3", "Step 1. Line 1: call foo, semicolon, call foo again, semicolon. Two statements on one line. That's fine.": "audio/b09-explain-8.mp3", "Step 2. Next: one call to OutputDebugStringA written over three lines. First the name and the open parenthesis, then the text, then the close parenthesis and the semicolon.": "audio/b09-explain-9.mp3", "Step 3. That's one statement, because it has only one semicolon. Also fine.": "audio/b09-explain-10.mp3", "Step 4. The compiler ignores line breaks and indentation between the pieces.": "audio/b09-explain-11.mp3", "Pattern: A semicolon ends a statement. Whitespace is free.": "audio/b09-explain-12.mp3", "Try it in your head: You write the call to foo three times on one line, each with its semicolon. How many statements is that, and how many times does foo run?": "audio/b09-explain-13.mp3", "Whitespace": "audio/b09-explain-14.mp3", "Spaces, tabs and newlines just separate tokens, the \"words\" of C. Indentation is purely for human readers. The one rule: whitespace can't go inside a token, because it splits it. OutputDebug StringA becomes the two tokens OutputDebug and StringA, and the compiler complains that it doesn't know OutputDebug.": "audio/b09-explain-15.mp3", "Prerequisite, explained now: tokens. Before understanding anything, the compiler chops your text into tokens: names (foo), keywords (void), punctuation (( ) { ;) and literals (\"text\", 5). That's the \"parse\" step from block 3. Whitespace is only there to separate tokens, which is why it doesn't matter anywhere else.": "audio/b09-explain-16.mp3", "Common beginner mistake: Forgetting a ; and then looking at the wrong line: the error is often reported on the next line.": "audio/b09-explain-17.mp3"}, "code": {"The one call statement, tokenized the way the compiler sees it:": "audio/b09-code-1.mp3", "Goal: See the five pieces, called tokens, that the compiler reads in this one line.": "audio/b09-code-2.mp3", "Step 1. The compiler reads the line from left to right and cuts it into tokens.": "audio/b09-code-3.mp3", "Step 2. Token 1: the name OutputDebugStringA. It says which function to call.": "audio/b09-code-4.mp3", "Step 3. Token 2: the open parenthesis. The inputs start here.": "audio/b09-code-5.mp3", "Step 4. Token 3: the string literal, the text between the double quotes. It's the input.": "audio/b09-code-6.mp3", "Step 5. Token 4: the close parenthesis. The inputs end here.": "audio/b09-code-7.mp3", "Step 6. Token 5: the semicolon. The statement ends here.": "audio/b09-code-8.mp3", "Step 7. The spaces between tokens don't matter. You could remove them, or add more.": "audio/b09-code-9.mp3", "Pattern: A call has the same shape as the function's first line: name, then the inputs in parentheses. Then a semicolon ends it.": "audio/b09-code-10.mp3", "Try it in your head: You put a space inside the name, between Output and DebugStringA. How many tokens does the compiler see now?": "audio/b09-code-11.mp3", "Five tokens. Every bit of whitespace between them could be removed, or doubled, and the program would be identical.": "audio/b09-code-12.mp3"}}, "b10": {"explain": {"The idea in one sentence: WinMain returns an int exit code, is marked CALLBACK so it matches the way Windows calls functions, and receives four values about how the program was started.": "audio/b10-explain-1.mp3", "Real-life picture: WinMain is a form with fixed fields: Windows fills in four boxes, you must reply in the agreed format (CALLBACK), and you hand back a number (the exit code).": "audio/b10-explain-2.mp3", "int: the return value": "audio/b10-explain-3.mp3", "WinMain promises to hand back an int, a whole number. When WinMain returns, that number becomes the program's exit code, which Windows can report. By convention, 0 means \"fine\".": "audio/b10-explain-4.mp3", "CALLBACK: just enough for today": "audio/b10-explain-5.mp3", "CALLBACK isn't a C keyword. It's a macro, a word that windows.h replaces with other text before compiling. It expands to a marker telling the compiler that this function follows Windows's agreed calling convention: the exact rules for passing arguments and returning values. Casey's reasoning is the part to remember: Windows and your program were compiled separately, so they need a shared agreement. The details are parked. On 32-bit, that agreement is where the @16 from block 5 comes from.": "audio/b10-explain-6.mp3", "The four parameters": "audio/b10-explain-7.mp3", "Goal: Know what each WinMain input is, and what a game will use it for.": "audio/b10-explain-8.mp3", "Step 1. hInstance: a handle to our own loaded program. A game passes it back to Windows when it creates its window.": "audio/b10-explain-9.mp3", "Step 2. hPrevInstance: left over from 16-bit Windows. Always 0 now. Ignore it.": "audio/b10-explain-10.mp3", "Step 3. lpCmdLine: the text typed after the program's name when it started. A game can read launch options from it, like a level name.": "audio/b10-explain-11.mp3", "Step 4. nCmdShow: a number meaning normal, minimized or maximized. It says how to show the window the first time.": "audio/b10-explain-12.mp3", "Try it in your head: You start the program by double-clicking it. What text do you expect in lpCmdLine?": "audio/b10-explain-13.mp3", "Casey's point about the command line: even a program never run from a console still receives one, because shortcuts can add text after the program path in their Target field.": "audio/b10-explain-14.mp3", "Common beginner mistake: Ignoring what int promises. A function that says it returns int should return one (return 0;).": "audio/b10-explain-15.mp3"}, "code": {"WinMain with every parameter put to use: the experiments above, in one place:": "audio/b10-code-1.mp3", "Goal: Print the command line the program received, then end with the exit code 42.": "audio/b10-code-2.mp3", "Step 1. Include windows.h, so the compiler knows OutputDebugStringA. Part 12 explains how.": "audio/b10-code-3.mp3", "Step 2. The program starts. Windows calls WinMain with four inputs. One of them, lpCmdLine, holds the text typed after the program's name.": "audio/b10-code-4.mp3", "Step 3. Call OutputDebugStringA with the label \u201cCommand line\u201d. It appears in the Output window.": "audio/b10-code-5.mp3", "Step 4. Call OutputDebugStringA again, with lpCmdLine as its input. We pass along the text we received, so it prints right after the label.": "audio/b10-code-6.mp3", "Step 5. Print a new line, so the next output starts on a fresh line.": "audio/b10-code-7.mp3", "Step 6. Return 42. WinMain ends, and 42 goes back to Windows as the program's exit code.": "audio/b10-code-8.mp3", "Pattern: Data in, data out. Inputs arrive as parameters, and the result leaves through return.": "audio/b10-code-9.mp3", "Try it in your head: You start the program with the words hello world after its name. What does the Output window show?": "audio/b10-code-10.mp3"}}, "b11": {"explain": {"The idea in one sentence: A declaration tells the compiler how to call a function; only a definition gives the linker a body to connect the call to.": "audio/b11-explain-1.mp3", "Real-life picture: A declaration is a phone-book entry: it lets you dial. The definition is the person who answers. No person, and the call fails at the end (link error).": "audio/b11-explain-2.mp3", "The rule": "audio/b11-explain-3.mp3", "The compiler reads your file top to bottom, once. Before you can call foo, it has to have seen what foo looks like: what it takes and what it returns. Otherwise it can't generate the call.": "audio/b11-explain-4.mp3", "Declaration vs. definition": "audio/b11-explain-5.mp3", "Goal: Tell a declaration from a definition by their shape.": "audio/b11-explain-6.mp3", "Step 1. Line 1: void foo, void in parentheses, then a semicolon. No body. This is a declaration. It says foo exists and how to call it.": "audio/b11-explain-7.mp3", "Step 2. Line 2: the same first line, followed by a body in braces. This is a definition: the declaration plus the real code.": "audio/b11-explain-8.mp3", "Pattern: Declare before use. To compile a call, the compiler only needs the declaration.": "audio/b11-explain-9.mp3", "Try it in your head: A line ends with a semicolon right after the close parenthesis. Is it a declaration or a definition?": "audio/b11-explain-10.mp3", "A declaration is enough for the compiler to translate a call: it knows what to pass and what comes back.": "audio/b11-explain-11.mp3", "Only a definition gives the linker something to point that call at.": "audio/b11-explain-12.mp3", "Why the error moved": "audio/b11-explain-13.mp3", "Goal: Predict what the compiler and the linker do, for each state of foo.": "audio/b11-explain-14.mp3", "Step 1. Case 1: foo is not declared at all. The compiler stops with identifier not found. The linker never runs.": "audio/b11-explain-15.mp3", "Step 2. Case 2: foo is declared, but no file defines it. The compiler is happy and notes that it needs foo. The linker fails: unresolved external.": "audio/b11-explain-16.mp3", "Step 3. Case 3: foo is declared, and defined in some file of the build. The compiler is happy, and the linker fills in foo's address.": "audio/b11-explain-17.mp3", "Pattern: The compiler checks how you use a name. The linker checks that the name really exists somewhere.": "audio/b11-explain-18.mp3", "Try it in your head: foo is defined below WinMain, with no declaration above it. Which case is this, and which program complains?": "audio/b11-explain-19.mp3", "This is exactly how one .cpp calls a function defined in another .cpp. Each file declares what it uses, one file defines it, and the linker joins them up. That answers the question from block 5: unresolved externals exist at all because declarations let the compiler move on without the body.": "audio/b11-explain-20.mp3", "C vs. C++: early C let you call an undeclared function and guessed that it returned int. C99 removed that, and C++ never allowed it. Casey's file is .cpp, so it's strict either way.": "audio/b11-explain-21.mp3", "Common beginner mistake: Mixing up a declaration (ends with ;, no body) with a definition (has a { } body).": "audio/b11-explain-22.mp3"}, "code": {"Casey's file at 1:07:00, with his comments:": "audio/b11-code-1.mp3", "Goal: Show that a declaration lets a call compile, even when no body exists anywhere.": "audio/b11-code-2.mp3", "Step 1. Include windows.h, the Windows declarations.": "audio/b11-code-3.mp3", "Step 2. Declare foo: no inputs, no output, and no body here. Now the compiler knows how to call foo.": "audio/b11-code-4.mp3", "Step 3. Define WinMain with its four inputs. The startup code will call it.": "audio/b11-code-5.mp3", "Step 4. Inside WinMain, call foo. The compiler accepts it because of the declaration, and notes that foo's address must be filled in later.": "audio/b11-code-6.mp3", "Step 5. The compiler makes the object file with no errors.": "audio/b11-code-7.mp3", "Step 6. The linker searches every object file and library for foo's body. It finds none and fails with LNK2019, unresolved external symbol foo.": "audio/b11-code-8.mp3", "Pattern: Declare before use. A declaration is a promise, and the linker checks the promise.": "audio/b11-code-9.mp3", "Try it in your head: You delete the declaration line too. Which program complains now, and with which error?": "audio/b11-code-10.mp3", "Add this anywhere, even in another .cpp, and the build links:": "audio/b11-code-11.mp3", "Goal: Keep the promise: give foo its body.": "audio/b11-code-12.mp3", "Step 1. Define foo: the same first line as the declaration, but with a body.": "audio/b11-code-13.mp3", "Step 2. The body calls OutputDebugStringA with the text \u201cThis is the first thing we have actually printed\u201d.": "audio/b11-code-14.mp3", "Step 3. Put this in any .cpp file of the build. The compiler translates it into machine code in that file's object file.": "audio/b11-code-15.mp3", "Step 4. Now the linker finds foo, fills in its address at the call, and the program links.": "audio/b11-code-16.mp3", "Pattern: Define once, use many times. There is one definition, and any file with the declaration can call it.": "audio/b11-code-17.mp3", "Try it in your head: The definition is now in foo.cpp, and WinMain is in test.cpp. How many object files does the linker join?": "audio/b11-code-18.mp3"}}, "b12": {"explain": {"The idea in one sentence: #include pastes another file's text in place, and windows.h brings in the declarations of everything Windows provides.": "audio/b12-explain-1.mp3", "Real-life picture: #include is like photocopying a reference sheet and stapling it into your notes at that exact spot.": "audio/b12-explain-2.mp3", "Two kinds of names": "audio/b12-explain-3.mp3", "Keywords: void, int, plus punctuation like { } ( ) ;. These are the language itself, and work on every C compiler.": "audio/b12-explain-4.mp3", "Everything else: HINSTANCE, LPSTR, CALLBACK, OutputDebugStringA, WinMain's declaration. These are ordinary C declarations and macros written by Microsoft in header files.": "audio/b12-explain-5.mp3", "#include is copy-paste": "audio/b12-explain-6.mp3", "#include isn't really part of C's grammar. It's handled by the preprocessor, a text pass that runs before the compiler proper. It replaces the line with the full contents of the named file, and that file's own #includes get expanded the same way, recursively. What reaches the compiler is one long file: the translation unit from block 5.": "audio/b12-explain-7.mp3", "Putting today together: windows.h supplies the declarations (block 11) for OutputDebugStringA and the rest, so the compiler is happy. The definitions live in Windows itself (kernel32.dll), and the linker connects the two through an import library (kernel32.lib) that Visual Studio links by default. Declaration from a header, definition from a library: same mechanism as foo, at a larger scale.": "audio/b12-explain-8.mp3", "<angle> vs. \"quotes\"": "audio/b12-explain-9.mp3", "#include <windows.h> searches the system and SDK include folders. #include \"mine.h\" searches next to your file first. Casey doesn't cover this distinction today. It's here so the angle brackets don't puzzle you.": "audio/b12-explain-10.mp3", "Common beginner mistake: Thinking #include <windows.h> adds Windows's code to your program. It adds only declarations; the code lives in Windows's DLLs.": "audio/b12-explain-11.mp3"}, "code": {"The finished Day 1 program with every line labeled by the block that explains it. Read this once a day for a week.": "audio/b12-code-1.mp3", "Goal: Read the whole Day 1 program, and connect each line to the part that taught it.": "audio/b12-code-2.mp3", "Step 1. Include windows.h. Before compiling, the preprocessor pastes in Windows' declarations, such as OutputDebugStringA. Its code lives in kernel32.dll. Part 12.": "audio/b12-code-3.mp3", "Step 2. Declare foo, so the compiler can compile a call to it before its body appears. Part 11.": "audio/b12-code-4.mp3", "Step 3. Define WinMain, the function the startup code calls first. It returns an int exit code and uses the CALLBACK convention. Parts 6 and 10.": "audio/b12-code-5.mp3", "Step 4. Its four inputs: this program's handle, an old value that's always 0, the command-line text, and how to show the window. Parts 7 and 10.": "audio/b12-code-6.mp3", "Step 5. Define foo below WinMain: its body sends the text to the debugger. Part 8.": "audio/b12-code-7.mp3", "Step 6. Build: the compiler turns this file into an object file. The linker joins it with the libraries into an .exe that starts in the startup code. Parts 3, 5 and 6.": "audio/b12-code-8.mp3", "Step 7. Run: Windows loads the .exe and runs the startup code, which calls WinMain.": "audio/b12-code-9.mp3", "Step 8. WinMain calls foo. foo calls OutputDebugStringA, and the text appears in the Output window. Then control comes back to WinMain. Part 8.": "audio/b12-code-10.mp3", "Step 9. WinMain returns 0. That's the program's exit code, and the program ends. Part 10.": "audio/b12-code-11.mp3", "Pattern: The three patterns of Day 1: compile then link, declare before use, and call and return.": "audio/b12-code-12.mp3", "Try it in your head: You remove the include line. Which program fails first, and on which name?": "audio/b12-code-13.mp3"}}};
 
 </script>
 <script>
@@ -1557,8 +1665,12 @@ document.addEventListener("keydown",e=>{
   if(e.code==="ArrowLeft"){e.preventDefault();const [st]=range(playerBlock);vid.currentTime=Math.max(st,vid.currentTime-5)}
 });
 
-/* ---------- listen: read the Explain / Read code step aloud ---------- */
+/* ---------- listen: read the Explain / Read code step aloud ----------
+   Natural voice first: tools/voice/make_audio.py renders each piece of text with Kokoro and build.py puts
+   the map into D.audio = {blockId: {step: {text: "audio/file.mp3"}}}. Text with no mp3 (or a file that
+   fails to load) falls back to the browser's own voice. */
 const TTS=("speechSynthesis" in window)&&window.SpeechSynthesisUtterance?window.speechSynthesis:null;
+const AUD=D.audio||{}, AU=new Audio();
 let tts={segs:[],i:0,on:false,gen:0,q:[]}, voice=null;
 function pickVoice(){
   if(!TTS) return;
@@ -1568,19 +1680,31 @@ function pickVoice(){
   voice=TTS.getVoices().filter(v=>/^en/i.test(v.lang)).sort((a,b)=>score(b)-score(a))[0]||null;
 }
 if(TTS){pickVoice(); try{TTS.addEventListener("voiceschanged",pickVoice);}catch(e){}}
+const stepAudio=()=>(AUD[S.cur]||{})[S.step]||null;
+const ttsHint=()=>(stepAudio()?"Natural voice. Code is read as the “In words” version."
+  :"No natural voice for this step yet: the browser voice reads it. (Claude makes it with make_audio.py.)");
 function listenBar(){
-  if(!TTS) return `<p class="small muted">Listening isn't available in this browser. You can still read everything below.</p>`;
+  if(!TTS&&!stepAudio()) return `<p class="small muted">Listening isn't available in this browser. You can still read everything below.</p>`;
   return `<div class="listen"><button class="btn small" data-tts="play" id="ttsplay">${ICON.speak}<span>Listen</span></button>
   <button class="btn ghost small" data-tts="stop" id="ttsstop" aria-label="Stop" title="Stop" hidden>${ICON.stop}</button>
   <button class="btn ghost small" data-tts="rate" aria-label="Reading speed" title="Reading speed">${S.ttsRate||1}×</button>
-  <span class="small muted" id="ttsinfo">Code is read as the “In words” version.</span></div>`;
+  <span class="small muted" id="ttsinfo">${ttsHint()}</span></div>`;
+}
+function inWords(s){
+  if(Array.isArray(s)||typeof s==="string"){ // old format: a plain list of lines
+    const lines=Array.isArray(s)?s:String(s).split("\n");
+    return `<div class="inwords"><div class="k">In words</div><ol>${lines.map(l=>`<li class="ln">${md(l)}</li>`).join("")}</ol></div>`;
+  }
+  return `<div class="inwords"><div class="k">In words</div>`
+    +(s.goal?`<p class="ln iw"><b>Goal:</b> ${md(s.goal)}</p>`:"")
+    +`<ol>${(s.steps||[]).map((l,i)=>`<li class="ln"><span class="vh">Step ${i+1}. </span>${md(l)}</li>`).join("")}</ol>`
+    +(s.pattern?`<p class="ln iw"><b>Pattern:</b> ${md(s.pattern)}</p>`:"")
+    +(s.tryit?`<p class="ln iw try"><b>Try it in your head:</b> ${md(s.tryit)}</p>`:"")+`</div>`;
 }
 function withWords(html,say){
   if(!say||!say.length) return html;
   let n=0;
-  return html.replace(/<\/pre>|<\/table>/g,m=>{const s=say[n++]; if(!s) return m;
-    const lines=Array.isArray(s)?s:String(s).split("\n");
-    return m+`<div class="inwords"><div class="k">In words</div><ol>${lines.map(l=>`<li class="ln">${md(l)}</li>`).join("")}</ol></div>`;});
+  return html.replace(/<\/pre>|<\/table>/g,m=>{const s=say[n++]; return s?m+inWords(s):m;});
 }
 function speakable(t){
   return String(t).replace(/\s+/g," ")
@@ -1600,16 +1724,29 @@ function speakable(t){
 const sentences=t=>(t.match(/[^.!?]+[.!?]*\s*/g)||[t]).map(x=>x.trim()).filter(Boolean);
 function ttsSegments(){
   const pane=$("#pane"); if(!pane) return [];
+  const map=stepAudio()||{};
   const els=[...pane.querySelectorAll("h3,p,li,.callout,.inwords .ln")].filter(el=>!el.closest("pre,table,.listen,details"));
-  return els.filter(el=>!els.some(o=>o!==el&&o.contains(el))).map(el=>({el,text:speakable(el.textContent)})).filter(x=>x.text);
+  return els.filter(el=>!els.some(o=>o!==el&&o.contains(el))).map(el=>{const key=el.textContent.replace(/\s+/g," ").trim();
+    return {el,text:speakable(el.textContent),file:map[key]||null};}).filter(x=>x.text);
 }
-function ttsSpeak(){
+function ttsSpeak(resume){
   const seg=tts.segs[tts.i]; if(!seg){ttsStop(true);return}
   document.querySelectorAll(".reading").forEach(e=>e.classList.remove("reading"));
   seg.el.classList.add("reading");
   const r=seg.el.getBoundingClientRect(); if(r.top<0||r.bottom>innerHeight) seg.el.scrollIntoView({block:"center",behavior:"smooth"});
-  const info=$("#ttsinfo"); if(info) info.textContent=`${tts.i+1} / ${tts.segs.length}`;
-  const g=tts.gen, parts=sentences(seg.text); let left=parts.length; tts.q=[];
+  const info=$("#ttsinfo"); if(info) info.textContent=`${tts.i+1} / ${tts.segs.length} · ${seg.file?"natural voice":"browser voice"}`;
+  const g=tts.gen;
+  if(seg.file){ // the Kokoro mp3 for this piece
+    let over=false;
+    const next=()=>{if(over||g!==tts.gen)return; over=true; tts.i++; ttsSpeak();};
+    const fail=()=>{if(over||g!==tts.gen)return; over=true; seg.file=null; ttsSpeak();}; // no file: browser voice for this piece only
+    if(!(resume&&AU.src===new URL(seg.file,location.href).href)) AU.src=seg.file;
+    AU.playbackRate=S.ttsRate||1; AU.onended=next; AU.onerror=fail;
+    AU.play().catch(e=>{ if(e.name==="NotAllowedError"){if(g===tts.gen){tts.on=false;ttsUi();}return} fail(); });
+    return;
+  }
+  if(!TTS){tts.i++;ttsSpeak();return}
+  const parts=sentences(seg.text); let left=parts.length; tts.q=[];
   parts.forEach(p=>{const u=new SpeechSynthesisUtterance(p); if(voice){u.voice=voice;u.lang=voice.lang;}else u.lang="en-US"; u.rate=S.ttsRate||1;
     u.onend=u.onerror=()=>{if(g!==tts.gen)return; if(--left===0){tts.i++;ttsSpeak();}};
     tts.q.push(u); TTS.speak(u);});
@@ -1618,24 +1755,27 @@ function ttsUi(finished){
   const p=$("#ttsplay"),s=$("#ttsstop"),i=$("#ttsinfo"); if(!p) return;
   p.innerHTML=tts.on?ICON.pause+"<span>Pause</span>":ICON.speak+"<span>"+(tts.segs.length&&tts.i>0?"Resume":"Listen")+"</span>";
   s.hidden=!(tts.on||tts.i>0);
-  if(i&&!tts.on&&!tts.segs.length) i.textContent=finished?"Done. Press Listen to hear it again.":"Code is read as the “In words” version.";
+  if(i&&!tts.on&&!tts.segs.length) i.textContent=finished?"Done. Press Listen to hear it again.":ttsHint();
 }
+function ttsHush(){ tts.gen++; if(TTS) TTS.cancel(); AU.pause(); }
 function ttsStop(finished){
-  if(TTS){tts.gen++;TTS.cancel();}
+  ttsHush(); AU.removeAttribute("src");
   tts={segs:[],i:0,on:false,gen:tts.gen,q:[]};
   document.querySelectorAll(".reading").forEach(e=>e.classList.remove("reading"));
   ttsUi(finished);
 }
 function ttsCmd(c){
-  if(!TTS) return;
+  if(!TTS&&!stepAudio()) return;
   if(c==="rate"){const r=[1,1.25,1.5,0.75];S.ttsRate=r[(r.indexOf(S.ttsRate||1)+1)%r.length];save();
     const b=document.querySelector('[data-tts="rate"]'); if(b) b.textContent=S.ttsRate+"×";
-    if(tts.on){tts.gen++;TTS.cancel();ttsSpeak();} return;}
+    AU.playbackRate=S.ttsRate; // an mp3 changes speed in place
+    if(tts.on&&TTS&&TTS.speaking){tts.gen++;TTS.cancel();ttsSpeak();} return;}
   if(c==="stop"){ttsStop();return}
-  if(tts.on){tts.gen++;TTS.cancel();tts.on=false;ttsUi();return} // pause: keeps the place
-  if(!tts.segs.length||tts.i>=tts.segs.length){tts.segs=ttsSegments();tts.i=0;}
+  if(tts.on){ttsHush();tts.on=false;ttsUi();return} // pause: keeps the place (an mp3 resumes mid-sentence)
+  let resume=true;
+  if(!tts.segs.length||tts.i>=tts.segs.length){tts.segs=ttsSegments();tts.i=0;resume=false;}
   if(!tts.segs.length){toast("Nothing to read here");return}
-  tts.on=true; ttsUi(); ttsSpeak();
+  tts.on=true; ttsUi(); ttsSpeak(resume);
 }
 
 /* ---------- tabs ---------- */

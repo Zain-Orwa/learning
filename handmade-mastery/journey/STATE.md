@@ -26,6 +26,7 @@ _Last updated: 2026-10-31_
   - [x] "Debug challenge" scheduled task: Mon/Wed/Fri/Sun 18:45 Europe/Berlin, cloud, automatic approval, push (id `trig_013u5WqvEma6ksmyvTh6PDjA`, same account as the daily review)
   - [x] Guess step (2026-10-31): Guess is now the first step of every part (look back at the previous part + 2–3 guesses; the video stays covered until they're locked in). Fixed: the end-of-part screen no longer covers the video
   - [x] Manim installed and tested on the Mac (2026-10-31): Manim 0.22.1 in `tools/animate/.venv`, uv, cairo + pkg-config; test video `tools/animate/example.mp4` rendered
+  - [x] Natural voice (2026-11-01): Kokoro-82M in `tools/voice/` (voice am_michael); Listen plays Day 1's audio (`courses/intro-to-c/day01/audio/`); "In words" pseudocode upgraded for all 12 parts (goal, steps, pattern, try it)
   - [ ] Learner tries Day 1 Part 1 with `./study` on the Mac
 
 ## Windows tools: all installed and verified (2026-10-30)

@@ -54,6 +54,7 @@ This file adds what is specific to this subject. Then read
 | Code tutor | Claude Code, Learning output style; a custom "Casey tutor" style may follow |
 | Concept teaching, practice, knowledge graph | LearnHarness (open source; the learner forked it). **Open:** needs an Anthropic API key (pay per use); a Claude subscription doesn't cover it |
 | Visual explanations | Manim through the repo skill `/animate` (renders on the Mac; one-time setup `tools/animate/setup-mac.sh`), only for hard ideas |
+| Listening | Kokoro-82M (offline, voice `am_michael`) through `tools/voice/make_audio.py`: the study page's Listen button plays it (one-time setup `tools/voice/setup-mac.sh`) |
 | Memory | Anki with FSRS. Cards live in the repo as `cards.tsv` per day |
 | Speed | Daily blank-file rebuild drill; speedtyper.dev as optional warm-up |
 | Episode lesson format | One HTML study kit per episode (see below) |
@@ -117,10 +118,18 @@ also asked as guesses; pick the 1–2 most important). Part 1's look back uses
 `window.STUDY.lookBack = {label, answer}` (the previous video in one sentence); later parts look back
 at the part before automatically. A part can also have `anim: "anim/<name>.mp4"` (a Manim video
 made with `/animate`); the Explain step shows it first.
-Explain and Read code have a **Listen** button (the browser's own voice). Every code block, diagram
-and table in those steps needs an **In words** version: `say: {explain: [[lines…], …], code: [[lines…], …]}`
-in `data.js`, one list of plain-English pseudocode lines per `<pre>`/`<table>`, in order. It shows
-under the code and is what Listen reads instead of the code.
+Explain and Read code have a **Listen** button. Every code block, diagram and table in those steps
+needs an **In words** version: `say: {explain: [{goal, steps, pattern, tryit}, …], code: […]}` in
+`data.js`, one object per `<pre>`/`<table>`, in order: the goal in one line, numbered steps in
+execution order (what each line does, inputs and outputs, why), the logic pattern if there is one,
+and one "Try it in your head" prediction question. Plain English, no symbols, only what Casey has
+covered so far. It shows under the code and is what Listen reads instead of the code.
+Listen plays **natural Kokoro audio** (voice `am_michael`) from `courses/<course>/dayNN/audio/`
+(`<part>-<step>-<n>.mp3` + `index.json`), made on the Mac with
+`uv run --project tools/voice python tools/voice/make_audio.py handmade-mastery/courses/<course>/dayNN`
+(repo root; one-time setup `tools/voice/setup-mac.sh`). It re-renders only changed text and rebuilds
+the page. Any piece without an mp3 (e.g. the pinned claude.ai page) uses the browser's voice.
+Every new kit gets the upgraded pseudocode and its audio.
 Video files stay outside git (e.g. `~/learning-videos/` on the Mac).
 
 ## Study sessions: `/study`

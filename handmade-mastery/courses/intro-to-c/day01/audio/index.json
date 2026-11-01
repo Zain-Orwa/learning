@@ -1,0 +1,2118 @@
+{
+ "voice": "am_michael",
+ "speed": 1.0,
+ "segments": {
+  "b01": {
+   "explain": [
+    {
+     "file": "b01-explain-1.mp3",
+     "key": "The idea in one sentence: Handmade Hero builds a whole game in C, and on Windows you first have to install a C compiler (Visual Studio).",
+     "spoken": "The idea in one sentence: Handmade Hero builds a whole game in C, and on Windows you first have to install a C compiler (Visual Studio).",
+     "hash": "f05f3f27b78f1c08"
+    },
+    {
+     "file": "b01-explain-2.mp3",
+     "key": "Real-life picture: A compiler is like a translator for a trip abroad: Windows doesn't come with one, so you bring your own.",
+     "spoken": "Real-life picture: A compiler is like a translator for a trip abroad: Windows doesn't come with one, so you bring your own.",
+     "hash": "bac42f29dbf5a155"
+    },
+    {
+     "file": "b01-explain-3.mp3",
+     "key": "Day 1 is short on code and long on the toolchain: the chain of programs that turns text you type into something a CPU runs. That chain is the subject of the whole video. This first block just sets it up.",
+     "spoken": "Day 1 is short on code and long on the toolchain: the chain of programs that turns text you type into something a CPU runs. That chain is the subject of the whole video. This first block just sets it up.",
+     "hash": "4588cf5e7ed83dd3"
+    },
+    {
+     "file": "b01-explain-4.mp3",
+     "key": "What Casey actually says",
+     "spoken": "What Casey actually says",
+     "hash": "ad64d7e64bc520c5"
+    },
+    {
+     "file": "b01-explain-5.mp3",
+     "key": "Handmade Hero is a full game written in C from scratch, live, explaining every decision.",
+     "spoken": "Handmade Hero is a full game written in C from scratch, live, explaining every decision.",
+     "hash": "c9dbbe01506f5662"
+    },
+    {
+     "file": "b01-explain-6.mp3",
+     "key": "He won't pause the game series for basics, so this prelude covers them.",
+     "spoken": "He won't pause the game series for basics, so this prelude covers them.",
+     "hash": "363172b6583eb5ed"
+    },
+    {
+     "file": "b01-explain-7.mp3",
+     "key": "Windows doesn't ship with a C compiler. You install Microsoft's, which comes inside Visual Studio.",
+     "spoken": "Windows doesn't ship with a C compiler. You install Microsoft's, which comes inside Visual Studio.",
+     "hash": "47710d036985deb3"
+    },
+    {
+     "file": "b01-explain-8.mp3",
+     "key": "Update for today",
+     "spoken": "Update for today",
+     "hash": "22943b2b9afcb025"
+    },
+    {
+     "file": "b01-explain-9.mp3",
+     "key": "Casey downloads \"Visual Studio Express 2013 for Windows Desktop\" and records in Visual Studio 2008. Both are long gone. On Day 2 he tells viewers to switch to the free Community edition, and that's still the one to use. When the installer asks, pick the \"Desktop development with C++\" workload. That gives you the compiler (cl.exe), the linker (link.exe), the Windows headers and the debugger. The menus look different from 2008, but every idea in this video still applies exactly.",
+     "spoken": "Casey downloads \"Visual Studio Express 2013 for Windows Desktop\" and records in Visual Studio 2008. Both are long gone. On Day 2 he tells viewers to switch to the free Community edition, and that's still the one to use. When the installer asks, pick the \"Desktop development with C plus plus\" workload. That gives you the compiler (C L dot E X E), the linker (link dot E X E), the Windows headers and the debugger. The menus look different from 2008, but every idea in this video still applies exactly.",
+     "hash": "f74b53f5bccc066b"
+    },
+    {
+     "file": "b01-explain-10.mp3",
+     "key": "Mental model to hold for the whole day: text file → compiler → object file → linker → .exe → Windows loads it → the CPU runs it. Every block below fills in one arrow.",
+     "spoken": "Mental model to hold for the whole day: text file to compiler to object file to linker to dot E X E to Windows loads it to the CPU runs it. Every block below fills in one arrow.",
+     "hash": "3c1b38a5a1403a74"
+    },
+    {
+     "file": "b01-explain-11.mp3",
+     "key": "Common beginner mistake: Installing Visual Studio without the \"Desktop development with C++\" workload. Then there's no cl.exe.",
+     "spoken": "Common beginner mistake: Installing Visual Studio without the \"Desktop development with C plus plus\" workload. Then there's no C L dot E X E.",
+     "hash": "6c5e685ccf9afc5d"
+    }
+   ],
+   "code": [
+    {
+     "file": "b01-code-1.mp3",
+     "key": "No code in this block. Here is the one-line toolchain check from the experiment, so you know what \"working\" looks like:",
+     "spoken": "No code in this block. Here is the one-line toolchain check from the experiment, so you know what \"working\" looks like:",
+     "hash": "a75c585d30958e4a"
+    },
+    {
+     "file": "b01-code-2.mp3",
+     "key": "Goal: Check that the compiler is installed, by running it with no files.",
+     "spoken": "Goal: Check that the compiler is installed, by running it with no files.",
+     "hash": "cd5022912e7cdeae"
+    },
+    {
+     "file": "b01-code-3.mp3",
+     "key": "Step 1. You type cl and press Enter. cl is the name of Microsoft's C compiler.",
+     "spoken": "Step 1. You type C L and press Enter. C L is the name of Microsoft's C compiler.",
+     "hash": "e0437950f205c46a"
+    },
+    {
+     "file": "b01-code-4.mp3",
+     "key": "Step 2. Windows looks for a program called cl.exe and runs it. Input: nothing, because you gave it no file names.",
+     "spoken": "Step 2. Windows looks for a program called C L dot E X E and runs it. Input: nothing, because you gave it no file names.",
+     "hash": "bcc984de2ba252ef"
+    },
+    {
+     "file": "b01-code-5.mp3",
+     "key": "Step 3. Output, first line: its full name, the Microsoft C and C++ Optimizing Compiler, then its version and its target, x64. This proves the compiler is installed.",
+     "spoken": "Step 3. Output, first line: its full name, the Microsoft C and C plus plus Optimizing Compiler, then its version and its target, x 64. This proves the compiler is installed.",
+     "hash": "0ea8f12120241974"
+    },
+    {
+     "file": "b01-code-6.mp3",
+     "key": "Step 4. Output, second line: how to use it. The word cl, then options, then the files to compile, then slash link and options for the linker.",
+     "spoken": "Step 4. Output, second line: how to use it. The word C L, then options, then the files to compile, then slash link and options for the linker.",
+     "hash": "064e44337c381386"
+    },
+    {
+     "file": "b01-code-7.mp3",
+     "key": "Step 5. Then it stops, because it had nothing to compile.",
+     "spoken": "Step 5. Then it stops, because it had nothing to compile.",
+     "hash": "a5ec8ea446b4a553"
+    },
+    {
+     "file": "b01-code-8.mp3",
+     "key": "Pattern: A tool with no input prints how to use it. That's a quick way to check that a tool is installed.",
+     "spoken": "Pattern: A tool with no input prints how to use it. That's a quick way to check that a tool is installed.",
+     "hash": "c8c59627936bffd8"
+    },
+    {
+     "file": "b01-code-9.mp3",
+     "key": "Try it in your head: You type link instead of cl. What do you expect to see?",
+     "spoken": "Try it in your head: You type link instead of C L. What do you expect to see?",
+     "hash": "31b9ccb7a595a0ad"
+    },
+    {
+     "file": "b01-code-10.mp3",
+     "key": "The version number tells you which compiler you have. The usage line already hints at the two stages: cl compiles, and anything after /link is handed to the linker.",
+     "spoken": "The version number tells you which compiler you have. The usage line already hints at the two stages: C L compiles, and anything after slash link is handed to the linker.",
+     "hash": "8362d9259aae531b"
+    }
+   ]
+  },
+  "b02": {
+   "explain": [
+    {
+     "file": "b02-explain-1.mp3",
+     "key": "The idea in one sentence: A project is a list of plain-text source files plus settings, and on Windows it's built as either a console program or a windowed program.",
+     "spoken": "The idea in one sentence: A project is a list of plain-text source files plus settings, and on Windows it's built as either a console program or a windowed program.",
+     "hash": "ae78538b43dc3849"
+    },
+    {
+     "file": "b02-explain-2.mp3",
+     "key": "Real-life picture: A solution is a binder, each project in it is a recipe card, and the .cpp files are the plain-paper pages of the recipe.",
+     "spoken": "Real-life picture: A solution is a binder, each project in it is a recipe card, and the dot C P P files are the plain-paper pages of the recipe.",
+     "hash": "a0eb1010f0333783"
+    },
+    {
+     "file": "b02-explain-3.mp3",
+     "key": "Console vs. windowed: the \"subsystem\"",
+     "spoken": "Console vs. windowed: the \"subsystem\"",
+     "hash": "745998d27adbc24f"
+    },
+    {
+     "file": "b02-explain-4.mp3",
+     "key": "Every Windows .exe carries a flag in its header called the subsystem. CONSOLE means \"give me a text console window when I start\". WINDOWS means \"don't, I'll make my own windows\". This flag is what Casey means by \"you have to build an app as one or the other\". The two project types in the wizard mostly just set this flag, and with it which startup function name the linker expects. That second point turns into a real error in block 5.",
+     "spoken": "Every Windows dot E X E carries a flag in its header called the subsystem. console means \"give me a text console window when I start\". windows means \"don't, I'll make my own windows\". This flag is what Casey means by \"you have to build an app as one or the other\". The two project types in the wizard mostly just set this flag, and with it which startup function name the linker expects. That second point turns into a real error in block 5.",
+     "hash": "91f5129842c17f46"
+    },
+    {
+     "file": "b02-explain-5.mp3",
+     "key": "Solution vs. project",
+     "spoken": "Solution vs. project",
+     "hash": "66ca54c66c8e30f8"
+    },
+    {
+     "file": "b02-explain-6.mp3",
+     "key": "A project describes how to build one output (one .exe or one library): which files and which settings.",
+     "spoken": "A project describes how to build one output (one dot E X E or one library): which files and which settings.",
+     "hash": "33c62478cb2167aa"
+    },
+    {
+     "file": "b02-explain-7.mp3",
+     "key": "A solution is a container of projects. The bold one is the startup project, the one that runs when you press Start.",
+     "spoken": "A solution is a container of projects. The bold one is the startup project, the one that runs when you press Start.",
+     "hash": "0ab66723fdcf462c"
+    },
+    {
+     "file": "b02-explain-8.mp3",
+     "key": "For a one-person game, one solution holding one project is all you need. Casey says he'll soon stop using this machinery entirely.",
+     "spoken": "For a one-person game, one solution holding one project is all you need. Casey says he'll soon stop using this machinery entirely.",
+     "hash": "078fbd51a8b9d8d8"
+    },
+    {
+     "file": "b02-explain-9.mp3",
+     "key": "Source code is plain text",
+     "spoken": "Source code is plain text",
+     "hash": "29f4bfda9a8c075c"
+    },
+    {
+     "file": "b02-explain-10.mp3",
+     "key": "A .cpp file is a sequence of characters, the same kind of file Notepad saves. Everything the tools do starts from reading that text. Nothing is hidden in the file. The colors you see in the editor are added by the editor and aren't stored anywhere.",
+     "spoken": "A dot C P P file is a sequence of characters, the same kind of file Notepad saves. Everything the tools do starts from reading that text. Nothing is hidden in the file. The colors you see in the editor are added by the editor and aren't stored anywhere.",
+     "hash": "7e6c15431c5f09a6"
+    },
+    {
+     "file": "b02-explain-11.mp3",
+     "key": ".cpp vs .c",
+     "spoken": "dot C P P vs .c",
+     "hash": "aa428681a30f27bb"
+    },
+    {
+     "file": "b02-explain-12.mp3",
+     "key": "Casey names the file test.cpp, so the compiler treats it as C++. Handmade Hero is written in a \"C-style\" subset of C++: almost entirely plain C, using a few C++ conveniences. That matters once in today's video (block 11), when C++ is stricter than old C.",
+     "spoken": "Casey names the file test dot C P P, so the compiler treats it as C plus plus. Handmade Hero is written in a \"C-style\" subset of C plus plus: almost entirely plain C, using a few C plus plus conveniences. That matters once in today's video (block 11), when C plus plus is stricter than old C.",
+     "hash": "c2bb13b8908e0f4a"
+    },
+    {
+     "file": "b02-explain-13.mp3",
+     "key": "Common beginner mistake: Making a Console project and then wondering why the linker wants main instead of WinMain. The subsystem setting doesn't match your code.",
+     "spoken": "Common beginner mistake: Making a Console project and then wondering why the linker wants main instead of Win Main. The subsystem setting doesn't match your code.",
+     "hash": "fb9623366b8fc6db"
+    }
+   ],
+   "code": [
+    {
+     "file": "b02-code-1.mp3",
+     "key": "Nothing compiles yet. This is the state of test.cpp when Casey first hits Build (around 12:20): just text with no meaning to C.",
+     "spoken": "Nothing compiles yet. This is the state of test dot C P P when Casey first hits Build (around 12 minutes 20): just text with no meaning to C.",
+     "hash": "e303af05f54bf298"
+    },
+    {
+     "file": "b02-code-2.mp3",
+     "key": "Goal: See that a source file is only plain text until the compiler reads it.",
+     "spoken": "Goal: See that a source file is only plain text until the compiler reads it.",
+     "hash": "5e94bc849f5ebd40"
+    },
+    {
+     "file": "b02-code-3.mp3",
+     "key": "Step 1. The file test.cpp holds one line: this is some text in a file.",
+     "spoken": "Step 1. The file test dot C P P holds one line: this is some text in a file.",
+     "hash": "95d51f903c9c3a74"
+    },
+    {
+     "file": "b02-code-4.mp3",
+     "key": "Step 2. The editor saves it as plain characters. Nothing checks it yet.",
+     "spoken": "Step 2. The editor saves it as plain characters. Nothing checks it yet.",
+     "hash": "7d179771f0929de1"
+    },
+    {
+     "file": "b02-code-5.mp3",
+     "key": "Step 3. The .cpp at the end of the name tells Visual Studio to give this file to the C compiler when you build.",
+     "spoken": "Step 3. The dot C P P at the end of the name tells Visual Studio to give this file to the C compiler when you build.",
+     "hash": "f1577060234fd520"
+    },
+    {
+     "file": "b02-code-6.mp3",
+     "key": "Step 4. This line isn't C, so the compiler will reject it. Part 3 shows that error.",
+     "spoken": "Step 4. This line isn't C, so the compiler will reject it. Part 3 shows that error.",
+     "hash": "c71bd675cfe4badd"
+    },
+    {
+     "file": "b02-code-7.mp3",
+     "key": "Try it in your head: You build now. Does the compiler complain about the whole file, or about one line? Which line?",
+     "spoken": "Try it in your head: You build now. Does the compiler complain about the whole file, or about one line? Which line?",
+     "hash": "33f34e563fbab23d"
+    },
+    {
+     "file": "b02-code-8.mp3",
+     "key": "Keep this file. In the next block it produces your first compiler error, on purpose.",
+     "spoken": "Keep this file. In the next block it produces your first compiler error, on purpose.",
+     "hash": "16cd2e0140883e63"
+    }
+   ]
+  },
+  "b03": {
+   "explain": [
+    {
+     "file": "b03-explain-1.mp3",
+     "key": "The idea in one sentence: Compiling translates human-readable C text into machine code for one specific kind of CPU.",
+     "spoken": "The idea in one sentence: Compiling translates human-readable C text into machine code for one specific kind of CPU.",
+     "hash": "6a04ac2399d18c03"
+    },
+    {
+     "file": "b03-explain-2.mp3",
+     "key": "Real-life picture: Compiling is like translating a book: the same story becomes French for x64 or Japanese for ARM. A French reader can't read the Japanese edition.",
+     "spoken": "Real-life picture: Compiling is like translating a book: the same story becomes French for x 64 or Japanese for ARM. A French reader can't read the Japanese edition.",
+     "hash": "e12b6847fe17f0b0"
+    },
+    {
+     "file": "b03-explain-3.mp3",
+     "key": "Configuration = which kind of build",
+     "spoken": "Configuration is which kind of build",
+     "hash": "e9c25963735444ed"
+    },
+    {
+     "file": "b03-explain-4.mp3",
+     "key": "The same source can be built in several ways:",
+     "spoken": "The same source can be built in several ways:",
+     "hash": "dcc7f17421fd1773"
+    },
+    {
+     "file": "b03-explain-5.mp3",
+     "key": "Debug: no optimization, extra checks, full debug information. Each line of C maps simply to machine code, so the debugger can follow along.",
+     "spoken": "Debug: no optimization, extra checks, full debug information. Each line of C maps simply to machine code, so the debugger can follow along.",
+     "hash": "5fa609a22fa6b5aa"
+    },
+    {
+     "file": "b03-explain-6.mp3",
+     "key": "Release (Casey also says \"Retail\"): optimized, fast, much harder to step through.",
+     "spoken": "Release (Casey also says \"Retail\"): optimized, fast, much harder to step through.",
+     "hash": "065d3cf84665340a"
+    },
+    {
+     "file": "b03-explain-7.mp3",
+     "key": "Platform: Win32 means 32-bit x86 code. x64 means 64-bit code. Same C, different machine instructions.",
+     "spoken": "Platform: Win 32 means 32-bit x 86 code. x 64 means 64-bit code. Same C, different machine instructions.",
+     "hash": "9d5e6aa7d1f1bbb3"
+    },
+    {
+     "file": "b03-explain-8.mp3",
+     "key": "What a compiler does",
+     "spoken": "What a compiler does",
+     "hash": "3e0c01414ff17ea4"
+    },
+    {
+     "file": "b03-explain-9.mp3",
+     "key": "Casey's definition: compilation means moving something from one format to another, like translating. A C compiler does three things:",
+     "spoken": "Casey's definition: compilation means moving something from one format to another, like translating. A C compiler does three things:",
+     "hash": "8025f64c8f9a638a"
+    },
+    {
+     "file": "b03-explain-10.mp3",
+     "key": "Parse: read the characters and work out the structure (this is a function, this is a call…).",
+     "spoken": "Parse: read the characters and work out the structure (this is a function, this is a call…).",
+     "hash": "5160b470ea0e2823"
+    },
+    {
+     "file": "b03-explain-11.mp3",
+     "key": "Understand: check the meaning (does that name exist? do the types fit?). Compile errors come from steps 1 and 2.",
+     "spoken": "Understand: check the meaning (does that name exist? do the types fit?). Compile errors come from steps 1 and 2.",
+     "hash": "34037308bb1ebc87"
+    },
+    {
+     "file": "b03-explain-12.mp3",
+     "key": "Emit: write out machine code, numbers that a particular CPU decodes as instructions.",
+     "spoken": "Emit: write out machine code, numbers that a particular CPU decodes as instructions.",
+     "hash": "a495e2b32f620241"
+    },
+    {
+     "file": "b03-explain-13.mp3",
+     "key": "Prerequisite, explained now: what is \"machine code\" for \"a specific CPU\"? A CPU only does a small set of simple operations: copy this number, add these two, jump over there. Each operation is encoded as a few bytes. x64 chips (Intel, AMD) and ARM chips (phones, Apple M-series) use different encodings, so the same C produces different bytes for each. That's why the compiler has to know its target. You'll read this code, called assembly, on Intro to C Day 2.",
+     "spoken": "Prerequisite, explained now: what is \"machine code\" for \"a specific CPU\"? A CPU only does a small set of simple operations: copy this number, add these two, jump over there. Each operation is encoded as a few bytes. x 64 chips (Intel, AMD) and ARM chips (phones, Apple M-series) use different encodings, so the same C produces different bytes for each. That's why the compiler has to know its target. You'll read this code, called assembly, on Intro to C Day 2.",
+     "hash": "8da6bc63a78f5299"
+    },
+    {
+     "file": "b03-explain-14.mp3",
+     "key": "Common beginner mistake: Thinking an .exe built for x64 runs on any computer, for example an ARM Mac.",
+     "spoken": "Common beginner mistake: Thinking an dot E X E built for x 64 runs on any computer, for example an ARM Mac.",
+     "hash": "571a566b512a85cb"
+    }
+   ],
+   "code": [
+    {
+     "file": "b03-code-1.mp3",
+     "key": "What Casey's output window shows, annotated (the wording differs a little in modern VS):",
+     "spoken": "What Casey's output window shows, annotated (the wording differs a little in modern Visual Studio):",
+     "hash": "869cf9554215bc1c"
+    },
+    {
+     "file": "b03-code-2.mp3",
+     "key": "Goal: Read the build output line by line, to find what went wrong and which program found it.",
+     "spoken": "Goal: Read the build output line by line, to find what went wrong and which program found it.",
+     "hash": "a4a791830d4bb8fe"
+    },
+    {
+     "file": "b03-code-3.mp3",
+     "key": "Step 1. Line 1: build started. It names the project, test, and which build: Debug, for the Win32 platform.",
+     "spoken": "Step 1. Line 1: build started. It names the project, test, and which build: Debug, for the Win 32 platform.",
+     "hash": "b3612f26d8efa9d5"
+    },
+    {
+     "file": "b03-code-4.mp3",
+     "key": "Step 2. Line 2: Compiling. The compiler starts translating source files.",
+     "spoken": "Step 2. Line 2: Compiling. The compiler starts translating source files.",
+     "hash": "4e5233863f4301c0"
+    },
+    {
+     "file": "b03-code-5.mp3",
+     "key": "Step 3. Line 3: test.cpp. The file it is translating right now.",
+     "spoken": "Step 3. Line 3: test dot C P P. The file it is translating right now.",
+     "hash": "f07ed98ab53a57be"
+    },
+    {
+     "file": "b03-code-6.mp3",
+     "key": "Step 4. Line 4: an error in test.cpp, line 1. The error code starts with C, so the compiler found it. It's a syntax error: the text isn't valid C.",
+     "spoken": "Step 4. Line 4: an error in test dot C P P, line 1. The error code starts with C, so the compiler found it. It's a syntax error: the text isn't valid C.",
+     "hash": "5245cb1f206271f0"
+    },
+    {
+     "file": "b03-code-7.mp3",
+     "key": "Step 5. Last line: the summary. 0 succeeded, 1 failed. No program was made.",
+     "spoken": "Step 5. Last line: the summary. 0 succeeded, 1 failed. No program was made.",
+     "hash": "b1940bdad5a8ed0f"
+    },
+    {
+     "file": "b03-code-8.mp3",
+     "key": "Pattern: Read an error by its first letters. C and a number means a compiler error.",
+     "spoken": "Pattern: Read an error by its first letters. C and a number means a compiler error.",
+     "hash": "29315c5b28322751"
+    },
+    {
+     "file": "b03-code-9.mp3",
+     "key": "Try it in your head: Your file has three lines of plain text. Which line number does the first error point at?",
+     "spoken": "Try it in your head: Your file has three lines of plain text. Which line number does the first error point at?",
+     "hash": "3dc69de5c9a415c7"
+    },
+    {
+     "file": "b03-code-10.mp3",
+     "key": "Learn the C in C2146. In block 5 you'll see an LNK prefix instead, and that one letter tells you which stage failed.",
+     "spoken": "Learn the C in C 2146. In block 5 you'll see an L N K prefix instead, and that one letter tells you which stage failed.",
+     "hash": "52b1902bc8df8955"
+    }
+   ]
+  },
+  "b04": {
+   "explain": [
+    {
+     "file": "b04-explain-1.mp3",
+     "key": "The idea in one sentence: One chip holds several cores, each core can run more than one hardware thread, and Windows counts each thread as a logical processor.",
+     "spoken": "The idea in one sentence: One chip holds several cores, each core can run more than one hardware thread, and Windows counts each thread as a logical processor.",
+     "hash": "bafaa5a4aa087a81"
+    },
+    {
+     "file": "b04-explain-2.mp3",
+     "key": "Real-life picture: A core is a cook. Hyperthreading gives one cook two order tickets: while one dish waits in the oven, the cook works on the other. Two tickets, still one cook.",
+     "spoken": "Real-life picture: A core is a cook. Hyperthreading gives one cook two order tickets: while one dish waits in the oven, the cook works on the other. Two tickets, still one cook.",
+     "hash": "39f1c9f7e16fad45"
+    },
+    {
+     "file": "b04-explain-3.mp3",
+     "key": "The hierarchy",
+     "spoken": "The hierarchy",
+     "hash": "a0e61a75cb3f725f"
+    },
+    {
+     "file": "b04-explain-4.mp3",
+     "key": "Goal: See where Windows' logical processors come from, from the biggest part to the smallest.",
+     "spoken": "Goal: See where Windows' logical processors come from, from the biggest part to the smallest.",
+     "hash": "c78d74f728cbcb0f"
+    },
+    {
+     "file": "b04-explain-5.mp3",
+     "key": "Step 1. Start with the whole machine.",
+     "spoken": "Step 1. Start with the whole machine.",
+     "hash": "f375bba863c6f7f5"
+    },
+    {
+     "file": "b04-explain-6.mp3",
+     "key": "Step 2. The machine has one or more sockets. Each socket holds one physical CPU chip. Casey's machine has two.",
+     "spoken": "Step 2. The machine has one or more sockets. Each socket holds one physical CPU chip. Casey's machine has two.",
+     "hash": "8f6ecb092b75c2d1"
+    },
+    {
+     "file": "b04-explain-7.mp3",
+     "key": "Step 3. Each chip has several cores. A core is a full engine that runs instructions, with its own math units and memory units.",
+     "spoken": "Step 3. Each chip has several cores. A core is a full engine that runs instructions, with its own math units and memory units.",
+     "hash": "3b855f3afd8daf49"
+    },
+    {
+     "file": "b04-explain-8.mp3",
+     "key": "Step 4. Each core can hold two hardware threads, also called hyperthreads. A hardware thread is one saved state of what the core is running.",
+     "spoken": "Step 4. Each core can hold two hardware threads, also called hyperthreads. A hardware thread is one saved state of what the core is running.",
+     "hash": "a3be5fe175c3395e"
+    },
+    {
+     "file": "b04-explain-9.mp3",
+     "key": "Step 5. Windows counts each hardware thread as one logical processor.",
+     "spoken": "Step 5. Windows counts each hardware thread as one logical processor.",
+     "hash": "3f9a131d9d42986a"
+    },
+    {
+     "file": "b04-explain-10.mp3",
+     "key": "Pattern: Count from the top down: machine, socket, core, hardware thread.",
+     "spoken": "Pattern: Count from the top down: machine, socket, core, hardware thread.",
+     "hash": "1ad32c9dc50240f8"
+    },
+    {
+     "file": "b04-explain-11.mp3",
+     "key": "Try it in your head: A machine has one chip with 8 cores and 2 threads per core. How many logical processors does Windows show?",
+     "spoken": "Try it in your head: A machine has one chip with 8 cores and 2 threads per core. How many logical processors does Windows show?",
+     "hash": "3989874558fada8c"
+    },
+    {
+     "file": "b04-explain-12.mp3",
+     "key": "Casey's machine has two Xeon W5580 chips. Each has 4 cores, and each core runs 2 hyperthreads, so 2 × 4 × 2 = 16 logical processors: the 16 little graphs in his Task Manager.",
+     "spoken": "Casey's machine has two Xeon W5580 chips. Each has 4 cores, and each core runs 2 hyperthreads, so 2 times 4 times 2 equals 16 logical processors: the 16 little graphs in his Task Manager.",
+     "hash": "af645617b9316611"
+    },
+    {
+     "file": "b04-explain-13.mp3",
+     "key": "One correction to keep in mind",
+     "spoken": "One correction to keep in mind",
+     "hash": "e2104cd1700c6edd"
+    },
+    {
+     "file": "b04-explain-14.mp3",
+     "key": "Casey describes a hyperthreaded core as running only one of its states \"at a given time\" and switching quickly. That's a fair first picture, and he says there's \"tons more to talk about\". On modern chips, instructions from both hardware threads are usually in flight in the same core at the same time, sharing its execution units. When one thread stalls (for example, waiting on memory), the other keeps those units busy. That's why a hyperthread doesn't count as a whole extra core: two threads on one core usually finish somewhat faster than one, but nowhere near twice as fast.",
+     "spoken": "Casey describes a hyperthreaded core as running only one of its states \"at a given time\" and switching quickly. That's a fair first picture, and he says there's \"tons more to talk about\". On modern chips, instructions from both hardware threads are usually in flight in the same core at the same time, sharing its execution units. When one thread stalls (for example, waiting on memory), the other keeps those units busy. That's why a hyperthread doesn't count as a whole extra core: two threads on one core usually finish somewhat faster than one, but nowhere near twice as fast.",
+     "hash": "a800f9773a154e1c"
+    },
+    {
+     "file": "b04-explain-15.mp3",
+     "key": "Back to the build",
+     "spoken": "Back to the build",
+     "hash": "9a2f926e6097ff1b"
+    },
+    {
+     "file": "b04-explain-16.mp3",
+     "key": "Compiling many files is easy to split up. Each .cpp can be compiled on its own (block 5 shows why), so the compiler can farm files out to different logical processors. The 1> prefix identifies which project build or job produced the line. With one file you only ever see 1>.",
+     "spoken": "Compiling many files is easy to split up. Each dot C P P can be compiled on its own (block 5 shows why), so the compiler can farm files out to different logical processors. The 1 prefix identifies which project build or job produced the line. With one file you only ever see 1 .",
+     "hash": "eb4ce9ade527d7d1"
+    },
+    {
+     "file": "b04-explain-17.mp3",
+     "key": "Common beginner mistake: Thinking 16 logical processors means 16 times the speed. Hyperthreads share one core's hardware.",
+     "spoken": "Common beginner mistake: Thinking 16 logical processors means 16 times the speed. Hyperthreads share one core's hardware.",
+     "hash": "3c3fd3020356e4f7"
+    }
+   ],
+   "code": [
+    {
+     "file": "b04-code-1.mp3",
+     "key": "No C code here. This is the \"code\" of the topic: the multiplication that turns Task Manager's numbers into a picture of your hardware.",
+     "spoken": "No C code here. This is the \"code\" of the topic: the multiplication that turns Task Manager's numbers into a picture of your hardware.",
+     "hash": "d0874b5c2fcb2bda"
+    },
+    {
+     "file": "b04-code-2.mp3",
+     "key": "Goal: Work out how many logical processors a machine has.",
+     "spoken": "Goal: Work out how many logical processors a machine has.",
+     "hash": "15a5006d74233b6b"
+    },
+    {
+     "file": "b04-code-3.mp3",
+     "key": "Step 1. Inputs: the number of sockets, the cores in each socket, and the threads in each core.",
+     "spoken": "Step 1. Inputs: the number of sockets, the cores in each socket, and the threads in each core.",
+     "hash": "8b6b78de2897cdff"
+    },
+    {
+     "file": "b04-code-4.mp3",
+     "key": "Step 2. Multiply the three numbers. The result is the number of logical processors.",
+     "spoken": "Step 2. Multiply the three numbers. The result is the number of logical processors.",
+     "hash": "4093de317c5169a0"
+    },
+    {
+     "file": "b04-code-5.mp3",
+     "key": "Step 3. Casey's machine: 2 sockets, times 4 cores, times 2 threads, gives 16.",
+     "spoken": "Step 3. Casey's machine: 2 sockets, times 4 cores, times 2 threads, gives 16.",
+     "hash": "0c0d17cdda06bed7"
+    },
+    {
+     "file": "b04-code-6.mp3",
+     "key": "Step 4. Your machine: read the three numbers in Task Manager and fill them in.",
+     "spoken": "Step 4. Your machine: read the three numbers in Task Manager and fill them in.",
+     "hash": "52c8e7cc8fc9db6d"
+    },
+    {
+     "file": "b04-code-7.mp3",
+     "key": "Pattern: Nested counts multiply, because each level repeats everything below it.",
+     "spoken": "Pattern: Nested counts multiply, because each level repeats everything below it.",
+     "hash": "bf5b4655ac11f59b"
+    },
+    {
+     "file": "b04-code-8.mp3",
+     "key": "Try it in your head: Casey turns hyperthreading off. How many logical processors are left?",
+     "spoken": "Try it in your head: Casey turns hyperthreading off. How many logical processors are left?",
+     "hash": "4f9ae5f4786c4532"
+    }
+   ]
+  },
+  "b05": {
+   "explain": [
+    {
+     "file": "b05-explain-1.mp3",
+     "key": "The idea in one sentence: The compiler turns each .cpp into an object file on its own; the linker joins them, connects the names between them, and writes the .exe.",
+     "spoken": "The idea in one sentence: The compiler turns each dot C P P into an object file on its own; the linker joins them, connects the names between them, and writes the dot E X E.",
+     "hash": "67e44829f5dec492"
+    },
+    {
+     "file": "b05-explain-2.mp3",
+     "key": "Real-life picture: Each chapter of a book is written separately, with notes like \"see chapter 7\". The linker is the editor who binds the chapters and fills in the real page numbers.",
+     "spoken": "Real-life picture: Each chapter of a book is written separately, with notes like \"see chapter 7\". The linker is the editor who binds the chapters and fills in the real page numbers.",
+     "hash": "6c61fdc0c97c9dc4"
+    },
+    {
+     "file": "b05-explain-3.mp3",
+     "key": "Two stages, two kinds of error",
+     "spoken": "Two stages, two kinds of error",
+     "hash": "d485fa02bf6ef8e4"
+    },
+    {
+     "file": "b05-explain-4.mp3",
+     "key": "Goal: See how several source files become one program.",
+     "spoken": "Goal: See how several source files become one program.",
+     "hash": "29419a4818c7e6f6"
+    },
+    {
+     "file": "b05-explain-5.mp3",
+     "key": "Step 1. Start with three source files: test.cpp, foo.cpp and bar.cpp.",
+     "spoken": "Step 1. Start with three source files: test dot C P P, foo dot C P P and bar dot C P P.",
+     "hash": "e379a79f02a1a9dd"
+    },
+    {
+     "file": "b05-explain-6.mp3",
+     "key": "Step 2. The compiler takes each file on its own and turns it into an object file: test.obj, foo.obj and bar.obj.",
+     "spoken": "Step 2. The compiler takes each file on its own and turns it into an object file: test dot O B J, foo dot O B J and bar dot O B J.",
+     "hash": "9809c560d0f02ee0"
+    },
+    {
+     "file": "b05-explain-7.mp3",
+     "key": "Step 3. The linker takes all the object files, plus libraries such as the C runtime and kernel32.lib.",
+     "spoken": "Step 3. The linker takes all the object files, plus libraries such as the C runtime and kernel 32 dot L I B.",
+     "hash": "59cd78986815119a"
+    },
+    {
+     "file": "b05-explain-8.mp3",
+     "key": "Step 4. It joins them into one program, test.exe.",
+     "spoken": "Step 4. It joins them into one program, test dot E X E.",
+     "hash": "210933edcd55bb48"
+    },
+    {
+     "file": "b05-explain-9.mp3",
+     "key": "Pattern: Compile each file separately, then link everything once.",
+     "spoken": "Pattern: Compile each file separately, then link everything once.",
+     "hash": "d53ec15cc31b7cd9"
+    },
+    {
+     "file": "b05-explain-10.mp3",
+     "key": "Try it in your head: You change only foo.cpp. Which file must be compiled again before linking?",
+     "spoken": "Try it in your head: You change only foo dot C P P. Which file must be compiled again before linking?",
+     "hash": "19fdb9e6cef3335d"
+    },
+    {
+     "file": "b05-explain-11.mp3",
+     "key": "Compiler: works on one .cpp at a time, a translation unit. Output: an object file (.obj) holding mostly finished machine code plus a list of names it defines and names it needs but couldn't find in this file.",
+     "spoken": "Compiler: works on one dot C P P at a time, a translation unit. Output: an object file ( dot O B J) holding mostly finished machine code plus a list of names it defines and names it needs but couldn't find in this file.",
+     "hash": "2118e198877903d0"
+    },
+    {
+     "file": "b05-explain-12.mp3",
+     "key": "Linker: reads all the .obj files and libraries, matches every \"needed\" name to a \"defined\" name, patches the real addresses into the code, and writes the .exe.",
+     "spoken": "Linker: reads all the dot O B J files and libraries, matches every \"needed\" name to a \"defined\" name, patches the real addresses into the code, and writes the dot E X E.",
+     "hash": "f6862cc65828bc33"
+    },
+    {
+     "file": "b05-explain-13.mp3",
+     "key": "Why split it? Casey's reason: if you change one file out of hundreds, only that file is recompiled. The linker then quickly stitches the old and new .obj files together. He adds that it's partly for legacy reasons. Handmade Hero later compiles everything as a single translation unit (a \"unity build\"), because for one person's project that's simply faster.",
+     "spoken": "Why split it? Casey's reason: if you change one file out of hundreds, only that file is recompiled. The linker then quickly stitches the old and new dot O B J files together. He adds that it's partly for legacy reasons. Handmade Hero later compiles everything as a single translation unit (a \"unity build\"), because for one person's project that's simply faster.",
+     "hash": "5dae17e88fc8bb1f"
+    },
+    {
+     "file": "b05-explain-14.mp3",
+     "key": "Reading the error",
+     "spoken": "Reading the error",
+     "hash": "a6bd2eb40636fcb8"
+    },
+    {
+     "file": "b05-explain-15.mp3",
+     "key": "unresolved external symbol _WinMain@16 referenced in function _tmainCRTStartup",
+     "spoken": "unresolved external symbol Win Main at 16 referenced in function tmain CRTStartup",
+     "hash": "f7bfc7fb4f22fb3d"
+    },
+    {
+     "file": "b05-explain-16.mp3",
+     "key": "symbol: a name the linker deals in (a function or a global variable).",
+     "spoken": "symbol: a name the linker deals in (a function or a global variable).",
+     "hash": "27be7dba8ff1aedf"
+    },
+    {
+     "file": "b05-explain-17.mp3",
+     "key": "external: defined outside the translation unit that uses it.",
+     "spoken": "external: defined outside the translation unit that uses it.",
+     "hash": "0924d31384e4d6fe"
+    },
+    {
+     "file": "b05-explain-18.mp3",
+     "key": "unresolved: the linker searched every .obj and library and found no definition.",
+     "spoken": "unresolved: the linker searched every dot O B J and library and found no definition.",
+     "hash": "a3c67d82c0f59853"
+    },
+    {
+     "file": "b05-explain-19.mp3",
+     "key": "referenced in _tmainCRTStartup: someone else's code (startup code that comes with the compiler) calls WinMain. You didn't write that call. Casey promises at 35:40 that the reason is a surprise for Day 2.",
+     "spoken": "referenced in tmain CRTStartup: someone else's code (startup code that comes with the compiler) calls Win Main. You didn't write that call. Casey promises at 35 minutes 40 that the reason is a surprise for Day 2.",
+     "hash": "64c6042d8008b221"
+    },
+    {
+     "file": "b05-explain-20.mp3",
+     "key": "Prerequisite, explained now: what's the \"_\" and \"@16\"? On 32-bit Windows, functions using this calling style get their names decorated: a leading underscore, plus @ and the number of bytes of arguments. WinMain takes 4 arguments × 4 bytes = 16. That's all you need today. Calling conventions themselves are parked (block 10). On an x64 build there's no decoration, so modern VS prints something like unresolved external symbol WinMain referenced in function \"int __cdecl invoke_main(void)\". Same error, newer startup code.",
+     "spoken": "Prerequisite, explained now: what's the underscore and \" at 16\"? On 32-bit Windows, functions using this calling style get their names decorated: a leading underscore, plus @ and the number of bytes of arguments. Win Main takes 4 arguments times 4 bytes is 16. That's all you need today. Calling conventions themselves are parked (block 10). On an x 64 build there's no decoration, so modern Visual Studio prints something like unresolved external symbol Win Main referenced in function \"int cdecl invoke_main(void)\". Same error, newer startup code.",
+     "hash": "32f8cffb2eb30257"
+    },
+    {
+     "file": "b05-explain-21.mp3",
+     "key": "Common beginner mistake: Trying to fix a linker error (LNK…) by editing syntax. Linker errors are about a missing definition or library, not about how a line is written.",
+     "spoken": "Common beginner mistake: Trying to fix a linker error (L N K…) by editing syntax. Linker errors are about a missing definition or library, not about how a line is written.",
+     "hash": "d29a8fbb3767267c"
+    }
+   ],
+   "code": [
+    {
+     "file": "b05-code-1.mp3",
+     "key": "The \"rote code\" Casey types at 26:02. It's the smallest thing that gets past the compiler:",
+     "spoken": "The \"rote code\" Casey types at 26 minutes 2. It's the smallest thing that gets past the compiler:",
+     "hash": "d4baeb9fba4db75a"
+    },
+    {
+     "file": "b05-code-2.mp3",
+     "key": "Goal: Write the smallest possible function, so there is something to compile.",
+     "spoken": "Goal: Write the smallest possible function, so there is something to compile.",
+     "hash": "a94facb9ff41b148"
+    },
+    {
+     "file": "b05-code-3.mp3",
+     "key": "Step 1. Define a function named foo. The two void words say it takes nothing and gives nothing back. Part 8 explains them.",
+     "spoken": "Step 1. Define a function named foo. The two void words say it takes nothing and gives nothing back. Part 8 explains them.",
+     "hash": "2feb44a8c411ffbe"
+    },
+    {
+     "file": "b05-code-4.mp3",
+     "key": "Step 2. The opening brace starts its body.",
+     "spoken": "Step 2. The opening brace starts its body.",
+     "hash": "5f01cd984564d487"
+    },
+    {
+     "file": "b05-code-5.mp3",
+     "key": "Step 3. The body is empty, so foo does nothing when it runs.",
+     "spoken": "Step 3. The body is empty, so foo does nothing when it runs.",
+     "hash": "725876d3dbf5aec2"
+    },
+    {
+     "file": "b05-code-6.mp3",
+     "key": "Step 4. The closing brace ends it. The compiler turns this file into an object file, test.obj.",
+     "spoken": "Step 4. The closing brace ends it. The compiler turns this file into an object file, test dot O B J.",
+     "hash": "ae22708c01a712a6"
+    },
+    {
+     "file": "b05-code-7.mp3",
+     "key": "Try it in your head: This file compiles with no errors. Will the program also link and run?",
+     "spoken": "Try it in your head: This file compiles with no errors. Will the program also link and run?",
+     "hash": "caf7164d055db1b5"
+    },
+    {
+     "file": "b05-code-8.mp3",
+     "key": "It's valid C, so test.obj gets made. But nothing in it is called WinMain, so the linker fails:",
+     "spoken": "It's valid C, so test dot O B J gets made. But nothing in it is called Win Main, so the linker fails:",
+     "hash": "4029c34bcac3a197"
+    },
+    {
+     "file": "b05-code-9.mp3",
+     "key": "Goal: Read a linker error, to find out what is missing and who wants it.",
+     "spoken": "Goal: Read a linker error, to find out what is missing and who wants it.",
+     "hash": "8b68bb50e78300c0"
+    },
+    {
+     "file": "b05-code-10.mp3",
+     "key": "Step 1. Line 1: Linking. Compiling worked, and now the linker joins the pieces.",
+     "spoken": "Step 1. Line 1: Linking. Compiling worked, and now the linker joins the pieces.",
+     "hash": "f0486f113aaad3dd"
+    },
+    {
+     "file": "b05-code-11.mp3",
+     "key": "Step 2. Line 2: error LNK2019, unresolved external symbol WinMain. The name has an underscore in front and at 16 at the end. Read it as WinMain. The linker can't find it in any object file or library.",
+     "spoken": "Step 2. Line 2: error L N K 2019, unresolved external symbol Win Main. The name has an underscore in front and at 16 at the end. Read it as Win Main. The linker can't find it in any object file or library.",
+     "hash": "cc5a77fbf9a03230"
+    },
+    {
+     "file": "b05-code-12.mp3",
+     "key": "Step 3. Who asked for WinMain? The startup code: the function tmainCRTStartup, in crtexew.obj, inside the library MSVCRTD.lib. That's the C runtime.",
+     "spoken": "Step 3. Who asked for Win Main? The startup code: the function T main C R T startup, in C R T E X E W dot O B J, inside the library M S V C R T D dot L I B. That's the C runtime.",
+     "hash": "c7ad311814fefac4"
+    },
+    {
+     "file": "b05-code-13.mp3",
+     "key": "Step 4. Last line: fatal error LNK1120, one unresolved external. No .exe is made.",
+     "spoken": "Step 4. Last line: fatal error L N K 1120, one unresolved external. No dot E X E is made.",
+     "hash": "677e326aa19218b6"
+    },
+    {
+     "file": "b05-code-14.mp3",
+     "key": "Pattern: An error code that starts with LNK comes from the linker: something was asked for, but not found anywhere.",
+     "spoken": "Pattern: An error code that starts with L N K comes from the linker: something was asked for, but not found anywhere.",
+     "hash": "8a8c3c109cd8bfcd"
+    },
+    {
+     "file": "b05-code-15.mp3",
+     "key": "Try it in your head: You add a function named WinMain to test.cpp and build again. Which of these lines go away?",
+     "spoken": "Try it in your head: You add a function named Win Main to test dot C P P and build again. Which of these lines go away?",
+     "hash": "dca4576223cab66f"
+    },
+    {
+     "file": "b05-code-16.mp3",
+     "key": "Notice crtexew.obj: the code that wants WinMain lives in a library you never asked for. That's the thread Casey pulls on Day 2.",
+     "spoken": "Notice C R T E X E W dot O B J: the code that wants Win Main lives in a library you never asked for. That's the thread Casey pulls on Day 2.",
+     "hash": "0de2635536294971"
+    }
+   ]
+  },
+  "b06": {
+   "explain": [
+    {
+     "file": "b06-explain-1.mp3",
+     "key": "The idea in one sentence: The linker writes the address of the start function (found by its name) into the .exe header, and Windows jumps there after loading the file.",
+     "spoken": "The idea in one sentence: The linker writes the address of the start function (found by its name) into the dot E X E header, and Windows jumps there after loading the file.",
+     "hash": "e2a84503f5d85137"
+    },
+    {
+     "file": "b06-explain-2.mp3",
+     "key": "Real-life picture: An .exe is a parcel with a label. Windows reads the label (the header), unpacks the parcel into memory, and the label says where to start reading.",
+     "spoken": "Real-life picture: An dot E X E is a parcel with a label. Windows reads the label (the header), unpacks the parcel into memory, and the label says where to start reading.",
+     "hash": "4921b57362e53a9c"
+    },
+    {
+     "file": "b06-explain-3.mp3",
+     "key": "The handoff problem",
+     "spoken": "The handoff problem",
+     "hash": "4c9c71961e6bf8b2"
+    },
+    {
+     "file": "b06-explain-4.mp3",
+     "key": "Linking (block 5) resolves every reference inside your program. But Windows was built years before your program, and the two were never linked together. So how does Windows know which byte of your code to run first?",
+     "spoken": "Linking (block 5) resolves every reference inside your program. But Windows was built years before your program, and the two were never linked together. So how does Windows know which byte of your code to run first?",
+     "hash": "e02cb38f40f1b872"
+    },
+    {
+     "file": "b06-explain-5.mp3",
+     "key": "Answer: the executable file format",
+     "spoken": "Answer: the executable file format",
+     "hash": "d2f4fec8df7c498c"
+    },
+    {
+     "file": "b06-explain-6.mp3",
+     "key": "An .exe is a file in a documented format, PE (Portable Executable) on Windows. Besides your machine code, its header carries data, including an AddressOfEntryPoint. Starting a program goes roughly like this:",
+     "spoken": "An dot E X E is a file in a documented format, PE (Portable Executable) on Windows. Besides your machine code, its header carries data, including an Address Of Entry Point. Starting a program goes roughly like this:",
+     "hash": "99520a5940a38e3a"
+    },
+    {
+     "file": "b06-explain-7.mp3",
+     "key": "Windows opens the .exe and reads its headers.",
+     "spoken": "Windows opens the dot E X E and reads its headers.",
+     "hash": "90d41182d3c7c7b5"
+    },
+    {
+     "file": "b06-explain-8.mp3",
+     "key": "It maps the code and data into memory and does some fix-up work that Casey parks.",
+     "spoken": "It maps the code and data into memory and does some fix-up work that Casey parks.",
+     "hash": "aeadfa9797f440d7"
+    },
+    {
+     "file": "b06-explain-9.mp3",
+     "key": "It sets the CPU running at image base + AddressOfEntryPoint.",
+     "spoken": "It sets the CPU running at image base plus Address Of Entry Point.",
+     "hash": "5a2868fb7d3641eb"
+    },
+    {
+     "file": "b06-explain-10.mp3",
+     "key": "The linker writes that address. To know which function you mean, it looks for a predefined name. For windowed programs, Casey says that name is WinMain. You can override it with a linker switch (/ENTRY, the \"Foo\" he mentions at 35:24), but almost nobody does.",
+     "spoken": "The linker writes that address. To know which function you mean, it looks for a predefined name. For windowed programs, Casey says that name is Win Main. You can override it with a linker switch ( slash entry, the \"Foo\" he mentions at 35 minutes 24), but almost nobody does.",
+     "hash": "1475e3d9076e4584"
+    },
+    {
+     "file": "b06-explain-11.mp3",
+     "key": "Turtles all the way down",
+     "spoken": "Turtles all the way down",
+     "hash": "51f23defe4b660e6"
+    },
+    {
+     "file": "b06-explain-12.mp3",
+     "key": "Only the very first code is truly self-contained. The firmware (BIOS or UEFI) loads the OS kernel. The kernel loads your program, using the same idea each time: a known format and a known place to start.",
+     "spoken": "Only the very first code is truly self-contained. The firmware (BIOS or UEFI) loads the OS kernel. The kernel loads your program, using the same idea each time: a known format and a known place to start.",
+     "hash": "6d61e836949e1c9e"
+    },
+    {
+     "file": "b06-explain-13.mp3",
+     "key": "Your new reference manual",
+     "spoken": "Your new reference manual",
+     "hash": "44fc204effaf360a"
+    },
+    {
+     "file": "b06-explain-14.mp3",
+     "key": "MSDN is now Microsoft Learn. Search \"WinMain function\" to find the page Casey reads. It's where you look up every Windows function in Handmade Hero. Casey's advice: nobody remembers this, everyone looks it up.",
+     "spoken": "M S D N is now Microsoft Learn. Search \"Win Main function\" to find the page Casey reads. It's where you look up every Windows function in Handmade Hero. Casey's advice: nobody remembers this, everyone looks it up.",
+     "hash": "5324e6b7ff157c11"
+    },
+    {
+     "file": "b06-explain-15.mp3",
+     "key": "Common beginner mistake: Believing WinMain is the very first code that runs. It isn't, and Casey explains why on Day 2.",
+     "spoken": "Common beginner mistake: Believing Win Main is the very first code that runs. It isn't, and Casey explains why on Day 2.",
+     "hash": "8a87a41ff213ebea"
+    }
+   ],
+   "code": [
+    {
+     "file": "b06-code-1.mp3",
+     "key": "The WinMain prototype as Casey copies it from MSDN at around 37:44, with the annotations he removes in block 7:",
+     "spoken": "The Win Main prototype as Casey copies it from M S D N at around 37 minutes 44, with the annotations he removes in block 7:",
+     "hash": "908465fc81a9e797"
+    },
+    {
+     "file": "b06-code-2.mp3",
+     "key": "Goal: Learn the exact shape of WinMain, the function the startup code calls first.",
+     "spoken": "Goal: Learn the exact shape of Win Main, the function the startup code calls first.",
+     "hash": "63cf4741694a91df"
+    },
+    {
+     "file": "b06-code-3.mp3",
+     "key": "Step 1. int: WinMain gives a whole number back when it ends. Part 10 explains what for.",
+     "spoken": "Step 1. int: Win Main gives a whole number back when it ends. Part 10 explains what for.",
+     "hash": "c90b30c753dab94d"
+    },
+    {
+     "file": "b06-code-4.mp3",
+     "key": "Step 2. CALLBACK: a word Windows needs on this function. Part 10 explains it too.",
+     "spoken": "Step 2. callback: a word Windows needs on this function. Part 10 explains it too.",
+     "hash": "d3745411a3680fdb"
+    },
+    {
+     "file": "b06-code-5.mp3",
+     "key": "Step 3. WinMain: the name the startup code looks for. That's why it must be spelled exactly like this.",
+     "spoken": "Step 3. Win Main: the name the startup code looks for. That's why it must be spelled exactly like this.",
+     "hash": "b16c35436f7b9bc2"
+    },
+    {
+     "file": "b06-code-6.mp3",
+     "key": "Step 4. Input 1, hInstance: a handle to this program.",
+     "spoken": "Step 4. Input 1, H instance: a handle to this program.",
+     "hash": "461015b7c5d42d5e"
+    },
+    {
+     "file": "b06-code-7.mp3",
+     "key": "Step 5. Input 2, hPrevInstance: a second instance handle.",
+     "spoken": "Step 5. Input 2, H previous instance: a second instance handle.",
+     "hash": "189d03937e77b6c6"
+    },
+    {
+     "file": "b06-code-8.mp3",
+     "key": "Step 6. Input 3, lpCmdLine: the text typed after the program's name.",
+     "spoken": "Step 6. Input 3, L P command line: the text typed after the program's name.",
+     "hash": "bde7dfc4ef36e4b3"
+    },
+    {
+     "file": "b06-code-9.mp3",
+     "key": "Step 7. Input 4, nCmdShow: a number.",
+     "spoken": "Step 7. Input 4, N command show: a number.",
+     "hash": "2d25b36aa0a1f2df"
+    },
+    {
+     "file": "b06-code-10.mp3",
+     "key": "Step 8. Each input starts with the mark In. Part 7 explains it.",
+     "spoken": "Step 8. Each input starts with the mark In. Part 7 explains it.",
+     "hash": "4c9702ac28623f6b"
+    },
+    {
+     "file": "b06-code-11.mp3",
+     "key": "Step 9. This line ends with a semicolon and has no body. In your file, you put a body in braces there instead.",
+     "spoken": "Step 9. This line ends with a semicolon and has no body. In your file, you put a body in braces there instead.",
+     "hash": "602801e0b45edf3d"
+    },
+    {
+     "file": "b06-code-12.mp3",
+     "key": "Pattern: Match the name and the inputs exactly, because other code calls this function by that name.",
+     "spoken": "Pattern: Match the name and the inputs exactly, because other code calls this function by that name.",
+     "hash": "4ce61c779de7ad82"
+    },
+    {
+     "file": "b06-code-13.mp3",
+     "key": "Try it in your head: You spell it Winmain, with a small m. Which program complains when you build?",
+     "spoken": "Try it in your head: You spell it Winmain, with a small m. Which program complains when you build?",
+     "hash": "a9c706552f2b7279"
+    },
+    {
+     "file": "b06-code-14.mp3",
+     "key": "Pasted into test.cpp with a body, then built: the compiler stops at HINSTANCE. Nothing has told it what that word means. Block 12 shows the fix, #include <windows.h>, which Casey adds quickly at 39:35.",
+     "spoken": "Pasted into test dot C P P with a body, then built: the compiler stops at H instance. Nothing has told it what that word means. Block 12 shows the fix, include windows dot H , which Casey adds quickly at 39 minutes 35.",
+     "hash": "611cebd8a4735d92"
+    }
+   ]
+  },
+  "b07": {
+   "explain": [
+    {
+     "file": "b07-explain-1.mp3",
+     "key": "The idea in one sentence: HINSTANCE and LPSTR are Windows's own type names written in Hungarian notation: H means handle, LP means (long) pointer.",
+     "spoken": "The idea in one sentence: H instance and L P S T R are Windows's own type names written in Hungarian notation: H means handle, LP means (long) pointer.",
+     "hash": "ab0dbe25512f1e75"
+    },
+    {
+     "file": "b07-explain-2.mp3",
+     "key": "Real-life picture: A handle is a coat-check ticket: the ticket isn't your coat, but you hand it back to get the coat.",
+     "spoken": "Real-life picture: A handle is a coat-check ticket: the ticket isn't your coat, but you hand it back to get the coat.",
+     "hash": "b72fe04f2ad2ef06"
+    },
+    {
+     "file": "b07-explain-3.mp3",
+     "key": "Where these words come from",
+     "spoken": "Where these words come from",
+     "hash": "fe7c1f59a3dc6553"
+    },
+    {
+     "file": "b07-explain-4.mp3",
+     "key": "Keywords like int and void belong to C itself. HINSTANCE, LPSTR and friends are names Windows defined in its header files. They're new names for basic types. If you don't know them, that's not a gap in your C. Windows made them up.",
+     "spoken": "Keywords like int and void belong to C itself. H instance, L P S T R and friends are names Windows defined in its header files. They're new names for basic types. If you don't know them, that's not a gap in your C. Windows made them up.",
+     "hash": "357b18d078874b01"
+    },
+    {
+     "file": "b07-explain-5.mp3",
+     "key": "Hungarian notation, decoded",
+     "spoken": "Hungarian notation, decoded",
+     "hash": "400ff1a27d9f8683"
+    },
+    {
+     "file": "b07-explain-6.mp3",
+     "key": "Goal: Decode Windows type names from their first letters.",
+     "spoken": "Goal: Decode Windows type names from their first letters.",
+     "hash": "9df211dc402403cd"
+    },
+    {
+     "file": "b07-explain-7.mp3",
+     "key": "Step 1. H means handle: an ID that you pass back to Windows. Examples: HINSTANCE and HWND.",
+     "spoken": "Step 1. H means handle: an ID that you pass back to Windows. Examples: H instance and H W N D.",
+     "hash": "3220aa6db516097b"
+    },
+    {
+     "file": "b07-explain-8.mp3",
+     "key": "Step 2. P means pointer: an address in memory. Example: PVOID.",
+     "spoken": "Step 2. P means pointer: an address in memory. Example: P void.",
+     "hash": "3c67efcc039d1383"
+    },
+    {
+     "file": "b07-explain-9.mp3",
+     "key": "Step 3. LP means long pointer. It comes from 16-bit Windows. Today it's just a pointer. Example: LPSTR.",
+     "spoken": "Step 3. LP means long pointer. It comes from 16-bit Windows. Today it's just a pointer. Example: L P S T R.",
+     "hash": "e67e381715517088"
+    },
+    {
+     "file": "b07-explain-10.mp3",
+     "key": "Step 4. STR means string: a run of characters. So LPSTR is a pointer to a string.",
+     "spoken": "Step 4. STR means string: a run of characters. So L P S T R is a pointer to a string.",
+     "hash": "efbdb2a041fec5b2"
+    },
+    {
+     "file": "b07-explain-11.mp3",
+     "key": "Step 5. n or i means a number. Example: nCmdShow.",
+     "spoken": "Step 5. n or i means a number. Example: N command show.",
+     "hash": "4eb31967f11d4416"
+    },
+    {
+     "file": "b07-explain-12.mp3",
+     "key": "Pattern: Read a name as prefix plus meaning. Casey calls this habit a bad idea, but you need it to read Windows code.",
+     "spoken": "Pattern: Read a name as prefix plus meaning. Casey calls this habit a bad idea, but you need it to read Windows code.",
+     "hash": "1d8ecfe3fc41828d"
+    },
+    {
+     "file": "b07-explain-13.mp3",
+     "key": "Try it in your head: Decode lpCmdLine from its first two letters. What kind of thing is it?",
+     "spoken": "Try it in your head: Decode L P command line from its first two letters. What kind of thing is it?",
+     "hash": "f2fc827b23817970"
+    },
+    {
+     "file": "b07-explain-14.mp3",
+     "key": "Casey wasn't sure what L meant. The answer is the 16-bit-era \"long\" or \"far\" pointer that could reach outside the current memory segment. That distinction disappeared in 32-bit Windows, but the names stayed. That's Casey's point: the prefixes go stale and just add noise.",
+     "spoken": "Casey wasn't sure what L meant. The answer is the 16-bit-era \"long\" or \"far\" pointer that could reach outside the current memory segment. That distinction disappeared in 32-bit Windows, but the names stayed. That's Casey's point: the prefixes go stale and just add noise.",
+     "hash": "f4e21c5632141189"
+    },
+    {
+     "file": "b07-explain-15.mp3",
+     "key": "Prerequisite, explained now: what's a handle? Windows owns the real data about your running program (its memory, its windows). It won't give you that data. It gives you a handle: a value meaning \"the thing Windows knows as #42\". You pass the handle back whenever you ask Windows to do something with that thing. It's like a coat-check ticket: useless on its own, and it means something only to the person who gave it to you.",
+     "spoken": "Prerequisite, explained now: what's a handle? Windows owns the real data about your running program (its memory, its windows). It won't give you that data. It gives you a handle: a value meaning \"the thing Windows knows as 42\". You pass the handle back whenever you ask Windows to do something with that thing. It's like a coat-check ticket: useless on its own, and it means something only to the person who gave it to you.",
+     "hash": "252681a0eaa9f4cd"
+    },
+    {
+     "file": "b07-explain-16.mp3",
+     "key": "The _In_ annotations",
+     "spoken": "The In annotations",
+     "hash": "4082a53eff5d9729"
+    },
+    {
+     "file": "b07-explain-17.mp3",
+     "key": "_In_ and _Out_ come from Microsoft's SAL (Source-code Annotation Language). They tell readers and analysis tools which way data flows: into Windows, or back out to you. They're not core C. Casey's \"middle compiler\" is the MIDL compiler, used for COM/OLE interface files. Casey deletes the annotations because the compiler rejected them in his setup. With windows.h included they usually compile, but they don't change what the program does.",
+     "spoken": "In and Out come from Microsoft's SAL (Source-code Annotation Language). They tell readers and analysis tools which way data flows: into Windows, or back out to you. They're not core C. Casey's \"middle compiler\" is the MIDL compiler, used for COM or OLE interface files. Casey deletes the annotations because the compiler rejected them in his setup. With windows dot H included they usually compile, but they don't change what the program does.",
+     "hash": "cc8380634ec23d3b"
+    },
+    {
+     "file": "b07-explain-18.mp3",
+     "key": "Common beginner mistake: Copying Hungarian prefixes into your own code because Windows uses them. Casey says don't.",
+     "spoken": "Common beginner mistake: Copying Hungarian prefixes into your own code because Windows uses them. Casey says don't.",
+     "hash": "824e741cca5bfb5d"
+    }
+   ],
+   "code": [
+    {
+     "file": "b07-code-1.mp3",
+     "key": "The prototype after Casey deletes the annotations at around 46:08, read line by line:",
+     "spoken": "The prototype after Casey deletes the annotations at around 46 minutes 8, read line by line:",
+     "hash": "95d9343c5db34ada"
+    },
+    {
+     "file": "b07-code-2.mp3",
+     "key": "Goal: Read WinMain's four inputs and say what each one is, from its type.",
+     "spoken": "Goal: Read Win Main's four inputs and say what each one is, from its type.",
+     "hash": "5520a1bfa8177cb9"
+    },
+    {
+     "file": "b07-code-3.mp3",
+     "key": "Step 1. WinMain returns an int and carries the word CALLBACK. Both come back in part 10.",
+     "spoken": "Step 1. Win Main returns an int and carries the word callback. Both come back in part 10.",
+     "hash": "1149298793abf9de"
+    },
+    {
+     "file": "b07-code-4.mp3",
+     "key": "Step 2. Input 1, hInstance, of type HINSTANCE. H means handle: this running program.",
+     "spoken": "Step 2. Input 1, H instance, of type H instance. H means handle: this running program.",
+     "hash": "90b1068cf8d02fc7"
+    },
+    {
+     "file": "b07-code-5.mp3",
+     "key": "Step 3. Input 2, hPrevInstance, also a handle. It's left over from old Windows and always 0 today.",
+     "spoken": "Step 3. Input 2, H previous instance, also a handle. It's left over from old Windows and always 0 today.",
+     "hash": "2c0a871bb4095f22"
+    },
+    {
+     "file": "b07-code-6.mp3",
+     "key": "Step 4. Input 3, lpCmdLine, of type LPSTR. LP and STR mean a pointer to text: the command line.",
+     "spoken": "Step 4. Input 3, L P command line, of type L P S T R. LP and STR mean a pointer to text: the command line.",
+     "hash": "7bfcbb98b3d81f7f"
+    },
+    {
+     "file": "b07-code-7.mp3",
+     "key": "Step 5. Input 4, nCmdShow, of type int. n means number: show the window normal, minimized or maximized.",
+     "spoken": "Step 5. Input 4, N command show, of type int. n means number: show the window normal, minimized or maximized.",
+     "hash": "b460009f7e42c029"
+    },
+    {
+     "file": "b07-code-8.mp3",
+     "key": "Step 6. The body, between the braces, is empty. The program starts, does nothing and ends.",
+     "spoken": "Step 6. The body, between the braces, is empty. The program starts, does nothing and ends.",
+     "hash": "6f4de090b0bbd700"
+    },
+    {
+     "file": "b07-code-9.mp3",
+     "key": "Pattern: The type tells you what kind of thing it is. The name tells you what it's for.",
+     "spoken": "Pattern: The type tells you what kind of thing it is. The name tells you what it's for.",
+     "hash": "ca887e325d77ed3a"
+    },
+    {
+     "file": "b07-code-10.mp3",
+     "key": "Try it in your head: Which of the four inputs could hold a level name that you typed when you started the game?",
+     "spoken": "Try it in your head: Which of the four inputs could hold a level name that you typed when you started the game?",
+     "hash": "d594466249762ae8"
+    },
+    {
+     "file": "b07-code-11.mp3",
+     "key": "Notice that Hungarian notation shows up twice: in the types (HINSTANCE, LPSTR) and in the parameter names (hInstance, lpCmdLine). Casey keeps the names in his code because they come straight from the docs.",
+     "spoken": "Notice that Hungarian notation shows up twice: in the types (H instance, L P S T R) and in the parameter names (H instance, L P command line). Casey keeps the names in his code because they come straight from the docs.",
+     "hash": "8b9d57da5f786047"
+    }
+   ]
+  },
+  "b08": {
+   "explain": [
+    {
+     "file": "b08-explain-1.mp3",
+     "key": "The idea in one sentence: A function is a named, reusable block of code: its signature says what goes in and out, and its body runs only when it's called.",
+     "spoken": "The idea in one sentence: A function is a named, reusable block of code: its signature says what goes in and out, and its body runs only when it's called.",
+     "hash": "1eb765649cde206a"
+    },
+    {
+     "file": "b08-explain-2.mp3",
+     "key": "Real-life picture: A function is a recipe card. Writing the card cooks nothing; food appears only when someone says \"make recipe foo now\" (a call).",
+     "spoken": "Real-life picture: A function is a recipe card. Writing the card cooks nothing; food appears only when someone says \"make recipe foo now\" (a call).",
+     "hash": "3ffe4adfcf81cc96"
+    },
+    {
+     "file": "b08-explain-3.mp3",
+     "key": "Running under the debugger",
+     "spoken": "Running under the debugger",
+     "hash": "66773ec30c2eb911"
+    },
+    {
+     "file": "b08-explain-4.mp3",
+     "key": "Start Debugging (F5) launches your .exe with the debugger attached. Your WinMain does nothing, returns, and the program ends, so all you see is the debugger's log of the DLLs Windows loaded for you.",
+     "spoken": "Start Debugging (F5) launches your dot E X E with the debugger attached. Your Win Main does nothing, returns, and the program ends, so all you see is the debugger's log of the DLLs Windows loaded for you.",
+     "hash": "134f4efb3d668963"
+    },
+    {
+     "file": "b08-explain-5.mp3",
+     "key": "OutputDebugStringA",
+     "spoken": "Output Debug String A",
+     "hash": "05c7b5b5d2924b35"
+    },
+    {
+     "file": "b08-explain-6.mp3",
+     "key": "A Windows function that sends a piece of text to whatever debugger is attached. Visual Studio shows it in the Output window. With no debugger attached, the text goes nowhere you can see. It's Handmade Hero's first logging tool.",
+     "spoken": "A Windows function that sends a piece of text to whatever debugger is attached. Visual Studio shows it in the Output window. With no debugger attached, the text goes nowhere you can see. It's Handmade Hero's first logging tool.",
+     "hash": "85f67a56f17592a5"
+    },
+    {
+     "file": "b08-explain-7.mp3",
+     "key": "Functions",
+     "spoken": "Functions",
+     "hash": "13d3384ceaecd834"
+    },
+    {
+     "file": "b08-explain-8.mp3",
+     "key": "Goal: Read a function's first line, so you know how to call it.",
+     "spoken": "Goal: Read a function's first line, so you know how to call it.",
+     "hash": "b9a59d2c3e88a406"
+    },
+    {
+     "file": "b08-explain-9.mp3",
+     "key": "Step 1. Read the first line from left to right.",
+     "spoken": "Step 1. Read the first line from left to right.",
+     "hash": "7b840107a31f1748"
+    },
+    {
+     "file": "b08-explain-10.mp3",
+     "key": "Step 2. The first word, void, is the return type: what foo gives back to its caller. void means nothing.",
+     "spoken": "Step 2. The first word, void, is the return type: what foo gives back to its caller. void means nothing.",
+     "hash": "5f2cab7f927de54c"
+    },
+    {
+     "file": "b08-explain-11.mp3",
+     "key": "Step 3. foo is the name. You use it to call the function.",
+     "spoken": "Step 3. foo is the name. You use it to call the function.",
+     "hash": "ce4a80a73c4909ed"
+    },
+    {
+     "file": "b08-explain-12.mp3",
+     "key": "Step 4. The void in parentheses is the parameter list: what the caller must give foo. void means nothing again.",
+     "spoken": "Step 4. The void in parentheses is the parameter list: what the caller must give foo. void means nothing again.",
+     "hash": "795dd0b43e56eacc"
+    },
+    {
+     "file": "b08-explain-13.mp3",
+     "key": "Step 5. These three together are the signature, also called the prototype. They tell you how to call foo.",
+     "spoken": "Step 5. These three together are the signature, also called the prototype. They tell you how to call foo.",
+     "hash": "decbe8617892cf3a"
+    },
+    {
+     "file": "b08-explain-14.mp3",
+     "key": "Step 6. Then the body, between the braces: one call to OutputDebugStringA with some text. The body runs each time foo is called, and never runs if foo is never called.",
+     "spoken": "Step 6. Then the body, between the braces: one call to Output Debug String A with some text. The body runs each time foo is called, and never runs if foo is never called.",
+     "hash": "9e5b67c0a9e1c6c7"
+    },
+    {
+     "file": "b08-explain-15.mp3",
+     "key": "Pattern: Signature plus body is a definition.",
+     "spoken": "Pattern: Signature plus body is a definition.",
+     "hash": "f5f935eca435a4bd"
+    },
+    {
+     "file": "b08-explain-16.mp3",
+     "key": "Try it in your head: A function gives back a number and takes nothing. Which word replaces the first void?",
+     "spoken": "Try it in your head: A function gives back a number and takes nothing. Which word replaces the first void?",
+     "hash": "3663b561ba9cf0a3"
+    },
+    {
+     "file": "b08-explain-17.mp3",
+     "key": "Definition = prototype + body: the whole function.",
+     "spoken": "Definition is prototype plus body: the whole function.",
+     "hash": "2e44673cc2f4b01c"
+    },
+    {
+     "file": "b08-explain-18.mp3",
+     "key": "Call = foo(); runs the body at that spot, then continues after the call.",
+     "spoken": "Call is foo, runs the body at that spot, then continues after the call.",
+     "hash": "74d68fef101d74b8"
+    },
+    {
+     "file": "b08-explain-19.mp3",
+     "key": "Code inside a function that's never called never runs. That's what Casey's vanishing-output demo shows.",
+     "spoken": "Code inside a function that's never called never runs. That's what Casey's vanishing-output demo shows.",
+     "hash": "83224d2b2077aceb"
+    },
+    {
+     "file": "b08-explain-20.mp3",
+     "key": "What a call is at the CPU level (preview only): the CPU jumps to the function's first instruction and, at the end, jumps back to just after the call. How it remembers where \"back\" is uses the stack, which is parked for Intro to C Day 3. Today, just hold \"a call is a jump there and back\".",
+     "spoken": "What a call is at the CPU level (preview only): the CPU jumps to the function's first instruction and, at the end, jumps back to just after the call. How it remembers where \"back\" is uses the stack, which is parked for Intro to C Day 3. Today, just hold \"a call is a jump there and back\".",
+     "hash": "c6c115a0ba406e5a"
+    },
+    {
+     "file": "b08-explain-21.mp3",
+     "key": "Comments",
+     "spoken": "Comments",
+     "hash": "a30bf831adbce073"
+    },
+    {
+     "file": "b08-explain-22.mp3",
+     "key": "// ignores the rest of the line (added in C++, now in C too). /* … */ ignores everything between the markers, across lines. The compiler throws comments away. They're notes for people.",
+     "spoken": "double slash ignores the rest of the line (added in C plus plus, now in C too). slash star … star slash ignores everything between the markers, across lines. The compiler throws comments away. They're notes for people.",
+     "hash": "71d7689dd3b5e59e"
+    },
+    {
+     "file": "b08-explain-23.mp3",
+     "key": "Common beginner mistake: Defining a function and expecting it to run without calling it.",
+     "spoken": "Common beginner mistake: Defining a function and expecting it to run without calling it.",
+     "hash": "64147f31df43418e"
+    }
+   ],
+   "code": [
+    {
+     "file": "b08-code-1.mp3",
+     "key": "The complete program at 54:00 (the string as on Casey's screen):",
+     "spoken": "The complete program at 54 minutes (the string as on Casey's screen):",
+     "hash": "8294122f2d5a5368"
+    },
+    {
+     "file": "b08-code-2.mp3",
+     "key": "Goal: Print one line to the debugger, by putting the print inside our own function, foo, and calling foo from WinMain.",
+     "spoken": "Goal: Print one line to the debugger, by putting the print inside our own function, foo, and calling foo from Win Main.",
+     "hash": "2a7fd67b33a64066"
+    },
+    {
+     "file": "b08-code-3.mp3",
+     "key": "Step 1. Include windows.h. Before anything runs, the compiler pastes in Windows' list of names, so it knows OutputDebugStringA. Part 12 shows how this works.",
+     "spoken": "Step 1. Include windows dot H. Before anything runs, the compiler pastes in Windows' list of names, so it knows Output Debug String A. Part 12 shows how this works.",
+     "hash": "04369b98183fbdc3"
+    },
+    {
+     "file": "b08-code-4.mp3",
+     "key": "Step 2. Define foo. Input: nothing. Output: nothing. Defining foo does not run it. The compiler translates its body into machine code, but nothing runs it yet.",
+     "spoken": "Step 2. Define foo. Input: nothing. Output: nothing. Defining foo does not run it. The compiler translates its body into machine code, but nothing runs it yet.",
+     "hash": "c12d1a45e4dadac4"
+    },
+    {
+     "file": "b08-code-5.mp3",
+     "key": "Step 3. The program starts. Windows, through the startup code, calls WinMain and hands it four inputs. We don't use them yet.",
+     "spoken": "Step 3. The program starts. Windows, through the startup code, calls Win Main and hands it four inputs. We don't use them yet.",
+     "hash": "49bf9c477f75acd5"
+    },
+    {
+     "file": "b08-code-6.mp3",
+     "key": "Step 4. WinMain calls foo. The CPU jumps into foo's body, and WinMain waits at that spot.",
+     "spoken": "Step 4. Win Main calls foo. The CPU jumps into foo's body, and Win Main waits at that spot.",
+     "hash": "c7bae29fa4a3490d"
+    },
+    {
+     "file": "b08-code-7.mp3",
+     "key": "Step 5. Inside foo, call OutputDebugStringA. Input: the text “This is the first thing we have actually printed”. Nothing comes back to foo, but the text appears in the debugger's Output window.",
+     "spoken": "Step 5. Inside foo, call Output Debug String A. Input: the text “This is the first thing we have actually printed”. Nothing comes back to foo, but the text appears in the debugger's Output window.",
+     "hash": "f379fb8289816d78"
+    },
+    {
+     "file": "b08-code-8.mp3",
+     "key": "Step 6. foo's body ends. Control goes back to WinMain, just after the call.",
+     "spoken": "Step 6. foo's body ends. Control goes back to Win Main, just after the call.",
+     "hash": "5bb25cfa75f198d8"
+    },
+    {
+     "file": "b08-code-9.mp3",
+     "key": "Step 7. WinMain reaches its closing brace. It ends, and the program ends with it.",
+     "spoken": "Step 7. Win Main reaches its closing brace. It ends, and the program ends with it.",
+     "hash": "68f78149d766ca9a"
+    },
+    {
+     "file": "b08-code-10.mp3",
+     "key": "Pattern: Call and return. A call jumps into a function, runs its body, then comes back to the line after the call. Also: define once, use many times.",
+     "spoken": "Pattern: Call and return. A call jumps into a function, runs its body, then comes back to the line after the call. Also: define once, use many times.",
+     "hash": "e0be7f18ba01a8a5"
+    },
+    {
+     "file": "b08-code-11.mp3",
+     "key": "Try it in your head: You write the call to foo three times in WinMain. How many lines print? And how many if you delete all three calls?",
+     "spoken": "Try it in your head: You write the call to foo three times in Win Main. How many lines print? And how many if you delete all three calls?",
+     "hash": "92354fa88a3d5dff"
+    },
+    {
+     "file": "b08-code-12.mp3",
+     "key": "Read it in execution order: Windows → (startup code) → WinMain → foo → OutputDebugStringA → back to foo → back to WinMain → WinMain ends → the program exits.",
+     "spoken": "Read it in execution order: Windows to (startup code) to Win Main to foo to Output Debug String A to back to foo to back to Win Main to Win Main ends to the program exits.",
+     "hash": "1d6702c85c902036"
+    },
+    {
+     "file": "b08-code-13.mp3",
+     "key": "The \\n at the end is a newline. Escape sequences are covered on Intro to C Day 2 (14:35). Casey's WinMain has no return line. A modern compiler may warn, or refuse with \"must return a value\". If yours does, add return 0; as WinMain's last line. It promises an int, so it should hand one back.",
+     "spoken": "The backslash n at the end is a newline. Escape sequences are covered on Intro to C Day 2 (14 minutes 35). Casey's Win Main has no return line. A modern compiler may warn, or refuse with \"must return a value\". If yours does, add return 0; as Win Main's last line. It promises an int, so it should hand one back.",
+     "hash": "c8a23d6219fe3afd"
+    }
+   ]
+  },
+  "b09": {
+   "explain": [
+    {
+     "file": "b09-explain-1.mp3",
+     "key": "The idea in one sentence: A semicolon ends a statement; whitespace only separates tokens, so it matters only when it splits a name.",
+     "spoken": "The idea in one sentence: A semicolon ends a statement; whitespace only separates tokens, so it matters only when it splits a name.",
+     "hash": "1bdb47a72121dbdf"
+    },
+    {
+     "file": "b09-explain-2.mp3",
+     "key": "Real-life picture: Spaces in C are like spaces between words: add as many as you want between words, but a space inside a word makes two words.",
+     "spoken": "Real-life picture: Spaces in C are like spaces between words: add as many as you want between words, but a space inside a word makes two words.",
+     "hash": "de4867d362309ba4"
+    },
+    {
+     "file": "b09-explain-3.mp3",
+     "key": "Strings (the Day 1 level)",
+     "spoken": "Strings (the Day 1 level)",
+     "hash": "3ff8fabf8492b59a"
+    },
+    {
+     "file": "b09-explain-4.mp3",
+     "key": "\"like this\" is a string literal: text the compiler stores inside your program, which you can pass to functions. What a string really is in memory (bytes, a terminating zero, a pointer to the first character) is built up on Day 2 and Day 3. For now: double quotes make text you can hand to a function.",
+     "spoken": "\"like this\" is a string literal: text the compiler stores inside your program, which you can pass to functions. What a string really is in memory (bytes, a terminating zero, a pointer to the first character) is built up on Day 2 and Day 3. For now: double quotes make text you can hand to a function.",
+     "hash": "6a49c4c865c711ba"
+    },
+    {
+     "file": "b09-explain-5.mp3",
+     "key": "Statements and semicolons",
+     "spoken": "Statements and semicolons",
+     "hash": "3e0c71cbfa65a756"
+    },
+    {
+     "file": "b09-explain-6.mp3",
+     "key": "A statement is one complete instruction to the program, like a call. C needs a ; to know where each one ends, because line breaks don't count:",
+     "spoken": "A statement is one complete instruction to the program, like a call. C needs a semicolon to know where each one ends, because line breaks don't count:",
+     "hash": "eed0262234b346d2"
+    },
+    {
+     "file": "b09-explain-7.mp3",
+     "key": "Goal: See that semicolons, not line breaks, decide where a statement ends.",
+     "spoken": "Goal: See that semicolons, not line breaks, decide where a statement ends.",
+     "hash": "4ce5924d2eab9b51"
+    },
+    {
+     "file": "b09-explain-8.mp3",
+     "key": "Step 1. Line 1: call foo, semicolon, call foo again, semicolon. Two statements on one line. That's fine.",
+     "spoken": "Step 1. Line 1: call foo, semicolon, call foo again, semicolon. Two statements on one line. That's fine.",
+     "hash": "05a23e80df9a2c76"
+    },
+    {
+     "file": "b09-explain-9.mp3",
+     "key": "Step 2. Next: one call to OutputDebugStringA written over three lines. First the name and the open parenthesis, then the text, then the close parenthesis and the semicolon.",
+     "spoken": "Step 2. Next: one call to Output Debug String A written over three lines. First the name and the open parenthesis, then the text, then the close parenthesis and the semicolon.",
+     "hash": "f91c37bededf0e8f"
+    },
+    {
+     "file": "b09-explain-10.mp3",
+     "key": "Step 3. That's one statement, because it has only one semicolon. Also fine.",
+     "spoken": "Step 3. That's one statement, because it has only one semicolon. Also fine.",
+     "hash": "134b8750a6198e50"
+    },
+    {
+     "file": "b09-explain-11.mp3",
+     "key": "Step 4. The compiler ignores line breaks and indentation between the pieces.",
+     "spoken": "Step 4. The compiler ignores line breaks and indentation between the pieces.",
+     "hash": "f52cc8bbea274587"
+    },
+    {
+     "file": "b09-explain-12.mp3",
+     "key": "Pattern: A semicolon ends a statement. Whitespace is free.",
+     "spoken": "Pattern: A semicolon ends a statement. Whitespace is free.",
+     "hash": "1ce545f96b232673"
+    },
+    {
+     "file": "b09-explain-13.mp3",
+     "key": "Try it in your head: You write the call to foo three times on one line, each with its semicolon. How many statements is that, and how many times does foo run?",
+     "spoken": "Try it in your head: You write the call to foo three times on one line, each with its semicolon. How many statements is that, and how many times does foo run?",
+     "hash": "e163d9c71821ab8e"
+    },
+    {
+     "file": "b09-explain-14.mp3",
+     "key": "Whitespace",
+     "spoken": "Whitespace",
+     "hash": "6ed33a853f92b6d1"
+    },
+    {
+     "file": "b09-explain-15.mp3",
+     "key": "Spaces, tabs and newlines just separate tokens, the \"words\" of C. Indentation is purely for human readers. The one rule: whitespace can't go inside a token, because it splits it. OutputDebug StringA becomes the two tokens OutputDebug and StringA, and the compiler complains that it doesn't know OutputDebug.",
+     "spoken": "Spaces, tabs and newlines just separate tokens, the \"words\" of C. Indentation is purely for human readers. The one rule: whitespace can't go inside a token, because it splits it. Output Debug String A becomes the two tokens Output Debug and String A, and the compiler complains that it doesn't know Output Debug.",
+     "hash": "02d5e0f0d24d3abe"
+    },
+    {
+     "file": "b09-explain-16.mp3",
+     "key": "Prerequisite, explained now: tokens. Before understanding anything, the compiler chops your text into tokens: names (foo), keywords (void), punctuation (( ) { ;) and literals (\"text\", 5). That's the \"parse\" step from block 3. Whitespace is only there to separate tokens, which is why it doesn't matter anywhere else.",
+     "spoken": "Prerequisite, explained now: tokens. Before understanding anything, the compiler chops your text into tokens: names (foo), keywords (void), punctuation ( parentheses semicolon) and literals (\"text\", 5). That's the \"parse\" step from block 3. Whitespace is only there to separate tokens, which is why it doesn't matter anywhere else.",
+     "hash": "9d634d64ea3f51d1"
+    },
+    {
+     "file": "b09-explain-17.mp3",
+     "key": "Common beginner mistake: Forgetting a ; and then looking at the wrong line: the error is often reported on the next line.",
+     "spoken": "Common beginner mistake: Forgetting a semicolon and then looking at the wrong line: the error is often reported on the next line.",
+     "hash": "7c11768245347ace"
+    }
+   ],
+   "code": [
+    {
+     "file": "b09-code-1.mp3",
+     "key": "The one call statement, tokenized the way the compiler sees it:",
+     "spoken": "The one call statement, tokenized the way the compiler sees it:",
+     "hash": "f9b06817f81c16ba"
+    },
+    {
+     "file": "b09-code-2.mp3",
+     "key": "Goal: See the five pieces, called tokens, that the compiler reads in this one line.",
+     "spoken": "Goal: See the five pieces, called tokens, that the compiler reads in this one line.",
+     "hash": "70da86b2ba59c731"
+    },
+    {
+     "file": "b09-code-3.mp3",
+     "key": "Step 1. The compiler reads the line from left to right and cuts it into tokens.",
+     "spoken": "Step 1. The compiler reads the line from left to right and cuts it into tokens.",
+     "hash": "96ca17edbdfc4b1c"
+    },
+    {
+     "file": "b09-code-4.mp3",
+     "key": "Step 2. Token 1: the name OutputDebugStringA. It says which function to call.",
+     "spoken": "Step 2. Token 1: the name Output Debug String A. It says which function to call.",
+     "hash": "9d10c318cbb53dd0"
+    },
+    {
+     "file": "b09-code-5.mp3",
+     "key": "Step 3. Token 2: the open parenthesis. The inputs start here.",
+     "spoken": "Step 3. Token 2: the open parenthesis. The inputs start here.",
+     "hash": "32c01189d723fb2d"
+    },
+    {
+     "file": "b09-code-6.mp3",
+     "key": "Step 4. Token 3: the string literal, the text between the double quotes. It's the input.",
+     "spoken": "Step 4. Token 3: the string literal, the text between the double quotes. It's the input.",
+     "hash": "ce50c4207dd13df8"
+    },
+    {
+     "file": "b09-code-7.mp3",
+     "key": "Step 5. Token 4: the close parenthesis. The inputs end here.",
+     "spoken": "Step 5. Token 4: the close parenthesis. The inputs end here.",
+     "hash": "794098a8e40e4d51"
+    },
+    {
+     "file": "b09-code-8.mp3",
+     "key": "Step 6. Token 5: the semicolon. The statement ends here.",
+     "spoken": "Step 6. Token 5: the semicolon. The statement ends here.",
+     "hash": "3646130a1fa225f5"
+    },
+    {
+     "file": "b09-code-9.mp3",
+     "key": "Step 7. The spaces between tokens don't matter. You could remove them, or add more.",
+     "spoken": "Step 7. The spaces between tokens don't matter. You could remove them, or add more.",
+     "hash": "2c2849044fb74dee"
+    },
+    {
+     "file": "b09-code-10.mp3",
+     "key": "Pattern: A call has the same shape as the function's first line: name, then the inputs in parentheses. Then a semicolon ends it.",
+     "spoken": "Pattern: A call has the same shape as the function's first line: name, then the inputs in parentheses. Then a semicolon ends it.",
+     "hash": "e134c18e041c68fb"
+    },
+    {
+     "file": "b09-code-11.mp3",
+     "key": "Try it in your head: You put a space inside the name, between Output and DebugStringA. How many tokens does the compiler see now?",
+     "spoken": "Try it in your head: You put a space inside the name, between Output and Debug String A. How many tokens does the compiler see now?",
+     "hash": "c5963cdadd0f334c"
+    },
+    {
+     "file": "b09-code-12.mp3",
+     "key": "Five tokens. Every bit of whitespace between them could be removed, or doubled, and the program would be identical.",
+     "spoken": "Five tokens. Every bit of whitespace between them could be removed, or doubled, and the program would be identical.",
+     "hash": "5723834eaab54139"
+    }
+   ]
+  },
+  "b10": {
+   "explain": [
+    {
+     "file": "b10-explain-1.mp3",
+     "key": "The idea in one sentence: WinMain returns an int exit code, is marked CALLBACK so it matches the way Windows calls functions, and receives four values about how the program was started.",
+     "spoken": "The idea in one sentence: Win Main returns an int exit code, is marked callback so it matches the way Windows calls functions, and receives four values about how the program was started.",
+     "hash": "a1fb31f863a1a092"
+    },
+    {
+     "file": "b10-explain-2.mp3",
+     "key": "Real-life picture: WinMain is a form with fixed fields: Windows fills in four boxes, you must reply in the agreed format (CALLBACK), and you hand back a number (the exit code).",
+     "spoken": "Real-life picture: Win Main is a form with fixed fields: Windows fills in four boxes, you must reply in the agreed format (callback), and you hand back a number (the exit code).",
+     "hash": "1e8505421ac0590a"
+    },
+    {
+     "file": "b10-explain-3.mp3",
+     "key": "int: the return value",
+     "spoken": "int: the return value",
+     "hash": "6f1538cd667fcbb4"
+    },
+    {
+     "file": "b10-explain-4.mp3",
+     "key": "WinMain promises to hand back an int, a whole number. When WinMain returns, that number becomes the program's exit code, which Windows can report. By convention, 0 means \"fine\".",
+     "spoken": "Win Main promises to hand back an int, a whole number. When Win Main returns, that number becomes the program's exit code, which Windows can report. By convention, 0 means \"fine\".",
+     "hash": "b72285aca009a823"
+    },
+    {
+     "file": "b10-explain-5.mp3",
+     "key": "CALLBACK: just enough for today",
+     "spoken": "callback: just enough for today",
+     "hash": "eb636ee46b5a76b7"
+    },
+    {
+     "file": "b10-explain-6.mp3",
+     "key": "CALLBACK isn't a C keyword. It's a macro, a word that windows.h replaces with other text before compiling. It expands to a marker telling the compiler that this function follows Windows's agreed calling convention: the exact rules for passing arguments and returning values. Casey's reasoning is the part to remember: Windows and your program were compiled separately, so they need a shared agreement. The details are parked. On 32-bit, that agreement is where the @16 from block 5 comes from.",
+     "spoken": "callback isn't a C keyword. It's a macro, a word that windows dot H replaces with other text before compiling. It expands to a marker telling the compiler that this function follows Windows's agreed calling convention: the exact rules for passing arguments and returning values. Casey's reasoning is the part to remember: Windows and your program were compiled separately, so they need a shared agreement. The details are parked. On 32-bit, that agreement is where the at 16 from block 5 comes from.",
+     "hash": "0e200312b123e589"
+    },
+    {
+     "file": "b10-explain-7.mp3",
+     "key": "The four parameters",
+     "spoken": "The four parameters",
+     "hash": "6cfb87a02ee9a2df"
+    },
+    {
+     "file": "b10-explain-8.mp3",
+     "key": "Goal: Know what each WinMain input is, and what a game will use it for.",
+     "spoken": "Goal: Know what each Win Main input is, and what a game will use it for.",
+     "hash": "12a629b54a587bb3"
+    },
+    {
+     "file": "b10-explain-9.mp3",
+     "key": "Step 1. hInstance: a handle to our own loaded program. A game passes it back to Windows when it creates its window.",
+     "spoken": "Step 1. H instance: a handle to our own loaded program. A game passes it back to Windows when it creates its window.",
+     "hash": "8cb80a5f9c32bffd"
+    },
+    {
+     "file": "b10-explain-10.mp3",
+     "key": "Step 2. hPrevInstance: left over from 16-bit Windows. Always 0 now. Ignore it.",
+     "spoken": "Step 2. H previous instance: left over from 16-bit Windows. Always 0 now. Ignore it.",
+     "hash": "06997828974c4f5a"
+    },
+    {
+     "file": "b10-explain-11.mp3",
+     "key": "Step 3. lpCmdLine: the text typed after the program's name when it started. A game can read launch options from it, like a level name.",
+     "spoken": "Step 3. L P command line: the text typed after the program's name when it started. A game can read launch options from it, like a level name.",
+     "hash": "b53cb878443ce4fc"
+    },
+    {
+     "file": "b10-explain-12.mp3",
+     "key": "Step 4. nCmdShow: a number meaning normal, minimized or maximized. It says how to show the window the first time.",
+     "spoken": "Step 4. N command show: a number meaning normal, minimized or maximized. It says how to show the window the first time.",
+     "hash": "6424f72f3259c1ea"
+    },
+    {
+     "file": "b10-explain-13.mp3",
+     "key": "Try it in your head: You start the program by double-clicking it. What text do you expect in lpCmdLine?",
+     "spoken": "Try it in your head: You start the program by double-clicking it. What text do you expect in L P command line?",
+     "hash": "1b5f0cea2883bc3a"
+    },
+    {
+     "file": "b10-explain-14.mp3",
+     "key": "Casey's point about the command line: even a program never run from a console still receives one, because shortcuts can add text after the program path in their Target field.",
+     "spoken": "Casey's point about the command line: even a program never run from a console still receives one, because shortcuts can add text after the program path in their Target field.",
+     "hash": "a84db000ce0bf650"
+    },
+    {
+     "file": "b10-explain-15.mp3",
+     "key": "Common beginner mistake: Ignoring what int promises. A function that says it returns int should return one (return 0;).",
+     "spoken": "Common beginner mistake: Ignoring what int promises. A function that says it returns int should return one (return 0;).",
+     "hash": "871d7a5bef35a1e5"
+    }
+   ],
+   "code": [
+    {
+     "file": "b10-code-1.mp3",
+     "key": "WinMain with every parameter put to use: the experiments above, in one place:",
+     "spoken": "Win Main with every parameter put to use: the experiments above, in one place:",
+     "hash": "ce28532c7e27e9d6"
+    },
+    {
+     "file": "b10-code-2.mp3",
+     "key": "Goal: Print the command line the program received, then end with the exit code 42.",
+     "spoken": "Goal: Print the command line the program received, then end with the exit code 42.",
+     "hash": "0d9920084e057e15"
+    },
+    {
+     "file": "b10-code-3.mp3",
+     "key": "Step 1. Include windows.h, so the compiler knows OutputDebugStringA. Part 12 explains how.",
+     "spoken": "Step 1. Include windows dot H, so the compiler knows Output Debug String A. Part 12 explains how.",
+     "hash": "ee727ca75f4153ea"
+    },
+    {
+     "file": "b10-code-4.mp3",
+     "key": "Step 2. The program starts. Windows calls WinMain with four inputs. One of them, lpCmdLine, holds the text typed after the program's name.",
+     "spoken": "Step 2. The program starts. Windows calls Win Main with four inputs. One of them, L P command line, holds the text typed after the program's name.",
+     "hash": "cffbdf9b5ae7b0ec"
+    },
+    {
+     "file": "b10-code-5.mp3",
+     "key": "Step 3. Call OutputDebugStringA with the label “Command line”. It appears in the Output window.",
+     "spoken": "Step 3. Call Output Debug String A with the label “Command line”. It appears in the Output window.",
+     "hash": "2d50f7a589fac3f0"
+    },
+    {
+     "file": "b10-code-6.mp3",
+     "key": "Step 4. Call OutputDebugStringA again, with lpCmdLine as its input. We pass along the text we received, so it prints right after the label.",
+     "spoken": "Step 4. Call Output Debug String A again, with L P command line as its input. We pass along the text we received, so it prints right after the label.",
+     "hash": "cb35d929d4ae90e4"
+    },
+    {
+     "file": "b10-code-7.mp3",
+     "key": "Step 5. Print a new line, so the next output starts on a fresh line.",
+     "spoken": "Step 5. Print a new line, so the next output starts on a fresh line.",
+     "hash": "2c530d4afbfacf45"
+    },
+    {
+     "file": "b10-code-8.mp3",
+     "key": "Step 6. Return 42. WinMain ends, and 42 goes back to Windows as the program's exit code.",
+     "spoken": "Step 6. Return 42. Win Main ends, and 42 goes back to Windows as the program's exit code.",
+     "hash": "43b248847ded7baf"
+    },
+    {
+     "file": "b10-code-9.mp3",
+     "key": "Pattern: Data in, data out. Inputs arrive as parameters, and the result leaves through return.",
+     "spoken": "Pattern: Data in, data out. Inputs arrive as parameters, and the result leaves through return.",
+     "hash": "842c2294f5ed1dd0"
+    },
+    {
+     "file": "b10-code-10.mp3",
+     "key": "Try it in your head: You start the program with the words hello world after its name. What does the Output window show?",
+     "spoken": "Try it in your head: You start the program with the words hello world after its name. What does the Output window show?",
+     "hash": "44b55d88e155fd6b"
+    }
+   ]
+  },
+  "b11": {
+   "explain": [
+    {
+     "file": "b11-explain-1.mp3",
+     "key": "The idea in one sentence: A declaration tells the compiler how to call a function; only a definition gives the linker a body to connect the call to.",
+     "spoken": "The idea in one sentence: A declaration tells the compiler how to call a function; only a definition gives the linker a body to connect the call to.",
+     "hash": "eb34ef5fe10d8c22"
+    },
+    {
+     "file": "b11-explain-2.mp3",
+     "key": "Real-life picture: A declaration is a phone-book entry: it lets you dial. The definition is the person who answers. No person, and the call fails at the end (link error).",
+     "spoken": "Real-life picture: A declaration is a phone-book entry: it lets you dial. The definition is the person who answers. No person, and the call fails at the end (link error).",
+     "hash": "12ef3a73bfb13974"
+    },
+    {
+     "file": "b11-explain-3.mp3",
+     "key": "The rule",
+     "spoken": "The rule",
+     "hash": "6d73af1566978c65"
+    },
+    {
+     "file": "b11-explain-4.mp3",
+     "key": "The compiler reads your file top to bottom, once. Before you can call foo, it has to have seen what foo looks like: what it takes and what it returns. Otherwise it can't generate the call.",
+     "spoken": "The compiler reads your file top to bottom, once. Before you can call foo, it has to have seen what foo looks like: what it takes and what it returns. Otherwise it can't generate the call.",
+     "hash": "5773b64141f4c14f"
+    },
+    {
+     "file": "b11-explain-5.mp3",
+     "key": "Declaration vs. definition",
+     "spoken": "Declaration vs. definition",
+     "hash": "eaf78e3c578ca8e0"
+    },
+    {
+     "file": "b11-explain-6.mp3",
+     "key": "Goal: Tell a declaration from a definition by their shape.",
+     "spoken": "Goal: Tell a declaration from a definition by their shape.",
+     "hash": "e3ba180ba113c847"
+    },
+    {
+     "file": "b11-explain-7.mp3",
+     "key": "Step 1. Line 1: void foo, void in parentheses, then a semicolon. No body. This is a declaration. It says foo exists and how to call it.",
+     "spoken": "Step 1. Line 1: void foo, void in parentheses, then a semicolon. No body. This is a declaration. It says foo exists and how to call it.",
+     "hash": "4399dde61646ed75"
+    },
+    {
+     "file": "b11-explain-8.mp3",
+     "key": "Step 2. Line 2: the same first line, followed by a body in braces. This is a definition: the declaration plus the real code.",
+     "spoken": "Step 2. Line 2: the same first line, followed by a body in braces. This is a definition: the declaration plus the real code.",
+     "hash": "a7ca6650d1c33c17"
+    },
+    {
+     "file": "b11-explain-9.mp3",
+     "key": "Pattern: Declare before use. To compile a call, the compiler only needs the declaration.",
+     "spoken": "Pattern: Declare before use. To compile a call, the compiler only needs the declaration.",
+     "hash": "f63b1db27880b2ed"
+    },
+    {
+     "file": "b11-explain-10.mp3",
+     "key": "Try it in your head: A line ends with a semicolon right after the close parenthesis. Is it a declaration or a definition?",
+     "spoken": "Try it in your head: A line ends with a semicolon right after the close parenthesis. Is it a declaration or a definition?",
+     "hash": "c12d5d6b96aad842"
+    },
+    {
+     "file": "b11-explain-11.mp3",
+     "key": "A declaration is enough for the compiler to translate a call: it knows what to pass and what comes back.",
+     "spoken": "A declaration is enough for the compiler to translate a call: it knows what to pass and what comes back.",
+     "hash": "fdaa115ab33be04d"
+    },
+    {
+     "file": "b11-explain-12.mp3",
+     "key": "Only a definition gives the linker something to point that call at.",
+     "spoken": "Only a definition gives the linker something to point that call at.",
+     "hash": "9d60805db1349f0d"
+    },
+    {
+     "file": "b11-explain-13.mp3",
+     "key": "Why the error moved",
+     "spoken": "Why the error moved",
+     "hash": "f564fafb99c2d2a2"
+    },
+    {
+     "file": "b11-explain-14.mp3",
+     "key": "Goal: Predict what the compiler and the linker do, for each state of foo.",
+     "spoken": "Goal: Predict what the compiler and the linker do, for each state of foo.",
+     "hash": "29043bcc4e4453e0"
+    },
+    {
+     "file": "b11-explain-15.mp3",
+     "key": "Step 1. Case 1: foo is not declared at all. The compiler stops with identifier not found. The linker never runs.",
+     "spoken": "Step 1. Case 1: foo is not declared at all. The compiler stops with identifier not found. The linker never runs.",
+     "hash": "390a7c2a843a11eb"
+    },
+    {
+     "file": "b11-explain-16.mp3",
+     "key": "Step 2. Case 2: foo is declared, but no file defines it. The compiler is happy and notes that it needs foo. The linker fails: unresolved external.",
+     "spoken": "Step 2. Case 2: foo is declared, but no file defines it. The compiler is happy and notes that it needs foo. The linker fails: unresolved external.",
+     "hash": "d08699ca38b2fe31"
+    },
+    {
+     "file": "b11-explain-17.mp3",
+     "key": "Step 3. Case 3: foo is declared, and defined in some file of the build. The compiler is happy, and the linker fills in foo's address.",
+     "spoken": "Step 3. Case 3: foo is declared, and defined in some file of the build. The compiler is happy, and the linker fills in foo's address.",
+     "hash": "ec3c156ca9e6fb5b"
+    },
+    {
+     "file": "b11-explain-18.mp3",
+     "key": "Pattern: The compiler checks how you use a name. The linker checks that the name really exists somewhere.",
+     "spoken": "Pattern: The compiler checks how you use a name. The linker checks that the name really exists somewhere.",
+     "hash": "4b55216e7bb5686e"
+    },
+    {
+     "file": "b11-explain-19.mp3",
+     "key": "Try it in your head: foo is defined below WinMain, with no declaration above it. Which case is this, and which program complains?",
+     "spoken": "Try it in your head: foo is defined below Win Main, with no declaration above it. Which case is this, and which program complains?",
+     "hash": "831d408c43e19fd7"
+    },
+    {
+     "file": "b11-explain-20.mp3",
+     "key": "This is exactly how one .cpp calls a function defined in another .cpp. Each file declares what it uses, one file defines it, and the linker joins them up. That answers the question from block 5: unresolved externals exist at all because declarations let the compiler move on without the body.",
+     "spoken": "This is exactly how one dot C P P calls a function defined in another dot C P P. Each file declares what it uses, one file defines it, and the linker joins them up. That answers the question from block 5: unresolved externals exist at all because declarations let the compiler move on without the body.",
+     "hash": "9369c1557ebe3755"
+    },
+    {
+     "file": "b11-explain-21.mp3",
+     "key": "C vs. C++: early C let you call an undeclared function and guessed that it returned int. C99 removed that, and C++ never allowed it. Casey's file is .cpp, so it's strict either way.",
+     "spoken": "C vs. C plus plus: early C let you call an undeclared function and guessed that it returned int. C99 removed that, and C plus plus never allowed it. Casey's file is dot C P P, so it's strict either way.",
+     "hash": "088354d5c48760e7"
+    },
+    {
+     "file": "b11-explain-22.mp3",
+     "key": "Common beginner mistake: Mixing up a declaration (ends with ;, no body) with a definition (has a { } body).",
+     "spoken": "Common beginner mistake: Mixing up a declaration (ends with semicolon, no body) with a definition (has a body).",
+     "hash": "e2d200d4dce99df3"
+    }
+   ],
+   "code": [
+    {
+     "file": "b11-code-1.mp3",
+     "key": "Casey's file at 1:07:00, with his comments:",
+     "spoken": "Casey's file at 1 hour 7 minutes, with his comments:",
+     "hash": "71071f92d003fc4d"
+    },
+    {
+     "file": "b11-code-2.mp3",
+     "key": "Goal: Show that a declaration lets a call compile, even when no body exists anywhere.",
+     "spoken": "Goal: Show that a declaration lets a call compile, even when no body exists anywhere.",
+     "hash": "51c6e4fb61646517"
+    },
+    {
+     "file": "b11-code-3.mp3",
+     "key": "Step 1. Include windows.h, the Windows declarations.",
+     "spoken": "Step 1. Include windows dot H, the Windows declarations.",
+     "hash": "432100735ffe3613"
+    },
+    {
+     "file": "b11-code-4.mp3",
+     "key": "Step 2. Declare foo: no inputs, no output, and no body here. Now the compiler knows how to call foo.",
+     "spoken": "Step 2. Declare foo: no inputs, no output, and no body here. Now the compiler knows how to call foo.",
+     "hash": "a87c18092012be66"
+    },
+    {
+     "file": "b11-code-5.mp3",
+     "key": "Step 3. Define WinMain with its four inputs. The startup code will call it.",
+     "spoken": "Step 3. Define Win Main with its four inputs. The startup code will call it.",
+     "hash": "770efb56d675673c"
+    },
+    {
+     "file": "b11-code-6.mp3",
+     "key": "Step 4. Inside WinMain, call foo. The compiler accepts it because of the declaration, and notes that foo's address must be filled in later.",
+     "spoken": "Step 4. Inside Win Main, call foo. The compiler accepts it because of the declaration, and notes that foo's address must be filled in later.",
+     "hash": "69decd384d24c94d"
+    },
+    {
+     "file": "b11-code-7.mp3",
+     "key": "Step 5. The compiler makes the object file with no errors.",
+     "spoken": "Step 5. The compiler makes the object file with no errors.",
+     "hash": "00d676e943ce1f13"
+    },
+    {
+     "file": "b11-code-8.mp3",
+     "key": "Step 6. The linker searches every object file and library for foo's body. It finds none and fails with LNK2019, unresolved external symbol foo.",
+     "spoken": "Step 6. The linker searches every object file and library for foo's body. It finds none and fails with L N K 2019, unresolved external symbol foo.",
+     "hash": "9f0cc0cbb5421029"
+    },
+    {
+     "file": "b11-code-9.mp3",
+     "key": "Pattern: Declare before use. A declaration is a promise, and the linker checks the promise.",
+     "spoken": "Pattern: Declare before use. A declaration is a promise, and the linker checks the promise.",
+     "hash": "2307fd3c40aa4113"
+    },
+    {
+     "file": "b11-code-10.mp3",
+     "key": "Try it in your head: You delete the declaration line too. Which program complains now, and with which error?",
+     "spoken": "Try it in your head: You delete the declaration line too. Which program complains now, and with which error?",
+     "hash": "db1999588d5fbcac"
+    },
+    {
+     "file": "b11-code-11.mp3",
+     "key": "Add this anywhere, even in another .cpp, and the build links:",
+     "spoken": "Add this anywhere, even in another dot C P P, and the build links:",
+     "hash": "3eee693a84ac4a15"
+    },
+    {
+     "file": "b11-code-12.mp3",
+     "key": "Goal: Keep the promise: give foo its body.",
+     "spoken": "Goal: Keep the promise: give foo its body.",
+     "hash": "7bcf04ab557a2010"
+    },
+    {
+     "file": "b11-code-13.mp3",
+     "key": "Step 1. Define foo: the same first line as the declaration, but with a body.",
+     "spoken": "Step 1. Define foo: the same first line as the declaration, but with a body.",
+     "hash": "c926effa0d4ecc2f"
+    },
+    {
+     "file": "b11-code-14.mp3",
+     "key": "Step 2. The body calls OutputDebugStringA with the text “This is the first thing we have actually printed”.",
+     "spoken": "Step 2. The body calls Output Debug String A with the text “This is the first thing we have actually printed”.",
+     "hash": "2ee3f8fa5885e129"
+    },
+    {
+     "file": "b11-code-15.mp3",
+     "key": "Step 3. Put this in any .cpp file of the build. The compiler translates it into machine code in that file's object file.",
+     "spoken": "Step 3. Put this in any dot C P P file of the build. The compiler translates it into machine code in that file's object file.",
+     "hash": "0064694b296bb4a1"
+    },
+    {
+     "file": "b11-code-16.mp3",
+     "key": "Step 4. Now the linker finds foo, fills in its address at the call, and the program links.",
+     "spoken": "Step 4. Now the linker finds foo, fills in its address at the call, and the program links.",
+     "hash": "127dc882e156f1d7"
+    },
+    {
+     "file": "b11-code-17.mp3",
+     "key": "Pattern: Define once, use many times. There is one definition, and any file with the declaration can call it.",
+     "spoken": "Pattern: Define once, use many times. There is one definition, and any file with the declaration can call it.",
+     "hash": "e0f04856000bdac6"
+    },
+    {
+     "file": "b11-code-18.mp3",
+     "key": "Try it in your head: The definition is now in foo.cpp, and WinMain is in test.cpp. How many object files does the linker join?",
+     "spoken": "Try it in your head: The definition is now in foo dot C P P, and Win Main is in test dot C P P. How many object files does the linker join?",
+     "hash": "f0bbb4c1b2fcac1b"
+    }
+   ]
+  },
+  "b12": {
+   "explain": [
+    {
+     "file": "b12-explain-1.mp3",
+     "key": "The idea in one sentence: #include pastes another file's text in place, and windows.h brings in the declarations of everything Windows provides.",
+     "spoken": "The idea in one sentence: include pastes another file's text in place, and windows dot H brings in the declarations of everything Windows provides.",
+     "hash": "9a5888f37719b824"
+    },
+    {
+     "file": "b12-explain-2.mp3",
+     "key": "Real-life picture: #include is like photocopying a reference sheet and stapling it into your notes at that exact spot.",
+     "spoken": "Real-life picture: include is like photocopying a reference sheet and stapling it into your notes at that exact spot.",
+     "hash": "41148e459de62676"
+    },
+    {
+     "file": "b12-explain-3.mp3",
+     "key": "Two kinds of names",
+     "spoken": "Two kinds of names",
+     "hash": "6f2e3e2685b2d9df"
+    },
+    {
+     "file": "b12-explain-4.mp3",
+     "key": "Keywords: void, int, plus punctuation like { } ( ) ;. These are the language itself, and work on every C compiler.",
+     "spoken": "Keywords: void, int, plus punctuation like parentheses semicolon. These are the language itself, and work on every C compiler.",
+     "hash": "615fe09a307e0101"
+    },
+    {
+     "file": "b12-explain-5.mp3",
+     "key": "Everything else: HINSTANCE, LPSTR, CALLBACK, OutputDebugStringA, WinMain's declaration. These are ordinary C declarations and macros written by Microsoft in header files.",
+     "spoken": "Everything else: H instance, L P S T R, callback, Output Debug String A, Win Main's declaration. These are ordinary C declarations and macros written by Microsoft in header files.",
+     "hash": "6147d525a9afa2e7"
+    },
+    {
+     "file": "b12-explain-6.mp3",
+     "key": "#include is copy-paste",
+     "spoken": "include is copy-paste",
+     "hash": "1565b1041cd8bd8d"
+    },
+    {
+     "file": "b12-explain-7.mp3",
+     "key": "#include isn't really part of C's grammar. It's handled by the preprocessor, a text pass that runs before the compiler proper. It replaces the line with the full contents of the named file, and that file's own #includes get expanded the same way, recursively. What reaches the compiler is one long file: the translation unit from block 5.",
+     "spoken": "include isn't really part of C's grammar. It's handled by the preprocessor, a text pass that runs before the compiler proper. It replaces the line with the full contents of the named file, and that file's own includes get expanded the same way, recursively. What reaches the compiler is one long file: the translation unit from block 5.",
+     "hash": "1af9ed01a5c60038"
+    },
+    {
+     "file": "b12-explain-8.mp3",
+     "key": "Putting today together: windows.h supplies the declarations (block 11) for OutputDebugStringA and the rest, so the compiler is happy. The definitions live in Windows itself (kernel32.dll), and the linker connects the two through an import library (kernel32.lib) that Visual Studio links by default. Declaration from a header, definition from a library: same mechanism as foo, at a larger scale.",
+     "spoken": "Putting today together: windows dot H supplies the declarations (block 11) for Output Debug String A and the rest, so the compiler is happy. The definitions live in Windows itself (kernel 32 dot D L L), and the linker connects the two through an import library (kernel 32 dot L I B) that Visual Studio links by default. Declaration from a header, definition from a library: same mechanism as foo, at a larger scale.",
+     "hash": "1c29b8cc10a9aeb0"
+    },
+    {
+     "file": "b12-explain-9.mp3",
+     "key": "<angle> vs. \"quotes\"",
+     "spoken": "angle vs. \"quotes\"",
+     "hash": "939bb871efed38fb"
+    },
+    {
+     "file": "b12-explain-10.mp3",
+     "key": "#include <windows.h> searches the system and SDK include folders. #include \"mine.h\" searches next to your file first. Casey doesn't cover this distinction today. It's here so the angle brackets don't puzzle you.",
+     "spoken": "include windows dot H searches the system and SDK include folders. include \"mine dot H\" searches next to your file first. Casey doesn't cover this distinction today. It's here so the angle brackets don't puzzle you.",
+     "hash": "c07302235436fe24"
+    },
+    {
+     "file": "b12-explain-11.mp3",
+     "key": "Common beginner mistake: Thinking #include <windows.h> adds Windows's code to your program. It adds only declarations; the code lives in Windows's DLLs.",
+     "spoken": "Common beginner mistake: Thinking include windows dot H adds Windows's code to your program. It adds only declarations; the code lives in Windows's DLLs.",
+     "hash": "bfcf7f46f832d1a5"
+    }
+   ],
+   "code": [
+    {
+     "file": "b12-code-1.mp3",
+     "key": "The finished Day 1 program with every line labeled by the block that explains it. Read this once a day for a week.",
+     "spoken": "The finished Day 1 program with every line labeled by the block that explains it. Read this once a day for a week.",
+     "hash": "e3efaf64289e81c2"
+    },
+    {
+     "file": "b12-code-2.mp3",
+     "key": "Goal: Read the whole Day 1 program, and connect each line to the part that taught it.",
+     "spoken": "Goal: Read the whole Day 1 program, and connect each line to the part that taught it.",
+     "hash": "74253ee635f9ab45"
+    },
+    {
+     "file": "b12-code-3.mp3",
+     "key": "Step 1. Include windows.h. Before compiling, the preprocessor pastes in Windows' declarations, such as OutputDebugStringA. Its code lives in kernel32.dll. Part 12.",
+     "spoken": "Step 1. Include windows dot H. Before compiling, the preprocessor pastes in Windows' declarations, such as Output Debug String A. Its code lives in kernel 32 dot D L L. Part 12.",
+     "hash": "a7cf29136b5e1187"
+    },
+    {
+     "file": "b12-code-4.mp3",
+     "key": "Step 2. Declare foo, so the compiler can compile a call to it before its body appears. Part 11.",
+     "spoken": "Step 2. Declare foo, so the compiler can compile a call to it before its body appears. Part 11.",
+     "hash": "bd17a1cd376bb056"
+    },
+    {
+     "file": "b12-code-5.mp3",
+     "key": "Step 3. Define WinMain, the function the startup code calls first. It returns an int exit code and uses the CALLBACK convention. Parts 6 and 10.",
+     "spoken": "Step 3. Define Win Main, the function the startup code calls first. It returns an int exit code and uses the callback convention. Parts 6 and 10.",
+     "hash": "26855431d3aec4f4"
+    },
+    {
+     "file": "b12-code-6.mp3",
+     "key": "Step 4. Its four inputs: this program's handle, an old value that's always 0, the command-line text, and how to show the window. Parts 7 and 10.",
+     "spoken": "Step 4. Its four inputs: this program's handle, an old value that's always 0, the command-line text, and how to show the window. Parts 7 and 10.",
+     "hash": "f5448cff9608ceb8"
+    },
+    {
+     "file": "b12-code-7.mp3",
+     "key": "Step 5. Define foo below WinMain: its body sends the text to the debugger. Part 8.",
+     "spoken": "Step 5. Define foo below Win Main: its body sends the text to the debugger. Part 8.",
+     "hash": "17179b5d9c0a590b"
+    },
+    {
+     "file": "b12-code-8.mp3",
+     "key": "Step 6. Build: the compiler turns this file into an object file. The linker joins it with the libraries into an .exe that starts in the startup code. Parts 3, 5 and 6.",
+     "spoken": "Step 6. Build: the compiler turns this file into an object file. The linker joins it with the libraries into an dot E X E that starts in the startup code. Parts 3, 5 and 6.",
+     "hash": "65257475135186a7"
+    },
+    {
+     "file": "b12-code-9.mp3",
+     "key": "Step 7. Run: Windows loads the .exe and runs the startup code, which calls WinMain.",
+     "spoken": "Step 7. Run: Windows loads the dot E X E and runs the startup code, which calls Win Main.",
+     "hash": "82c1d5a0a67559c4"
+    },
+    {
+     "file": "b12-code-10.mp3",
+     "key": "Step 8. WinMain calls foo. foo calls OutputDebugStringA, and the text appears in the Output window. Then control comes back to WinMain. Part 8.",
+     "spoken": "Step 8. Win Main calls foo. foo calls Output Debug String A, and the text appears in the Output window. Then control comes back to Win Main. Part 8.",
+     "hash": "7fba231d87b6b9e4"
+    },
+    {
+     "file": "b12-code-11.mp3",
+     "key": "Step 9. WinMain returns 0. That's the program's exit code, and the program ends. Part 10.",
+     "spoken": "Step 9. Win Main returns 0. That's the program's exit code, and the program ends. Part 10.",
+     "hash": "5fb27578a1dd551c"
+    },
+    {
+     "file": "b12-code-12.mp3",
+     "key": "Pattern: The three patterns of Day 1: compile then link, declare before use, and call and return.",
+     "spoken": "Pattern: The three patterns of Day 1: compile then link, declare before use, and call and return.",
+     "hash": "9c92f3195ee3aee1"
+    },
+    {
+     "file": "b12-code-13.mp3",
+     "key": "Try it in your head: You remove the include line. Which program fails first, and on which name?",
+     "spoken": "Try it in your head: You remove the include line. Which program fails first, and on which name?",
+     "hash": "307b30360da741f1"
+    }
+   ]
+  }
+ }
+}

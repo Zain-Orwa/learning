@@ -35,3 +35,7 @@ Thumbs.db
 tools/animate/.venv/
 tools/animate/media/
 !**/anim/*.mp4
+
+# Voice (Kokoro): the environment and the voice samples stay local
+tools/voice/.venv/
+tools/voice/samples/

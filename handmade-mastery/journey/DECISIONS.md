@@ -171,3 +171,14 @@ Newest at the bottom. Each entry: date, decision, why.
 - Code isn't read symbol by symbol. Every code block, diagram and table has an "In words" version
   (`say` in `data.js`): specific pseudocode in plain English, shown under it and read aloud instead.
 - Fixed in Day 1, part 9: the tokenized line has five tokens, not six.
+
+## 2026-11-01: Natural voice (Kokoro) and teaching pseudocode
+- The browser voice sounded robotic. Listen now plays audio made offline on the Mac with
+  Kokoro-82M (open source, runs on the M1, no API key). Zain picked the voice `am_michael` over
+  `af_heart` from two samples. Setup: `tools/voice/` (uv, Python 3.12); audio per day in
+  `courses/<course>/dayNN/audio/` (mp3 + `index.json`), committed while a day stays under ~30 MB
+  (Day 1: about 20 MB). Pieces without an mp3 fall back to the browser voice, one piece at a time.
+- Code is never read as code. The "In words" pseudocode now teaches the logic: goal, numbered steps
+  in execution order (what, inputs and outputs, why), the pattern (declare before use, call and
+  return, define once and use many times), and a "Try it in your head" question. Symbols in the
+  normal text are said as words ("double slash", "backslash n", "C plus plus", video times as minutes).

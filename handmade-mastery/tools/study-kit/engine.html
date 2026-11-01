@@ -188,6 +188,9 @@ td.mono{font-family:var(--f-mono);font-size:13px;white-space:nowrap}
 .inwords{border:1px dashed var(--rule);border-radius:6px;padding:8px 14px;margin:-4px 0 14px;background:var(--panel)}
 .inwords .k{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .inwords ol{margin:6px 0 0;padding-left:22px}
+.inwords .iw{margin:6px 0 0}
+.inwords .try{border-top:1px dashed var(--rule);padding-top:6px;margin-top:8px}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .reading{background:color-mix(in srgb,var(--ip) 20%,transparent);border-radius:4px;box-shadow:0 0 0 4px color-mix(in srgb,var(--ip) 20%,transparent)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -406,8 +409,12 @@ document.addEventListener("keydown",e=>{
   if(e.code==="ArrowLeft"){e.preventDefault();const [st]=range(playerBlock);vid.currentTime=Math.max(st,vid.currentTime-5)}
 });
 
-/* ---------- listen: read the Explain / Read code step aloud ---------- */
+/* ---------- listen: read the Explain / Read code step aloud ----------
+   Natural voice first: tools/voice/make_audio.py renders each piece of text with Kokoro and build.py puts
+   the map into D.audio = {blockId: {step: {text: "audio/file.mp3"}}}. Text with no mp3 (or a file that
+   fails to load) falls back to the browser's own voice. */
 const TTS=("speechSynthesis" in window)&&window.SpeechSynthesisUtterance?window.speechSynthesis:null;
+const AUD=D.audio||{}, AU=new Audio();
 let tts={segs:[],i:0,on:false,gen:0,q:[]}, voice=null;
 function pickVoice(){
   if(!TTS) return;
@@ -417,19 +424,31 @@ function pickVoice(){
   voice=TTS.getVoices().filter(v=>/^en/i.test(v.lang)).sort((a,b)=>score(b)-score(a))[0]||null;
 }
 if(TTS){pickVoice(); try{TTS.addEventListener("voiceschanged",pickVoice);}catch(e){}}
+const stepAudio=()=>(AUD[S.cur]||{})[S.step]||null;
+const ttsHint=()=>(stepAudio()?"Natural voice. Code is read as the “In words” version."
+  :"No natural voice for this step yet: the browser voice reads it. (Claude makes it with make_audio.py.)");
 function listenBar(){
-  if(!TTS) return `<p class="small muted">Listening isn't available in this browser. You can still read everything below.</p>`;
+  if(!TTS&&!stepAudio()) return `<p class="small muted">Listening isn't available in this browser. You can still read everything below.</p>`;
   return `<div class="listen"><button class="btn small" data-tts="play" id="ttsplay">${ICON.speak}<span>Listen</span></button>
   <button class="btn ghost small" data-tts="stop" id="ttsstop" aria-label="Stop" title="Stop" hidden>${ICON.stop}</button>
   <button class="btn ghost small" data-tts="rate" aria-label="Reading speed" title="Reading speed">${S.ttsRate||1}×</button>
-  <span class="small muted" id="ttsinfo">Code is read as the “In words” version.</span></div>`;
+  <span class="small muted" id="ttsinfo">${ttsHint()}</span></div>`;
+}
+function inWords(s){
+  if(Array.isArray(s)||typeof s==="string"){ // old format: a plain list of lines
+    const lines=Array.isArray(s)?s:String(s).split("\n");
+    return `<div class="inwords"><div class="k">In words</div><ol>${lines.map(l=>`<li class="ln">${md(l)}</li>`).join("")}</ol></div>`;
+  }
+  return `<div class="inwords"><div class="k">In words</div>`
+    +(s.goal?`<p class="ln iw"><b>Goal:</b> ${md(s.goal)}</p>`:"")
+    +`<ol>${(s.steps||[]).map((l,i)=>`<li class="ln"><span class="vh">Step ${i+1}. </span>${md(l)}</li>`).join("")}</ol>`
+    +(s.pattern?`<p class="ln iw"><b>Pattern:</b> ${md(s.pattern)}</p>`:"")
+    +(s.tryit?`<p class="ln iw try"><b>Try it in your head:</b> ${md(s.tryit)}</p>`:"")+`</div>`;
 }
 function withWords(html,say){
   if(!say||!say.length) return html;
   let n=0;
-  return html.replace(/<\/pre>|<\/table>/g,m=>{const s=say[n++]; if(!s) return m;
-    const lines=Array.isArray(s)?s:String(s).split("\n");
-    return m+`<div class="inwords"><div class="k">In words</div><ol>${lines.map(l=>`<li class="ln">${md(l)}</li>`).join("")}</ol></div>`;});
+  return html.replace(/<\/pre>|<\/table>/g,m=>{const s=say[n++]; return s?m+inWords(s):m;});
 }
 function speakable(t){
   return String(t).replace(/\s+/g," ")
@@ -449,16 +468,29 @@ function speakable(t){
 const sentences=t=>(t.match(/[^.!?]+[.!?]*\s*/g)||[t]).map(x=>x.trim()).filter(Boolean);
 function ttsSegments(){
   const pane=$("#pane"); if(!pane) return [];
+  const map=stepAudio()||{};
   const els=[...pane.querySelectorAll("h3,p,li,.callout,.inwords .ln")].filter(el=>!el.closest("pre,table,.listen,details"));
-  return els.filter(el=>!els.some(o=>o!==el&&o.contains(el))).map(el=>({el,text:speakable(el.textContent)})).filter(x=>x.text);
+  return els.filter(el=>!els.some(o=>o!==el&&o.contains(el))).map(el=>{const key=el.textContent.replace(/\s+/g," ").trim();
+    return {el,text:speakable(el.textContent),file:map[key]||null};}).filter(x=>x.text);
 }
-function ttsSpeak(){
+function ttsSpeak(resume){
   const seg=tts.segs[tts.i]; if(!seg){ttsStop(true);return}
   document.querySelectorAll(".reading").forEach(e=>e.classList.remove("reading"));
   seg.el.classList.add("reading");
   const r=seg.el.getBoundingClientRect(); if(r.top<0||r.bottom>innerHeight) seg.el.scrollIntoView({block:"center",behavior:"smooth"});
-  const info=$("#ttsinfo"); if(info) info.textContent=`${tts.i+1} / ${tts.segs.length}`;
-  const g=tts.gen, parts=sentences(seg.text); let left=parts.length; tts.q=[];
+  const info=$("#ttsinfo"); if(info) info.textContent=`${tts.i+1} / ${tts.segs.length} · ${seg.file?"natural voice":"browser voice"}`;
+  const g=tts.gen;
+  if(seg.file){ // the Kokoro mp3 for this piece
+    let over=false;
+    const next=()=>{if(over||g!==tts.gen)return; over=true; tts.i++; ttsSpeak();};
+    const fail=()=>{if(over||g!==tts.gen)return; over=true; seg.file=null; ttsSpeak();}; // no file: browser voice for this piece only
+    if(!(resume&&AU.src===new URL(seg.file,location.href).href)) AU.src=seg.file;
+    AU.playbackRate=S.ttsRate||1; AU.onended=next; AU.onerror=fail;
+    AU.play().catch(e=>{ if(e.name==="NotAllowedError"){if(g===tts.gen){tts.on=false;ttsUi();}return} fail(); });
+    return;
+  }
+  if(!TTS){tts.i++;ttsSpeak();return}
+  const parts=sentences(seg.text); let left=parts.length; tts.q=[];
   parts.forEach(p=>{const u=new SpeechSynthesisUtterance(p); if(voice){u.voice=voice;u.lang=voice.lang;}else u.lang="en-US"; u.rate=S.ttsRate||1;
     u.onend=u.onerror=()=>{if(g!==tts.gen)return; if(--left===0){tts.i++;ttsSpeak();}};
     tts.q.push(u); TTS.speak(u);});
@@ -467,24 +499,27 @@ function ttsUi(finished){
   const p=$("#ttsplay"),s=$("#ttsstop"),i=$("#ttsinfo"); if(!p) return;
   p.innerHTML=tts.on?ICON.pause+"<span>Pause</span>":ICON.speak+"<span>"+(tts.segs.length&&tts.i>0?"Resume":"Listen")+"</span>";
   s.hidden=!(tts.on||tts.i>0);
-  if(i&&!tts.on&&!tts.segs.length) i.textContent=finished?"Done. Press Listen to hear it again.":"Code is read as the “In words” version.";
+  if(i&&!tts.on&&!tts.segs.length) i.textContent=finished?"Done. Press Listen to hear it again.":ttsHint();
 }
+function ttsHush(){ tts.gen++; if(TTS) TTS.cancel(); AU.pause(); }
 function ttsStop(finished){
-  if(TTS){tts.gen++;TTS.cancel();}
+  ttsHush(); AU.removeAttribute("src");
   tts={segs:[],i:0,on:false,gen:tts.gen,q:[]};
   document.querySelectorAll(".reading").forEach(e=>e.classList.remove("reading"));
   ttsUi(finished);
 }
 function ttsCmd(c){
-  if(!TTS) return;
+  if(!TTS&&!stepAudio()) return;
   if(c==="rate"){const r=[1,1.25,1.5,0.75];S.ttsRate=r[(r.indexOf(S.ttsRate||1)+1)%r.length];save();
     const b=document.querySelector('[data-tts="rate"]'); if(b) b.textContent=S.ttsRate+"×";
-    if(tts.on){tts.gen++;TTS.cancel();ttsSpeak();} return;}
+    AU.playbackRate=S.ttsRate; // an mp3 changes speed in place
+    if(tts.on&&TTS&&TTS.speaking){tts.gen++;TTS.cancel();ttsSpeak();} return;}
   if(c==="stop"){ttsStop();return}
-  if(tts.on){tts.gen++;TTS.cancel();tts.on=false;ttsUi();return} // pause: keeps the place
-  if(!tts.segs.length||tts.i>=tts.segs.length){tts.segs=ttsSegments();tts.i=0;}
+  if(tts.on){ttsHush();tts.on=false;ttsUi();return} // pause: keeps the place (an mp3 resumes mid-sentence)
+  let resume=true;
+  if(!tts.segs.length||tts.i>=tts.segs.length){tts.segs=ttsSegments();tts.i=0;resume=false;}
   if(!tts.segs.length){toast("Nothing to read here");return}
-  tts.on=true; ttsUi(); ttsSpeak();
+  tts.on=true; ttsUi(); ttsSpeak(resume);
 }
 
 /* ---------- tabs ---------- */

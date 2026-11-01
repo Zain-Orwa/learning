@@ -123,6 +123,16 @@ Every tool we use, what it's for, which machine it runs on, and how to set it up
 - LaTeX (MacTeX) is optional; only needed for math formulas.
 - **Rule:** only for hard ideas (memory, the stack, pixels, vectors, collisions), not every episode.
 
+### [x] Kokoro: natural voice for Listen
+- **What:** Kokoro-82M, an open-source text-to-speech model that runs offline on the M1. The study
+  page's Listen button plays its audio (voice `am_michael`, chosen 2026-11-01).
+- **One-time setup (Mac), from the repo root:** `./tools/voice/setup-mac.sh`. It installs uv (if
+  missing) and ffmpeg (Homebrew), then Kokoro into `tools/voice/.venv` (Python 3.12, about 1 GB),
+  downloads the model (about 330 MB, once) and renders two samples.
+- **Making a day's audio:** `uv run --project tools/voice python tools/voice/make_audio.py
+  handmade-mastery/courses/<course>/dayNN`. Only changed text is rendered again; the page is rebuilt.
+- **Where it renders:** only on the Mac. Without audio files the page uses the browser's voice.
+
 ### [ ] Optional: speedtyper.dev
 - Type-racing with real code, as a 5-minute warm-up: https://speedtyper.dev
 

@@ -72,8 +72,22 @@ Claude can't watch video. It works from text:
   For Day 2 and later, set `window.STUDY.lookBack = {label, answer}` (the previous video in
   one sentence), so Part 1 starts with a look back.
   Also write `say` for every block: for each `<pre>` and `<table>` in `explain` and `code`, in order,
-  a list of short plain-English lines (specific pseudocode for code, a walk-through for diagrams and
-  tables). The page shows them as "In words" and the Listen button reads them instead of the code.
+  one object `{goal, steps, pattern, tryit}` (see Day 01's `SAY` at the end of its `data.js`).
+  It teaches the logic, not just describes it:
+  - `goal`: one line, what this code is for.
+  - `steps`: line by line **in execution order**: what each line does, its inputs and outputs, and
+    why it's there. For diagrams and tables: a short walk-through, step by step.
+  - `pattern`: name the logic pattern when there is one (declare before use, call and return, define
+    once and use many times, compile then link). Only patterns Casey has taught by that part.
+  - `tryit`: one "Try it in your head" question that makes him predict a result.
+  Stay inside what Casey has covered so far. Simple English, and no symbols that sound bad aloud
+  (no braces, semicolons, `#`, `->`; write "include windows.h", not `#include <windows.h>`).
+  The page shows it as "In words", and Listen reads it instead of the code.
+  Then make the **Kokoro audio** for the day (Mac only, voice am_michael):
+  `uv run --project tools/voice python tools/voice/make_audio.py handmade-mastery/courses/<course>/dayNN`
+  from the repo root (first time on a machine: `./tools/voice/setup-mac.sh`). Run it again after any
+  text change in `explain`, `code` or `say`: it re-renders only the changed pieces and rebuilds the page.
+  Commit `audio/` if the day stays under about 30 MB.
   End the kit build with a **self-check** for the learner: list what you could
   not verify (tool versions, claims not found in the transcript). Also write `cards.tsv`. If the kit already exists, use its blocks as the sections.
 - Show the learner the section list (number, time range, title) once. Save it.
