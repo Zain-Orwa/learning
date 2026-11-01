@@ -113,6 +113,9 @@ def main():
     args = sys.argv[1:]
     if not args: sys.exit(__doc__)
     day = pathlib.Path(args[0])
+    if not (day / "data.js").is_file():
+        days = sorted(p.parent.as_posix() for p in pathlib.Path("handmade-mastery/courses").glob("*/day*/data.js"))
+        sys.exit(f"No data.js in {day}. Give a real day folder" + (": " + ", ".join(days) if days else "."))
     only = args[args.index("--only") + 1] if "--only" in args else None
     dry = "--dry-run" in args
     adir = day / "audio"; idx_path = adir / "index.json"
