@@ -185,3 +185,10 @@ Newest at the bottom. Each entry: date, decision, why.
 
 ## 2026-11-01: Grading checks meaning, not wording
 - 2026-11-01: Grading checks meaning, not wording (synonyms, own words and simple English count fully when the idea is right).
+
+## 2026-11-01: Kokoro is the only voice; ./study clears a stuck helper
+- Zain wants only the Kokoro voice. The browser/Mac voice (speechSynthesis) was removed from the page:
+  Listen plays only the mp3s, a piece without one is skipped, and a step with no audio shows no Listen
+  button. So make_audio.py must run after every text change.
+- The page didn't open twice because a helper paused with Ctrl+Z kept port 8765. serve.py now checks
+  that the running helper answers; if it doesn't, it stops the stuck study helper and starts fresh.

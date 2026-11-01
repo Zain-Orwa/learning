@@ -131,7 +131,7 @@ Every tool we use, what it's for, which machine it runs on, and how to set it up
   downloads the model (about 330 MB, once) and renders two samples.
 - **Making a day's audio:** `uv run --project tools/voice python tools/voice/make_audio.py
   handmade-mastery/courses/<course>/dayNN`. Only changed text is rendered again; the page is rebuilt.
-- **Where it renders:** only on the Mac. Without audio files the page uses the browser's voice.
+- **Where it renders:** only on the Mac. Kokoro is the only voice: the page never uses the browser's or the Mac's own voice. Pieces without an mp3 are skipped, and a step with no audio shows no Listen button.
 
 ### [ ] Optional: speedtyper.dev
 - Type-racing with real code, as a 5-minute warm-up: https://speedtyper.dev

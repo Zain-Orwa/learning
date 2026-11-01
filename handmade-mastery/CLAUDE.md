@@ -128,7 +128,8 @@ Listen plays **natural Kokoro audio** (voice `am_michael`) from `courses/<course
 (`<part>-<step>-<n>.mp3` + `index.json`), made on the Mac with
 `uv run --project tools/voice python tools/voice/make_audio.py handmade-mastery/courses/<course>/dayNN`
 (repo root; one-time setup `tools/voice/setup-mac.sh`). It re-renders only changed text and rebuilds
-the page. Any piece without an mp3 (e.g. the pinned claude.ai page) uses the browser's voice.
+the page. Kokoro is the only voice (the browser/Mac voice was removed, 2026-11-01): a piece without an mp3
+is skipped, so render the audio after every text change.
 Every new kit gets the upgraded pseudocode and its audio.
 Video files stay outside git (e.g. `~/learning-videos/` on the Mac).
 

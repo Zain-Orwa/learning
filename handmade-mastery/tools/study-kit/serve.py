@@ -17,11 +17,14 @@ import os
 import pathlib
 import re
 import shutil
+import signal
 import subprocess
 import sys
 import tempfile
 import threading
+import time
 import urllib.parse
+import urllib.request
 import webbrowser
 
 HERE = pathlib.Path(__file__).resolve().parent          # handmade-mastery/tools/study-kit
@@ -279,19 +282,52 @@ class Handler(http.server.BaseHTTPRequestHandler):
         self.send_error(404)
 
 
+def answers(url):
+    try:
+        urllib.request.urlopen(url, timeout=3).close()
+        return True
+    except Exception:
+        return False
+
+
+def stuck_helpers():
+    """PIDs of study helpers that hold the port (e.g. one paused with Ctrl+Z, which keeps the port but never answers)."""
+    out = subprocess.run(["lsof", "-ti", f"tcp:{PORT}", "-sTCP:LISTEN"], capture_output=True, text=True).stdout
+    pids = [int(p) for p in out.split() if p.isdigit() and int(p) != os.getpid()]
+    cmd = lambda p: subprocess.run(["ps", "-o", "command=", "-p", str(p)], capture_output=True, text=True).stdout
+    return [p for p in pids if "serve.py" in cmd(p)]
+
+
 def main():
     url = f"http://localhost:{PORT}/"
+    bind = lambda: http.server.ThreadingHTTPServer(("127.0.0.1", PORT), Handler)
     try:
-        server = http.server.ThreadingHTTPServer(("127.0.0.1", PORT), Handler)
+        server = bind()
     except OSError:
-        print(f"The study helper is already running. Opening {url}")
-        webbrowser.open(url)
-        return
+        if answers(url):
+            print(f"The study helper is already running. Opening {url}")
+            webbrowser.open(url)
+            return
+        pids = stuck_helpers()
+        if not pids:
+            sys.exit(f"Port {PORT} is used by another program. Close it, or run: STUDY_PORT=8766 ./study")
+        print(f"An old study helper is stuck (paused with Ctrl+Z?): stopping it (PID {', '.join(map(str, pids))}).")
+        for p in pids:
+            os.kill(p, signal.SIGKILL)  # SIGKILL also works on a paused process
+        for _ in range(30):
+            time.sleep(0.1)
+            try:
+                server = bind()
+                break
+            except OSError:
+                pass
+        else:
+            sys.exit(f"Port {PORT} is still busy. Try again in a few seconds.")
     VIDEOS.mkdir(parents=True, exist_ok=True)
     print(f"Study helper running at {url}")
     print(f"Videos folder: {VIDEOS}")
     print("Claude Code:", "found" if shutil.which(CLAUDE) else "NOT found (grading in the page won't work)")
-    print("Leave this window open while you study. Press Ctrl+C to stop.")
+    print("Leave this window open while you study. Press Ctrl+C to stop (Ctrl+Z only pauses it and blocks the page).")
     if "--no-browser" not in sys.argv:
         threading.Timer(0.6, lambda: webbrowser.open(url)).start()
     try:

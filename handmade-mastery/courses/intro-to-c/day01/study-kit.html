@@ -983,7 +983,7 @@ window.STUDY.how = `<h2>How this page works</h2>
 <li><b>Recall.</b> Write what Casey explained, from memory. Then compare with the notes and handle your parked questions.</li>
 <li><b>Answer.</b> Answer the questions before you see any explanation. Your guesses appear next to them, so you see what changed. "Copy for Claude" copies the question and your answer so any Claude account can grade it.</li>
 <li><b>Explain → Experiment → Read code → Flashcards → Why it matters.</b> The rest of the part, one step at a time.</li>
-<li><b>Listen.</b> Explain and Read code have a <b>Listen</b> button: it reads the step aloud and highlights what it's reading. Code, diagrams and tables are read as their <b>In words</b> version (plain-English pseudocode shown under them). On the Mac it plays a natural voice (Kokoro, made offline). Where there is no audio file, the browser's own voice reads instead.</li>
+<li><b>Listen.</b> Explain and Read code have a <b>Listen</b> button: it reads the step aloud and highlights what it's reading. Code, diagrams and tables are read as their <b>In words</b> version (plain-English pseudocode shown under them). It plays a natural voice (Kokoro, made offline on the Mac). The computer's own robot voice is never used: a piece with no audio file is skipped.</li>
 <li><b>Break.</b> After each part: a short break (5 min), and a longer one (15 min) after every 3 parts. Or stop for today.</li></ol>
 <h3>Your time, your schedule</h3>
 <p><b>Saturday and Sunday are study days.</b> Each session starts with “How much time do you have today?”. Pick 30 min to 3 h, and the page plans what fits (reviews first, then parts, about 1.3 × video minutes + 30 min each), shows a countdown, and warns you 10 minutes before the end so you stop at a clean point. <b>Monday to Friday are review days:</b> a notification at 12:48 brings your due reviews and 2 interview questions.</p>
@@ -1666,25 +1666,15 @@ document.addEventListener("keydown",e=>{
 });
 
 /* ---------- listen: read the Explain / Read code step aloud ----------
-   Natural voice first: tools/voice/make_audio.py renders each piece of text with Kokoro and build.py puts
-   the map into D.audio = {blockId: {step: {text: "audio/file.mp3"}}}. Text with no mp3 (or a file that
-   fails to load) falls back to the browser's own voice. */
-const TTS=("speechSynthesis" in window)&&window.SpeechSynthesisUtterance?window.speechSynthesis:null;
+   Kokoro only: tools/voice/make_audio.py renders each piece of text and build.py puts the map into
+   D.audio = {blockId: {step: {text: "audio/file.mp3"}}}. The browser's own voice is never used: a piece
+   with no mp3 (or a file that fails to load) is skipped. */
 const AUD=D.audio||{}, AU=new Audio();
-let tts={segs:[],i:0,on:false,gen:0,q:[]}, voice=null;
-function pickVoice(){
-  if(!TTS) return;
-  const score=v=>(/premium/i.test(v.name)?50:0)+(/enhanced/i.test(v.name)?40:0)+(/siri/i.test(v.name)?30:0)
-    +(/^(Ava|Zoe|Evan|Samantha|Daniel|Karen|Moira|Serena|Allison|Tom)\b/.test(v.name)?10:0)+(/Google/.test(v.name)?8:0)
-    +(/en[-_]US/i.test(v.lang)?3:0)+(v.localService?2:0);
-  voice=TTS.getVoices().filter(v=>/^en/i.test(v.lang)).sort((a,b)=>score(b)-score(a))[0]||null;
-}
-if(TTS){pickVoice(); try{TTS.addEventListener("voiceschanged",pickVoice);}catch(e){}}
+let tts={segs:[],i:0,on:false,gen:0};
 const stepAudio=()=>(AUD[S.cur]||{})[S.step]||null;
-const ttsHint=()=>(stepAudio()?"Natural voice. Code is read as the “In words” version."
-  :"No natural voice for this step yet: the browser voice reads it. (Claude makes it with make_audio.py.)");
+const ttsHint=()=>"Natural voice. Code is read as the “In words” version.";
 function listenBar(){
-  if(!TTS&&!stepAudio()) return `<p class="small muted">Listening isn't available in this browser. You can still read everything below.</p>`;
+  if(!stepAudio()) return `<p class="small muted">No voice for this step yet (Claude makes it with make_audio.py). You can still read everything below.</p>`;
   return `<div class="listen"><button class="btn small" data-tts="play" id="ttsplay">${ICON.speak}<span>Listen</span></button>
   <button class="btn ghost small" data-tts="stop" id="ttsstop" aria-label="Stop" title="Stop" hidden>${ICON.stop}</button>
   <button class="btn ghost small" data-tts="rate" aria-label="Reading speed" title="Reading speed">${S.ttsRate||1}×</button>
@@ -1706,50 +1696,24 @@ function withWords(html,say){
   let n=0;
   return html.replace(/<\/pre>|<\/table>/g,m=>{const s=say[n++]; return s?m+inWords(s):m;});
 }
-function speakable(t){
-  return String(t).replace(/\s+/g," ")
-    .replace(/→|─▶|▶/g," to ").replace(/×/g," times ").replace(/−/g," minus ")
-    .replace(/\be\.g\./g,"for example").replace(/\bi\.e\./g,"that is").replace(/\bvs\./g,"versus")
-    .replace(/[└┘┐┌│├─┼▲]+/g," ")
-    .replace(/@(\d+)/g," at $1")
-    .replace(/\.(cpp|obj|exe|dll|lib|bat|h)\b/gi,(m,e)=>" dot "+e.toUpperCase().split("").join(" "))
-    .replace(/\b(LNK|C)(\d{4})\b/g,"$1 $2").replace(/\bLNK\b/g,"L N K")
-    .replace(/\bcl\b/g,"C L").replace(/\bx64\b/g,"x 64").replace(/\bx86\b/g,"x 86")
-    .replace(/\b(LP|H|P)(CSTR|STR|INSTANCE|WND|DC|VOID)\b/g,(m,a,b)=>a.split("").join(" ")+" "+(b==="INSTANCE"?"instance":b.split("").join(" ")))
-    .replace(/\b_+(?=[A-Za-z])/g,"").replace(/([A-Za-z])_+(?=\s|$)/g,"$1")
-    .replace(/([a-z])([A-Z])/g,"$1 $2")
-    .replace(/[;()]/g,", ").replace(/[{}<>#*`"“”\[\]\\|]/g," ")
-    .replace(/\s+/g," ").replace(/\s*,(\s*,)+/g,",").replace(/\s+([,.:!?])/g,"$1").replace(/,([.!?])/g,"$1").replace(/^[,\s]+|[,\s]+$/g,"").trim();
-}
-const sentences=t=>(t.match(/[^.!?]+[.!?]*\s*/g)||[t]).map(x=>x.trim()).filter(Boolean);
-function ttsSegments(){
+function ttsSegments(){ // the pieces that have a Kokoro mp3, in reading order (pieces without one are skipped)
   const pane=$("#pane"); if(!pane) return [];
   const map=stepAudio()||{};
   const els=[...pane.querySelectorAll("h3,p,li,.callout,.inwords .ln")].filter(el=>!el.closest("pre,table,.listen,details"));
   return els.filter(el=>!els.some(o=>o!==el&&o.contains(el))).map(el=>{const key=el.textContent.replace(/\s+/g," ").trim();
-    return {el,text:speakable(el.textContent),file:map[key]||null};}).filter(x=>x.text);
+    return {el,file:map[key]||null};}).filter(x=>x.file);
 }
 function ttsSpeak(resume){
   const seg=tts.segs[tts.i]; if(!seg){ttsStop(true);return}
   document.querySelectorAll(".reading").forEach(e=>e.classList.remove("reading"));
   seg.el.classList.add("reading");
   const r=seg.el.getBoundingClientRect(); if(r.top<0||r.bottom>innerHeight) seg.el.scrollIntoView({block:"center",behavior:"smooth"});
-  const info=$("#ttsinfo"); if(info) info.textContent=`${tts.i+1} / ${tts.segs.length} · ${seg.file?"natural voice":"browser voice"}`;
-  const g=tts.gen;
-  if(seg.file){ // the Kokoro mp3 for this piece
-    let over=false;
-    const next=()=>{if(over||g!==tts.gen)return; over=true; tts.i++; ttsSpeak();};
-    const fail=()=>{if(over||g!==tts.gen)return; over=true; seg.file=null; ttsSpeak();}; // no file: browser voice for this piece only
-    if(!(resume&&AU.src===new URL(seg.file,location.href).href)) AU.src=seg.file;
-    AU.playbackRate=S.ttsRate||1; AU.onended=next; AU.onerror=fail;
-    AU.play().catch(e=>{ if(e.name==="NotAllowedError"){if(g===tts.gen){tts.on=false;ttsUi();}return} fail(); });
-    return;
-  }
-  if(!TTS){tts.i++;ttsSpeak();return}
-  const parts=sentences(seg.text); let left=parts.length; tts.q=[];
-  parts.forEach(p=>{const u=new SpeechSynthesisUtterance(p); if(voice){u.voice=voice;u.lang=voice.lang;}else u.lang="en-US"; u.rate=S.ttsRate||1;
-    u.onend=u.onerror=()=>{if(g!==tts.gen)return; if(--left===0){tts.i++;ttsSpeak();}};
-    tts.q.push(u); TTS.speak(u);});
+  const info=$("#ttsinfo"); if(info) info.textContent=`${tts.i+1} / ${tts.segs.length}`;
+  const g=tts.gen; let over=false;
+  const next=()=>{if(over||g!==tts.gen)return; over=true; tts.i++; ttsSpeak();}; // a file that fails is skipped too
+  if(!(resume&&AU.src===new URL(seg.file,location.href).href)) AU.src=seg.file;
+  AU.playbackRate=S.ttsRate||1; AU.onended=next; AU.onerror=next;
+  AU.play().catch(e=>{ if(e.name==="NotAllowedError"){if(g===tts.gen){tts.on=false;ttsUi();}return} next(); });
 }
 function ttsUi(finished){
   const p=$("#ttsplay"),s=$("#ttsstop"),i=$("#ttsinfo"); if(!p) return;
@@ -1757,19 +1721,18 @@ function ttsUi(finished){
   s.hidden=!(tts.on||tts.i>0);
   if(i&&!tts.on&&!tts.segs.length) i.textContent=finished?"Done. Press Listen to hear it again.":ttsHint();
 }
-function ttsHush(){ tts.gen++; if(TTS) TTS.cancel(); AU.pause(); }
+function ttsHush(){ tts.gen++; AU.pause(); }
 function ttsStop(finished){
   ttsHush(); AU.removeAttribute("src");
-  tts={segs:[],i:0,on:false,gen:tts.gen,q:[]};
+  tts={segs:[],i:0,on:false,gen:tts.gen};
   document.querySelectorAll(".reading").forEach(e=>e.classList.remove("reading"));
   ttsUi(finished);
 }
 function ttsCmd(c){
-  if(!TTS&&!stepAudio()) return;
+  if(!stepAudio()) return;
   if(c==="rate"){const r=[1,1.25,1.5,0.75];S.ttsRate=r[(r.indexOf(S.ttsRate||1)+1)%r.length];save();
     const b=document.querySelector('[data-tts="rate"]'); if(b) b.textContent=S.ttsRate+"×";
-    AU.playbackRate=S.ttsRate; // an mp3 changes speed in place
-    if(tts.on&&TTS&&TTS.speaking){tts.gen++;TTS.cancel();ttsSpeak();} return;}
+    AU.playbackRate=S.ttsRate; return;} // the mp3 changes speed in place
   if(c==="stop"){ttsStop();return}
   if(tts.on){ttsHush();tts.on=false;ttsUi();return} // pause: keeps the place (an mp3 resumes mid-sentence)
   let resume=true;
