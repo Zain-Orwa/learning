@@ -1,18 +1,23 @@
 {
  "v": 2,
  "cur": "b01",
- "step": "watch",
+ "step": "explain",
  "tab": "path",
  "done": {
   "b01": {
-   "guess": true
+   "guess": true,
+   "watch": true,
+   "recall": true,
+   "ask": true
   }
  },
  "completed": {},
  "vt": {
-  "b01": 33.843131
+  "b01": 321
  },
- "recall": {},
+ "recall": {
+  "b01": "1. how you can code C program in Windows.\n2. what do you need as tools to Code a game using Windows machine.\n3. to able to code a game you need to get a text editor and compiler that is not come out of the box like linux we have to download that."
+ },
  "cmp": {},
  "guess": {
   "b01": "Turns the code into machine code is acted like a translator"
@@ -25,7 +30,28 @@
  },
  "lb": {},
  "lbShow": {},
- "rfb": {},
+ "rfb": {
+  "b01": {
+   "score": 35,
+   "right": "You correctly said that Windows does not come with a C compiler, so you have to download one yourself, and that Linux usually has one already (2:46). You also loosely said the series is about coding a game on a Windows machine.",
+   "missing": [
+    {
+     "point": "Why this series exists: Handmade Hero builds a whole game in C, live. Casey will not stop the game streams to explain basics like the ?: operator or how the stack works. These Intro to C videos teach those basics first, so a beginner can follow. You only said 'code a game', which gets partial credit.",
+     "pct": 25
+    },
+    {
+     "point": "Which program Casey installs to get the compiler, which edition he picks, and why he says the other editions are not useful for us",
+     "pct": 35
+    },
+    {
+     "point": "Wrong detail: you said you also have to download a text editor. Windows already has one (Notepad). In this part, Casey only says that the C compiler is missing.",
+     "pct": 5
+    }
+   ],
+   "guide": "You said that on Windows you must download the compiler yourself. What is the name of the big Microsoft program that the compiler comes inside, and which edition of it did Casey choose (and which editions did he say to ignore)?",
+   "rewatch": "1:38-4:00"
+  }
+ },
  "cdate": {},
  "ivans": {},
  "ivfb": {},
@@ -34,12 +60,84 @@
  "dbgfb": {},
  "session": null,
  "park": {},
- "answers": {},
- "fb": {},
+ "answers": {
+  "b01?0": "so as a beginner also can follow along during the series, because he mentioned that he will not stop and explain basic things like what is ?: operators do. and addition to that is like a testing for the series.",
+  "b01?1": "We need a compiler because in linux the compiler come with linux machine",
+  "b01?2": "visual studio express (community) because any one can download because it's free for the personal use.\n"
+ },
+ "fb": {
+  "b01?0": {
+   "score": 65,
+   "right": "You got two important ideas. (1) The Intro to C series is there so a beginner can follow Handmade Hero. (2) Casey will not stop the game series to explain basic things like what the ?: operator does. Good, you also gave a real example from the video.",
+   "missing": [
+    {
+     "point": "WHY he does not want to stop: you did not say what he wants the game series to focus on instead of C basics",
+     "pct": 20
+    },
+    {
+     "point": "The exception: the one case where he WILL still explain a basic thing during the game series",
+     "pct": 5
+    },
+    {
+     "point": "Wrong: Casey does not say the prelude is 'a testing for the series'. Do not add ideas that are not in the video",
+     "pct": 10
+    }
+   ],
+   "guide": "When Handmade Hero starts, Casey wants to use his time to explain one kind of thing about the game code. What kind of thing is it, and when would he still stop to explain a C basic?",
+   "rewatch": "0:00-5:21"
+  },
+  "b01?1": {
+   "score": 65,
+   "right": "You named the right first thing: a C compiler (35%). You also said Linux machines usually come with a compiler already (15%). You suggested that Windows does not have one, but you did not say it clearly, so this gets half credit (10% of 20%).",
+   "missing": [
+    {
+     "point": "Say clearly that Windows does NOT come with a C compiler, so you must get one yourself. You only suggested this.",
+     "pct": 10
+    },
+    {
+     "point": "Where the compiler comes from on Windows: whose compiler you install, and which program you install to get it (and which free version to use today).",
+     "pct": 40
+    }
+   ],
+   "guide": "Windows has no compiler built in. So which company's compiler does Casey install, and which big program does he download to get it?",
+   "rewatch": "0:00-5:21"
+  },
+  "b01?2": {
+   "score": 30,
+   "right": "You picked Express, which was the right family, and you correctly said that today we use the Community edition. It is true that it is free, but that is not the reason Casey picks it.",
+   "missing": [
+    {
+     "point": "The exact edition: Express has more than one version. You must name the one Casey picks, not just 'Express'.",
+     "pct": 20
+    },
+    {
+     "point": "The deciding feature: what this edition can do with C code that the other editions cannot. 'Free' is not the reason, because the other Express editions were free too.",
+     "pct": 40
+    },
+    {
+     "point": "For today: which workload to choose in the Community installer.",
+     "pct": 10
+    }
+   ],
+   "guide": "Casey's list had several Express editions, and all of them were free. So why does he pick this one? What kind of program must it make from our C code?",
+   "rewatch": "0:00-5:21"
+  }
+ },
  "cards": {},
- "notes": {},
- "speed": 1,
- "lastVisit": 1793484196020,
+ "notes": {
+  "b01": [
+   {
+    "r": "user",
+    "c": "I would like to ask you to include only the important part like why Casey choose this tool and another tool itn't not that important unless is important and relevant for what is the video for"
+   },
+   {
+    "r": "assistant",
+    "c": "Here is only what matters in this part.\n\n**Why this series exists**\nCasey is making Handmade Hero, a full game written in C from scratch, live. He will not stop that series to teach the basics. These Intro to C videos teach the basics first, so you can follow along later.\n\n**Why Visual Studio**\nWindows does not come with a C compiler. Microsoft's compiler comes inside Visual Studio, so Casey installs that. You only need it for a few of its parts, not the whole program.\n\n**What to install today**\nCasey's version is very old now. Install the free **Visual Studio Community** edition. When the installer asks, choose **\"Desktop development with C++\"**.\n\n**The parts you need from it**\n- **cl.exe** is the compiler. It turns your C text into an object file.\n- **link.exe** is the linker. It joins the object files into a .exe.\n- **Debugger** lets you watch your program while it runs.\n\nYou can ignore the other tools for now.\n\n**Keep this picture in mind for the whole video:**\ntext file → compiler → object file → linker → .exe → Windows runs it"
+   }
+  ]
+ },
+ "speed": 1.25,
+ "lastVisit": 1793546051122,
  "sessionParts": 0,
  "brk": null,
  "stopped": false,

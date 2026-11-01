@@ -48,10 +48,10 @@ Needed for the first session: Claude Code (logged in), the videos folder
 ## Study position
 - Course: intro-to-c, Day 01
 - Section: 1 of 12 ("Why this series, and getting a compiler", 0:00-5:21)
-- Step: Watch (video at 0:34 into the part, episode time 0:34)
+- Step: Explain (video at 5:21 into the part, episode time 5:21)
 - Parts done: 0
 - Completed (part id, date): none
-- Updated: 2026-10-31
+- Updated: 2026-11-01
 
 ## Debugging log
 _(one line per challenge: date, bug class, score, time)_
