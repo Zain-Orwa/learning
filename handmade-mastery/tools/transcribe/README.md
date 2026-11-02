@@ -9,10 +9,11 @@ Each episode's `transcript.txt` has one line per spoken segment:
 - A 72-minute episode took about 30 minutes on 2 CPU cores.
 
 ## Run it on the Mac
+faster-whisper is already installed for the mic buttons, in the repo-root `tools/transcribe/`
+(set up once with `./tools/transcribe/setup-mac.sh`). From the repo root:
 ```sh
-pip install faster-whisper numpy
 ffmpeg -i episode.mp4 -ac 1 -ar 16000 audio.wav
-python3 transcribe.py small.en audio.wav transcript.txt
+tools/transcribe/.venv/bin/python handmade-mastery/tools/transcribe/transcribe.py tools/transcribe/models/small.en audio.wav transcript.txt
 ```
 The first argument is a model name (downloaded automatically) or a local model folder.
 

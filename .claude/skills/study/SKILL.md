@@ -86,7 +86,11 @@ Claude can't watch video. It works from text:
   Then make the **Kokoro audio** for the day (Mac only, voice am_michael):
   `uv run --project tools/voice python tools/voice/make_audio.py handmade-mastery/courses/<course>/dayNN`
   from the repo root (first time on a machine: `./tools/voice/setup-mac.sh`). Run it again after any
-  text change in `explain`, `code` or `say`: it re-renders only the changed pieces and rebuilds the page.
+  text change in `explain`, `code`, `say` or `interview`: it re-renders only the changed pieces and rebuilds the page.
+  The same run gives every new kit its **interview audio** (each question, each follow-up, and the
+  intro "Here's an interview question."), so the Interview corner's interviewer speaks with Kokoro.
+  Text boxes need no work: the engine adds a mic button to every box (speech to text through the
+  helper). If a part uses special names Whisper may mishear, add them as `terms: [...]` on the part.
   Commit `audio/` if the day stays under about 30 MB.
   End the kit build with a **self-check** for the learner: list what you could
   not verify (tool versions, claims not found in the transcript). Also write `cards.tsv`. If the kit already exists, use its blocks as the sections.

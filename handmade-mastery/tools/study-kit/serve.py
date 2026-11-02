@@ -37,6 +37,8 @@ CLAUDE = os.environ.get("STUDY_CLAUDE", "claude")
 MODEL = os.environ.get("STUDY_MODEL", "")               # empty = your account's default model
 PLAYLIST = SUBJECT / "courses" / "playlist.json"
 LOCK = threading.Lock()
+TRANSCRIBE = REPO / "tools" / "transcribe"                # faster-whisper env (setup: tools/transcribe/setup-mac.sh)
+MAX_AUDIO = 30 * 1024 * 1024
 
 TUTOR = ("You are a strict but kind programming tutor for Zain, whose English is not his first "
          "language. Use plain, simple English. Follow the instructions in the message exactly. "
@@ -114,6 +116,52 @@ def ask_claude(prompt, want_json):
         return {"data": json.loads(raw)}
     except Exception:
         return {"error": "Claude's answer wasn't in the expected format. Try again.", "text": text}
+
+
+class Whisper:
+    """The mic buttons' speech to text: tools/transcribe/worker.py, started once, keeps the model in memory."""
+
+    def __init__(self):
+        self.proc, self.lock = None, threading.Lock()
+
+    def available(self):
+        return (TRANSCRIBE / ".venv").is_dir() and bool(shutil.which("ffmpeg"))
+
+    def _start(self):
+        if self.proc and self.proc.poll() is None:
+            return
+        py = TRANSCRIBE / ".venv" / "bin" / "python"
+        self.proc = subprocess.Popen([str(py), str(TRANSCRIBE / "worker.py")], stdin=subprocess.PIPE,
+                                     stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True, bufsize=1)
+        if not json.loads(self.proc.stdout.readline() or "{}").get("ready"):
+            self.proc = None
+            raise RuntimeError("the speech model didn't load (run tools/transcribe/setup-mac.sh)")
+
+    def preload(self):
+        try:
+            with self.lock:
+                self._start()
+        except Exception as e:
+            print("Speech to text: not ready:", e)
+
+    def transcribe(self, audio, prompt):
+        with tempfile.TemporaryDirectory() as tmp:
+            src, wav = pathlib.Path(tmp) / "in", pathlib.Path(tmp) / "in.wav"
+            src.write_bytes(audio)
+            code, out = run(["ffmpeg", "-loglevel", "error", "-y", "-i", str(src), "-ac", "1", "-ar", "16000", str(wav)], timeout=60)
+            if code != 0:
+                return {"error": "Couldn't read the recording."}
+            with self.lock:                   # one request at a time; the worker answers in order
+                try:
+                    self._start()
+                    self.proc.stdin.write(json.dumps({"wav": str(wav), "prompt": prompt}) + "\n")
+                    return json.loads(self.proc.stdout.readline() or '{"error": "The speech worker stopped."}')
+                except Exception as e:
+                    self.proc = None
+                    return {"error": str(e)[:200]}
+
+
+WHISPER = Whisper()
 
 
 def update_state_position(block):
@@ -241,7 +289,8 @@ class Handler(http.server.BaseHTTPRequestHandler):
             self.end_headers()
             return
         if path == "/api/ping":
-            return self.send_json({"ok": True, "claude": bool(shutil.which(CLAUDE)), "videos": str(VIDEOS)})
+            return self.send_json({"ok": True, "claude": bool(shutil.which(CLAUDE)), "videos": str(VIDEOS),
+                                   "transcribe": WHISPER.available()})
         if path == "/api/progress":
             f = kit_dir(q["kit"][0]) / "progress.json"
             return self.send_json(json.loads(f.read_text(encoding="utf-8")) if f.exists() else {})
@@ -259,7 +308,16 @@ class Handler(http.server.BaseHTTPRequestHandler):
         self.send_error(404)
 
     def do_POST(self):
-        path = urllib.parse.urlparse(self.path).path
+        url = urllib.parse.urlparse(self.path)
+        path = url.path
+        if path == "/api/transcribe":           # body: the raw recording (webm/mp4); ?prompt= key terms
+            n = int(self.headers.get("Content-Length", "0"))
+            if not WHISPER.available():
+                return self.send_json({"error": "Speech to text isn't set up on this computer."}, 503)
+            if not 0 < n <= MAX_AUDIO:
+                return self.send_json({"error": "The recording is empty or too long."}, 400)
+            prompt = urllib.parse.parse_qs(url.query).get("prompt", [""])[0][:800]
+            return self.send_json(WHISPER.transcribe(self.rfile.read(n), prompt))
         try:
             body = self.read_json()
         except Exception:
@@ -327,6 +385,10 @@ def main():
     print(f"Study helper running at {url}")
     print(f"Videos folder: {VIDEOS}")
     print("Claude Code:", "found" if shutil.which(CLAUDE) else "NOT found (grading in the page won't work)")
+    print("Speech to text:", "on (mic buttons in every text box)" if WHISPER.available()
+          else "off (run tools/transcribe/setup-mac.sh once to get mic buttons)")
+    if WHISPER.available():
+        threading.Thread(target=WHISPER.preload, daemon=True).start()   # load the model now: the first answer is fast
     print("Leave this window open while you study. Press Ctrl+C to stop (Ctrl+Z only pauses it and blocks the page).")
     if "--no-browser" not in sys.argv:
         threading.Timer(0.6, lambda: webbrowser.open(url)).start()

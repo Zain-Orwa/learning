@@ -32,7 +32,9 @@ Whenever Zain answers, explains or writes code, grade it like this:
    grammar mistakes). Never ask him to repeat the reference word for word; an
    exact name or term matters only when the question asks for it. Be strict
    on the ideas: a vague or half-right idea gets partial credit, and a wrong
-   statement costs points even if the rest is right.
+   statement costs points even if the rest is right. Spoken answers (the mic
+   button) have filler words ("uh", "like") and small transcription mistakes
+   ("when main" for WinMain): ignore them and judge only the ideas.
 2. **What's right**: name the parts he got right (short).
 3. **What's missing or wrong for 100%**: list each missing or wrong piece and
    roughly how many % it's worth, so the numbers add up to 100.

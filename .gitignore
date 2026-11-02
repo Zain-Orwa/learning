@@ -39,3 +39,7 @@ tools/animate/media/
 # Voice (Kokoro): the environment and the voice samples stay local
 tools/voice/.venv/
 tools/voice/samples/
+
+# Speech to text (faster-whisper): the environment and the Whisper model stay local
+tools/transcribe/.venv/
+tools/transcribe/models/

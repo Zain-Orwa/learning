@@ -25,6 +25,9 @@ This file adds what is specific to this subject. Then read
 - **Stay inside the episode.** When Casey says "we'll cover this later", park
   it (each study kit has a *Parked for later* list) and teach it when Casey does.
 - **Never compile course code on the Mac.** Course code is written and run on Windows.
+- **Every place Zain can type (study pages, new tools, future subjects) also has a mic button that
+  transcribes speech with the local helper.** On the study page this is automatic: `attachMics()` in
+  `engine.html` adds a mic to every `<textarea>` and text `<input>`, so a new box needs no code.
 
 ## Setup progress
 
@@ -54,7 +57,8 @@ This file adds what is specific to this subject. Then read
 | Code tutor | Claude Code, Learning output style; a custom "Casey tutor" style may follow |
 | Concept teaching, practice, knowledge graph | LearnHarness (open source; the learner forked it). **Open:** needs an Anthropic API key (pay per use); a Claude subscription doesn't cover it |
 | Visual explanations | Manim through the repo skill `/animate` (renders on the Mac; one-time setup `tools/animate/setup-mac.sh`), only for hard ideas |
-| Listening | Kokoro-82M (offline, voice `am_michael`) through `tools/voice/make_audio.py`: the study page's Listen button plays it (one-time setup `tools/voice/setup-mac.sh`) |
+| Listening | Kokoro-82M (offline, voice `am_michael`) through `tools/voice/make_audio.py`: the study page's Listen button and the interviewer's voice play it (one-time setup `tools/voice/setup-mac.sh`) |
+| Speaking | faster-whisper `small.en` (offline, int8, CPU) in `tools/transcribe/`: the mic button in every text box (one-time setup `tools/transcribe/setup-mac.sh`) |
 | Memory | Anki with FSRS. Cards live in the repo as `cards.tsv` per day |
 | Speed | Daily blank-file rebuild drill; speedtyper.dev as optional warm-up |
 | Episode lesson format | One HTML study kit per episode (see below) |
@@ -131,6 +135,19 @@ Listen plays **natural Kokoro audio** (voice `am_michael`) from `courses/<course
 the page. Kokoro is the only voice (the browser/Mac voice was removed, 2026-11-01): a piece without an mp3
 is skipped, so render the audio after every text change.
 Every new kit gets the upgraded pseudocode and its audio.
+The same run renders the **interviewer's voice**: every interview question and follow-up
+(`<part>-iv-<n>.mp3`, step `iv`) plus one intro (`_iv-intro-1.mp3`, "Here's an interview question.").
+In the Interview corner, **Ask me** plays intro + question, each follow-up has a play button, and
+**Auto-ask** (off by default) asks the question when the Why it matters step opens.
+**Speak instead of type:** with the helper running, every text box has a mic button (bottom-right).
+Press it, speak, press again (or Esc). The page records with MediaRecorder and POSTs to `/api/transcribe`;
+serve.py converts with ffmpeg (16 kHz mono WAV) and transcribes with faster-whisper `small.en` in a
+worker (`tools/transcribe/worker.py`) that keeps the model loaded (about 1 s per short answer).
+The Whisper prompt holds the part's key terms (the title, `<code>`/backtick words and CamelCase names
+from data.js, plus optional `terms: [...]` on a part or `window.STUDY.terms`), so WinMain comes out right.
+The text is inserted at the cursor and saved like typing; nothing is graded or sent by itself. Without
+the helper (plain file, claude.ai) or without `tools/transcribe/.venv`, there are no mic buttons.
+Grader prompts (`GRADE_RULES`) ignore filler words and small transcription mistakes.
 Video files stay outside git (e.g. `~/learning-videos/` on the Mac).
 
 ## Study sessions: `/study`
@@ -143,4 +160,5 @@ and one task at a time.
 
 ## Making a transcript
 
-See `tools/transcribe/README.md`. Line format: `[h:mm:ss] text`.
+See `tools/transcribe/README.md`. Line format: `[h:mm:ss] text`. The faster-whisper environment
+is shared with the mic buttons: `../tools/transcribe/` (repo root).

@@ -5,7 +5,9 @@ Usage (from the repo root):
 
 For each part and each step (explain, code) it builds the same reading order as the page (headings,
 paragraphs, list items, callouts, and the "In words" pseudocode in place of every code block, diagram
-and table), renders each piece with Kokoro and saves <day>/audio/<part>-<step>-<n>.mp3. It writes
+and table), renders each piece with Kokoro and saves <day>/audio/<part>-<step>-<n>.mp3. The interviewer
+speaks too: every interview question and follow-up becomes <part>-iv-<n>.mp3 (step "iv", keyed by its
+data.js text), plus one shared intro, _iv-intro-1.mp3 (the page's "Ask me" plays intro + question). It writes
 <day>/audio/index.json (which text goes with which file) and rebuilds study-kit.html, so the page finds
 the files. Only pieces whose text changed are rendered again. Needs node (to read data.js).
 """
@@ -15,6 +17,7 @@ from html.parser import HTMLParser
 from speak import spoken
 
 VOICE, SPEED = "am_michael", 1.0
+IV_INTRO = "Here's an interview question."
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 BUILD = ROOT / "handmade-mastery" / "tools" / "study-kit" / "build.py"
 
@@ -123,15 +126,26 @@ def main():
     old_by_hash = {s["hash"]: adir / s["file"] for steps in old["segments"].values() for segs in steps.values() for s in segs}
 
     plan, words = {}, 0
-    for b in load_blocks(day):
+
+    def piece(bid, k, n, key):
+        nonlocal words
+        say = spoken(key); words += len(say.split())
+        h = hashlib.sha1(f"{VOICE}|{SPEED}|{say}".encode()).hexdigest()[:16]
+        plan.setdefault(bid, {}).setdefault(k, []).append({"file": f"{bid}-{k}-{n}.mp3", "key": key, "spoken": say, "hash": h})
+
+    blocks = load_blocks(day)
+    if any(b.get("interview") for b in blocks):
+        piece("_iv", "intro", 1, IV_INTRO)
+    for b in blocks:
         if only and b["id"] != only:
             if b["id"] in old["segments"]: plan[b["id"]] = old["segments"][b["id"]]  # keep other parts as they are
             continue
         for k in ("explain", "code"):
             for n, key in enumerate(segments(step_html(b, k)), 1):
-                say = spoken(key); words += len(say.split())
-                h = hashlib.sha1(f"{VOICE}|{SPEED}|{say}".encode()).hexdigest()[:16]
-                plan.setdefault(b["id"], {}).setdefault(k, []).append({"file": f'{b["id"]}-{k}-{n}.mp3', "key": key, "spoken": say, "hash": h})
+                piece(b["id"], k, n, key)
+        ivs = [t for iv in b.get("interview") or [] for t in [iv["q"], *(iv.get("followups") or [])]]
+        for n, key in enumerate(dict.fromkeys(ivs), 1):  # the question, then each follow-up
+            piece(b["id"], "iv", n, key)
 
     todo = [s for steps in plan.values() for segs in steps.values() for s in segs
             if not ((adir / s["file"]).is_file() and old_by_hash.get(s["hash"]) == adir / s["file"])]

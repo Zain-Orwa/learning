@@ -9,3 +9,5 @@ so the dates are always right. `/review` runs a review session.
 | Unit | Title | Source | Learned | Stage | Next due | Last | History |
 |---|---|---|---|---|---|---|---|
 | icd01-p01 | Intro C D1 · Why this series, and getting a compiler | courses/intro-to-c/day01#b01 | 2026-11-01 | 1d | 2026-11-02 | – |  |
+| icd01-p02 | Intro C D1 · Creating a project and your first .cpp file | courses/intro-to-c/day01#b02 | 2026-11-02 | 1d | 2026-11-03 | – |  |
+| iv-icd01-b02-0 | [os-windows] On Windows, what's the difference between a console application and a GUI application? Can one .exe be both? | courses/intro-to-c/day01#b02/iv0 | 2026-11-02 | 1d | 2026-11-03 | – |  |

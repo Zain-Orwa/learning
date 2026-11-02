@@ -48,11 +48,11 @@ Needed for the first session: Claude Code (logged in), the videos folder
 
 ## Study position
 - Course: intro-to-c, Day 01
-- Section: 2 of 12 ("Creating a project and your first .cpp file", 5:21-12:13)
-- Step: Answer (video at 6:52 into the part, episode time 12:13)
-- Parts done: 1
-- Completed (part id, date): b01 2026-11-01
-- Updated: 2026-11-01
+- Section: 3 of 12 ("Building: what compiling actually means", 12:13-16:55)
+- Step: Guess
+- Parts done: 2
+- Completed (part id, date): b01 2026-11-01, b02 2026-11-02
+- Updated: 2026-11-02
 
 ## Debugging log
 _(one line per challenge: date, bug class, score, time)_

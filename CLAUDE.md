@@ -52,7 +52,11 @@ everything else), so both machines can edit safely.
    instead of giving the answer. Full rules: `docs/learning-method.md`.
 7. **Review before new.** Every study session starts with any reviews due in
    the subject's `journey/REVIEWS.md` (`/review`), then new material.
-8. **Keep the repo current.** At the end of every session, update the subject's
+8. **Voice in, voice out.** Every place Zain can type (study pages, new tools, future subjects)
+   also has a mic button that transcribes speech with the local helper (faster-whisper,
+   `tools/transcribe/`, set up once with `tools/transcribe/setup-mac.sh`). Text he hears uses the
+   Kokoro voice (`tools/voice/`). Graders ignore filler words and small transcription mistakes.
+9. **Keep the repo current.** At the end of every session, update the subject's
    `journey/STATE.md` and `journey/REVIEWS.md`, add new decisions to its
    `journey/DECISIONS.md`, then commit and push.
 

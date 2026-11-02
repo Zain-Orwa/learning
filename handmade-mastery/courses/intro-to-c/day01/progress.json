@@ -1,7 +1,7 @@
 {
  "v": 2,
- "cur": "b02",
- "step": "ask",
+ "cur": "b03",
+ "step": "guess",
  "tab": "path",
  "done": {
   "b01": {
@@ -18,11 +18,18 @@
   "b02": {
    "guess": true,
    "watch": true,
-   "recall": true
+   "recall": true,
+   "ask": true,
+   "explain": true,
+   "experiment": true,
+   "code": true,
+   "cards": true,
+   "why": true
   }
  },
  "completed": {
-  "b01": true
+  "b01": true,
+  "b02": true
  },
  "vt": {
   "b01": 321,
@@ -112,10 +119,34 @@
   }
  },
  "cdate": {
-  "b01": "2026-11-01"
+  "b01": "2026-11-01",
+  "b02": "2026-11-02"
  },
- "ivans": {},
- "ivfb": {},
+ "ivans": {
+  "b02:0": "a console application is app that is using the terminal as its interface while GUI app is creating it's own one and all that can be flagged inside the app itself"
+ },
+ "ivfb": {
+  "b02:0": {
+   "score": 45,
+   "right": "You explained the main user-facing difference correctly: a console app uses a text terminal, and a GUI app makes its own windows (30%). You also said a flag in the app decides this. That is the right idea, but you did not say where the flag lives or when it is set, so it gets half credit (15 of 35%).",
+   "missing": [
+    {
+     "point": "Say more clearly what the flag is and where it lives. It is set at build time in the .exe header. It is called the subsystem, and its value is CONSOLE or WINDOWS. The program's code does not set it while running.",
+     "pct": 20
+    },
+    {
+     "point": "The subsystem also decides which start function the startup code looks for and calls: main for a console app, WinMain for a GUI app.",
+     "pct": 20
+    },
+    {
+     "point": "You did not answer the second question, 'Can one .exe be both?' On Windows, one .exe is cleanly one or the other. There are workarounds, but not a clean 'both'.",
+     "pct": 15
+    }
+   ],
+   "guide": "You said this can be 'flagged inside the app.' Where exactly is that flag stored, and when is it decided: while the program runs, or when you build the .exe?",
+   "rewatch": "5:21-12:13"
+  }
+ },
  "dbgs": {},
  "dbgans": {},
  "dbgfb": {},
@@ -126,7 +157,9 @@
   "b01?1": "We need a compiler because in linux the compiler come with linux machine",
   "b01?2": "visual studio express (community) because any one can download because it's free for the personal use.\n",
   "b02?0": "I think Win32 Console is when you want to develop program that run on command line cl, but for project that where you run a program from a window.",
-  "b02?1": "because we are coding a game and a game in most cases uses a windowed application"
+  "b02?1": "because we are coding a game and a game in most cases uses a windowed application",
+  "b02?2": "it's just a project\n",
+  "b02?3": "it's file that has .c extension"
  },
  "fb": {
   "b01?0": {
@@ -220,6 +253,42 @@
    ],
    "guide": "An app must be either a console program or a windowed program, not both. What would Handmade Hero lose by not being a console program?",
    "rewatch": "5:21-12:13"
+  },
+  "b02?2": {
+   "score": 5,
+   "right": "You connected a solution to projects, and that link is real (5%). But saying a solution IS a project is not correct. They are two different things.",
+   "missing": [
+    {
+     "point": "A solution is a container. It holds one or more projects. It is not one project itself.",
+     "pct": 55
+    },
+    {
+     "point": "The solution is Visual Studio's name for the whole thing you are building, and it lists the projects and how to build them.",
+     "pct": 15
+    },
+    {
+     "point": "Inside a solution, the project in bold is the startup project. It is the one that runs when you press Start.",
+     "pct": 25
+    }
+   ],
+   "guide": "In the Solution Explorer, look at the top line (the solution) and the line under it (the project). If one sits inside the other, what is the solution's job: is it a project, or something that holds projects?",
+   "rewatch": "5:21-12:13"
+  },
+  "b02?3": {
+   "score": 5,
+   "right": "You know a C source file is a file, and that C files often end in .c. (Note: Casey's file is test.cpp, which also holds C-style code.) But the file name ending only tells us the name. It does not tell us what is inside the file.",
+   "missing": [
+    {
+     "point": "What is inside: only plain text (normal characters, like a Notepad file), with no hidden formatting or extra data. The colors come from the editor and are not saved in the file.",
+     "pct": 70
+    },
+    {
+     "point": "The compiler reads this text and works out what it means",
+     "pct": 25
+    }
+   ],
+   "guide": "If you open test.cpp in Notepad instead of Visual Studio, what will you see? Is anything else hidden in the file, like colors or special data?",
+   "rewatch": "5:21-12:13"
   }
  },
  "cards": {
@@ -240,6 +309,36 @@
    "int": 0,
    "reps": 0,
    "due": 20759
+  },
+  "b02#0": {
+   "ease": 2.5,
+   "int": 0,
+   "reps": 0,
+   "due": 20759
+  },
+  "b02#1": {
+   "ease": 2.5,
+   "int": 0,
+   "reps": 0,
+   "due": 20759
+  },
+  "b02#2": {
+   "ease": 2.5,
+   "int": 0,
+   "reps": 0,
+   "due": 20759
+  },
+  "b02#3": {
+   "ease": 2.5,
+   "int": 0,
+   "reps": 0,
+   "due": 20759
+  },
+  "b02#4": {
+   "ease": 2.5,
+   "int": 0,
+   "reps": 0,
+   "due": 20759
   }
  },
  "notes": {
@@ -255,9 +354,9 @@
   ]
  },
  "speed": 1.25,
- "lastVisit": 1793564983933,
+ "lastVisit": 1793580680521,
  "sessionParts": 1,
  "brk": null,
- "stopped": false,
+ "stopped": true,
  "finished": false
 }

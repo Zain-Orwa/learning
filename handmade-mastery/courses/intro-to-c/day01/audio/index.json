@@ -2,6 +2,16 @@
  "voice": "am_michael",
  "speed": 1.0,
  "segments": {
+  "_iv": {
+   "intro": [
+    {
+     "file": "_iv-intro-1.mp3",
+     "key": "Here's an interview question.",
+     "spoken": "Here's an interview question.",
+     "hash": "a81aebf26b90c601"
+    }
+   ]
+  },
   "b01": {
    "explain": [
     {
@@ -264,6 +274,26 @@
      "spoken": "Keep this file. In the next block it produces your first compiler error, on purpose.",
      "hash": "16cd2e0140883e63"
     }
+   ],
+   "iv": [
+    {
+     "file": "b02-iv-1.mp3",
+     "key": "On Windows, what's the difference between a console application and a GUI application? Can one .exe be both?",
+     "spoken": "On Windows, what's the difference between a console application and a GUI application? Can one dot E X E be both?",
+     "hash": "c14abb2375413859"
+    },
+    {
+     "file": "b02-iv-2.mp3",
+     "key": "Where is that difference stored?",
+     "spoken": "Where is that difference stored?",
+     "hash": "fb099638f5d3753b"
+    },
+    {
+     "file": "b02-iv-3.mp3",
+     "key": "What happens if you build a GUI program as a console program?",
+     "spoken": "What happens if you build a GUI program as a console program?",
+     "hash": "b55df612736eaca9"
+    }
    ]
   },
   "b03": {
@@ -413,6 +443,26 @@
      "key": "Learn the C in C2146. In block 5 you'll see an LNK prefix instead, and that one letter tells you which stage failed.",
      "spoken": "Learn the C in C 2146. In block 5 you'll see an L N K prefix instead, and that one letter tells you which stage failed.",
      "hash": "52b1902bc8df8955"
+    }
+   ],
+   "iv": [
+    {
+     "file": "b03-iv-1.mp3",
+     "key": "What's the difference between a Debug build and a Release build?",
+     "spoken": "What's the difference between a Debug build and a Release build?",
+     "hash": "1269c221ef91c549"
+    },
+    {
+     "file": "b03-iv-2.mp3",
+     "key": "Why is it harder to step through a Release build in the debugger?",
+     "spoken": "Why is it harder to step through a Release build in the debugger?",
+     "hash": "f9b23321fd85fc48"
+    },
+    {
+     "file": "b03-iv-3.mp3",
+     "key": "Why might a bug appear only in Release?",
+     "spoken": "Why might a bug appear only in Release?",
+     "hash": "3fb417fcab117cb5"
     }
    ]
   },
@@ -569,6 +619,20 @@
      "key": "Try it in your head: Casey turns hyperthreading off. How many logical processors are left?",
      "spoken": "Try it in your head: Casey turns hyperthreading off. How many logical processors are left?",
      "hash": "4f9ae5f4786c4532"
+    }
+   ],
+   "iv": [
+    {
+     "file": "b04-iv-1.mp3",
+     "key": "What's the difference between a CPU core, a hardware thread (hyperthread) and a logical processor? Does hyperthreading double performance?",
+     "spoken": "What's the difference between a CPU core, a hardware thread (hyperthread) and a logical processor? Does hyperthreading double performance?",
+     "hash": "ad4793ce33213a00"
+    },
+    {
+     "file": "b04-iv-2.mp3",
+     "key": "Task Manager shows 16 logical processors on a 2-socket machine. How many cores could that be?",
+     "spoken": "Task Manager shows 16 logical processors on a 2-socket machine. How many cores could that be?",
+     "hash": "49c702b21b059ed9"
     }
    ]
   },
@@ -798,6 +862,26 @@
      "spoken": "Notice C R T E X E W dot O B J: the code that wants Win Main lives in a library you never asked for. That's the thread Casey pulls on Day 2.",
      "hash": "0de2635536294971"
     }
+   ],
+   "iv": [
+    {
+     "file": "b05-iv-1.mp3",
+     "key": "Explain the difference between a compiler error and a linker error, with one example of each.",
+     "spoken": "Explain the difference between a compiler error and a linker error, with one example of each.",
+     "hash": "a421d3d57e49c8c0"
+    },
+    {
+     "file": "b05-iv-2.mp3",
+     "key": "What does \"unresolved external symbol\" mean, and how would you fix it?",
+     "spoken": "What does \"unresolved external symbol\" mean, and how would you fix it?",
+     "hash": "0333da707d2ac105"
+    },
+    {
+     "file": "b05-iv-3.mp3",
+     "key": "Why do C and C++ compile files separately and link them later?",
+     "spoken": "Why do C and C plus plus compile files separately and link them later?",
+     "hash": "e8a2451801859f4e"
+    }
    ]
   },
   "b06": {
@@ -978,6 +1062,26 @@
      "spoken": "Pasted into test dot C P P with a body, then built: the compiler stops at H instance. Nothing has told it what that word means. Block 12 shows the fix, include windows dot H , which Casey adds quickly at 39 minutes 35.",
      "hash": "611cebd8a4735d92"
     }
+   ],
+   "iv": [
+    {
+     "file": "b06-iv-1.mp3",
+     "key": "What happens, step by step, when you double-click an .exe on Windows, until the program's code starts running?",
+     "spoken": "What happens, step by step, when you double-click an dot E X E on Windows, until the program's code starts running?",
+     "hash": "403c10147bcee296"
+    },
+    {
+     "file": "b06-iv-2.mp3",
+     "key": "Who decides where execution starts?",
+     "spoken": "Who decides where execution starts?",
+     "hash": "ce35640a77c26b40"
+    },
+    {
+     "file": "b06-iv-3.mp3",
+     "key": "Is WinMain really the first code that runs?",
+     "spoken": "Is Win Main really the first code that runs?",
+     "hash": "7bca2bf1bef7cb79"
+    }
    ]
   },
   "b07": {
@@ -1157,6 +1261,20 @@
      "key": "Notice that Hungarian notation shows up twice: in the types (HINSTANCE, LPSTR) and in the parameter names (hInstance, lpCmdLine). Casey keeps the names in his code because they come straight from the docs.",
      "spoken": "Notice that Hungarian notation shows up twice: in the types (H instance, L P S T R) and in the parameter names (H instance, L P command line). Casey keeps the names in his code because they come straight from the docs.",
      "hash": "8b9d57da5f786047"
+    }
+   ],
+   "iv": [
+    {
+     "file": "b07-iv-1.mp3",
+     "key": "What is a handle in an operating-system API? Why does Windows give you handles instead of pointers to its own data?",
+     "spoken": "What is a handle in an operating-system API? Why does Windows give you handles instead of pointers to its own data?",
+     "hash": "45a5954c04174f45"
+    },
+    {
+     "file": "b07-iv-2.mp3",
+     "key": "Give two examples of Windows handles.",
+     "spoken": "Give two examples of Windows handles.",
+     "hash": "672d7e20bbc3edb7"
     }
    ]
   },
@@ -1716,6 +1834,20 @@
      "spoken": "Try it in your head: You start the program with the words hello world after its name. What does the Output window show?",
      "hash": "44b55d88e155fd6b"
     }
+   ],
+   "iv": [
+    {
+     "file": "b10-iv-1.mp3",
+     "key": "Why must a program and the operating system agree on a calling convention when the OS calls a function in your program?",
+     "spoken": "Why must a program and the operating system agree on a calling convention when the OS calls a function in your program?",
+     "hash": "e9e97048eda1bfe0"
+    },
+    {
+     "file": "b10-iv-2.mp3",
+     "key": "How does WinMain's declaration show that agreement?",
+     "spoken": "How does Win Main's declaration show that agreement?",
+     "hash": "ae9d9c5064ba9a0b"
+    }
    ]
   },
   "b11": {
@@ -1962,6 +2094,26 @@
      "spoken": "Try it in your head: The definition is now in foo dot C P P, and Win Main is in test dot C P P. How many object files does the linker join?",
      "hash": "f0bbb4c1b2fcac1b"
     }
+   ],
+   "iv": [
+    {
+     "file": "b11-iv-1.mp3",
+     "key": "What's the difference between a declaration and a definition in C?",
+     "spoken": "What's the difference between a declaration and a definition in C?",
+     "hash": "8fe9607afdf85a11"
+    },
+    {
+     "file": "b11-iv-2.mp3",
+     "key": "You call a function that is declared but never defined. Do you get a compile error or a link error? Why?",
+     "spoken": "You call a function that is declared but never defined. Do you get a compile error or a link error? Why?",
+     "hash": "d7f1ac5da652754b"
+    },
+    {
+     "file": "b11-iv-3.mp3",
+     "key": "Where do declarations usually live, and why?",
+     "spoken": "Where do declarations usually live, and why?",
+     "hash": "542a00c748c6df45"
+    }
    ]
   },
   "b12": {
@@ -2111,6 +2263,26 @@
      "key": "Try it in your head: You remove the include line. Which program fails first, and on which name?",
      "spoken": "Try it in your head: You remove the include line. Which program fails first, and on which name?",
      "hash": "307b30360da741f1"
+    }
+   ],
+   "iv": [
+    {
+     "file": "b12-iv-1.mp3",
+     "key": "What does #include actually do? And what's the preprocessor?",
+     "spoken": "What does include actually do? And what's the preprocessor?",
+     "hash": "62e6303bd85da0bd"
+    },
+    {
+     "file": "b12-iv-2.mp3",
+     "key": "Why can including a big header like windows.h slow your build?",
+     "spoken": "Why can including a big header like windows dot H slow your build?",
+     "hash": "d023d8fdab9fd043"
+    },
+    {
+     "file": "b12-iv-3.mp3",
+     "key": "Does #include <windows.h> add Windows's code to your program?",
+     "spoken": "Does include windows dot H add Windows's code to your program?",
+     "hash": "b0b2b21ed76ecb1b"
     }
    ]
   }

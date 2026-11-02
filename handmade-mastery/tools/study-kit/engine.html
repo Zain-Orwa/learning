@@ -192,6 +192,24 @@ td.mono{font-family:var(--f-mono);font-size:13px;white-space:nowrap}
 .inwords .try{border-top:1px dashed var(--rule);padding-top:6px;margin-top:8px}
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .reading{background:color-mix(in srgb,var(--ip) 20%,transparent);border-radius:4px;box-shadow:0 0 0 4px color-mix(in srgb,var(--ip) 20%,transparent)}
+/* mic: speak instead of typing. attachMics() wraps every text box; the button sits in its bottom-right corner */
+.micwrap{display:block;position:relative;flex:1 1 200px;min-width:0}
+.micwrap>textarea{display:block;padding-right:58px}
+.micwrap>input{padding-right:46px}
+.mic{position:absolute;right:20px;bottom:8px;width:30px;height:30px;border-radius:50%;border:1px solid var(--rule);background:var(--panel);color:var(--muted);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0}
+.micwrap.one .mic{right:6px;bottom:auto;top:50%;transform:translateY(-50%)}
+.mic svg{width:16px;height:16px;fill:currentColor}
+.mic:hover{color:var(--ink);border-color:var(--muted)}
+.mic.rec{background:var(--bad);border-color:var(--bad);color:#fff}
+.mic:disabled{opacity:.6;cursor:default}
+.micstat{position:absolute;right:58px;bottom:12px;font-family:var(--f-mono);font-size:12px;background:var(--panel);color:var(--muted);border:1px solid var(--rule);border-radius:10px;padding:0 8px;pointer-events:none}
+.micwrap.one .micstat{right:44px;bottom:auto;top:50%;transform:translateY(-50%)}
+.micstat.rec{color:var(--bad);border-color:var(--bad)}
+.micstat.rec::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--bad);margin-right:6px;vertical-align:1px;animation:micblink 1s steps(2) infinite}
+@keyframes micblink{50%{opacity:.25}}
+.ivsay{margin-left:6px;vertical-align:middle;display:inline-flex;align-items:center;gap:4px}
+.ivsay svg{width:14px;height:14px;fill:currentColor}
+.ivsay.on{background:var(--ip);color:var(--ip-ink);border-color:var(--ip)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
@@ -279,6 +297,7 @@ helperSample.json=async input=>(await helperCall(input,true)).data;
       if(welcome){S.sessionParts=0;S.brk=null;S.stopped=false;S.session=null;}
     }
     if(ping.claude) sample=helperSample;
+    micOK=!!ping.transcribe&&!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&window.MediaRecorder);
     if(D.video&&D.video.file){const v=await (await fetch("/api/video?file="+encodeURIComponent(D.video.file))).json();
       if(v.exists){videoURL="/video/"+encodeURIComponent(D.video.file);vid.src=videoURL;} else videoFolder=v.folder;}
     helperReady=true; setSaved("saved in your repo"); save(); safeRender();
@@ -353,7 +372,7 @@ TOPICS CASEY PARKS FOR LATER (do not teach these; say they come later): ${(D.par
 let videoURL=null, playerBlock=null, lastSave=0;
 const svg=d=>`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"/></svg>`;
 const ICON={play:svg("M8 5v14l11-7z"),pause:svg("M6 5h4v14H6zM14 5h4v14h-4z"),back:svg("M12 5V2L7 6l5 4V7a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z"),replay:svg("M6 6h2v12H6zM9.5 12l8.5 6V6z"),fs:svg("M5 5h5v2H7v3H5zM14 5h5v5h-2V7h-3zM5 14h2v3h3v2H5zM17 14h2v5h-5v-2h3z"),
-  stop:svg("M6 6h12v12H6z"),speak:svg("M3 9v6h4l5 5V4L7 9H3zM16.5 12A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z")};
+  stop:svg("M6 6h12v12H6z"),mic:svg("M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.9V21h2v-3.1a7 7 0 0 0 6-6.9z"),speak:svg("M3 9v6h4l5 5V4L7 9H3zM16.5 12A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z")};
 const vw=document.createElement("div"); vw.className="player";
 vw.innerHTML=`<video playsinline preload="metadata"></video>
 <div class="pctl"><button data-v="play" aria-label="Play" title="Play (Space)">${ICON.play}</button><button data-v="back" aria-label="Back 10 seconds" title="Back 10 seconds">${ICON.back}<span>10</span></button>
@@ -482,8 +501,92 @@ function ttsCmd(c){
   let resume=true;
   if(!tts.segs.length||tts.i>=tts.segs.length){tts.segs=ttsSegments();tts.i=0;resume=false;}
   if(!tts.segs.length){toast("Nothing to read here");return}
-  tts.on=true; ttsUi(); ttsSpeak(resume);
+  ivStop(); tts.on=true; ttsUi(); ttsSpeak(resume);
 }
+
+/* ---------- mic: speak instead of typing, in EVERY text box ----------
+   attachMics() wraps each <textarea> and text <input> (watched by a MutationObserver, so boxes added later
+   get one too) and adds a mic button in its corner. The recording goes to the helper (POST /api/transcribe:
+   ffmpeg + faster-whisper small.en, tools/transcribe/). The text is inserted at the cursor and the box's
+   normal input event saves it. Nothing is graded or sent by itself. No helper (or no speech setup): no mics. */
+let micOK=false, rec=null;
+const touched=new WeakSet(); // boxes the student has clicked into: insert at their cursor, else at the end
+document.addEventListener("focusin",e=>{if(e.target.matches&&e.target.matches("textarea,input"))touched.add(e.target)});
+const micBoxes=root=>[...root.querySelectorAll('textarea:not([readonly]):not([data-mic]),input[type=text]:not([data-mic])')];
+function attachMics(root=document){
+  if(!micOK) return;
+  micBoxes(root).forEach(el=>{
+    el.dataset.mic="1";
+    const w=document.createElement("span"); w.className="micwrap"+(el.tagName==="INPUT"?" one":"");
+    el.replaceWith(w); w.append(el);
+    w.insertAdjacentHTML("beforeend",`<button type="button" class="mic" aria-label="Speak instead of typing" title="Speak instead of typing (press again or Esc to stop)">${ICON.mic}</button><span class="micstat" hidden></span>`);
+  });
+}
+new MutationObserver(()=>{if(micOK)attachMics()}).observe(document.body,{childList:true,subtree:true});
+function boxKey(el){ // finds the same box again if render() replaced it while we waited
+  if(el.id) return "#"+CSS.escape(el.id);
+  const k=Object.keys(el.dataset).find(k=>k!=="mic");
+  return k?`[data-${k.replace(/[A-Z]/g,c=>"-"+c.toLowerCase())}="${CSS.escape(el.dataset[k])}"]`:null;
+}
+function boxBlock(el){ // the part a box belongs to (data-ans="b02?0", data-iv="b02:0", …), else the current part
+  for(const v of Object.values(el.dataset)){const b=blockById(String(v).split(/[:?]/)[0]); if(b) return b;}
+  return blockById(S.cur)||D.blocks[0];
+}
+function micPrompt(b){ // Whisper's initial_prompt: the course's and this part's key terms, so technical words come out right
+  const text=[b.summary,(b.watchFor||[]).join(" "),b.explain,b.code,b.oneLiner].join(" ");
+  const terms=new Set([...(D.terms||[]),...(b.terms||[])]);
+  for(const m of text.matchAll(/<code>([^<]{2,40})<\/code>|`([^`]{2,40})`/g)) terms.add((m[1]||m[2]).replace(/&[a-z]+;/g,"").trim());
+  for(const m of text.replace(/<[^>]+>/g," ").matchAll(/\b(?:[a-z]+[A-Z]\w*|[A-Z][a-z]+[A-Z]\w*|[A-Z]{2,}\w*)\b/g)) terms.add(m[0]);
+  const list=[...terms].filter(t=>t&&!/[{};]/.test(t)).slice(0,40).join(", ");
+  return `${D.title}. ${b.title}. C programming on Windows, Visual Studio, compiler, linker, debugger. ${list}.`.slice(0,800);
+}
+function micStatus(w,cls,text){const s=w.querySelector(".micstat"); if(!s) return; s.className="micstat"+(cls?" "+cls:""); s.textContent=text; s.hidden=!text;}
+function micButton(w,on){const b=w.querySelector(".mic"); if(!b) return; b.classList.toggle("rec",on); b.innerHTML=on?ICON.stop:ICON.mic;
+  b.setAttribute("aria-label",on?"Stop recording":"Speak instead of typing");}
+async function micStart(btn){
+  const w=btn.closest(".micwrap"), el=w.querySelector("textarea,input");
+  let stream;
+  try{stream=await navigator.mediaDevices.getUserMedia({audio:true});}
+  catch(e){toast(e.name==="NotAllowedError"?"The microphone is blocked. Allow it for this page, or type.":"No microphone found. You can type.");return}
+  const mr=new MediaRecorder(stream), chunks=[];
+  const cur=touched.has(el)?[el.selectionStart,el.selectionEnd]:null;
+  const rec0=rec={mr,w,el,key:boxKey(el),cur,b:boxBlock(el),t0:Date.now(),tick:null};
+  mr.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};
+  mr.onstop=()=>{stream.getTracks().forEach(t=>t.stop()); micSend(rec0,new Blob(chunks,{type:mr.mimeType||"audio/webm"}));};
+  mr.start(); micButton(w,true); micStatus(w,"rec","0:00");
+  rec.tick=setInterval(()=>{const s=(Date.now()-rec0.t0)/1000; micStatus(rec0.w,"rec",fmt(s)); if(s>=300) micStop();},500); // 5 min max
+}
+function micStop(){
+  if(!rec) return; const r=rec; rec=null;
+  clearInterval(r.tick); micButton(r.w,false);
+  if(r.mr.state!=="inactive") r.mr.stop();
+}
+async function micSend(r,blob){
+  const find=()=>r.el.isConnected?r.el:(r.key&&document.querySelector(r.key)); // the box may have been re-rendered
+  const status=(c,t)=>{const el=find(); const w=el&&el.closest(".micwrap"); if(w) micStatus(w,c,t);};
+  const lock=on=>{const el=find(), b=el&&el.closest(".micwrap")?.querySelector(".mic"); if(b) b.disabled=on;};
+  if(Date.now()-r.t0<600||blob.size<1000){status("","");toast("Too short. Press the mic, speak, then press it again.");return}
+  status("","Transcribing…"); lock(true);
+  try{
+    const res=await (await fetch("/api/transcribe?prompt="+encodeURIComponent(micPrompt(r.b)),{method:"POST",headers:{"Content-Type":blob.type},body:blob})).json();
+    if(res.error) throw new Error(res.error);
+    const text=(res.text||"").trim(); if(!text){toast("I didn't hear any words. Try again, a bit closer to the mic.");return}
+    const el=find(); if(!el){toast("The box is gone, so the text wasn't added.");return}
+    const v=el.value, [a,z]=r.cur||[v.length,v.length];
+    const pre=a>0&&!/\s$/.test(v.slice(0,a))?" ":"", post=z<v.length&&!/^\s/.test(v.slice(z))?" ":"";
+    el.value=v.slice(0,a)+pre+text+post+v.slice(z);
+    const end=a+pre.length+text.length; el.focus(); el.setSelectionRange(end,end); touched.add(el);
+    el.dispatchEvent(new Event("input",{bubbles:true})); // the box's normal save
+  }catch(e){toast("Couldn't turn the speech into text. Your box is unchanged.");}
+  finally{status("",""); lock(false);}
+}
+document.addEventListener("click",e=>{
+  const btn=e.target.closest(".mic"); if(!btn) return;
+  e.preventDefault(); e.stopPropagation();
+  if(rec&&rec.w===btn.closest(".micwrap")){micStop();return}
+  micStop(); micStart(btn); // only one box records at a time
+},true);
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&rec){e.preventDefault();micStop();}});
 
 /* ---------- tabs ---------- */
 const TABS=[["path","Study path"],["review","Review"],["interview","Interview"],["parked","Parked"],["tools","Toolbox"],["how","How to study"]];
@@ -546,14 +649,40 @@ function updateTimer(){
 setInterval(updateTimer,30000);
 
 /* ---------- interview corner ---------- */
+/* The interviewer speaks with Kokoro (same voice as Listen): make_audio.py renders each question and follow-up
+   into D.audio[blockId].iv = {text: file}, plus one intro, D.audio._iv.intro. No mp3, no button. */
+const IVA=new Audio(); let ivOn=null, autoAsked=null;
+const ivFile=(b,text)=>((AUD[b.id]||{}).iv||{})[text]||null;
+const ivIntro=()=>Object.values((AUD._iv||{}).intro||{})[0]||null;
+function ivSayBtn(b,id,part,text,label){
+  if(!ivFile(b,text)) return "";
+  return `<button class="btn ghost small ivsay" data-ivsay="${id}" data-ivpart="${part}" aria-label="${label?"Ask me the question out loud":"Play this follow-up"}" title="${label?"The interviewer asks the question":"Play this follow-up"}">${ICON.speak}${label?`<span>${label}</span>`:""}</button>`;
+}
+function ivStop(){ IVA.onended=IVA.onerror=null; IVA.pause(); ivOn=null; document.querySelectorAll(".ivsay.on").forEach(x=>x.classList.remove("on")); }
+function ivPlay(files,btn){
+  ivStop(); ttsStop(); files=files.filter(Boolean); if(!files.length) return;
+  const me=ivOn={}; if(btn) btn.classList.add("on");
+  const next=()=>{ if(ivOn!==me) return; const f=files.shift(); if(!f){ivStop();return}
+    IVA.src=f; IVA.onended=next; IVA.onerror=next; IVA.play().catch(()=>{ if(ivOn===me) ivStop(); }); };
+  next();
+}
+function ivSay(btn){
+  const [bid,qi]=btn.dataset.ivsay.split(":"), b=blockById(bid), iv=b.interview[+qi], p=btn.dataset.ivpart;
+  if(btn.classList.contains("on")){ivStop();return}
+  ivPlay(p==="q"?[ivIntro(),ivFile(b,iv.q)]:[ivFile(b,iv.followups[+p.slice(1)])],btn);
+}
+function autoAsk(){ // "Auto-ask": play the first question when the Why it matters step opens
+  const b=blockById(S.cur), key=S.tab==="path"&&S.step==="why"&&b?b.id:null;
+  if(key!==autoAsked){autoAsked=key; if(key&&S.autoAsk){const btn=document.querySelector('[data-ivsay][data-ivpart="q"]'); if(btn) ivSay(btn);}}
+}
 function ivBlock(b,qi,iv,withGrade){
   const id=b.id+":"+qi, fb=S.ivfb[id];
-  return `<div class="q ivq"><div class="qn">INTERVIEW · ${esc(iv.level||"junior")} · ${esc(iv.area||"")}</div><div class="qt">“${md(iv.q)}”</div>
-  ${withGrade?`<p class="small muted">Answer out loud first, like in a real interview. Then write it.</p>
+  return `<div class="q ivq"><div class="qn">INTERVIEW · ${esc(iv.level||"junior")} · ${esc(iv.area||"")}</div><div class="qt">“${md(iv.q)}”${ivSayBtn(b,id,"q",iv.q,"Ask me")}</div>
+  ${withGrade?`<p class="small muted">Answer out loud first, like in a real interview: press the mic in the box and speak, or type.</p>
   <textarea data-iv="${id}" placeholder="My answer…">${esc(S.ivans[id]||"")}</textarea>
   <div class="row">${sample?`<button class="btn" data-ivcheck="${id}">Grade me like an interviewer</button>`:`<button class="btn ghost" data-ivcopy="${id}">Copy for Claude to grade</button>`}</div>
   <div class="copybox" id="ivcb-${id}"></div><div id="ivfb-${id}">${fb?renderScore(fb):""}</div>`:(fb?renderScore(fb):`<p class="small muted">Not answered yet.</p>`)}
-  ${(iv.followups||[]).length?`<details class="model"><summary>Follow-ups the interviewer asks next</summary><ul>${iv.followups.map(f=>`<li>${md(f)}</li>`).join("")}</ul></details>`:""}
+  ${(iv.followups||[]).length?`<details class="model"><summary>Follow-ups the interviewer asks next</summary><ul>${iv.followups.map((f,j)=>`<li>${md(f)}${ivSayBtn(b,id,"f"+j,f,"")}</li>`).join("")}</ul></details>`:""}
   <details class="model"><summary>What a strong answer includes</summary><ul>${(iv.strong||[]).map(([t,p])=>`<li>${md(t)} <span class="muted">(${p}%)</span></li>`).join("")}</ul>
   ${(iv.redflags||[]).length?`<p class="small"><b>Red flags:</b> ${iv.redflags.map(md).join("; ")}</p>`:""}</details>
   ${iv.grows?`<p class="small muted">${md(iv.grows)}</p>`:""}<p class="small muted">${md(iv.source||"")}</p></div>`;
@@ -666,7 +795,8 @@ function renderStepRaw(b,k){
     + (b.mistake?`<div class="callout later"><b>Common beginner mistake:</b> ${md(b.mistake)}</div>`:"");
   if(k==="experiment") return b.experiment + ((b.debug||[]).length?`<h3>Debug challenge</h3><p class="small muted">Find the real cause fast, with the smallest fix. Use the method: read the exact error, state a hypothesis, narrow it down, fix, verify. The clock starts when you press Start. (Error texts can differ slightly between compiler versions.)</p>`+b.debug.map((c,i)=>dbgBlock(b,i,c,true)).join(""):"");
   if(k==="code") return b.code;
-  if(k==="why") return b.why + ((b.interview||[]).length?`<h3>Interview corner</h3><p class="small muted">How a real interviewer could ask about this part. It joins your reviews and your mock interviews.</p>`+b.interview.map((iv,i)=>ivBlock(b,i,iv,true)).join(""):"");
+  if(k==="why") return b.why + ((b.interview||[]).length?`<h3>Interview corner</h3><p class="small muted">How a real interviewer could ask about this part. It joins your reviews and your mock interviews.</p>`
+    +(b.interview.some(iv=>ivFile(b,iv.q))?`<label class="small"><input type="checkbox" data-autoask ${S.autoAsk?"checked":""}> Auto-ask: the interviewer asks the question when this step opens</label>`:"")+b.interview.map((iv,i)=>ivBlock(b,i,iv,true)).join(""):"");
   if(k==="ask") return renderAsk(b);
   if(k==="cards") return `<p class="muted small">Say the answer out loud before you flip. Finishing this step adds these ${b.cards.length} cards to Review.</p>`+
     b.cards.map(c=>`<div class="card"><div class="face"><div class="side">Front</div><div class="txt">${md(c[0])}</div><details class="model"><summary>Flip</summary><p>${md(c[1])}</p></details></div></div>`).join("");
@@ -696,7 +826,7 @@ function lockGuesses(b){
   }
   nudge=null; return true;
 }
-const GRADE_RULES=`Grade in percent, by MEANING, not wording. Score = how much of the main ideas of the correct answer the student showed. Split the correct answer into its key ideas, each with a weight. An idea counts fully when it is clearly there, in ANY words: synonyms, his own phrasing, a different order, simple English, spelling or grammar mistakes are all fine. Never require the reference's exact words or terms, unless the question asks for a specific name. Give partial credit only when the idea itself is vague or half-right, not because the words differ. A wrong statement costs points even if the rest is right. List what is right, and every missing or wrong piece with the percent it is worth, so right + missing = 100. Do NOT reveal the full answer: if below 100, ask ONE guiding question that leads the student to the missing piece. If the gap is something Casey explains in the video, give the time range to rewatch. Simple English.`;
+const GRADE_RULES=`Grade in percent, by MEANING, not wording. Score = how much of the main ideas of the correct answer the student showed. Split the correct answer into its key ideas, each with a weight. An idea counts fully when it is clearly there, in ANY words: synonyms, his own phrasing, a different order, simple English, spelling or grammar mistakes are all fine. Never require the reference's exact words or terms, unless the question asks for a specific name. The answer may be spoken and turned into text by speech recognition: ignore filler words ("uh", "um", "like", "you know"), repeated words, false starts and small transcription mistakes (a word that sounds like the right term, e.g. "when main" for WinMain, "linker" heard as "linger"); never take points for them, judge only the ideas. Give partial credit only when the idea itself is vague or half-right, not because the words differ. A wrong statement costs points even if the rest is right. List what is right, and every missing or wrong piece with the percent it is worth, so right + missing = 100. Do NOT reveal the full answer: if below 100, ask ONE guiding question that leads the student to the missing piece. If the gap is something Casey explains in the video, give the time range to rewatch. Simple English.`;
 function scoreColor(n){return n>=90?"var(--good)":n>=60?"var(--warn)":"var(--bad)"}
 function renderScore(fb){
   if(fb.verdict&&fb.score===undefined) return renderFb(fb);
@@ -822,7 +952,7 @@ function renderHow(){return `<section class="block"><div class="pane">${D.how||"
 /* ---------- render + events ---------- */
 function render(){
   if(vw.isConnected){vid.pause();vw.remove();}
-  playerBlock=null; ttsStop();
+  playerBlock=null; ttsStop(); ivStop(); micStop(); // a recording in progress is still transcribed into its (re-rendered) box
   renderTabs();
   const p=progress(); $("#pct").textContent=p+"%"; $("#pctbar").style.width=p+"%";
   $("#view").innerHTML = S.tab==="path"?renderPath():S.tab==="review"?renderReview():S.tab==="interview"?renderInterviewTab():S.tab==="parked"?renderParked():S.tab==="tools"?renderTools():renderHow();
@@ -835,6 +965,7 @@ function render(){
     drop.addEventListener("drop",e=>{e.preventDefault();drop.classList.remove("over");loadVideo(e.dataTransfer.files[0])}); }
   if(S.brk&&S.brk.until&&!brkTimer) brkTimer=setInterval(tickBreak,500);
   if($("#nextbox")&&!S.stopped) showNext();
+  autoAsk();
 }
 function goNextStep(){
   const b=blockById(S.cur); if(!b) return;
@@ -859,6 +990,7 @@ $("#view").addEventListener("keydown",e=>{ if(e.target.id==="parkin"&&e.key==="E
 $("#view").addEventListener("click",async e=>{
   const t=e.target.closest("button"); if(!t) return;
   if(t.dataset.tts){ttsCmd(t.dataset.tts);return}
+  if(t.dataset.ivsay){ivSay(t);return}
   if(t.dataset.go){const g=t.dataset.go;
     if(g==="continue"){welcome=false;S.tab="path";save();render();return}
     if(g==="warmup"){welcome=true;S.tab="review";revQueue=null;save();render();return}
@@ -926,6 +1058,7 @@ $("#view").addEventListener("input",e=>{
   const g=e.target.dataset.dbg; if(g){S.dbgans[g]=e.target.value;save()}
   const gs=e.target.dataset.gs; if(gs){const [bid,gi]=gs.split(":");(S.guesses[bid]=S.guesses[bid]||[])[+gi]=e.target.value;nudge=null;save()}
   const lbk=e.target.dataset.lb; if(lbk){S.lb[lbk]=e.target.value;save()}
+  if("autoask" in e.target.dataset){S.autoAsk=e.target.checked;save()}
 });
 async function checkAnswer(id,btn){
   const [bid,qi]=id.split("?"); const b=blockById(bid), q=b.questions[+qi]; const ans=(S.answers[id]||"").trim();

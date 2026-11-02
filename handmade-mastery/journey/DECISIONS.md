@@ -192,3 +192,18 @@ Newest at the bottom. Each entry: date, decision, why.
   button. So make_audio.py must run after every text change.
 - The page didn't open twice because a helper paused with Ctrl+Z kept port 8765. serve.py now checks
   that the running helper answers; if it doesn't, it stops the stuck study helper and starts fresh.
+
+## 2026-11-02: Voice everywhere: speak in every text box, the interviewer speaks
+- Zain wants to speak instead of type. Every text box on the study page now has a mic button
+  (added automatically to every textarea and text input, so new boxes need no code). The page records
+  with MediaRecorder; the helper converts with ffmpeg and transcribes with faster-whisper `small.en`
+  (int8, CPU, offline) in `tools/transcribe/`, loaded once and kept in memory (about 1 s per short
+  answer). The Whisper prompt holds the part's key terms, so names like WinMain come out right.
+  The text lands at the cursor and can be edited; nothing is graded or sent by itself.
+  Why faster-whisper: it already made the Day 1 transcript on this Mac, runs offline, and small.en is
+  fast enough on the M1 CPU. No helper (claude.ai page) = no mic buttons, typing only.
+- The Interview corner's interviewer speaks with Kokoro (same voice as Listen): make_audio.py renders
+  every question, follow-up and a short intro. "Ask me", a play button per follow-up, and Auto-ask
+  (off by default).
+- Graders ignore filler words and small transcription mistakes; they still judge only the ideas.
+- Rule for the whole repo (root CLAUDE.md): every place Zain can type also gets a mic button.
