@@ -1,6 +1,6 @@
 # Current state
 
-_Last updated: 2026-10-31_
+_Last updated: 2026-11-08_
 
 ## Setup
 - Step 1, choose the toolset: **done**.
@@ -24,10 +24,11 @@ _Last updated: 2026-10-31_
   - [x] Debugging track: `docs/debugging-track.md`, `/debug`, 8 Day 1 challenges (timed) in the page, `dbg-` review units
   - [x] Phone reminders stored in the repo (`docs/scheduled-tasks.md`, `/reminders` for other accounts)
   - [x] "Debug challenge" scheduled task: Mon/Wed/Fri/Sun 18:45 Europe/Berlin, cloud, automatic approval, push (id `trig_013u5WqvEma6ksmyvTh6PDjA`, same account as the daily review)
-  - [x] Guess step (2026-10-31): Guess is now the first step of every part (look back at the previous part + 2–3 guesses; the video stays covered until they're locked in). Fixed: the end-of-part screen no longer covers the video
+  - [x] Historical guess step (2026-10-31); retired on November 8 in favor of Watch → Check → Practice. Old answers are preserved.
   - [x] Manim installed and tested on the Mac (2026-10-31): Manim 0.22.1 in `tools/animate/.venv`, uv, cairo + pkg-config; test video `tools/animate/example.mp4` rendered
   - [x] Natural voice (2026-11-01): Kokoro-82M in `tools/voice/` (voice am_michael); Listen plays Day 1's audio (`courses/intro-to-c/day01/audio/`); "In words" pseudocode upgraded for all 12 parts (goal, steps, pattern, try it)
-  - [ ] Learner tries Day 1 Part 1 with `./study` on the Mac
+  - [x] Learner finished Day 1 Parts 1–2 (November 1–2).
+  - [x] Short routine (2026-11-08): Watch → Check → Practice; one check and one task.
 
 ## Windows tools: all installed and verified (2026-10-30)
 - Visual Studio Community 2026 with the C++ workload (MSVC 14.51). Test: a
@@ -42,29 +43,33 @@ _Last updated: 2026-10-31_
 - RAD Debugger: later, on purpose.
 - Editor: VS Code for Intro to C. Revisit at the start of Handmade Hero (see DECISIONS.md).
 
-## Mac tools: not installed yet
-Needed for the first session: Claude Code (logged in), the videos folder
-`~/learning-videos/` with the Day 1 video, and `./study`. See `docs/toolset.md`, section "Mac M1".
+## Mac tools
+The study page has recorded sessions on November 1–2. Use `./study` to resume.
+Local voice/transcription tools are documented in `docs/toolset.md`.
 
 ## Study position
 - Course: intro-to-c, Day 01
 - Section: 3 of 12 ("Building: what compiling actually means", 12:13-16:55)
-- Step: Guess
+- Step: Watch
 - Parts done: 2
 - Completed (part id, date): b01 2026-11-01, b02 2026-11-02
-- Updated: 2026-11-02
+- Updated: 2026-11-08
 
 ## Debugging log
 _(one line per challenge: date, bug class, score, time)_
 
 ## Course progress
-- Intro to C, Day 1: study kit ready, **not started**.
+- Intro to C, Day 1: **in progress**, 2 of 12 parts finished.
+- Historical grades are retained; later unaided reviews will check retention.
 
 ## Open decisions
 - LearnHarness needs an Anthropic API key (pay per use). Use it with Claude
   via an API key, or with another provider, or skip it for now?
 
 ## Next action
-On the Mac: `git pull --rebase`, put the Day 1 video in `~/learning-videos/`,
-open `handmade-mastery/courses/intro-to-c/day01/study-kit.html` in Chrome or Safari,
-load the video, and do Part 1. Then tell Claude how it went.
+Start `./study`. Spend up to five minutes on overdue reviews, then resume
+Day 1 Part 3 (12:13–16:55), Watch. Follow Watch → Check → Practice.
+
+## Follow-up
+- Local reminder prompts now use the short routine. Existing cloud reminders
+  on the original Claude account have not been updated from this workspace.

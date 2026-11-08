@@ -5,7 +5,9 @@ with the smallest change, proves it's fixed, and can explain his process out
 loud in an interview. Challenges come **only from material he has studied**,
 and they get harder as the course goes on.
 
-## The method (taught and graded every time)
+## The method (reference for optional practice)
+
+Use these rules to diagnose a gap; do not recite the whole list for every task.
 
 David Agans' **9 indispensable rules** of debugging:
 1. **Understand the system:** know what *should* happen (read the docs, know the tools).
@@ -78,8 +80,8 @@ target time shrinks as the same bug class comes back in reviews.
 - Each study-kit part can have a `debug` list in its `data.js` (title, level,
   scenario, task, hint, solution checklist with %, root cause). The page shows
   them in the **Experiment** step and in the **Interview** tab.
-- Finished parts add their challenges to the review log as `dbg-…` units
-  (`[debugging] title`), on the normal spaced schedule.
+- After a useful optional challenge, add it as a `dbg-…` review unit only
+  when it is worth repeating. Finishing a part does not automatically add it.
 - `/debug` runs a challenge session any time.
 - The **Debug challenge** scheduled task (Mon, Wed, Fri, Sun at 18:45 Berlin)
   sends one challenge to his phone. See `docs/scheduled-tasks.md`.

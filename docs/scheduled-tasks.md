@@ -17,8 +17,10 @@ Current owner: the Claude account that created them on 2026-10-31 (ids below).
 ## 1. Daily review
 - **When:** every day, 12:48 Europe/Berlin (`CRON_TZ=Europe/Berlin 48 12 * * *`)
 - **Id on the current account:** `trig_015H7qGd7zXdGP9ACCUadnzw`
-- **Does:** due spaced reviews. Weekdays add a 2-question interview drill;
-  weekends add a study-day reminder. Grades strictly, reschedules, pushes.
+- **Local prompt:** up to five minutes of due reviews; no mandatory interview
+  drill. Reschedule only answered units, then save.
+- **Live task:** last configured on the original Claude account. The local
+  November 8 prompt changes have not been applied to that cloud task.
 - **Prompt:** see `.claude/skills/reminders/daily-review.txt`
 
 ## 2. Debug challenge

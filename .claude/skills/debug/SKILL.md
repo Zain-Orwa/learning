@@ -32,8 +32,8 @@ Follow the root `CLAUDE.md`, `docs/learning-method.md` (strict % grading) and
 ## 3. Grade (debugging rubric, 100%)
 Reproduce/observe 15 · read the evidence 20 · hypothesis 20 · narrowing 15 ·
 root cause 15 · fix + verify 15. Give **Score: N%**, what's right, what's
-missing for 100% (with %), the time taken vs. the target, and one guiding
-question if below 100%. Name the Agans rule he skipped, if any.
+the main gap, time vs. target, and one short hint or correction below 80%.
+Allow one retry, then explain directly. No repeated prompts to reach 100%.
 
 ## 4. Record
 - Due unit: `python3 tools/reviews.py grade handmade-mastery <dbg-unit> <score>`.

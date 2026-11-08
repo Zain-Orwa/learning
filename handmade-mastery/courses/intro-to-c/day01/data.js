@@ -50,7 +50,7 @@ watchFor:[
  "At 7:27: **Empty project**, so the wizard doesn't generate code you didn't write.",
  "At 8:39: what a \"solution\" is. It's just Microsoft's word for a list of things to build.",
  "At 10:36: C source files are raw text. No hidden formatting.",
- "At 11:22 to 12:10: yellow bar = unsaved change, green bar = saved but changed since the last build."
+
 ],
 deferred:["Command-line programs (6:27). He says \"we'll look at in the future\" and shows a command prompt briefly at 1:01:23.","DLLs and static libraries (7:36). Handmade Hero uses a DLL for live code reloading around Day 21."],
 explain:`<h3>Console vs. windowed: the "subsystem"</h3>
@@ -715,33 +715,6 @@ window.STUDY.tools = [
  {role:"later: Day 2+ debugger", name:"RAD Debugger", url:"https://github.com/EpicGamesExt/raddebugger", use:"Open-source Windows debugger, popular in the Handmade community. Not needed for Day 1. Try it once Day 2 starts stepping through assembly."}
 ];
 
-window.STUDY.how = `<h2>How to study with this kit</h2>
-<p>Each block takes you through the same seven steps, in this order. The yellow arrow marks where you are, like the instruction pointer in Visual Studio's debugger.</p>
-<div class="loop"><span class="on">1 Watch</span><span>2 Explain</span><span>3 Experiment</span><span>4 Answer</span><span>5 Flashcards</span><span>6 Read code</span><span>7 Why it matters</span></div>
-<ol>
-<li><b>Watch</b> only the block's time range, at normal speed, with the "watch for" list open. Stop at the pause point and answer it before going on.</li>
-<li><b>Explain</b>: read the notes. They follow Casey closely, add a prerequisite only where you'd otherwise get stuck, and fix the few things that changed since 2014.</li>
-<li><b>Experiment</b>: do it with your own hands. Type the code; don't paste it. Break it on purpose and read the error.</li>
-<li><b>Answer</b>: write answers from memory <i>before</i> you open the model answer. "Check my answer" grades your understanding and gives a follow-up question. The "Ask about this block" box stays inside the block's topic and tells you when something is parked for later.</li>
-<li><b>Flashcards</b>: say each answer out loud, then flip. Marking the step done adds the cards to <b>Review</b>.</li>
-<li><b>Read code</b>: read the annotated code in execution order and say what each line does.</li>
-<li><b>Why it matters</b>: connect the block to Handmade Hero and to the CPU. This is what makes it stick.</li></ol>
-<h3>A schedule that works</h3>
-<table><thead><tr><th>When</th><th>What</th><th>Time</th></tr></thead><tbody>
-<tr><td>Sitting 1</td><td>Blocks 1–4 (setup, building, CPU tangent)</td><td>~75 min</td></tr>
-<tr><td>Sitting 2</td><td>Blocks 5–8 (linker, entry point, Windows types, first run)</td><td>~100 min</td></tr>
-<tr><td>Sitting 3</td><td>Blocks 9–12 (syntax, WinMain, declarations, #include)</td><td>~80 min</td></tr>
-<tr><td>Next day</td><td>Review tab (5–10 min) + rebuild the program from a blank file</td><td>~20 min</td></tr>
-<tr><td>Day 7 and on</td><td>Only the cards the Review tab says are due</td><td>~5 min</td></tr></tbody></table>
-<h3>Why this order works</h3>
-<ul><li><b>Retrieval beats rereading.</b> Answering and flashcards force you to pull ideas out of memory. That effort is what makes them stay.</li>
-<li><b>Spacing.</b> Cards come back after 1 day, then about 6, then longer each time you get them right. Five minutes a day keeps everything.</li>
-<li><b>Doing it yourself.</b> Typing code, breaking it and reading errors builds the kind of memory that reading alone can't.</li>
-<li><b>Staying in scope.</b> When Casey says "later", the kit says later. Parked topics go to their own list, so you don't drown in Day 4 material on Day 1.</li></ul>
-<h3>Using AI without losing the skill</h3>
-<p>Use Claude as a <b>quizzer and checker</b>, not an answer machine. Write your answer first, then ask for grading. Ask "why" and "what would break if…", not "what's the answer". The goal is that <i>you</i> can explain compile vs. link and what happens at program start with no tools at all. That's the part AI can't do for you, and what lets you check the code it writes.</p>
-<h3>Your progress</h3>
-<p class="small muted">When you're signed in to Claude, progress, answers and card schedules are saved to your account. Otherwise they're kept in this browser only.</p>`;
 
 
 /* ---- page settings for this episode ---- */
@@ -760,32 +733,6 @@ window.STUDY.qa = {
 <p><b>How Q&amp;A parts work:</b> the player stops after each question from chat. Guess Casey's answer first, then listen to his.</p>
 <p>Meanwhile: do your Review cards, then rebuild the Day 1 program from a blank file on the Windows PC.</p>`
 };
-window.STUDY.how = `<h2>How this page works</h2>
-<p>The page guides you through the video <b>one part at a time</b>. Only the current part is open. The others are locked until you finish it.</p>
-<div class="loop"><span class="on">Guess</span><span>Watch</span><span>Recall</span><span>Answer</span><span>Explain</span><span>Experiment</span><span>Read code</span><span>Flashcards</span><span>Why it matters</span></div>
-<ol>
-<li><b>Guess.</b> First, look back: write one or two sentences about the previous part, from memory. Then guess the answers to this part's 2 or 3 key questions. Being wrong is fine. The video stays covered until you lock in your guesses, and then you can't change them.</li>
-<li><b>Watch.</b> Load the video file once per visit. The player plays only this part and <b>stops by itself</b> at the end. You can't run ahead.</li>
-<li><b>Parking lot.</b> Want to search something while watching? Don't leave. Write it in the parking lot and keep watching. You'll see it again in Recall.</li>
-<li><b>Recall.</b> Write what Casey explained, from memory. Then compare with the notes and handle your parked questions.</li>
-<li><b>Answer.</b> Answer the questions before you see any explanation. Your guesses appear next to them, so you see what changed. "Copy for Claude" copies the question and your answer so any Claude account can grade it.</li>
-<li><b>Explain → Experiment → Read code → Flashcards → Why it matters.</b> The rest of the part, one step at a time.</li>
-<li><b>Listen.</b> Explain and Read code have a <b>Listen</b> button: it reads the step aloud and highlights what it's reading. Code, diagrams and tables are read as their <b>In words</b> version (plain-English pseudocode shown under them). It plays a natural voice (Kokoro, made offline on the Mac). The computer's own robot voice is never used: a piece with no audio file is skipped.</li>
-<li><b>Break.</b> After each part: a short break (5 min), and a longer one (15 min) after every 3 parts. Or stop for today.</li></ol>
-<h3>Your time, your schedule</h3>
-<p><b>Saturday and Sunday are study days.</b> Each session starts with “How much time do you have today?”. Pick 30 min to 3 h, and the page plans what fits (reviews first, then parts, about 1.3 × video minutes + 30 min each), shows a countdown, and warns you 10 minutes before the end so you stop at a clean point. <b>Monday to Friday are review days:</b> a notification at 12:48 brings your due reviews and 2 interview questions.</p>
-<h3>Interview corner</h3>
-<p>Many parts end with a real interview question: how an interviewer asks it, the follow-ups, and what a strong answer includes. Answer out loud, then write it. You're graded strictly in %. These questions join your reviews, and when an area has enough of them, Claude runs a mock interview (<code>/interview</code>).</p>
-<h3>Coming back</h3>
-<p>The page saves your exact place in this browser, down to the second in the video. Next time it says <b>Welcome back</b>, offers a quick card warm-up, and continues where you stopped.</p>
-<p>Started with <code>./study</code>, everything is automatic: the video loads by itself, Claude grades inside the page, your progress and reviews are saved into the repo, and <b>Stop for today</b> pushes to GitHub. (Opened as a plain file, use <b>Copy position</b> instead.)</p>
-<h3>Why it's built like this</h3>
-<ul><li><b>Short parts + questions after each one</b> reduce daydreaming and improve learning from lecture videos (Szpunar, Khan &amp; Schacter, 2013).</li>
-<li><b>Guessing before watching</b> (prequestions) helps you learn from video, even on questions you weren't asked (Carpenter &amp; Toftness, 2017).</li>
-<li><b>Looking back first</b>: recalling the previous part helps you learn the next one (Pastötter &amp; Bäuml, 2014).</li>
-<li><b>Recall before reading</b>: pulling ideas out of memory is what makes them stay.</li>
-<li><b>Spaced review</b>: cards come back after 1 day, about 6 days, then longer.</li>
-<li><b>Staying in scope</b>: when Casey says "later", it goes to the Parked tab.</li></ul>`;
 
 /* ---- lesson-template fields (guess first, one sentence, analogy, common mistake) ---- */
 (function(){
@@ -1250,3 +1197,277 @@ const SAY = {
 };
 window.STUDY.blocks.forEach(b=>{ if(SAY[b.id]) b.say=SAY[b.id]; });
 })();
+
+/* Short lessons: one core check and one task. Full notes remain optional references. */
+(function(){
+const QUICK = {
+  "b01": {
+    "check": {
+      "q": "What do you install on Windows to get a C compiler, and what is the compiler’s job?",
+      "rubric": [
+        [
+          "A C compiler is needed; it translates source code into machine code",
+          70
+        ],
+        [
+          "Install the C++ desktop tools in Visual Studio Community to get the Windows compiler",
+          30
+        ]
+      ]
+    },
+    "focus": "Notice which tool turns source text into code the CPU can run.",
+    "practice": "<p>On Windows, run <code>cl</code> in the x64 Native Tools prompt. Confirm that the compiler prints its name. If you already verified it, use that result.</p>",
+    "practiceMinutes": 2,
+    "reviewQuestion": "Your Windows PC has a text editor but no C compiler. What must you install, and why?"
+  },
+  "b02": {
+    "check": {
+      "q": "What is inside a C source file, and why choose an empty project?",
+      "rubric": [
+        [
+          "Source is plain text, without document formatting",
+          50
+        ],
+        [
+          "An empty project avoids generated code so you control what is added",
+          50
+        ]
+      ]
+    },
+    "focus": "Notice what is inside the source file and which code you create yourself.",
+    "practice": "<p>Create an empty Windows C++ project and add <code>test.cpp</code>. Open the same file in a plain-text editor: it should contain exactly the text you typed. If the project already exists, just check the file.</p>",
+    "practiceMinutes": 3,
+    "reviewQuestion": "A project wizard offers to generate starter code. Why might you prefer an empty project, and what kind of file will you add?"
+  },
+  "b03": {
+    "check": {
+      "q": "What does compilation do, and why does the target CPU matter?",
+      "rubric": [
+        [
+          "The compiler translates source text into machine code",
+          50
+        ],
+        [
+          "Different CPU families use different instruction encodings, so output targets a particular family",
+          50
+        ]
+      ]
+    },
+    "focus": "Follow the translation from source text to instructions for a target CPU.",
+    "practice": "<p>Build the <code>test.cpp</code> from Part 2. Find the target platform and the compiler message in the output. If the file contains nonsense, a compiler error is expected. Identify which stage failed.</p>",
+    "practiceMinutes": 3,
+    "reviewQuestion": "What does a compiler translate, and why does compiling for x64 differ from compiling for ARM?"
+  },
+  "b04": {
+    "check": {
+      "q": "What is the difference between a CPU chip, a core and a hardware thread?",
+      "rubric": [
+        [
+          "A chip contains one or more cores",
+          35
+        ],
+        [
+          "A core executes instructions",
+          35
+        ],
+        [
+          "Hardware threads share a core’s execution resources; they are not extra full cores",
+          30
+        ]
+      ]
+    },
+    "focus": "Separate physical cores from the logical processors Windows reports.",
+    "practice": "<p>In Windows Task Manager, find your CPU’s core count and logical processor count. Write both numbers and whether they are equal. Do not assume every CPU has two threads per core.</p>",
+    "practiceMinutes": 2,
+    "reviewQuestion": "Explain CPU chips, cores and hardware threads. Why are extra logical processors not extra full cores?"
+  },
+  "b05": {
+    "check": {
+      "q": "What does the compiler produce, and what does the linker do with it?",
+      "rubric": [
+        [
+          "The compiler produces an object file from source",
+          40
+        ],
+        [
+          "The linker combines object files/libraries and resolves references between names",
+          40
+        ],
+        [
+          "The linker writes the executable",
+          20
+        ]
+      ]
+    },
+    "focus": "Identify the output of each build stage and which stage reports an error.",
+    "practice": "<p>Write an empty function in your scratch file and run <code>cl /c test.cpp</code>. Confirm that it creates <code>test.obj</code> without creating a new executable. Explain why this tests compilation alone.</p>",
+    "practiceMinutes": 4,
+    "reviewQuestion": "Describe the compiler’s output and how the linker uses it to resolve names and produce an executable."
+  },
+  "b06": {
+    "check": {
+      "q": "How does Windows know where to start executing an executable?",
+      "rubric": [
+        [
+          "The executable header records an entry-point address",
+          40
+        ],
+        [
+          "The linker sets that entry point",
+          30
+        ],
+        [
+          "Windows loads the program and starts execution at that address",
+          30
+        ]
+      ]
+    },
+    "focus": "Follow the entry-point address from the linker to the program loader.",
+    "practice": "<p>Find the entry-point field in the executable-header diagram in the notes. State who writes it and who reads it. If you already have a built executable, you may inspect it with <code>dumpbin /headers</code> instead.</p>",
+    "practiceMinutes": 2,
+    "reviewQuestion": "Who records the entry-point address, where is it stored, and how does Windows use it when launching a program?"
+  },
+  "b07": {
+    "check": {
+      "q": "What are HINSTANCE and LPSTR: C keywords or Windows-defined types? What does each represent?",
+      "rubric": [
+        [
+          "They are Windows-defined type names, not built-in C keywords",
+          40
+        ],
+        [
+          "HINSTANCE is a handle referring to the loaded program",
+          30
+        ],
+        [
+          "LPSTR is a pointer to character text",
+          30
+        ]
+      ]
+    },
+    "focus": "Recognize the Windows types you need to read WinMain.",
+    "practice": "<p>Find <code>HINSTANCE</code> and <code>LPSTR</code> in the WinMain signature. Label the first “program handle” and the second “text pointer”. Stop there; no prefix-memorization drill.</p>",
+    "practiceMinutes": 2,
+    "reviewQuestion": "Are HINSTANCE and LPSTR built into C? Explain what each Windows type represents."
+  },
+  "b08": {
+    "check": {
+      "q": "Does defining a function run its body? What makes it run?",
+      "rubric": [
+        [
+          "A definition supplies the body but does not execute it by itself",
+          50
+        ],
+        [
+          "A call executes that body, then execution continues after the call",
+          50
+        ]
+      ]
+    },
+    "focus": "Watch the difference between defining a function and calling it.",
+    "practice": "<p>Write the small program shown in the code reference yourself. Predict the output with no call to <code>foo</code>, then add one call and run it under the debugger. Compare the output with your prediction.</p>",
+    "practiceMinutes": 7,
+    "reviewQuestion": "A function contains an output call, but the program never calls that function. Will the message appear? Why?"
+  },
+  "b09": {
+    "check": {
+      "q": "What ends a function-call statement, and when can whitespace change the meaning?",
+      "rubric": [
+        [
+          "A semicolon ends a function-call statement",
+          50
+        ],
+        [
+          "Changing indentation is different from splitting a name into separate tokens",
+          50
+        ]
+      ]
+    },
+    "focus": "Distinguish statement boundaries from visual formatting.",
+    "practice": "<p>Remove the semicolon after one function call and build. Read the compiler error, restore the semicolon, and build again. Record the difference.</p>",
+    "practiceMinutes": 3,
+    "reviewQuestion": "What separates two function-call statements on one line? Why is adding indentation different from inserting a space inside a function name?"
+  },
+  "b10": {
+    "check": {
+      "q": "What does WinMain’s return value represent, and what does lpCmdLine contain?",
+      "rubric": [
+        [
+          "The returned integer becomes the program’s exit code",
+          50
+        ],
+        [
+          "lpCmdLine contains command-line text passed to the program",
+          50
+        ]
+      ]
+    },
+    "focus": "Follow the values a program receives when launched and returns when it exits.",
+    "practice": "<p>Add <code>OutputDebugStringA(lpCmdLine);</code> inside your existing WinMain. Supply a short command argument in the debugger, run, and check that the same text appears in the output.</p>",
+    "practiceMinutes": 4,
+    "reviewQuestion": "You launch the program with extra text after its name. Where does WinMain receive that text, and what does its returned integer tell the caller?"
+  },
+  "b11": {
+    "check": {
+      "q": "What is a function declaration versus a definition, and what if a called function has only a declaration?",
+      "rubric": [
+        [
+          "A declaration describes how to call the function, without its body",
+          35
+        ],
+        [
+          "A definition supplies the body",
+          35
+        ],
+        [
+          "A declaration alone can let compilation succeed, but a called function with no definition causes a link error",
+          30
+        ]
+      ]
+    },
+    "focus": "Separate knowing how to call a function from having its implementation.",
+    "practice": "<p>Keep a declaration and call to <code>foo</code>, but remove its definition. Build and identify the linker error. Restore the definition and verify the build succeeds.</p>",
+    "practiceMinutes": 4,
+    "reviewQuestion": "The compiler accepts a call, but the linker cannot find the function. What did the declaration provide, and what is still needed?"
+  },
+  "b12": {
+    "check": {
+      "q": "What does #include do, and does including windows.h copy Windows’s function implementations into your program?",
+      "rubric": [
+        [
+          "The preprocessor inserts the included file’s text before compilation",
+          50
+        ],
+        [
+          "windows.h supplies declarations; it does not copy Windows function implementations into your source",
+          50
+        ]
+      ]
+    },
+    "focus": "Connect headers to declarations, rather than to the code that implements a function.",
+    "practice": "<p>Temporarily remove <code>#include &lt;windows.h&gt;</code> from your program and build. Identify one name the compiler no longer knows. Restore the include and verify the build succeeds.</p>",
+    "practiceMinutes": 3,
+    "reviewQuestion": "What does the preprocessor do with an include, and why does including windows.h supply declarations rather than Windows’s implementations?"
+  }
+};
+window.STUDY.blocks.forEach(b=>Object.assign(b,QUICK[b.id]));
+})();
+
+window.STUDY.how = `<h2>Short study sessions</h2>
+<p><b>Watch → Check → Practice.</b> Watch one part, answer one question from memory, then try one task. Aim for the video length plus roughly 3–8 minutes. Setup or a difficult task may take longer.</p>
+<p><b>Check:</b> use your own words. Only the visible checklist counts. 80% is enough to continue; correct the main gap without chasing perfect wording.</p>
+<p><b>Practice:</b> note what happened. Mark the task tried only after you have run or checked it. “Finished” means you reached the end; “checked” means you passed the check and reported trying the task.</p>
+<p>Explanations, code references and interview/debug drills are optional. There is no mandatory guess, second quiz or flashcard step.</p>
+<p><b>Review:</b> spend up to five minutes on due items in the Review tab. The page and chat use the same review log. Flashcard export is optional reference material, not another required review queue.</p>
+<p>Choose your available time. Keep two minutes to save. Breaks are offered after three parts, or whenever you need one. Stop in the middle of a part if necessary; your position is saved.</p>`;
+
+/* Optional interview checks cover only their question, never hidden follow-ups. */
+window.STUDY.blocks.forEach(b=>{
+  if(b.id==="b06") b.questions=b.questions.filter(q=>!q.q.includes("yellow bars"));
+  for(const iv of b.interview||[]){
+    if(b.id==="b05"){iv.strong=iv.strong.slice(0,4);iv.strong[0][1]=35;iv.strong[1][1]=35;}
+    if(b.id==="b07"){iv.strong=iv.strong.slice(0,3);iv.strong[0][1]=40;iv.strong[1][1]=30;iv.strong[2][1]=30;}
+    if(b.id==="b11"){iv.strong=iv.strong.slice(0,2);iv.strong.forEach(item=>item[1]=50);}
+    if(b.id==="b12"){iv.strong=iv.strong.slice(0,2);iv.strong.forEach(item=>item[1]=50);}
+  }
+});

@@ -44,7 +44,7 @@ Follow the root `CLAUDE.md`, `docs/learning-method.md` (strict % grading) and
   questions asked, scores, verdict, 3 fixes.
 - Commit and push.
 
-## Drill mode (daily task, weekdays)
-2 questions from the `iv-` units: the lowest latest scores first, then the
+## Drill mode (on request)
+1–2 questions from the `iv-` units: the lowest latest scores first, then the
 least recently asked. Grade each right away (strict %), with the
 interviewer's follow-up as the guiding question.

@@ -53,18 +53,17 @@ Each study-kit part can have an `interview` list in its `data.js`:
 - `grows` (optional): the answer gets bigger later in the course
 
 The page shows them in the part's **Interview corner** and in the **Interview** tab.
-When a part is finished, `/study` adds its interview questions to the review
-log as units named `iv-<course><day>-<part>-<n>`, titled `[area] question`.
+After a useful interview drill, optionally add its question to the review
+log as a unit named `iv-<course><day>-<part>-<n>`, titled `[area] question`.
 They then come back on the normal spaced schedule (1d, 3d, 1w, 2w, 1m, 3m, 6m…).
 
 ## The weekly rhythm
 
-- **Saturday and Sunday: study days.** New material on the study page. He says
-  "start" plus how much time he has; the page and Claude plan to fit.
-- **Monday to Friday: review days.** The daily task (12:48 Berlin) asks the
-  due reviews **plus 2 interview questions** every weekday, even when no
-  review is due, so there is always a short practice.
-- He can still study on any day: "start" works every day.
+Study sessions use Watch → Check → Practice. Interview practice is optional,
+requested with `/interview` or opened in the page's optional practice section.
+It does not add an automatic weekday drill or a required session ending.
+Only add a new interview review unit after it has actually been practiced
+and is worth revisiting; finishing a video part alone does not add it.
 
 ## Mock interviews (`/interview`)
 
@@ -73,7 +72,7 @@ average latest score). Mock history: the subject's `journey/INTERVIEWS.md`.
 
 | Level | When | Length | Format |
 |---|---|---|---|
-| **Drill** | Every weekday (daily task) | 5–10 min | 2 interview questions, graded in %, with the interviewer's follow-up |
+| **Drill** | On request | 5–10 min | 2 interview questions, graded in %, with the interviewer's follow-up |
 | **Mini mock** | An area has 8+ questions (and 8+ new since its last mock) | 25 min | One area, 5–6 questions with follow-ups, no hints during the interview |
 | **Area mock** | An area has 15+ questions and averages 60%+ | 60 min | One area in depth, including writing a small piece of C by hand |
 | **Full interview day** | End of each course stage (end of Intro to C, then every big Handmade Hero arc) | 2–3 rounds | Fundamentals, hand-written coding, debugging/optimization, and "walk me through your project" (his own Handmade Hero code) |

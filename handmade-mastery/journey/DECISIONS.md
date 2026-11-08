@@ -207,3 +207,14 @@ Newest at the bottom. Each entry: date, decision, why.
   (off by default).
 - Graders ignore filler words and small transcription mistakes; they still judge only the ideas.
 - Rule for the whole repo (root CLAUDE.md): every place Zain can type also gets a mic button.
+
+## 2026-11-08: Shorter study sessions
+- Zain requested fewer repetitions, fewer editor details and shorter sessions.
+- Required flow: Watch → Check → Practice. One core question and one task.
+  Notes, code references and interview/debug drills remain optional.
+- Fixed grading checklist; only requested ideas count. 80% is a practical
+  pass, with a short correction instead of repeatedly chasing 100%.
+- Planner: video length plus roughly 3–8 minutes, two minutes to save.
+- One shared review schedule in REVIEWS.md for page and chat. No automatic
+  duplicate flashcard/interview/debug queues. Preserve existing progress and
+  review history. Cloud reminders still need their local prompts applied.

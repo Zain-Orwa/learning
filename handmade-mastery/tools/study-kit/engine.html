@@ -232,11 +232,8 @@ td.mono{font-family:var(--f-mono);font-size:13px;white-space:nowrap}
 <script>
 (function(){
 const D = window.STUDY;
-const STEPS = [
-  ["guess","Guess"],["watch","Watch"],["recall","Recall"],["ask","Answer"],["explain","Explain"],["experiment","Experiment"],
-  ["code","Read code"],["cards","Flashcards"],["why","Why it matters"]
-];
-const SHORT_BREAK=5, LONG_BREAK=15, LONG_EVERY=3; // minutes; a long break after every 3 parts
+const STEPS = [["watch","Watch"],["recall","Check"],["experiment","Practice"]];
+const SHORT_BREAK=2, LONG_BREAK=5, LONG_EVERY=3; // minutes; a long break after every 3 parts
 const $ = (s,el=document)=>el.querySelector(s);
 const esc = s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const today = ()=>Math.floor(Date.now()/86400000);
@@ -247,7 +244,7 @@ const md = s=>esc(s).replace(/`([^`]+)`/g,"<code>$1</code>").replace(/\*\*([^*]+
 $("#eyebrow").textContent=D.eyebrow||""; $("#h1").textContent=D.title||document.title;
 
 /* ---------- state + persistence ---------- */
-const FRESH={v:2,cur:D.blocks[0].id,step:"guess",tab:"path",done:{},completed:{},vt:{},recall:{},cmp:{},guess:{},guesses:{},lb:{},lbShow:{},rfb:{},cdate:{},ivans:{},ivfb:{},dbgs:{},dbgans:{},dbgfb:{},session:null,park:{},answers:{},fb:{},cards:{},notes:{},speed:1,lastVisit:0,sessionParts:0,brk:null,stopped:false};
+const FRESH={v:3,cur:D.blocks[0].id,step:"watch",tab:"path",done:{},completed:{},vt:{},recall:{},cmp:{},guess:{},guesses:{},lb:{},lbShow:{},rfb:{},cdate:{},ivans:{},ivfb:{},dbgs:{},dbgans:{},dbgfb:{},session:null,park:{},answers:{},fb:{},cards:{},checkAnswers:{},checkFb:{},practice:{},practiceDone:{},notes:{},speed:1,lastVisit:0,sessionParts:0,brk:null,stopped:false};
 let S=JSON.parse(JSON.stringify(FRESH));
 const LS=D.storageKey||"study-kit";
 try{const raw=localStorage.getItem(LS); if(raw) S=Object.assign(S,JSON.parse(raw));}catch(e){}
@@ -271,7 +268,7 @@ const kitPath=decodeURIComponent(location.pathname).replace(/^\/courses\//,"").r
 let helperReady=false, videoFolder=null;
 function helperMeta(){
   return {kit:kitPath,unitPrefix:D.unitPrefix||D.storageKey,unitLabel:D.unitLabel||D.title,
-    completedParts:D.blocks.filter(b=>S.completed[b.id]).map(b=>({id:b.id,n:idxOf(b)+1,title:b.title,date:S.cdate[b.id]||new Date().toISOString().slice(0,10),interview:(b.interview||[]).map(iv=>({area:iv.area,q:iv.q})),debug:(b.debug||[]).map(c=>({title:c.title,level:c.level}))}))};
+    completedParts:D.blocks.filter(b=>S.completed[b.id]).map(b=>({id:b.id,n:idxOf(b)+1,title:b.title,date:S.cdate[b.id]||new Date().toISOString().slice(0,10),interview:[],debug:[]}))};
 }
 function postHelper(url,extra){
   S.finished=allDone();
@@ -300,7 +297,7 @@ helperSample.json=async input=>(await helperCall(input,true)).data;
     micOK=!!ping.transcribe&&!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&window.MediaRecorder);
     if(D.video&&D.video.file){const v=await (await fetch("/api/video?file="+encodeURIComponent(D.video.file))).json();
       if(v.exists){videoURL="/video/"+encodeURIComponent(D.video.file);vid.src=videoURL;} else videoFolder=v.folder;}
-    helperReady=true; setSaved("saved in your repo"); save(); safeRender();
+    helperReady=true; setSaved("saved in your repo"); save(); refreshReviews(); safeRender();
   }catch(e){}
 })();
 function setSaved(t){$("#saved").textContent=t}
@@ -330,35 +327,29 @@ async function copy(text,box){
 const blockById=id=>D.blocks.find(b=>b.id===id);
 const idxOf=b=>D.blocks.indexOf(b);
 /* ---------- guesses: the part's main guess plus the key questions listed in b.pre ---------- */
-function migrate(){S.guesses=S.guesses||{};S.lb=S.lb||{};S.lbShow=S.lbShow||{};Object.keys(S.guess||{}).forEach(id=>{if(!S.guesses[id])S.guesses[id]=[S.guess[id]]});}
-function guessList(b){
-  const out=[]; if(b.guess) out.push({q:b.guess,qi:null});
-  (b.pre||[]).forEach(i=>{if(b.questions[i]) out.push({q:b.questions[i].q,qi:i})});
-  if(!out.length) out.push({q:b.questions[0].q,qi:0});
-  return out;
+function migrate(){
+  S.guesses=S.guesses||{};S.lb=S.lb||{};S.lbShow=S.lbShow||{};
+  S.checkAnswers=S.checkAnswers||{};S.checkFb=S.checkFb||{};S.practice=S.practice||{};S.practiceDone=S.practiceDone||{};
+  Object.keys(S.guess||{}).forEach(id=>{if(!S.guesses[id])S.guesses[id]=[S.guess[id]]});
+  if(!["watch","recall","experiment"].includes(S.step)){
+    const d=S.done[S.cur]||{};
+    S.step=d.watch?(d.recall?"experiment":"recall"):"watch";
+  }
+  S.v=3;
 }
-function lookBackFor(b){
-  const i=idxOf(b);
-  if(i>0){const p=D.blocks[i-1];return {label:`Part ${i}: ${p.title}`,answer:p.oneLiner||p.summary};}
-  return D.lookBack||null; // part 1: the previous video, when the kit sets window.STUDY.lookBack = {label, answer}
-}
-const guessDone=b=>!!(S.done[b.id]||{}).guess;
-let nudge=null;
-function stepsFor(b){return STEPS.filter(([k])=>["guess","watch","recall","ask","cards"].includes(k)||b[k])}
+function stepsFor(b){return STEPS.filter(([k])=>k!=="experiment"||b.practice||b.experiment)}
 function blockDone(b){const d=S.done[b.id]||{};return stepsFor(b).filter(([k])=>d[k]).length}
 function frontier(){const i=D.blocks.findIndex(b=>!S.completed[b.id]);return i===-1?D.blocks.length:i}
 const allDone=()=>frontier()>=D.blocks.length;
 const unlocked=b=>idxOf(b)<=frontier();
-function stepOpen(b,k){const st=stepsFor(b),i=st.findIndex(([x])=>x===k),d=S.done[b.id]||{};return d[k]||st.slice(0,i).every(([x])=>d[x])}
+function stepOpen(b,k){const st=stepsFor(b),i=st.findIndex(([x])=>x===k),d=S.done[b.id]||{};return i>=0&&(d[k]||st.slice(0,i).every(([x])=>d[x]))}
 function allCards(){const out=[];D.blocks.forEach(b=>(b.cards||[]).forEach((c,i)=>out.push({id:b.id+"#"+i,b,c})));return out}
-function dueCards(){const t=today();return allCards().filter(x=>{const s=S.cards[x.id];return s&&s.due<=t})}
 function progress(){let tot=0,dn=0;D.blocks.forEach(b=>{tot+=stepsFor(b).length;dn+=blockDone(b)});return tot?Math.round(dn*100/tot):0}
-function rateCard(id,g){
-  const s=S.cards[id]||{ease:2.5,int:0,reps:0};
-  if(g===0){s.reps=0;s.int=0;s.ease=Math.max(1.3,s.ease-.2)}
-  else{ s.reps++; if(s.reps===1)s.int=g===3?3:1; else if(s.reps===2)s.int=g===1?3:6; else s.int=Math.round(s.int*(g===1?1.2:g===3?s.ease*1.3:s.ease)); s.ease=Math.max(1.3,s.ease+(g===1?-.15:g===3?.15:0)); }
-  s.due=today()+s.int; S.cards[id]=s; save();
-}
+function checkFor(b){return b.check||{q:b.questions[0].q,rubric:[[b.questions[0].a,100]]};}
+function rubricText(rubric){return rubric.map(([idea,weight],i)=>`${i+1}. ${idea} (${weight}%)`).join("\n");}
+function rubricHTML(rubric){return `<details class="model"><summary>What this check expects</summary><ul>${rubric.map(([idea,weight])=>`<li>${md(idea)} (${weight}%)</li>`).join("")}</ul></details>`;}
+function checkPrompt(b,check,answer){return `Check a short answer to this question only. ${GRADE_RULES}\nPART: ${b.title}\nQUESTION: ${check.q}\nFIXED CHECKLIST:\n${rubricText(check.rubric)}\nANSWER: ${answer}\n${JSON_SHAPE}`;}
+function checked(b){return !!(S.checkFb[b.id]&&S.checkFb[b.id].score>=80&&S.practiceDone[b.id]&&(S.practice[b.id]||"").trim());}
 function blockContext(b){
   const strip=h=>String(h||"").replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim();
   return `VIDEO: "${D.title}"${D.eyebrow?" ("+D.eyebrow+")":""}.
@@ -378,7 +369,7 @@ vw.innerHTML=`<video playsinline preload="metadata"></video>
 <div class="pctl"><button data-v="play" aria-label="Play" title="Play (Space)">${ICON.play}</button><button data-v="back" aria-label="Back 10 seconds" title="Back 10 seconds">${ICON.back}<span>10</span></button>
 <span class="pbar" role="slider" aria-label="Position in this part" tabindex="0"><i></i></span><span class="ptime">0:00 / 0:00</span>
 <button data-v="speed" aria-label="Playback speed" title="Speed">1×</button><button data-v="replay" aria-label="Replay this part" title="Replay this part">${ICON.replay}</button><button data-v="fs" aria-label="Full screen" title="Full screen">${ICON.fs}</button></div>
-<div class="pend" hidden><b>End of this part</b><span>The video stops here. Now recall what you just saw.</span><div class="row"><button class="btn" data-v="next">Next: Recall →</button><button class="btn ghost" data-v="replay">Replay part</button></div></div>`;
+<div class="pend" hidden><b>End of this part</b><span>The video stops here. Now answer one short question.</span><div class="row"><button class="btn" data-v="next">Next: Check →</button><button class="btn ghost" data-v="replay">Replay part</button></div></div>`;
 const vid=vw.querySelector("video");
 const range=b=>[secs(b.start),secs(b.end)];
 function ptick(){
@@ -433,11 +424,12 @@ document.addEventListener("keydown",e=>{
    D.audio = {blockId: {step: {text: "audio/file.mp3"}}}. The browser's own voice is never used: a piece
    with no mp3 (or a file that fails to load) is skipped. */
 const AUD=D.audio||{}, AU=new Audio();
+let referenceStep=null;
 let tts={segs:[],i:0,on:false,gen:0};
-const stepAudio=()=>(AUD[S.cur]||{})[S.step]||null;
+const stepAudio=()=>(AUD[S.cur]||{})[referenceStep||S.step]||null;
 const ttsHint=()=>"Natural voice. Code is read as the “In words” version.";
 function listenBar(){
-  if(!stepAudio()) return `<p class="small muted">No voice for this step yet (Claude makes it with make_audio.py). You can still read everything below.</p>`;
+  if(!stepAudio()) return `<p class="small muted">Read the notes below.</p>`;
   return `<div class="listen"><button class="btn small" data-tts="play" id="ttsplay">${ICON.speak}<span>Listen</span></button>
   <button class="btn ghost small" data-tts="stop" id="ttsstop" aria-label="Stop" title="Stop" hidden>${ICON.stop}</button>
   <button class="btn ghost small" data-tts="rate" aria-label="Reading speed" title="Reading speed">${S.ttsRate||1}×</button>
@@ -591,10 +583,10 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"&&rec){e.preventDefau
 /* ---------- tabs ---------- */
 const TABS=[["path","Study path"],["review","Review"],["interview","Interview"],["parked","Parked"],["tools","Toolbox"],["how","How to study"]];
 function renderTabs(){
-  const due=dueCards().length;
+  const due=dueReviews.length;
   $("#tabs").innerHTML=TABS.map(([k,l])=>`<button data-tab="${k}" aria-pressed="${S.tab===k}">${l}${k==="review"&&due?`<span class="badge">${due}</span>`:""}</button>`).join("");
 }
-$("#tabs").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;S.tab=b.dataset.tab;save();render();window.scrollTo({top:0})});
+$("#tabs").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;S.tab=b.dataset.tab;referenceStep=null;if(S.tab==="review")refreshReviews();save();render();window.scrollTo({top:0})});
 
 /* ---------- path view ---------- */
 function stackHTML(cur){
@@ -602,7 +594,7 @@ function stackHTML(cur){
   const items=D.blocks.map((x,i)=>{
     const n=blockDone(x),t=stepsFor(x).length;
     if(i>f) return `<li><div class="locked"><span></span><span><span class="t">Part ${i+1}</span><span class="ts">locked</span></span><span class="ck">🔒︎</span></div></li>`;
-    return `<li><button data-blk="${x.id}" aria-current="${x.id===cur}"><span class="arrow"></span><span><span class="t">${i+1}. ${esc(x.title)}</span><span class="ts">${x.start}–${x.end}${n<t?` · ~${n?estLeft(x):est(x)} min`:""}</span></span><span class="ck ${n===t?"full":""}">${n===t?"done":n+"/"+t}</span></button></li>`;
+    return `<li><button data-blk="${x.id}" aria-current="${x.id===cur}"><span class="arrow"></span><span><span class="t">${i+1}. ${esc(x.title)}</span><span class="ts">${x.start}–${x.end}${n<t?` · ~${n?estLeft(x):est(x)} min`:""}</span></span><span class="ck ${n===t?"full":""}">${S.completed[x.id]?(checked(x)?"checked":"finished"):n+"/"+t}</span></button></li>`;
   });
   if(D.qa){ const open=allDone(); items.push(open?`<li><button data-blk="__qa" aria-current="${cur==="__qa"}"><span class="arrow"></span><span><span class="t">Q&amp;A</span><span class="ts">${esc(D.qa.label||"after the video")}</span></span><span class="ck"></span></button></li>`
     :`<li><div class="locked"><span></span><span><span class="t">Q&amp;A</span><span class="ts">locked</span></span><span class="ck">🔒︎</span></div></li>`); }
@@ -610,31 +602,31 @@ function stackHTML(cur){
 }
 function welcomeHTML(){
   if(!welcome) return "";
-  const b=blockById(S.cur), due=dueCards().length, step=(STEPS.find(([k])=>k===S.step)||[])[1]||"";
+  const b=blockById(S.cur), due=dueReviews.length, step=(STEPS.find(([k])=>k===S.step)||[])[1]||"";
   const where = S.cur==="__qa" ? "the Q&amp;A" : allDone() ? "the end of the video" : `Part ${idxOf(b)+1}, <b>${esc(b.title)}</b>, step <b>${step}</b>`;
   return `<div class="welcome"><b>Welcome back.</b> You stopped at ${where}.
-  ${due?`<div class="row"><button class="btn" data-go="warmup">Warm up: ${due} card${due>1?"s":""} due</button><button class="btn ghost" data-go="continue">Skip warm-up, continue</button></div>`:`<div class="row"><button class="btn" data-go="continue">Continue</button></div>`}</div>`;
+  ${due?`<div class="row"><button class="btn" data-go="warmup">Review: ${due} item${due>1?"s":""} due</button><button class="btn ghost" data-go="continue">Continue studying</button></div>`:`<div class="row"><button class="btn" data-go="continue">Continue</button></div>`}</div>`;
 }
 /* ---------- time: estimates and the session planner ---------- */
-const est=b=>{const [st,en]=range(b);return Math.round((en-st)/60*1.3+30)};
-const estLeft=b=>Math.max(5,Math.round(est(b)*(1-blockDone(b)/stepsFor(b).length)));
+const est=b=>{const [st,en]=range(b);return Math.ceil((en-st)/60)+Math.max(3,b.practiceMinutes||5)};
+const estLeft=b=>Math.max(1,Math.round(est(b)*(1-blockDone(b)/stepsFor(b).length)));
 function sessionActive(){const x=S.session;return x&&(Date.now()-x.start)<(x.min*60000+3*3600000)}
 function minsLeft(){const x=S.session;return x?Math.round((x.start+x.min*60000-Date.now())/60000):null}
 function planHTML(){
   if(S.brk||S.stopped||allDone()) return "";
   if(!sessionActive()) return `<div class="plan"><b>How much time do you have today?</b> I'll plan what fits and tell you when to wrap up.
-    <div class="timechips">${[30,45,60,90,120,180].map(m=>`<button class="btn ghost small" data-sess="${m}">${m<60?m+" min":(m/60)+" h"}</button>`).join("")}<button class="btn ghost small" data-sess="0">No limit</button></div></div>`;
-  const x=S.session, left=minsLeft(), due=dueCards().length;
+    <div class="timechips">${[15,30,45,60,90].map(m=>`<button class="btn ghost small" data-sess="${m}">${m<60?m+" min":(m/60)+" h"}</button>`).join("")}<button class="btn ghost small" data-sess="0">No limit</button></div></div>`;
+  const x=S.session, left=minsLeft(), due=dueReviews.length;
   if(!x.min) return "";
-  let budget=Math.max(0,left-10), items=[];
-  if(due){const w=Math.min(Math.ceil(due*0.6),Math.round(x.min*0.15)||3);items.push(`Warm-up: ${due} review card${due>1?"s":""} (~${w} min)`);budget-=w;}
+  let budget=Math.max(0,left-2), items=[];
+  if(due){const w=Math.min(5,Math.ceil(due*1.5));items.push(`Review: ${due} item${due>1?"s":""} (~${w} min)`);budget-=w;}
   let i=frontier(), first=true;
   while(i<D.blocks.length){const b=D.blocks[i],need=first?estLeft(b):est(b);
     if(need>budget&&!first) break;
     items.push(`${first&&blockDone(b)?"Finish":"Do"} Part ${i+1}: ${esc(b.title)} (~${need} min)${need>budget?" — may not fit fully; stop at the end of a step":""}`);
     budget-=need; first=false; i++; if(budget<=0) break;}
-  items.push("Last 10 min: Interview corner, then Stop for today → Copy position");
-  const warn=left<=10;
+  items.push("Last 2 min: save and Stop for today");
+  const warn=left<=2;
   return `<div class="plan ${warn?"warn":""}"><b>${warn?(left>0?`${left} min left: finish this step, then press “Finish part” or Stop for today.`:"Time's up. Finish this step and stop for today."):`Today's plan (${x.min>=60?(x.min/60)+" h":x.min+" min"})`}</b>
     ${warn?"":`<ol>${items.map(t=>`<li>${t}</li>`).join("")}</ol>`}
     <div class="row"><button class="btn ghost small" data-sess="reset">Change time</button>${warn?`<button class="btn small" data-go="stop">Stop for today</button>`:""}</div></div>`;
@@ -643,8 +635,8 @@ let warned=false;
 function updateTimer(){
   const el=$("#timer"); if(!el) return;
   if(!sessionActive()||!S.session.min){el.hidden=true;return}
-  const l=minsLeft(); el.hidden=false; el.textContent=l>0?`${l} min left`:"time's up"; el.classList.toggle("low",l<=10);
-  if(l<=10&&!warned){warned=true;toast("10 minutes left. Finish this step, then stop.");}
+  const l=minsLeft(); el.hidden=false; el.textContent=l>0?`${l} min left`:"time's up"; el.classList.toggle("low",l<=2);
+  if(l<=2&&!warned){warned=true;toast("2 minutes left. Save and stop when ready.");}
 }
 setInterval(updateTimer,30000);
 
@@ -688,7 +680,7 @@ function ivBlock(b,qi,iv,withGrade){
   ${iv.grows?`<p class="small muted">${md(iv.grows)}</p>`:""}<p class="small muted">${md(iv.source||"")}</p></div>`;
 }
 function ivPrompt(b,iv,ans){
-  return `Act as a technical interviewer at a game or systems company, grading a junior candidate's answer. ${GRADE_RULES} Use the checklist as the 100% answer. The guiding question should be the follow-up a real interviewer would ask.
+  return `Act as a technical interviewer at a game or systems company, grading a junior candidate's answer. ${GRADE_RULES} Use only checklist items requested by the question. A follow-up is separate practice, never a hidden requirement.
 Only expect what the course has covered so far: ${blockContext(b)}
 INTERVIEW QUESTION: ${iv.q}
 CHECKLIST (with weights): ${(iv.strong||[]).map(([t,p])=>t+" ("+p+"%)").join("; ")}
@@ -724,9 +716,9 @@ setInterval(()=>{document.querySelectorAll("[data-clock]").forEach(el=>{const id
 function renderInterviewTab(){
   const open=D.blocks.filter(b=>S.completed[b.id]&&(b.interview||[]).length);
   const locked=D.blocks.filter(b=>!S.completed[b.id]&&(b.interview||[]).length).length;
-  return `<section class="block"><h2>Interview</h2><p class="pane">Real interview questions about what you've studied. They join your spaced reviews, and once an area has enough of them, Claude runs a mock interview (<code>/interview</code>).</p>
-  ${open.length?open.map(b=>`<h3>Part ${idxOf(b)+1}: ${esc(b.title)}</h3>`+b.interview.map((iv,i)=>ivBlock(b,i,iv,false)).join("")).join(""):`<p class="muted">No questions yet. They unlock as you finish parts.</p>`}
-  ${(()=>{const d=D.blocks.filter(b=>S.completed[b.id]&&(b.debug||[]).length);return d.length?`<h3>Debug challenges</h3>`+d.map(b=>b.debug.map((c,i)=>dbgBlock(b,i,c,false)).join("")).join(""):""})()}
+  return `<section class="block"><h2>Interview</h2><p class="pane">Real interview questions about what you've studied. Use these when you want extra practice. They are separate from the short lesson.</p>
+  ${open.length?open.map(b=>`<h3>Part ${idxOf(b)+1}: ${esc(b.title)}</h3>`+b.interview.map((iv,i)=>ivBlock(b,i,iv,true)).join("")).join(""):`<p class="muted">No questions yet. They unlock as you finish parts.</p>`}
+  ${(()=>{const d=D.blocks.filter(b=>S.completed[b.id]&&(b.debug||[]).length);return d.length?`<h3>Debug challenges</h3>`+d.map(b=>b.debug.map((c,i)=>dbgBlock(b,i,c,true)).join("")).join(""):""})()}
   ${locked?`<p class="small muted">${locked} more part${locked>1?"s":""} with interview questions unlock as you study.</p>`:""}</section>`;
 }
 
@@ -735,30 +727,28 @@ function renderPath(){
   if(S.stopped) return renderStopped();
   if(S.cur==="__qa") return welcomeHTML()+`<div class="grid">${stackHTML("__qa")}<section class="block"><div class="eyebrow">After the video</div><h2>Q&amp;A</h2><div class="pane">${D.qa.html}<div id="nextbox"></div></div></section></div>`;
   let b=blockById(S.cur)||D.blocks[0];
-  if(!unlocked(b)){b=D.blocks[Math.min(frontier(),D.blocks.length-1)];S.cur=b.id;S.step="guess";}
-  const steps=stepsFor(b); if(!steps.find(([k])=>k===S.step)||!stepOpen(b,S.step)) S.step=steps.find(([k])=>!(S.done[b.id]||{})[k])?.[0]||"guess";
+  if(!unlocked(b)){b=D.blocks[Math.min(frontier(),D.blocks.length-1)];S.cur=b.id;S.step="watch";}
+  const steps=stepsFor(b); if(!steps.find(([k])=>k===S.step)||!stepOpen(b,S.step)) S.step=steps.find(([k])=>!(S.done[b.id]||{})[k])?.[0]||"watch";
   const d=S.done[b.id]||{}, idx=idxOf(b);
   return welcomeHTML()+planHTML()+`<div class="grid">${stackHTML(b.id)}
   <section class="block" aria-labelledby="bt">
     <div class="bhead"><div><div class="eyebrow">Part ${idx+1} of ${D.blocks.length}</div><h2 id="bt">${esc(b.title)}</h2></div><span class="tsr">▶ ${b.start} – ${b.end}</span></div>
     <div class="steps" role="tablist">${steps.map(([k,l])=>`<button role="tab" data-step="${k}" aria-selected="${S.step===k}" class="${d[k]?"done":""}" ${stepOpen(b,k)?"":"disabled"}>${l}</button>`).join("")}</div>
-    <div class="pane" id="pane">${renderStep(b,S.step)}</div>
+    <div class="pane" id="pane">${referenceStep?`<button class="btn ghost small" data-reference="back">← Back to ${S.step==="recall"?"Check":"Practice"}</button>`+renderStep(b,referenceStep):renderStep(b,S.step)}</div>
     <div class="next"><button class="btn" id="markNext">${nextLabel(b)}</button></div>
   </section></div>`;
 }
 function nextLabel(b){
   const st=stepsFor(b), last=st[st.length-1][0]===S.step, d=(S.done[b.id]||{})[S.step];
-  if(S.step==="guess") return d?"Next step →":"Lock in my guesses → Watch";
-  if(S.step==="watch") return d?"Next step →":"I watched it → Recall";
-  if(last) return idxOf(b)===D.blocks.length-1?"Finish the last part":"Finish part, take a break";
-  return d?"Next step →":"Mark done, next step →";
+  if(S.step==="watch") return d?"Next step →":"I watched it → Check";
+  if(last) return idxOf(b)===D.blocks.length-1?"Finish the last part":"Finish part";
+  return d?"Next step →":"Continue to practice →";
 }
 function renderStep(b,k){
   if(k==="explain"||k==="code") return listenBar()+withWords(renderStepRaw(b,k),(b.say||{})[k]);
   return renderStepRaw(b,k);
 }
 function renderStepRaw(b,k){
-  if(k==="guess") return renderGuess(b);
   if(k==="watch"){
     const [st,en]=range(b);
     const loader = videoURL ? `<div id="vslot"></div>` :
@@ -766,103 +756,75 @@ function renderStepRaw(b,k){
        <p class="small muted">${D.video&&D.video.file?`File: <code>${esc(D.video.file)}</code>. `:""}It stays on your computer; nothing is uploaded.</p>
        <label class="btn" for="vfile">Choose video file</label><input type="file" id="vfile" accept="video/*" hidden><p class="small muted">or drag the file here</p>
        ${videoFolder?`<p class="small"><b>Tip:</b> put <code>${esc(D.video.file)}</code> in <code>${esc(videoFolder)}</code> and it loads by itself next time.</p>`:""}</div>`;
-    if(!guessDone(b)) return `<div class="cover"><b>The video is covered</b><span>Make your guesses first. Then the video opens.</span><button class="btn" data-step="guess">Go to Guess</button></div>`;
-    const gl=guessList(b), mine=S.guesses[b.id]||[];
-    return `<p><b>Watch ${b.start} → ${b.end}</b> (${fmt(en-st)}). ${md(b.summary)}</p>
-    <details class="watchfor"><summary class="small">Your ${gl.length>1?gl.length+" guesses":"guess"}: watch for the answer${gl.length>1?"s":""}</summary><ol>${gl.map((g,i)=>`<li>${md(g.q)}<br><span class="muted small">You: “${esc(mine[i]||"no idea")}”</span></li>`).join("")}</ol></details>
+
+    return `<p><b>Watch ${b.start} → ${b.end}</b> (${fmt(en-st)}).</p>
+    <p><b>Focus:</b> ${md(b.focus||b.oneLiner||b.summary)}</p>
     ${loader}
     <div class="park" id="parkbox"><h3>Parking lot</h3><p class="small muted">Want to search something? Don't leave. Write it here and keep watching. We look at it after this part.</p>
     <div class="row"><input type="text" id="parkin" placeholder="e.g. what does LPSTR stand for?" autocomplete="off"><button class="btn small" id="parkgo">Park it</button></div>
     <ul class="plist" id="plist">${parkItems(b,false)}</ul></div>
     <details class="watchfor"><summary class="small">What to watch for (optional hints)</summary><ol>${b.watchFor.map(w=>`<li>${md(w)}</li>`).join("")}</ol>
     ${b.pauseAt?`<div class="callout"><b>Pause at ${b.pauseAt.t}.</b> ${md(b.pauseAt.do)}</div>`:""}</details>
-    ${(b.deferred||[]).map(x=>`<div class="callout later"><b>Casey parks this:</b> ${md(x)} It's on the Parked tab. Don't chase it now.</div>`).join("")}
+
     <p class="stepnote">Keys: Space = play/pause · ← = back 5 s. The player won't go past ${b.end}.</p>`;
   }
   if(k==="recall"){
-    const shown=S.cmp[b.id];
-    return `<p><b>Without looking back:</b> what did Casey explain in this part? Write 3–5 short points in your own words.</p>
-    <textarea data-recall="${b.id}" placeholder="1. …">${esc(S.recall[b.id]||"")}</textarea>
-    <div class="row">${sample?`<button class="btn" id="rcheck">Grade my recall</button>`:`<button class="btn ghost" id="rcopy">Copy for Claude to grade</button>`}<button class="btn ghost" id="cmp">${shown?"Hide":"Compare with the notes"}</button></div>
-    <div class="copybox" id="rcb"></div><div id="rfb">${S.rfb[b.id]?renderScore(S.rfb[b.id]):""}</div>
-    <div id="cmpbox" ${shown?"":"hidden"}><div class="callout"><b>What the part covers:</b> ${md(b.summary)}<ol>${b.watchFor.map(w=>`<li>${md(w)}</li>`).join("")}</ol></div></div>
-    <div class="park"><h3>Your parking lot</h3>${(S.park[b.id]||[]).length?`<p class="small muted">Answer now only if it's about this part. If Casey covers it later, keep it for later.</p><ul class="plist" id="plist">${parkItems(b,true)}</ul>`:`<p class="small muted">Empty. Nothing pulled you away. Good.</p>`}</div>`;
+    const check=checkFor(b), fb=S.checkFb[b.id];
+    return `<p><b>From memory:</b> ${md(check.q)}</p><p class="small muted">A few sentences are enough.</p>
+    <textarea data-shortcheck="${b.id}" placeholder="Your answer…">${esc(S.checkAnswers[b.id]||"")}</textarea>
+    <div class="row">${sample?`<button class="btn" id="quickcheck">Check my answer</button>`:`<button class="btn ghost" id="quickcopy">Copy for tutor</button>`}</div>
+    <div class="copybox" id="quickcb"></div><div id="quickfb">${fb?renderScore(fb):""}</div>
+    ${rubricHTML(check.rubric)}
+    <button class="btn ghost small" data-reference="explain">Need an explanation?</button>
+    ${sample?`<details class="model" id="chathelp"><summary>Ask about this part</summary><div class="chatlog" id="chatlog">${(S.notes[b.id]||[]).map(m=>`<div class="msg ${m.r==="user"?"u":"a"}">${esc(m.c)}</div>`).join("")}</div><textarea id="chatin" placeholder="Your question…"></textarea><button class="btn" id="chatgo">Ask</button></details>`:""}
+    ${(S.park[b.id]||[]).length?`<div class="park"><h3>Your questions</h3><ul class="plist" id="plist">${parkItems(b,true)}</ul></div>`:""}`;
   }
+
   if(k==="explain") return (b.anim?`<figure class="anim"><video src="${esc(b.anim)}" controls playsinline preload="metadata"></video></figure>`:"")
     + (b.oneLiner?`<div class="callout"><b>The idea in one sentence:</b> ${md(b.oneLiner)}</div>`:"")
     + (b.analogy?`<p><b>Real-life picture:</b> ${md(b.analogy)}</p>`:"")
     + b.explain + (b.prereq?`<div class="callout"><b>Prerequisite, explained now:</b> ${b.prereq}</div>`:"")
     + (b.mistake?`<div class="callout later"><b>Common beginner mistake:</b> ${md(b.mistake)}</div>`:"");
-  if(k==="experiment") return b.experiment + ((b.debug||[]).length?`<h3>Debug challenge</h3><p class="small muted">Find the real cause fast, with the smallest fix. Use the method: read the exact error, state a hypothesis, narrow it down, fix, verify. The clock starts when you press Start. (Error texts can differ slightly between compiler versions.)</p>`+b.debug.map((c,i)=>dbgBlock(b,i,c,true)).join(""):"");
+  if(k==="experiment") return `<p><b>One task (~${b.practiceMinutes||5} min).</b></p>${b.practice||b.experiment}
+    <p class="small muted">Write one line about what you observed. If you cannot try it now, note what remains to do.</p>
+    <textarea data-practice="${b.id}" placeholder="What happened? Or: still to do…">${esc(S.practice[b.id]||"")}</textarea>
+    <label class="small"><input type="checkbox" data-practiced="${b.id}" ${S.practiceDone[b.id]?"checked":""}> I tried the task and checked the result</label>
+    ${b.code?`<button class="btn ghost small" data-reference="code">Code reference</button>`:""}
+    ${(b.debug||[]).length?`<details class="model"><summary>Optional debugging practice</summary>${b.debug.map((c,i)=>dbgBlock(b,i,c,true)).join("")}</details>`:""}
+    ${(b.interview||[]).length?`<details class="model"><summary>Optional interview practice</summary>${b.interview.map((iv,i)=>ivBlock(b,i,iv,true)).join("")}</details>`:""}`;
+
   if(k==="code") return b.code;
-  if(k==="why") return b.why + ((b.interview||[]).length?`<h3>Interview corner</h3><p class="small muted">How a real interviewer could ask about this part. It joins your reviews and your mock interviews.</p>`
-    +(b.interview.some(iv=>ivFile(b,iv.q))?`<label class="small"><input type="checkbox" data-autoask ${S.autoAsk?"checked":""}> Auto-ask: the interviewer asks the question when this step opens</label>`:"")+b.interview.map((iv,i)=>ivBlock(b,i,iv,true)).join(""):"");
-  if(k==="ask") return renderAsk(b);
-  if(k==="cards") return `<p class="muted small">Say the answer out loud before you flip. Finishing this step adds these ${b.cards.length} cards to Review.</p>`+
-    b.cards.map(c=>`<div class="card"><div class="face"><div class="side">Front</div><div class="txt">${md(c[0])}</div><details class="model"><summary>Flip</summary><p>${md(c[1])}</p></details></div></div>`).join("");
   return "";
 }
-function renderGuess(b){
-  const [st,en]=range(b), gl=guessList(b), mine=S.guesses[b.id]||[], lb=lookBackFor(b);
-  if(guessDone(b)) return `<p><b>Locked in before you watched.</b> You can't change these now. In <b>Answer</b> you'll see if you were right.</p>`
-    + (lb&&(S.lb[b.id]||"").trim()?`<div class="gq"><div class="qn">LOOK BACK · ${esc(lb.label)}</div><div class="gmine">${esc(S.lb[b.id])}</div></div>`:"")
-    + gl.map((g,i)=>`<div class="gq"><div class="qn">GUESS ${i+1}</div><div class="qt">${md(g.q)}</div><div class="gmine">${(mine[i]||"").trim()?esc(mine[i]):`<span class="muted">no idea</span>`}</div></div>`).join("");
-  return `<p><b>Part ${idxOf(b)+1}: ${b.start} → ${b.end}</b> (${fmt(en-st)}). The video stays covered until you lock in your guesses.</p>`
-    + (lb?`<div class="park"><h3>Look back first</h3><p class="small muted">Before something new, pull the last part out of memory. One or two sentences, no looking.</p>
-    <p><b>${esc(lb.label)}</b>: what was it about?</p><textarea data-lb="${b.id}" placeholder="From memory…">${esc(S.lb[b.id]||"")}</textarea>
-    <div class="row"><button class="btn ghost small" data-lbshow="${b.id}">${S.lbShow[b.id]?"Hide":"Compare"}</button></div>
-    <div class="callout" id="lbans" ${S.lbShow[b.id]?"":"hidden"}><b>In one sentence:</b> ${md(lb.answer)}</div></div>`:"")
-    + `<div class="guessbox"><h3>Guess first</h3><p class="small muted">${gl.length>1?`${gl.length} key questions from this part. `:""}Being wrong is fine: a guess makes your brain wait for the answer, so it sticks better. Leave a box empty only if you really have no idea.</p>
-    ${gl.map((g,i)=>`<div class="gq"><div class="qt">${gl.length>1?(i+1)+". ":""}${md(g.q)}</div><textarea data-gs="${b.id}:${i}" placeholder="My guess…">${esc(mine[i]||"")}</textarea></div>`).join("")}</div>`
-    + (nudge&&nudge.id===b.id?`<div class="nudge">${esc(nudge.text)} Press the button again to watch anyway.</div>`:"");
-}
-function lockGuesses(b){
-  const gl=guessList(b), mine=S.guesses[b.id]||[], lb=lookBackFor(b);
-  const empty=gl.filter((g,i)=>!(mine[i]||"").trim()).length, lbEmpty=!!lb&&!(S.lb[b.id]||"").trim();
-  if((empty||lbEmpty)&&!(nudge&&nudge.id===b.id)){
-    const parts=[]; if(lbEmpty) parts.push("The look-back is empty.");
-    if(empty) parts.push(empty===gl.length?(gl.length>1?"All your guesses are empty.":"Your guess is empty."):`${empty} of ${gl.length} guesses ${empty>1?"are":"is"} empty.`);
-    nudge={id:b.id,text:parts.join(" ")+" A wrong guess helps more than no guess."}; render(); $(".nudge")?.scrollIntoView({block:"center"}); return false;
-  }
-  nudge=null; return true;
-}
-const GRADE_RULES=`Grade in percent, by MEANING, not wording. Score = how much of the main ideas of the correct answer the student showed. Split the correct answer into its key ideas, each with a weight. An idea counts fully when it is clearly there, in ANY words: synonyms, his own phrasing, a different order, simple English, spelling or grammar mistakes are all fine. Never require the reference's exact words or terms, unless the question asks for a specific name. The answer may be spoken and turned into text by speech recognition: ignore filler words ("uh", "um", "like", "you know"), repeated words, false starts and small transcription mistakes (a word that sounds like the right term, e.g. "when main" for WinMain, "linker" heard as "linger"); never take points for them, judge only the ideas. Give partial credit only when the idea itself is vague or half-right, not because the words differ. A wrong statement costs points even if the rest is right. List what is right, and every missing or wrong piece with the percent it is worth, so right + missing = 100. Do NOT reveal the full answer: if below 100, ask ONE guiding question that leads the student to the missing piece. If the gap is something Casey explains in the video, give the time range to rewatch. Simple English.`;
-function scoreColor(n){return n>=90?"var(--good)":n>=60?"var(--warn)":"var(--bad)"}
+const GRADE_RULES=`Grade only the ideas explicitly requested in the QUESTION and its FIXED CHECKLIST. Context and reference notes are background, never extra requirements. Award each listed idea up to its stated weight, in the same order. Never invent criteria or bonus deductions. Accept correct ideas in any words; ignore grammar, spelling, filler words and minor speech-transcription errors. Wrong claims affect only the relevant criterion. Be concise: one sentence on what is right. If below 80%, give ONE short hint or correction for the main gap. At 80%+ with no major misconception, let the learner continue; do not demand 100% or another wording. Do not repeat the full answer or every note. Return awards, one number per checklist item. Simple English.`;
+
+function scoreColor(n){return n>=80?"var(--good)":n>=50?"var(--warn)":"var(--bad)"}
 function renderScore(fb){
   if(fb.verdict&&fb.score===undefined) return renderFb(fb);
   const n=Math.max(0,Math.min(100,Math.round(+fb.score||0)));
   return `<div class="fb fbs"><div class="score">Score: ${n}%<span class="sbar"><i style="width:${n}%;background:${scoreColor(n)}"></i></span></div>
   ${fb.right?`<p style="margin:8px 0 0"><b>Right:</b> ${esc(fb.right)}</p>`:""}
-  ${(fb.missing||[]).length?`<p style="margin:8px 0 0"><b>Missing or wrong for 100%:</b></p><ul class="miss">${fb.missing.map(m=>`<li>${esc(m.point)} <span class="muted">(${Math.round(+m.pct||0)}%)</span></li>`).join("")}</ul>`:""}
-  ${fb.guide?`<p style="margin:8px 0 0"><b>Guiding question:</b> ${esc(fb.guide)}</p>`:""}
+  ${(fb.missing||[]).length?`<p style="margin:8px 0 0"><b>To improve:</b></p><ul class="miss">${fb.missing.map(m=>`<li>${esc(m.point)} <span class="muted">(${Math.round(+m.pct||0)}%)</span></li>`).join("")}</ul>`:""}
+  ${fb.guide?`<p style="margin:8px 0 0"><b>Next:</b> ${esc(fb.guide)}</p>`:""}
   ${fb.rewatch?`<p class="small muted" style="margin:6px 0 0">Rewatch: ${esc(fb.rewatch)}</p>`:""}</div>`;
 }
-function normFb(r){return {score:Math.max(0,Math.min(100,Math.round(+r.score||0))),right:String(r.right||""),missing:Array.isArray(r.missing)?r.missing.slice(0,8).map(m=>({point:String(m.point||m||""),pct:+m.pct||0})):[],guide:String(r.guide||""),rewatch:String(r.rewatch||"")}}
-const JSON_SHAPE=`Reply with only JSON: {"score":0-100,"right":"...","missing":[{"point":"...","pct":number}],"guide":"one guiding question, or empty if 100","rewatch":"m:ss-m:ss or empty"}`;
+function normFb(r,rubric){
+  if(!rubric.length||rubric.some(([idea,w])=>!Number.isInteger(w)||w<=0)||rubric.reduce((n,[idea,w])=>n+w,0)!==100)throw new Error("This checklist needs weights totaling 100.");
+  if(!Array.isArray(r.awards)||r.awards.length!==rubric.length) throw new Error("The check returned incomplete marks. Try again.");
+  const awards=rubric.map(([idea,weight],i)=>{
+    const n=r.awards[i]; if(typeof n!=="number"||!Number.isFinite(n)) throw new Error("The check returned invalid marks. Try again.");
+    return Math.round(Math.max(0,Math.min(weight,n)));
+  });
+  const score=Math.round(awards.reduce((a,n)=>a+n,0));
+  return {v:3,score,awards,right:String(r.right||""),missing:rubric.map(([point,weight],i)=>({point,pct:Math.round(weight-awards[i])})).filter(x=>x.pct>0),guide:score<80?String(r.guide||""):"",rewatch:String(r.rewatch||"")};
+}
+const JSON_SHAPE=`Reply with only JSON: {"awards":[points for each fixed checklist item, in order],"right":"one short sentence","guide":"one short hint or correction if below 80%, otherwise empty","rewatch":"m:ss-m:ss or empty"}`;
+
 function parkItems(b,actions){
   return (S.park[b.id]||[]).map((p,i)=>`<li><span class="at">${fmt(p.at)}</span><span class="txt">${esc(p.t)}</span>
    ${p.status!=="open"?`<span class="chip ${p.status}">${p.status==="later"?"later":"answered"}</span>`:""}
    ${actions?`<span class="row" style="margin:0">${sample?`<button class="btn ghost small" data-pask="${i}">Ask Claude</button>`:`<button class="btn ghost small" data-pcopy="${i}">Copy for Claude</button>`}<button class="btn ghost small" data-pset="${i}:later">Later</button><button class="btn ghost small" data-pset="${i}:done">Answered</button></span>
    <div class="pans small" id="pans-${i}" style="flex-basis:100%">${p.ans?esc(p.ans):""}</div>`:""}</li>`).join("");
-}
-function renderAsk(b){
-  const gl=guessList(b), mine=S.guesses[b.id]||[], had=guessDone(b)||mine.some(x=>(x||"").trim());
-  const top=gl.map((g,i)=>({g,i})).filter(x=>x.g.qi===null);
-  return `<p class="muted small">Answer from memory first, in your own words. Then check. Grading is strict: you get a score in %, and what's missing for 100%.</p>`+
-  (had&&top.length?`<div class="guessbox"><h3>Your guess before watching</h3>${top.map(({g,i})=>`<p>${md(g.q)}</p><p>You guessed: “${esc(mine[i]||"no idea")}”. Were you right? What changed?</p>`).join("")}</div>`:"")+
-  b.questions.map((q,i)=>{const id=b.id+"?"+i, fb=S.fb[id];
-    return `<div class="q"><div class="qn">Q${i+1}${q.t?` · from ${q.t}`:""}</div><div class="qt">${md(q.q)}</div>
-    <textarea data-ans="${id}" placeholder="Your answer…">${esc(S.answers[id]||"")}</textarea>
-    <div class="row">${sample?`<button class="btn" data-check="${id}">Check my answer</button>`:`<button class="btn ghost" data-copyq="${id}">Copy for Claude to check</button>`}
-    ${q.hint?`<button class="btn ghost" data-hint="${id}">Hint</button>`:""}</div>
-    <div class="small muted" id="hint-${id}" hidden>${md(q.hint||"")}</div>
-    <div class="copybox" id="cb-${id}"></div>
-    ${had&&gl.findIndex(x=>x.qi===i)>=0?`<p class="small muted">Before watching you guessed: “${esc(mine[gl.findIndex(x=>x.qi===i)]||"no idea")}”.</p>`:""}
-    <div id="fb-${id}">${fb?renderScore(fb):""}</div>
-    <details class="model"><summary>Show model answer</summary><p>${md(q.a)}</p></details></div>`}).join("")+
-  (sample?`<div style="margin-top:18px;border-top:1px solid var(--rule);padding-top:14px"><h3>Stuck? Ask about this part</h3>
-  <div class="chatlog" id="chatlog">${(S.notes[b.id]||[]).map(m=>`<div class="msg ${m.r==="user"?"u":"a"}">${esc(m.c)}</div>`).join("")}</div>
-  <textarea id="chatin" placeholder="Ask about this part…"></textarea><div class="row"><button class="btn" id="chatgo">Ask</button><button class="btn ghost" id="chatclear">Clear</button></div></div>`:"");
 }
 function renderFb(fb){return `<div class="fb"><span class="verdict v-${fb.verdict}">${fb.verdict==="correct"?"Correct":fb.verdict==="partial"?"Partly there":"Not yet"}</span>\n${esc(fb.feedback)}${fb.followup?`\n\nFollow-up: ${esc(fb.followup)}`:""}</div>`}
 
@@ -885,7 +847,7 @@ function renderBreak(){
 function renderStopped(){
   const f=frontier(), nb=D.blocks[f];
   return `<section class="block center"><div class="eyebrow">Saved</div><h2>Good session.</h2>
-  <p>${nb?`Next time you start at <b>Part ${f+1}: ${esc(nb.title)}</b>.`:"Next time: the next video and your review cards."}</p>
+  <p>${nb?`Next time you start at <b>Part ${f+1}: ${esc(nb.title)}</b>.`:"Next time: the next video and your due reviews."}</p>
   ${helperReady?`<p id="syncmsg" class="small">Saving to your repo and pushing to GitHub…</p><div id="nextbox"></div>
   <div class="row" style="justify-content:center"><button class="btn ghost" data-go="resume">Actually, keep going</button></div></section>`
   :`<p class="small muted">Everything is saved in this browser. So every Claude account and machine knows your place: press <b>Copy position</b> and paste it to Claude with <code>/study</code>.</p>
@@ -909,9 +871,9 @@ async function showNext(){
 }
 function positionBlock(){
   const f=frontier(), b=blockById(S.cur), d=new Date().toISOString().slice(0,10);
-  const step=(STEPS.find(([k])=>k===S.step)||[])[1]||"Guess";
+  const step=(STEPS.find(([k])=>k===S.step)||[])[1]||"Watch";
   if(allDone()) return `## Study position\n- Course: ${D.course||D.title}\n- Section: all ${D.blocks.length} parts done; next is the Q&A\n- Step: Q&A\n- Completed (part id, date): ${completedList()}\n- Updated: ${d}`;
-  const nb=(S.brk||S.stopped)?D.blocks[f]:b, i=idxOf(nb), st=(S.brk||S.stopped)?"Guess":step;
+  const nb=(S.brk||S.stopped)?D.blocks[f]:b, i=idxOf(nb), st=(S.brk||S.stopped)?"Watch":step;
   const into=S.vt[nb.id]?Math.max(0,S.vt[nb.id]-secs(nb.start)):0;
   return `## Study position\n- Course: ${D.course||D.title}\n- Section: ${i+1} of ${D.blocks.length} ("${nb.title}", ${nb.start}-${nb.end})\n- Step: ${st}${into>1?` (video at ${fmt(into)} into the part, episode time ${fmt(secs(nb.start)+into)})`:""}\n- Parts done: ${Object.keys(S.completed).length}\n- Completed (part id, date): ${completedList()}\n- Updated: ${d}`;
 }
@@ -922,19 +884,36 @@ function tickBreak(){
 }
 
 /* ---------- review / parked / tools / how ---------- */
-let revQueue=null, revShow=false;
+let dueReviews=[], reviewsLoaded=false, reviewsError="", reviewResult="";
+const reviewAnswers={}, reviewFeedback={}, reviewFirstScores={};
+async function refreshReviews(){
+  if(!helperReady)return;
+  try{const r=await (await fetch("/api/reviews")).json();if(r.error)throw new Error(r.error);dueReviews=r.due||[];reviewsLoaded=true;reviewsError="";}
+  catch(e){reviewsError="Could not load reviews. Try again."}
+  safeRender();
+}
+function reviewItem(row){
+  const m=row.source.match(/^courses\/(.+)#([^/]+)(?:\/(iv|dbg)(\d+))?$/);
+  if(!m||m[1]!==kitPath)return null;
+  const b=blockById(m[2]);if(!b)return null;
+  if(m[3]==="iv"){const iv=(b.interview||[])[+m[4]];return iv?{b,check:{q:iv.q,rubric:iv.strong}}:null;}
+  if(m[3]==="dbg"){const c=(b.debug||[])[+m[4]];return c?{b,check:{q:c.task,rubric:c.strong},scenario:c.scenario}:null;}
+  return {b,check:{...checkFor(b),q:b.reviewQuestion||checkFor(b).q}};
+}
 function renderReview(){
-  if(!revQueue) revQueue=dueCards().map(x=>x.id);
-  const all=allCards(), started=Object.keys(S.cards).length;
-  const head=`<div class="cardmeta"><span>${revQueue.length} to review now</span><span>${started} of ${all.length} cards in rotation</span></div>`;
-  const exp=`<p><button class="btn ghost" id="anki">Export all cards for Anki (.tsv)</button></p>`;
-  if(!revQueue.length) return `<section class="block"><h2>Review</h2>${head}<p>Nothing due. Cards join when you finish a part's Flashcards step, then come back after 1 day, about 6 days, and longer each time you remember them.</p>${welcome?`<button class="btn" data-go="continue">Continue studying</button>`:""}${exp}</section>`;
-  const x=all.find(c=>c.id===revQueue[0]);
-  return `<section class="block"><h2>Review</h2>${head}
-  <div class="card"><div class="face"><div class="side">${esc(x.b.title)} · ${x.b.start}</div><div class="txt">${md(x.c[0])}</div>
-  ${revShow?`<hr style="border:0;border-top:1px dashed var(--rule);margin:14px 0"><div class="txt">${md(x.c[1])}</div>`:""}</div></div>
-  ${revShow?`<div class="rate"><button class="btn ghost" data-rate="0">Again</button><button class="btn ghost" data-rate="1">Hard</button><button class="btn" data-rate="2">Good</button><button class="btn ghost" data-rate="3">Easy</button></div>`:`<button class="btn" id="flip">Show answer</button>`}
-  ${exp}</section>`;
+  const exp=`<details class="model"><summary>Optional flashcard export</summary><p>Use this only if you prefer Anki. The lesson does not require another flashcard queue.</p><button class="btn ghost" id="anki">Export cards (.tsv)</button></details>`;
+  if(!helperReady)return `<section class="block"><h2>Review</h2><p>Start with <code>./study</code> to load your shared review schedule, or ask your tutor for <code>/review</code>.</p>${exp}</section>`;
+  if(reviewsError)return `<section class="block"><h2>Review</h2><p>${esc(reviewsError)}</p><button class="btn" id="reloadreviews">Retry</button></section>`;
+  if(!reviewsLoaded)return `<section class="block"><h2>Review</h2><p>Loading due reviews…</p></section>`;
+  const row=dueReviews[0],head=`<h2>Review</h2><p class="small muted">${dueReviews.length} due. Keep this to about five minutes; the rest can wait.</p>${reviewResult?`<p class="fb">${esc(reviewResult)}</p>`:""}`;
+  if(!row)return `<section class="block">${head}<p>No reviews due.</p><button class="btn" data-go="continue">Continue studying</button>${exp}</section>`;
+  const item=reviewItem(row);
+  if(!item){const kit=row.source.split("#")[0];return `<section class="block">${head}<p>${esc(row.title)}</p><a class="btn" href="/${esc(kit)}/study-kit.html">Open this lesson to review</a></section>`;}
+  const {check}=item, fb=reviewFeedback[row.unit];
+  return `<section class="block">${head}<p>${md(check.q)}</p>${item.scenario||""}
+  <textarea data-reviewanswer="${esc(row.unit)}" placeholder="From memory…">${esc(reviewAnswers[row.unit]||"")}</textarea>
+  <div class="row">${sample?`<button class="btn" id="checkreview">Check answer</button>`:`<button class="btn ghost" id="copyreview">Copy for tutor</button>`}${fb?`<button class="btn" id="savereview">Save review, next</button>`:""}<button class="btn ghost" data-go="continue">Continue studying</button></div>
+  <div class="copybox" id="reviewcb"></div><div id="reviewfb">${fb?renderScore(fb):""}</div>${rubricHTML(check.rubric)}${exp}</section>`;
 }
 function renderParked(){
   const mine=[];D.blocks.forEach((b,i)=>(S.park[b.id]||[]).forEach(p=>{if(p.status!=="done")mine.push({b,i,p})}));
@@ -969,14 +948,15 @@ function render(){
 }
 function goNextStep(){
   const b=blockById(S.cur); if(!b) return;
+  if(S.step==="recall"&&!(S.checkAnswers[b.id]||"").trim()){toast("Try a short answer first.");return}
+  if(S.step==="experiment"&&!(S.practice[b.id]||"").trim()){toast("Note the result, or what remains to do.");return}
   (S.done[b.id]=S.done[b.id]||{})[S.step]=true;
-  if(S.step==="cards"){b.cards.forEach((c,i)=>{const id=b.id+"#"+i;if(!S.cards[id])S.cards[id]={ease:2.5,int:0,reps:0,due:today()+1}});toast(b.cards.length+" cards added to Review")}
   const st=stepsFor(b),i=st.findIndex(([k])=>k===S.step);
   if(i<st.length-1){S.step=st[i+1][0];}
   else{
-    S.completed[b.id]=true; S.cdate[b.id]=new Date().toISOString().slice(0,10); S.sessionParts=(S.sessionParts||0)+1;
+    if(!S.completed[b.id]){S.cdate[b.id]=new Date().toISOString().slice(0,10);S.sessionParts=(S.sessionParts||0)+1;} S.completed[b.id]=true;
     const nb=D.blocks[idxOf(b)+1];
-    if(nb){S.cur=nb.id;S.step="guess";S.brk={from:b.id,until:null};}
+    if(nb){S.cur=nb.id;S.step="watch";S.brk=S.sessionParts%LONG_EVERY===0?{from:b.id,until:null}:null;}
     else{S.cur=D.qa?"__qa":b.id; toast("Last part finished");}
   }
   save();render();window.scrollTo({top:0});
@@ -989,20 +969,46 @@ function addPark(){
 $("#view").addEventListener("keydown",e=>{ if(e.target.id==="parkin"&&e.key==="Enter"){e.preventDefault();addPark();} });
 $("#view").addEventListener("click",async e=>{
   const t=e.target.closest("button"); if(!t) return;
+  if(t.dataset.reference){referenceStep=t.dataset.reference==="back"?null:t.dataset.reference;render();return}
   if(t.dataset.tts){ttsCmd(t.dataset.tts);return}
   if(t.dataset.ivsay){ivSay(t);return}
   if(t.dataset.go){const g=t.dataset.go;
     if(g==="continue"){welcome=false;S.tab="path";save();render();return}
-    if(g==="warmup"){welcome=true;S.tab="review";revQueue=null;save();render();return}
+    if(g==="warmup"){welcome=true;S.tab="review";save();render();return}
     if(g==="startbreak"){S.brk.until=Date.now()+(+t.dataset.min)*60000;save();render();return}
     if(g==="afterbreak"){if(S.sessionParts%LONG_EVERY===0&&S.brk&&S.brk.until)S.sessionParts=0;S.brk=null;save();render();window.scrollTo({top:0});return}
     if(g==="stop"){S.brk=null;S.stopped=true;S.session=null;save();render();if(helperReady)finishSync();return}
     if(g==="resume"){S.stopped=false;save();render();return}
     if(g==="copypos"){copy(positionText(),$("#poscb"));return}
   }
-  if(t.dataset.blk){welcome=false;S.cur=t.dataset.blk;const b=blockById(S.cur);S.step=b?(stepsFor(b).find(([k])=>!(S.done[b.id]||{})[k])||["guess"])[0]:"guess";save();render();$(".block")?.scrollIntoView({block:"start"});return}
-  if(t.dataset.step){S.step=t.dataset.step;save();render();return}
-  if(t.id==="markNext"){welcome=false;const cb=blockById(S.cur);if(cb&&S.step==="guess"&&!guessDone(cb)&&!lockGuesses(cb))return;goNextStep();return}
+  if(t.dataset.blk){referenceStep=null;welcome=false;S.cur=t.dataset.blk;const b=blockById(S.cur);S.step=b?(stepsFor(b).find(([k])=>!(S.done[b.id]||{})[k])||["watch"])[0]:"watch";save();render();$(".block")?.scrollIntoView({block:"start"});return}
+  if(t.dataset.step){referenceStep=null;S.step=t.dataset.step;save();render();return}
+  if(t.id==="reloadreviews"){refreshReviews();return}
+  if(["checkreview","copyreview","savereview"].includes(t.id)){
+    const row=dueReviews[0];if(!row)return;const item=reviewItem(row);if(!item)return;
+    const answer=(reviewAnswers[row.unit]||"").trim();if(!answer){toast("Try a short answer first.");return}
+    const prompt=checkPrompt(item.b,{...item.check,q:(item.scenario?item.scenario.replace(/<[^>]+>/g," ")+" ":"")+item.check.q},answer);
+    if(t.id==="copyreview"){copy(prompt,$("#reviewcb"));return}
+    t.disabled=true;
+    try{
+      if(t.id==="checkreview"){reviewFeedback[row.unit]=normFb(await sample.json(prompt),item.check.rubric);if(reviewFirstScores[row.unit]===undefined)reviewFirstScores[row.unit]=reviewFeedback[row.unit].score;render();}
+      else{
+        const fb=reviewFeedback[row.unit];if(!fb)return;
+        const r=await (await fetch("/api/review",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({unit:row.unit,score:reviewFirstScores[row.unit]})})).json();
+        if(r.error)throw new Error(r.error);reviewResult=r.message;delete reviewFeedback[row.unit];await refreshReviews();
+      }
+    }catch(e){const box=$("#reviewfb");if(box)box.textContent=e.message||"Could not save. Try again."}finally{t.disabled=false}return;
+  }
+  if(t.id==="quickcheck"||t.id==="quickcopy"){
+    const b=blockById(S.cur),answer=(S.checkAnswers[b.id]||"").trim(),check=checkFor(b);
+    if(!answer){toast("Try a short answer first.");return}
+    const prompt=checkPrompt(b,check,answer);
+    if(t.id==="quickcopy"){copy(prompt,$("#quickcb"));return}
+    t.disabled=true;const box=$("#quickfb");box.textContent="Checking…";
+    try{const r=await sample.json(prompt);const fb=normFb(r,check.rubric);if((S.checkAnswers[b.id]||"").trim()!==answer)return;S.checkFb[b.id]=fb;save();box.innerHTML=renderScore(fb);}
+    catch(err){box.textContent=err.message||"Could not check. Try again."}finally{t.disabled=false}return;
+  }
+  if(t.id==="markNext"){referenceStep=null;welcome=false;goNextStep();return}
   if(t.id==="parkgo"){addPark();return}
   if(t.dataset.sess){const v=t.dataset.sess;if(v==="reset"){S.session=null;}else{S.session={start:Date.now(),min:+v};warned=false;}welcome=false;save();render();return}
   if(t.dataset.dbgstart){S.dbgs[t.dataset.dbgstart]=Date.now();save();render();return}
@@ -1011,38 +1017,21 @@ $("#view").addEventListener("click",async e=>{
     const secs=Math.round((Date.now()-(S.dbgs[id]||Date.now()))/1000);
     if(t.dataset.dbgcopy){copy(dbgPrompt(b,c,ans,secs),$("#dbgcb-"+CSS.escape(id)));return}
     t.disabled=true;const box=$("#dbgfb-"+CSS.escape(id));box.innerHTML=`<div class="fb muted">Thinking…</div>`;
-    try{const r=await sample.json(dbgPrompt(b,c,ans,secs)+"\n"+JSON_SHAPE);S.dbgfb[id]=Object.assign(normFb(r),{secs});save();box.innerHTML=renderScore(S.dbgfb[id]);const cl=document.querySelector(`[data-clock="${CSS.escape(id)}"]`);if(cl)cl.textContent=`Solved in ${fmt(secs)} (target ${fmt(c.target||120)})`;}
+    try{const r=await sample.json(dbgPrompt(b,c,ans,secs)+"\n"+JSON_SHAPE);S.dbgfb[id]=Object.assign(normFb(r,c.strong),{secs});save();box.innerHTML=renderScore(S.dbgfb[id]);const cl=document.querySelector(`[data-clock="${CSS.escape(id)}"]`);if(cl)cl.textContent=`Solved in ${fmt(secs)} (target ${fmt(c.target||120)})`;}
     catch(err){box.innerHTML=`<div class="fb">${esc(err&&err.message||"Couldn't grade this time.")} Open the solution checklist.</div>`}
     finally{t.disabled=false}return}
   if(t.dataset.ivcopy||t.dataset.ivcheck){const id=t.dataset.ivcopy||t.dataset.ivcheck,[bid,qi]=id.split(":"),b=blockById(bid),iv=b.interview[+qi],ans=(S.ivans[id]||"").trim();
     if(!ans){toast("Write your answer first");return}
     if(t.dataset.ivcopy){copy(ivPrompt(b,iv,ans),$("#ivcb-"+CSS.escape(id)));return}
     t.disabled=true;const box=$("#ivfb-"+CSS.escape(id));box.innerHTML=`<div class="fb muted">Thinking…</div>`;
-    try{const r=await sample.json(ivPrompt(b,iv,ans)+"\n"+JSON_SHAPE);S.ivfb[id]=normFb(r);save();box.innerHTML=renderScore(S.ivfb[id]);}
+    try{const r=await sample.json(ivPrompt(b,iv,ans)+"\n"+JSON_SHAPE);S.ivfb[id]=normFb(r,iv.strong);save();box.innerHTML=renderScore(S.ivfb[id]);}
     catch(err){box.innerHTML=`<div class="fb">Couldn't grade this time. Open “What a strong answer includes”.</div>`}
     finally{t.disabled=false}return}
-  if(t.dataset.lbshow){const id=t.dataset.lbshow;if(!S.lbShow[id]&&!(S.lb[id]||"").trim()){toast("Write it from memory first");return}S.lbShow[id]=!S.lbShow[id];save();$("#lbans").hidden=!S.lbShow[id];t.textContent=S.lbShow[id]?"Hide":"Compare";return}
-  if(t.id==="rcopy"||t.id==="rcheck"){const b=blockById(S.cur),txt=(S.recall[b.id]||"").trim();if(!txt){toast("Write your recall first");return}
-    const strip=h=>String(h||"").replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim();
-    const ref=`What the part covers: ${b.summary}\nKey points: ${b.watchFor.map(w=>w.replace(/[*`]/g,"")).join(" | ")}\nNotes: ${strip(b.explain).slice(0,2500)}`;
-    if(t.id==="rcopy"){copy(`Grade my recall of a video part (I wrote it from memory). ${GRADE_RULES}\n\nVideo: "${D.title}", part "${b.title}" (${b.start}-${b.end})\nReference:\n${ref}\n\nMy recall:\n${txt}`,$("#rcb"));return}
-    t.disabled=true;$("#rfb").innerHTML=`<div class="fb muted">Thinking…</div>`;
-    try{const r=await sample.json(`A student watched one part of a programming video and wrote, from memory, what it covered. ${GRADE_RULES} Judge coverage of the key points and correctness, not English.\n${blockContext(b)}\nREFERENCE:\n${ref}\n\nSTUDENT RECALL:\n${txt}\n\n${JSON_SHAPE}`);
-      S.rfb[b.id]=normFb(r);save();$("#rfb").innerHTML=renderScore(S.rfb[b.id]);}
-    catch(err){$("#rfb").innerHTML=`<div class="fb">Couldn't grade this time. Try “Compare with the notes”.</div>`}
-    finally{t.disabled=false}return}
-  if(t.id==="cmp"){S.cmp[S.cur]=!S.cmp[S.cur];save();$("#cmpbox").hidden=!S.cmp[S.cur];t.textContent=S.cmp[S.cur]?"Hide":"Compare with the notes";return}
   if(t.dataset.pset){const [i,st]=t.dataset.pset.split(":");const b=blockById(S.cur);S.park[b.id][+i].status=st;save();$("#plist").innerHTML=parkItems(b,true);return}
   if(t.dataset.pcopy){const b=blockById(S.cur),p=S.park[b.id][+t.dataset.pcopy];copy(`I'm studying "${D.title}", part "${b.title}" (${b.start}-${b.end}). While watching I parked this question at ${fmt(p.at)} into the part: "${p.t}". Answer it briefly in simple English. If Casey covers it later in the series, just say so and give a one-line preview.`,$("#pans-"+t.dataset.pcopy));return}
   if(t.dataset.pask){const i=+t.dataset.pask,b=blockById(S.cur),p=S.park[b.id][i],out=$("#pans-"+i);t.disabled=true;out.textContent="Thinking…";
     try{const r=await sample(`You are a tutor for one part of a programming video. Answer the student's parked question in under 120 words, simple English. If it's about something Casey parks for later, say so in one line and give at most a one-sentence preview.\n${blockContext(b)}\n\nQUESTION (asked at ${fmt(p.at)} into the part): ${p.t}`,{onText:({text})=>{out.textContent=text}});p.ans=r.text;p.status="done";save();$("#plist").innerHTML=parkItems(b,true);}
     catch(err){out.textContent=err.text||"Couldn't answer this time. Try again later.";t.disabled=false}return}
-  if(t.dataset.hint){$("#hint-"+CSS.escape(t.dataset.hint)).hidden=false;return}
-  if(t.dataset.copyq){const [bid,qi]=t.dataset.copyq.split("?"),b=blockById(bid),q=b.questions[+qi];
-    copy(`Check my answer. ${GRADE_RULES} Don't teach topics Casey hasn't covered yet.\n\nVideo: "${D.title}", part "${b.title}" (${b.start}-${b.end})\nQuestion: ${q.q}\nReference answer (don't show it to me unless I ask): ${q.a}\nMy answer: ${S.answers[t.dataset.copyq]||"(empty)"}`,$("#cb-"+CSS.escape(t.dataset.copyq)));return}
-  if(t.dataset.check){checkAnswer(t.dataset.check,t);return}
-  if(t.id==="flip"){revShow=true;render();return}
-  if(t.dataset.rate){rateCard(revQueue.shift(),+t.dataset.rate);revShow=false;render();return}
   if(t.id==="chatgo"){chat();return}
   if(t.id==="chatclear"){S.notes[S.cur]=[];save();render();return}
   if(t.id==="anki"){const rows=allCards().map(x=>[x.c[0],x.c[1],(D.cardTag||"study")+"::"+x.b.id].map(s=>s.replace(/\t|\n/g," ")).join("\t")).join("\n");
@@ -1052,38 +1041,23 @@ $("#view").addEventListener("click",async e=>{
     return}
 });
 $("#view").addEventListener("input",e=>{
+  const sc=e.target.dataset.shortcheck;if(sc){S.checkAnswers[sc]=e.target.value;delete S.checkFb[sc];const fb=$("#quickfb");if(fb)fb.innerHTML="";save()}
+  const pd=e.target.dataset.practiced;if(pd){S.practiceDone[pd]=e.target.checked;save()}
+  const pr=e.target.dataset.practice;if(pr){S.practice[pr]=e.target.value;S.practiceDone[pr]=false;const cb=document.querySelector(`[data-practiced="${pr}"]`);if(cb)cb.checked=false;save()}
+  const ra=e.target.dataset.reviewanswer;if(ra){reviewAnswers[ra]=e.target.value;delete reviewFeedback[ra];const btn=$("#savereview");if(btn)btn.remove();const fb=$("#reviewfb");if(fb)fb.innerHTML="";}
   const a=e.target.dataset.ans; if(a){S.answers[a]=e.target.value;save()}
   const r=e.target.dataset.recall; if(r){S.recall[r]=e.target.value;save()}
   const v=e.target.dataset.iv; if(v){S.ivans[v]=e.target.value;save()}
   const g=e.target.dataset.dbg; if(g){S.dbgans[g]=e.target.value;save()}
-  const gs=e.target.dataset.gs; if(gs){const [bid,gi]=gs.split(":");(S.guesses[bid]=S.guesses[bid]||[])[+gi]=e.target.value;nudge=null;save()}
+  const gs=e.target.dataset.gs; if(gs){const [bid,gi]=gs.split(":");(S.guesses[bid]=S.guesses[bid]||[])[+gi]=e.target.value;save()}
   const lbk=e.target.dataset.lb; if(lbk){S.lb[lbk]=e.target.value;save()}
   if("autoask" in e.target.dataset){S.autoAsk=e.target.checked;save()}
 });
-async function checkAnswer(id,btn){
-  const [bid,qi]=id.split("?"); const b=blockById(bid), q=b.questions[+qi]; const ans=(S.answers[id]||"").trim();
-  const box=$("#fb-"+CSS.escape(id));
-  if(!ans){box.innerHTML=`<div class="fb">Write an answer first, even a rough guess.</div>`;return}
-  btn.disabled=true; box.innerHTML=`<div class="fb muted">Thinking…</div>`;
-  const prompt=`You are a strict but encouraging tutor grading one answer from a student studying a programming video. The student's English is simple; use simple English.
-${blockContext(b)}
-
-QUESTION: ${q.q}
-REFERENCE ANSWER: ${q.a}
-STUDENT ANSWER: ${ans}
-
-${GRADE_RULES} Grade understanding, not wording or English.
-${JSON_SHAPE}`;
-  try{const r=await sample.json(prompt);const fb=normFb(r);
-    S.fb[id]=fb;save();box.innerHTML=renderScore(fb);}
-  catch(err){box.innerHTML=`<div class="fb">${err&&err.code==="not_granted"?"Checking needs permission to use Claude. Open the model answer instead.":err&&err.code==="rate_limited"?"Too many checks at once. Try again in a minute.":esc(err&&err.message||"Couldn't check this time.")+" Try again, or open the model answer."}</div>`}
-  finally{btn.disabled=false}
-}
 async function chat(){
   const b=blockById(S.cur); const inp=$("#chatin"); const text=inp.value.trim(); if(!text) return;
-  const log=S.notes[b.id]=S.notes[b.id]||[]; log.push({r:"user",c:text}); inp.value=""; save(); render();
+  const log=S.notes[b.id]=S.notes[b.id]||[]; log.push({r:"user",c:text}); inp.value=""; save(); render(); $("#chathelp").open=true;
   const out=document.createElement("div"); out.className="msg a"; out.textContent="Thinking…"; $("#chatlog").append(out);
-  const rules=`You tutor one student through this video part. Simple English. Stay inside the part's topic. If the question is about something Casey parks for later, say so in one line and give at most a one-sentence preview. Under 180 words.\n${blockContext(b)}`;
+  const rules=`You tutor one student through this video part. Simple English. Stay inside the part's topic. If the question is about something Casey parks for later, say so in one line and give at most a one-sentence preview. Under 80 words. Answer only the question, with no repeated summary.\n${blockContext(b)}`;
   try{const r=await sample([{role:"user",content:rules},...log.slice(-8).map(m=>({role:m.r,content:m.c}))],{cache:false,onText:({text})=>{out.textContent=text}});log.push({r:"assistant",c:r.text});save();}
   catch(err){out.textContent=err.text||"Couldn't answer this time. Try again."}
 }

@@ -1,96 +1,85 @@
-# How we learn (all subjects)
+# Short, practical study sessions
 
-Every subject in this repo follows this method. Claude must apply it in every
-session, on every account.
+The default is **Watch → Check → Practice**. Keep explanations short and use
+only the details needed to understand the code or complete the task.
 
-Sources: the "learning machine" video Zain shared (2026-10-31; Sintech
-channel, built on YouMind; its five principles cite Dunlosky et al., 2013,
-*Improving Students' Learning With Effective Learning Techniques*), plus
-Szpunar, Khan & Schacter (2013) on short video parts with questions in between.
+## One part
 
-## The five principles
+1. **Watch** one topic. Give one focus point. No mandatory guesses or recap
+   of the previous part before every video.
+2. **Check** one core question from memory, in a few sentences. This replaces
+   the separate recall, answer, explain and flashcard steps.
+3. **Practice** one useful task. Predict, try it, observe the result. Zain
+   writes his own code. Record one line about the result or what is still to do.
 
-| # | Principle | Where it lives in our system |
-|---|---|---|
-| 1 | **Guess before you know.** Answer a question before the explanation, even if wrong. The brain then waits for the answer and keeps it better. | Study page: **Guess** step before each part's video (look back at the previous part, then 2–3 guesses; the video stays covered until they're locked in). Questions before explanations, always. |
-| 2 | **Test yourself instead of rereading.** Pull it out of memory without looking. Tiring, and that's what makes it stick. | **Recall** step after each part; **Answer** step; flashcards. |
-| 3 | **Spaced repetition.** Come back after days, then weeks, then months. | `journey/REVIEWS.md` + the daily review scheduled task + `/review`. |
-| 4 | **Apply immediately.** Build something real and see the result. | **Experiment** step; code on the Windows PC. |
-| 5 | **Explain in your own words.** If you can't explain it simply, you don't understand it yet. | **Recall** step, graded on meaning (own words welcome). |
+Explanations, code references, flashcard export, interviews and extra debug
+challenges are optional. Use them for a gap or when Zain asks. Do not make
+him repeat an idea he has already shown he understands.
 
-The goal isn't memorizing syntax. It's understanding how things really work,
-so he can write code from scratch *and* judge code that AI writes.
+## Choose useful content
 
-## Grading: strict on ideas, free on words (always)
+- Prioritize how code works, what the tools do, predicting behavior, reading
+  errors and verifying results.
+- Explain editor controls only when needed to perform the current task.
+  Do not quiz editor colors, menu locations, historical version names or
+  naming trivia. The learner can look these up.
+- Stay inside the lesson. Explain a necessary prerequisite briefly; park
+  advanced topics. No new tool installation unless needed now.
+- Write simple English. A direct answer is usually 2–5 sentences. No repeated
+  summary, analogy or motivation unless it helps with a specific confusion.
 
-Whenever Zain answers, explains or writes code, grade it like this:
+## Fair checks
 
-1. **Score: N%**, how much of the main ideas of the correct answer he showed.
-   Grade the **meaning, not the words**: split the correct answer into its key
-   ideas, and an idea counts fully when it's clearly there in any words
-   (synonyms, his own phrasing, another order, simple English, spelling or
-   grammar mistakes). Never ask him to repeat the reference word for word; an
-   exact name or term matters only when the question asks for it. Be strict
-   on the ideas: a vague or half-right idea gets partial credit, and a wrong
-   statement costs points even if the rest is right. Spoken answers (the mic
-   button) have filler words ("uh", "like") and small transcription mistakes
-   ("when main" for WinMain): ignore them and judge only the ideas.
-2. **What's right**: name the parts he got right (short).
-3. **What's missing or wrong for 100%**: list each missing or wrong piece and
-   roughly how many % it's worth, so the numbers add up to 100.
-4. **Don't hand over the answer.** If he's below 100%, ask **one guiding
-   question** that leads him to the missing piece himself. Give the full
-   answer only if he asks for it or tries twice more and is still stuck.
-5. **Timestamp to rewatch** when the gap is something Casey explained.
+Each check has a question and a fixed checklist of 2–3 core ideas whose
+weights total 100. Show the checklist on request. The question must ask for
+all the ideas being graded. Background notes are not extra requirements.
 
-Example:
-> **Score: 60%.** Right: the linker joins the .obj files (30%) and fixes calls
-> between them (30%). Missing for 100%: it writes the final .exe (20%), and it
-> also pulls in code from libraries, like the C runtime (20%).
-> Guiding question: in the error message, *where* was `_tmainCRTStartup`
-> defined? It wasn't in your file. Rewatch 28:49–29:45.
+- Grade meaning, not wording, grammar, spelling or minor voice-transcription
+  errors. Correct ideas in Zain's own words receive full credit.
+- Award points only within that checklist. An incorrect claim affects its
+  relevant criterion; never add arbitrary deductions or new criteria.
+- Reply with the score, one short sentence on what is right, and the main
+  gap. Below 80%, give one short hint or correction. Allow one retry, then
+  explain the gap directly. Do not keep asking until he reproduces a model answer.
+- 80%+ is a practical pass, not a scientific boundary. Correct major
+  misconceptions, but do not demand 100% or perfect phrasing.
+- The page adds the awarded checklist points itself, so the score and missing
+  points cannot contradict each other.
 
-## Mentor behavior (how Claude teaches)
+**Finished** means the part's steps were visited and an answer/result was
+recorded. **Checked** means its new core check passed and Zain marked the
+practical task tried. Neither proves long-term mastery. A later unaided
+review is stronger evidence. Preserve historical answers and scores.
 
-- **Start every study session with review**: questions on anything due in
-  `journey/REVIEWS.md`, before anything new.
-- Ask how much time he has today, and plan to fit it.
-- Socratic: when he's wrong, say what part is right, then ask a guiding
-  question. Never just reveal the answer.
-- **End every session** with: a 3-line summary, the review entries added to
-  `REVIEWS.md`, `STATE.md` updated, then commit and push.
+## Time
 
-## Lesson template (each part of a study kit)
+Ask how much time is available. Plan the video length plus roughly 3–8
+minutes for its check and one task; complex practice may need longer.
+Spend at most about five minutes on due reviews and keep two minutes to save.
+Interview practice is not a required session ending. Offer a break after
+three parts, or whenever needed. Stop mid-part when time is up.
 
-1. **Guess first**: look back at the previous part from memory, then guess the answers to 2–3 key
-   questions (the main `guess` plus the most important `questions`, listed in `pre`) before watching.
-   Prequestions help learning from video (Carpenter & Toftness, 2017), and recalling the previous
-   part helps learning the next one (Pastötter & Bäuml, 2014).
-2. **Watch** the part (the page stops the video at the end).
-3. **Recall**: explain it in your own words; graded strictly.
-4. **The idea in one sentence.**
-5. **Explanation** with a **real-life analogy**.
-6. **Common beginner mistake.**
-7. **Questions** to test yourself, graded strictly.
-8. **Experiment**: apply it on your own machine.
-9. **Read code**, **flashcards**, **why it matters**.
+## One review schedule
 
-When Claude builds a kit, it ends with a short **self-check**: what it could
-not verify (for example a tool version or a claim not found in the transcript),
-so Zain knows what to double-check.
+`journey/REVIEWS.md`, managed by `tools/reviews.py`, is the shared schedule
+for the page and chat. One core review per finished part. Do not automatically
+add all its interview questions, debug challenges and flashcards as more work.
+Old units and their histories remain valid; don't delete or grade them without
+an answer. Add a separate drill only when it is worth keeping after practice.
 
-## Review schedule (spaced repetition)
+Ask one short question per due unit, using fresh wording and the same core
+checklist. A pass (80%+) moves to the next interval; below 80% returns to one
+day. Intervals: 1d → 3d → 1w → 2w → 1m → 3m → 6m, then every 6 months.
+Record only units actually answered. Stop at the review time budget and leave
+the remaining items due. There is no mandatory extra weekday interview drill.
 
-After a unit (one part of an episode) is learned, it's reviewed after:
-**1 day → 3 days → 1 week → 2 weeks → 1 month → 3 months → 6 months → then
-every 6 months, forever.**
+The in-page flashcard scheduler is retired. Optional Anki export is available
+for a learner who chooses it, not another required daily queue.
 
-- A review **passes** at **80% or more**: move to the next interval.
-- **Below 80%**: the missed ideas are re-taught briefly, and the unit goes
-  back to the 1-day interval (but keeps its history).
-- Reviews ask *new* questions in different words where possible, not the same
-  question every time, so he learns the idea, not the sentence.
-- The log is the subject's `journey/REVIEWS.md`. A daily scheduled task
-  (12:48 Europe/Berlin) prepares due reviews (plus 2 interview questions on
-  weekdays) and notifies him.
-- Interview questions are review units too (`iv-…`). See `docs/interview-prep.md`.
+## Evidence behind the core
+
+Practice testing and distributed practice have strong support in Dunlosky
+et al. (2013), *Improving Students' Learning With Effective Learning Techniques*:
+https://www.psychologicalscience.org/publications/journals/pspi/learning-techniques.html
+The exact three-step flow and time estimates are practical defaults to try,
+not experimentally proven optimums. Judge them by later recall and independent work.

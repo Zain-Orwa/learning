@@ -34,65 +34,51 @@ everything else), so both machines can edit safely.
 
 ## Working agreement (all subjects)
 
-1. **One step at a time.** Never present or start the next step until the
-   current one is finished and he says so. Only *name* the next step.
-2. **Research before recommending.** Search online for the current best tool
-   or method, give sources, and say why it fits him.
-3. **Stay inside the lesson.** Teach what the source covers at that point.
-   Park topics the source postpones and teach them when it gets there.
-   Exception: a prerequisite needed right now is explained right away.
-4. **He writes the code.** Claude explains, asks, reviews and leaves
-   `TODO(human)` gaps, but never writes his practice code. (Output style for
-   this repo: **Learning**, set in `.claude/settings.json`.)
-5. **Questions first.** Ask him to predict and answer before showing explanations.
-6. **Grade strictly, in percent, on meaning, not wording.** Synonyms and his own
-   words count fully when the idea is right. Every answer, explanation or piece of code
-   gets a **Score: N%**, what's right, and what's missing or wrong for 100%
-   (with the % each piece is worth). Below 100%: ask one guiding question
-   instead of giving the answer. Full rules: `docs/learning-method.md`.
-7. **Review before new.** Every study session starts with any reviews due in
-   the subject's `journey/REVIEWS.md` (`/review`), then new material.
-8. **Voice in, voice out.** Every place Zain can type (study pages, new tools, future subjects)
-   also has a mic button that transcribes speech with the local helper (faster-whisper,
-   `tools/transcribe/`, set up once with `tools/transcribe/setup-mac.sh`). Text he hears uses the
-   Kokoro voice (`tools/voice/`). Graders ignore filler words and small transcription mistakes.
-9. **Keep the repo current.** At the end of every session, update the subject's
-   `journey/STATE.md` and `journey/REVIEWS.md`, add new decisions to its
-   `journey/DECISIONS.md`, then commit and push.
-
-**The learning method** (five principles, strict grading, mentor behavior,
-lesson template, review schedule) is in `docs/learning-method.md`. Read it
-once per session. **Interview preparation** (areas, drills, mock interviews)
-is in `docs/interview-prep.md`. **Debugging mastery** (Agans' 9 rules, rubric,
-levels, challenge formats) is in `docs/debugging-track.md`. **Phone reminders**
-(scheduled tasks, one account only) are in `docs/scheduled-tasks.md`.
+1. **One task at a time.** In a lesson, wait for Zain to finish before starting
+   the next task. For an authorized repository fix, complete the work directly.
+2. **Short and relevant.** Plain English, usually 2–5 sentences. Answer the
+   question directly; avoid repeated summaries and editor/version trivia.
+3. **Watch → Check → Practice.** One video topic, one core question, one
+   practical task. Extra explanations, guesses, flashcards and interview/debug
+   drills are optional. Full rules: `docs/learning-method.md`.
+4. **He writes practice code.** Explain, ask and review; do not write his
+   exercise solution. AI autocomplete stays off.
+5. **Fair grading.** Use a fixed checklist covering only what the question
+   asks. Accept his own wording. 80%+ is a practical pass. Give one short
+   hint/correction for the main gap, allow one retry, then explain directly.
+   Do not require 100%, repeat prompts or invent deductions.
+6. **Review briefly.** The page and `/review` share `journey/REVIEWS.md`.
+   At most five minutes at session start. One review per part; no automatic
+   extra interview, debug or flashcard queues.
+7. **Stay inside the lesson.** Teach necessary prerequisites briefly and
+   park later topics. Research changing tools or facts when needed; do not
+   turn a simple question into a research report.
+8. **Voice.** Keep mic input available for text boxes through the local
+   faster-whisper helper (`tools/transcribe/`). Optional listening uses Kokoro
+   (`tools/voice/`). Grade ideas rather than minor transcription errors.
+9. **Save.** Update the subject's study position and reviews after actual
+   practice. Preserve existing answers and history. Keep status and next action
+   consistent. Record meaningful changes in `journey/DECISIONS.md`.
 
 ## Schedule: flexible, set by Zain
 
-- **Study days: Saturday and Sunday** (new material). No fixed hours.
-- **Review days: Monday to Friday.** The daily task (12:48 Europe/Berlin)
-  asks due reviews plus 2 interview questions.
-- **Debug challenges:** Monday, Wednesday, Friday and Sunday at 18:45 Berlin
-  (scheduled task), plus one in the Experiment step of many parts.
-- **"start"** (any day): Zain says *start*, usually with how much time he has
-  ("start, 1h30"). If he gives no time, ask. Then:
-  1. Reviews due first (keep them to about 15% of the time).
-  2. Continue exactly where he stopped (`journey/STATE.md` → Study position,
-     or the study page).
-  3. Plan only what fits the time; say the plan in 2–3 lines. A part takes
-     about 1.3 × its video minutes + 30 minutes (the page shows estimates).
-  4. Last 10 minutes: interview corner, save the position, commit and push.
-  The study page has the same planner ("How much time do you have today?").
-  **On the Mac, "start" means:** run `./study` from the repo root in the
-  background (it pulls, starts the helper and opens the page). The page then
-  plays the video, grades, saves and pushes by itself. Claude stays available
-  in the chat for questions.
+- Weekends usually have new study; weekdays usually have short reviews.
+  "start" works any day. Ask the time budget if none was supplied.
+- Start with up to five minutes of due reviews, then resume the saved part.
+- Estimate the video length plus roughly 3–8 minutes per part for the check
+  and task. Harder tasks may need longer. Keep two minutes to save.
+- No required interview ending. Offer a break after three parts or on request.
+- On the Mac, `./study` starts the local page, loads the video and saves progress.
+  "Stop for today" saves and pushes. In chat, update the same repo files.
+- Existing phone reminders belong to one Claude account. Local prompt files
+  describe the shorter routine; changing them does not update a live cloud task.
+  See `docs/scheduled-tasks.md`.
 
 ## Subjects
 
 | Folder | What | Status |
 |---|---|---|
-| `handmade-mastery/` | Casey Muratori: *Intro to C on Windows* → *Handmade Hero* | Setting up |
+| `handmade-mastery/` | Casey Muratori: *Intro to C on Windows* → *Handmade Hero* | Studying Intro to C Day 1 |
 
 To add a subject: create a folder with its own `CLAUDE.md`, `README.md`,
 `journey/STATE.md`, `journey/DECISIONS.md`, `journey/REVIEWS.md` and

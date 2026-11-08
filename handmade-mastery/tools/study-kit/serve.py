@@ -39,8 +39,10 @@ PLAYLIST = SUBJECT / "courses" / "playlist.json"
 LOCK = threading.Lock()
 TRANSCRIBE = REPO / "tools" / "transcribe"                # faster-whisper env (setup: tools/transcribe/setup-mac.sh)
 MAX_AUDIO = 30 * 1024 * 1024
+sys.path.insert(0, str(REPO / "tools"))
+import reviews as review_log
 
-TUTOR = ("You are a strict but kind programming tutor for Zain, whose English is not his first "
+TUTOR = ("You are a concise, helpful programming tutor for Zain, whose English is not his first "
          "language. Use plain, simple English. Follow the instructions in the message exactly. "
          "Do not use any tools. Reply with text only.")
 
@@ -177,7 +179,7 @@ def update_state_position(block):
 
 
 def add_reviews(meta):
-    """Add finished parts, their interview questions and debug challenges to journey/REVIEWS.md (skips ones already there)."""
+    """Add one core review per finished part; optional drills are scheduled separately."""
     added = []
     tool = REPO / "tools" / "reviews.py"
     for part in meta.get("completedParts", []):
@@ -187,18 +189,6 @@ def add_reviews(meta):
         code, out = run([sys.executable, str(tool), "add", SUBJECT_NAME, unit, title, src, "--date", part["date"]])
         if "Added" in out:
             added.append(unit)
-        for i, iv in enumerate(part.get("interview", [])):
-            unit = f"iv-{meta['unitPrefix']}-{part['id']}-{i}"
-            code, out = run([sys.executable, str(tool), "add", SUBJECT_NAME, unit,
-                             f"[{iv['area']}] {iv['q']}", f"{src}/iv{i}", "--date", part["date"]])
-            if "Added" in out:
-                added.append(unit)
-        for i, dbg in enumerate(part.get("debug", [])):
-            unit = f"dbg-{meta['unitPrefix']}-{part['id']}-{i}"
-            code, out = run([sys.executable, str(tool), "add", SUBJECT_NAME, unit,
-                             f"[debugging] L{dbg.get('level', 1)} {dbg['title']}", f"{src}/dbg{i}", "--date", part["date"]])
-            if "Added" in out:
-                added.append(unit)
     return added
 
 
@@ -294,6 +284,10 @@ class Handler(http.server.BaseHTTPRequestHandler):
         if path == "/api/progress":
             f = kit_dir(q["kit"][0]) / "progress.json"
             return self.send_json(json.loads(f.read_text(encoding="utf-8")) if f.exists() else {})
+        if path == "/api/reviews":
+            with LOCK:
+                rows = [r for r in review_log.load(SUBJECT_NAME) if r["next"] <= dt.date.today().isoformat()]
+            return self.send_json({"due": rows})
         if path == "/api/video":
             name = os.path.basename(q.get("file", [""])[0])
             return self.send_json({"exists": bool(name) and (VIDEOS / name).is_file(), "folder": str(VIDEOS)})
@@ -322,6 +316,21 @@ class Handler(http.server.BaseHTTPRequestHandler):
             body = self.read_json()
         except Exception:
             return self.send_json({"error": "bad request"}, 400)
+        if path == "/api/review":
+            unit, score = body.get("unit"), body.get("score")
+            if not isinstance(unit, str) or type(score) is not int or not 0 <= score <= 100:
+                return self.send_json({"error": "A review needs a unit and score from 0 to 100."}, 400)
+            with LOCK:
+                rows = review_log.load(SUBJECT_NAME)
+                row = next((r for r in rows if r["unit"] == unit), None)
+                if row is None:
+                    return self.send_json({"error": "Unknown review unit."}, 404)
+                if row["next"] > dt.date.today().isoformat():
+                    return self.send_json({"error": "This review is already scheduled for later."}, 409)
+                code, out = run([sys.executable, str(REPO / "tools" / "reviews.py"), "grade", SUBJECT_NAME, unit, str(score)])
+            if code:
+                return self.send_json({"error": "Could not save the review."}, 500)
+            return self.send_json({"ok": True, "message": out})
         if path == "/api/claude":
             return self.send_json(ask_claude(str(body.get("prompt", "")), bool(body.get("json"))))
         if path in ("/api/progress", "/api/finish"):

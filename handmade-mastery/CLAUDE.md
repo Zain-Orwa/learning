@@ -35,7 +35,7 @@ This file adds what is specific to this subject. Then read
 |---|---|---|
 | 1 | Choose the toolset | **Done** (2026-10-30). See `docs/toolset.md` |
 | 2 | Create the repo and the handoff files | **Done** (2026-10-30). Cloned on both machines |
-| 3 | The study routine | **Built** (2026-10-30/31): study page with video player, strict % grading, `/study`, `/review`, daily review task. Learner tries it on Day 1 Part 1 |
+| 3 | The study routine | **Built** (2026-10-30/31): study page with video player, strict % grading, `/study`, `/review`, daily review task. Learner has finished Day 1 Parts 1–2 |
 | 4+ | Not decided yet | Decide together, one step at a time |
 
 ## Machines
@@ -59,8 +59,8 @@ This file adds what is specific to this subject. Then read
 | Visual explanations | Manim through the repo skill `/animate` (renders on the Mac; one-time setup `tools/animate/setup-mac.sh`), only for hard ideas |
 | Listening | Kokoro-82M (offline, voice `am_michael`) through `tools/voice/make_audio.py`: the study page's Listen button and the interviewer's voice play it (one-time setup `tools/voice/setup-mac.sh`) |
 | Speaking | faster-whisper `small.en` (offline, int8, CPU) in `tools/transcribe/`: the mic button in every text box (one-time setup `tools/transcribe/setup-mac.sh`) |
-| Memory | Anki with FSRS. Cards live in the repo as `cards.tsv` per day |
-| Speed | Daily blank-file rebuild drill; speedtyper.dev as optional warm-up |
+| Memory | Shared review log in `journey/REVIEWS.md`; optional Anki export |
+| Speed | Optional blank-file rebuild drill when useful |
 | Episode lesson format | One HTML study kit per episode (see below) |
 
 ## Folder map (inside `handmade-mastery/`)
@@ -88,75 +88,43 @@ tools/study-kit/          page engine, build script, serve.py (the ./study helpe
 
 ## The study-kit page (reference: `courses/intro-to-c/day01/`)
 
-One page per episode, opened in a browser on the Mac. It plays the episode's
-video file **one part at a time** (parts cut at the guide's topic timestamps),
-stops by itself at the end of each part and locks the parts ahead.
-Each part has 9 steps: **Guess** (look back at the previous part from memory, then guess the answers
-to 2–3 key questions; the video stays covered until the guesses are locked in, and then they can't
-change) → **Watch** (player + parking lot for questions) →
-**Recall** (write from memory, compare, handle parked questions) → **Answer**
-(questions tied to timestamps) → **Explain** → **Experiment** → **Read code** →
-**Flashcards** → **Why it matters**. Between parts there's a break screen
-(5 min; 15 min after every 3 parts). The page remembers the exact place
-(browser storage), greets him with "Welcome back" plus a card warm-up, and
-"Copy position" produces the block that `/study` saves into `STATE.md`.
-Tabs: Review (spaced repetition), Parked, Toolbox, How to study.
+One page per episode. The default is **Watch → Check → Practice**:
+one short video part, one core question, one practical task. Notes, code
+references, interview drills and debugging challenges are optional.
 
-**How Zain starts (Mac):** `./study` from the repo root (or Claude Code runs it
-in the background when he says "start"). It runs `tools/study-kit/serve.py`, a
-small local helper on http://localhost:8765 that: opens the current video's kit
-(from `courses/playlist.json`), plays the video straight from `~/learning-videos`
-(no file picking), saves progress into the repo (`courses/<kit>/progress.json`
-and the **Study position** in `journey/STATE.md`), adds finished parts and their
-interview questions to `journey/REVIEWS.md`, grades answers inside the page
-with Claude Code (`claude -p`, his normal Claude login, no copy-paste), and on
-**Stop for today** commits and pushes. When a video is done, the page points to
-the next playlist item. Opened as a plain file (no helper), the page still works
-with browser storage and "Copy position".
+**Start:** `./study` from the repo root. The helper loads the video from
+`~/learning-videos`, grades answers, saves progress and updates `STATE.md`.
+The Review tab and chat share `journey/REVIEWS.md`. Finished parts add one
+review unit, not every possible drill. On Stop for today it saves and pushes.
+Without the helper, local browser progress and Copy position still work;
+use `/review` in chat for the shared review schedule.
 
-Files per day: `data.js` (all content, `window.STUDY`) → built into
-`study-kit.html` by `python3 tools/study-kit/build.py courses/<course>/dayNN`.
-The shared engine is `tools/study-kit/engine.html`. Never hand-edit the built page.
-Guess fields per part: `guess` (the main guess question) and `pre` (indexes into `questions` that are
-also asked as guesses; pick the 1–2 most important). Part 1's look back uses
-`window.STUDY.lookBack = {label, answer}` (the previous video in one sentence); later parts look back
-at the part before automatically. A part can also have `anim: "anim/<name>.mp4"` (a Manim video
-made with `/animate`); the Explain step shows it first.
-Explain and Read code have a **Listen** button. Every code block, diagram and table in those steps
-needs an **In words** version: `say: {explain: [{goal, steps, pattern, tryit}, …], code: […]}` in
-`data.js`, one object per `<pre>`/`<table>`, in order: the goal in one line, numbered steps in
-execution order (what each line does, inputs and outputs, why), the logic pattern if there is one,
-and one "Try it in your head" prediction question. Plain English, no symbols, only what Casey has
-covered so far. It shows under the code and is what Listen reads instead of the code.
-Listen plays **natural Kokoro audio** (voice `am_michael`) from `courses/<course>/dayNN/audio/`
-(`<part>-<step>-<n>.mp3` + `index.json`), made on the Mac with
+**Content:** edit `courses/<course>/dayNN/data.js`, then run
+`python3 tools/study-kit/build.py courses/<course>/dayNN` from this subject.
+Never hand-edit the built page. Each block needs:
+- `focus`: one thing to notice while watching.
+- `check: {q, rubric: [[idea, weight], ...]}`: one core question, 2–3 ideas,
+  weights total 100. Every graded idea must be requested by the question.
+- `practice`: one short task in HTML, and `practiceMinutes` (usually 2–7).
+- `reviewQuestion`: fresh wording testing the same rubric.
+- The existing summary, explain, code, cards and optional drills can remain
+  reference material. Avoid editor trivia and obsolete installer names.
+
+`finished` records the steps visited. `checked` requires a new check at 80%+
+and the learner's confirmation that the practical task was tried. Preserve
+old progress, guesses, answers and grades; do not infer mastery from them.
+When a saved step is removed, resume at the next useful Watch/Check/Practice
+step without resetting completed parts.
+
+Mic buttons are attached automatically to text boxes. The helper uses the
+local faster-whisper worker; special names can go in `terms`. Optional audio
+uses existing Kokoro segments, keyed by their text. If changing spoken notes,
+update `say` (one plain-English object per code block/table) and regenerate:
 `uv run --project tools/voice python tools/voice/make_audio.py handmade-mastery/courses/<course>/dayNN`
-(repo root; one-time setup `tools/voice/setup-mac.sh`). It re-renders only changed text and rebuilds
-the page. Kokoro is the only voice (the browser/Mac voice was removed, 2026-11-01): a piece without an mp3
-is skipped, so render the audio after every text change.
-Every new kit gets the upgraded pseudocode and its audio.
-The same run renders the **interviewer's voice**: every interview question and follow-up
-(`<part>-iv-<n>.mp3`, step `iv`) plus one intro (`_iv-intro-1.mp3`, "Here's an interview question.").
-In the Interview corner, **Ask me** plays intro + question, each follow-up has a play button, and
-**Auto-ask** (off by default) asks the question when the Why it matters step opens.
-**Speak instead of type:** with the helper running, every text box has a mic button (bottom-right).
-Press it, speak, press again (or Esc). The page records with MediaRecorder and POSTs to `/api/transcribe`;
-serve.py converts with ffmpeg (16 kHz mono WAV) and transcribes with faster-whisper `small.en` in a
-worker (`tools/transcribe/worker.py`) that keeps the model loaded (about 1 s per short answer).
-The Whisper prompt holds the part's key terms (the title, `<code>`/backtick words and CamelCase names
-from data.js, plus optional `terms: [...]` on a part or `window.STUDY.terms`), so WinMain comes out right.
-The text is inserted at the cursor and saved like typing; nothing is graded or sent by itself. Without
-the helper (plain file, claude.ai) or without `tools/transcribe/.venv`, there are no mic buttons.
-Grader prompts (`GRADE_RULES`) ignore filler words and small transcription mistakes.
-Video files stay outside git (e.g. `~/learning-videos/` on the Mac).
+from the repo root. See the scripts in `tools/voice/` for audio details.
 
-## Study sessions: `/study`
-
-Lessons run on the study page. `/study` (`../.claude/skills/study/SKILL.md`)
-is the Claude side: it saves the position he pastes into `journey/STATE.md`
-under **Study position**, grades answers, answers parked questions, and builds
-new kits. Without the page, `/study` runs the same loop in chat, one section
-and one task at a time.
+For a new kit, use the same three-step flow and concise checks. Do not restore
+the former nine required steps. Follow `docs/learning-method.md` at repo root.
 
 ## Making a transcript
 
