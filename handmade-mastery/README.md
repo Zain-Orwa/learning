@@ -7,16 +7,20 @@ from zero to "a text editor, a compiler, a debugger and me can build anything".
 - **Where am I?** → [`journey/STATE.md`](journey/STATE.md)
 - **Why is it set up this way?** → [`journey/DECISIONS.md`](journey/DECISIONS.md)
 - **Tools and how to install them** → [`docs/toolset.md`](docs/toolset.md)
-- **Today's lesson** → open `courses/<course>/dayNN/study-kit.html` in a browser
+- **Today's lesson** → run `./study` from the repo root on the Mac
+- **How to study** → [`../docs/learning-method.md`](../docs/learning-method.md)
 
-## Plug in any Claude account
+## Continue with Codex or Claude
 
-See the repo root [`README.md`](../README.md). In short: `cd handmade-mastery`, run `claude`,
-and say **"Read CLAUDE.md and journey/STATE.md, then continue."**
+See the repo root [`README.md`](../README.md). Read this subject's
+[`AGENTS.md`](AGENTS.md) and [`journey/STATE.md`](journey/STATE.md).
+When Casey codes, pause at a meaningful change and write it yourself on
+Windows. Predict, build/run, compare; that counts as the lesson's practice.
 
 ## Layout
 ```
-CLAUDE.md          subject handoff for Claude (decisions, map)
+AGENTS.md          shared subject handoff
+CLAUDE.md          Claude entry point to the shared handoff
 journey/           state + decision log
 docs/              toolset and setup
 courses/           per-episode study kits, transcripts, flashcards

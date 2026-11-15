@@ -207,7 +207,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
     server_version = "StudyHelper/1"
 
     def log_message(self, fmt, *args):
-        if "/api/" in (args[0] if args else ""):
+        if "/api/" in str(args[0] if args else ""):
             sys.stderr.write("  " + (fmt % args) + "\n")
 
     # ---------- helpers ----------

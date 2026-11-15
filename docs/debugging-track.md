@@ -7,6 +7,12 @@ and they get harder as the course goes on.
 
 ## The method (reference for optional practice)
 
+During lessons, debug real failures in Zain's course code. This is part of
+the implementation, not an additional challenge afterward. At a feature
+boundary, one small fault can replace a practice slot if he needs diagnostic
+practice. Use the debugger once its controls have been taught. A correct
+spoken diagnosis does not claim a Windows fix was actually run.
+
 Use these rules to diagnose a gap; do not recite the whole list for every task.
 
 David Agans' **9 indispensable rules** of debugging:
@@ -79,7 +85,7 @@ target time shrinks as the same bug class comes back in reviews.
 
 - Each study-kit part can have a `debug` list in its `data.js` (title, level,
   scenario, task, hint, solution checklist with %, root cause). The page shows
-  them in the **Experiment** step and in the **Interview** tab.
+  them under optional practice in the **Practice** step and **Interview** tab.
 - After a useful optional challenge, add it as a `dbg-…` review unit only
   when it is worth repeating. Finishing a part does not automatically add it.
 - `/debug` runs a challenge session any time.

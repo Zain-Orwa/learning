@@ -218,3 +218,38 @@ Newest at the bottom. Each entry: date, decision, why.
 - One shared review schedule in REVIEWS.md for page and chat. No automatic
   duplicate flashcard/interview/debug queues. Preserve existing progress and
   review history. Cloud reminders still need their local prompts applied.
+
+
+## 2026-11-15: Coding-led routine for a long course
+- Zain clarified that he must write the code Casey teaches, with understanding.
+  Pause after a meaningful change, predict, implement on Windows, build/run
+  and compare. That is the practice; no duplicate implementation afterward.
+- Keep Watch → Check → Practice, brief reviews and fair grading. Use actual
+  coding time in estimates. At a feature boundary, use one normal practice
+  slot for a small independent change or diagnostic task; avoid another queue.
+- System understanding is checked through behavior, data flow and observed
+  values. Use small diagrams first and existing Manim for useful motion.
+  Keep dictation and Kokoro. Park LearnHarness and Anki unless a specific gap
+  warrants them; no model key or extra app is required to resume.
+- Root and subject AGENTS.md are canonical. CLAUDE.md and .claude skills
+  point to shared rules/skills in .agents, reducing drift across accounts.
+- Page checks now persist attempts: one retry, then direct correction;
+  passing ends regrading. Reviews retain the first score across reloads.
+  Failed/invalid/stale requests do not consume learner attempts. Deferred
+  practice is visible and saved, without assigning old completed parts again.
+- Added optional small visuals to Day 1 Parts 3, 5 and 8. Preserved old spoken
+  notes/audio, answers, completion dates and review history. Built only the
+  existing kit; future kits use the same routine when needed.
+- Local reminder prompts now use one canonical copy and make debugging an
+  invitation. Existing Claude tasks were not accessible through this session's
+  tools; no live update or migration is claimed. Owner-account handoff is in
+  docs/scheduled-tasks.md. Live verification remains the only external follow-up.
+- Learning-research sources and limits are in docs/learning-method.md. The
+  exact workflow is a practical starting point, not a proven optimum. Adapt
+  from independent coding, debugging and later recall, not video count.
+- Verification: JavaScript regression checks and disposable-file HTTP tests
+  pass. An isolated Chrome preview exercised review retries and saving,
+  the optional visual, and returning to pending practice with fake responses.
+  No real learner results were generated. Also corrected a missing-asset
+  logging error found in that preview. Windows compilation was not needed
+  for this study-tool change; learner code was not edited.

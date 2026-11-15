@@ -49,6 +49,11 @@ class ReviewsTest(unittest.TestCase):
                         return json.load(response)
 
                 try:
+                    # Missing assets should return 404, not crash the error logger.
+                    with self.assertRaises(urllib.error.HTTPError) as error:
+                        request("/missing-preview-icon.ico")
+                    self.assertEqual(error.exception.code, 404)
+                    error.exception.close()
                     self.assertEqual(len(request("/api/reviews")["due"]), 1)
                     for score in [-1, 101, "80", True]:
                         with self.subTest(score=score), self.assertRaises(urllib.error.HTTPError) as error:

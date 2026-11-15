@@ -6,16 +6,20 @@ Everything I'm learning, one folder per subject.
 |---|---|
 | Handmade Hero (C, Windows, game engine from scratch) | [`handmade-mastery/`](handmade-mastery/README.md) |
 
-## Plug in any Claude account
+## Continue with Codex or Claude
 
 1. Clone this repo.
 2. In a terminal, open the subject folder (for example `cd handmade-mastery`)
-   and run `claude`, logged in with any of your accounts.
-3. Say: **"Read CLAUDE.md and journey/STATE.md, then continue."**
+   and start Codex or `claude`, logged in with your account.
+3. Say: **"Read AGENTS.md and journey/STATE.md, then continue."**
 
-Claude Code loads `CLAUDE.md` files by itself: this repo's root file has the
-general rules, and the subject folder's file has that subject's details.
+`AGENTS.md` holds the shared rules. Claude Code's `CLAUDE.md` entry points
+load those same files. The canonical skills are in `.agents/skills/`.
 
-**Using claude.ai chat instead?** Attach the root `CLAUDE.md`, the subject's
-`CLAUDE.md` and its `journey/STATE.md` to the first message, or put them in a
+**Using a web chat instead?** Attach the root `AGENTS.md`, the subject's
+`AGENTS.md`, `docs/learning-method.md` and its `journey/STATE.md`, or put them in a
 claude.ai Project's knowledge.
+
+On the Mac, run `./study` to resume the local page. Write and run Casey's
+code on Windows, one meaningful change at a time. The full routine is in
+[`docs/learning-method.md`](docs/learning-method.md).

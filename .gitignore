@@ -12,6 +12,9 @@ build/
 x64/
 Debug/
 Release/
+# The command skill is not a compiler Debug directory (case-insensitive on Mac).
+!/.agents/skills/debug/
+!/.agents/skills/debug/**
 .vs/
 *.sln.docstates
 *.vcxproj.user

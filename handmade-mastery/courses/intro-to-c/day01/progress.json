@@ -1,8 +1,8 @@
 {
- "v": 2,
+ "v": 3,
  "cur": "b03",
- "step": "guess",
- "tab": "path",
+ "step": "watch",
+ "tab": "review",
  "done": {
   "b01": {
    "guess": true,
@@ -33,7 +33,8 @@
  },
  "vt": {
   "b01": 321,
-  "b02": 733
+  "b02": 733,
+  "b03": 733
  },
  "recall": {
   "b01": "1. how you can code C program in Windows.\n2. what do you need as tools to Code a game using Windows machine.\n3. to able to code a game you need to get a text editor and compiler that is not come out of the box like linux we have to download that.",
@@ -55,7 +56,8 @@
   ]
  },
  "lb": {
-  "b02": "This series is about:\n1. the set up for gooding a game in C using Windows machine.\n2. getting Compiler so we can compile the code that we are going to write.\n3. some things Casey will not stop explain them later unless if there is need fro it. so this is like a preparation. "
+  "b02": "This series is about:\n1. the set up for gooding a game in C using Windows machine.\n2. getting Compiler so we can compile the code that we are going to write.\n3. some things Casey will not stop explain them later unless if there is need fro it. so this is like a preparation. ",
+  "b03": ""
  },
  "lbShow": {
   "b02": true
@@ -150,7 +152,10 @@
  "dbgs": {},
  "dbgans": {},
  "dbgfb": {},
- "session": null,
+ "session": {
+  "start": 1794759059224,
+  "min": 60
+ },
  "park": {},
  "answers": {
   "b01?0": "so as a beginner also can follow along during the series, because he mentioned that he will not stop and explain basic things like what is ?: operators do. and addition to that is like a testing for the series.",
@@ -341,6 +346,10 @@
    "due": 20759
   }
  },
+ "checkAnswers": {},
+ "checkFb": {},
+ "practice": {},
+ "practiceDone": {},
  "notes": {
   "b01": [
    {
@@ -354,9 +363,9 @@
   ]
  },
  "speed": 1.25,
- "lastVisit": 1793580680521,
- "sessionParts": 1,
+ "lastVisit": 1794759071741,
+ "sessionParts": 0,
  "brk": null,
- "stopped": true,
+ "stopped": false,
  "finished": false
 }

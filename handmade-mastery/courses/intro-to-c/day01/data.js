@@ -1451,12 +1451,32 @@ const QUICK = {
   }
 };
 window.STUDY.blocks.forEach(b=>Object.assign(b,QUICK[b.id]));
+const VISUALS={
+ b03:`<h3>Source text → instructions for one CPU family</h3>
+ <div class="tbl"><table><thead><tr><th>Starting point</th><th>Translation</th><th>Result</th></tr></thead><tbody>
+ <tr><td>The same source text</td><td>Compiler targeting x64</td><td>x64 machine instructions</td></tr>
+ <tr><td>The same source text</td><td>Compiler targeting ARM</td><td>ARM machine instructions</td></tr>
+ </tbody></table></div><p>The text describes the work. The selected target determines the instruction encoding. Compiling is one stage of a build; the next parts explain linking.</p>`,
+ b05:`<h3>Follow the output of each build stage</h3>
+ <div class="tbl"><table><thead><tr><th>Input</th><th>Tool</th><th>Output</th></tr></thead><tbody>
+ <tr><td>One source file</td><td>Compiler</td><td>An object file (.obj)</td></tr>
+ <tr><td>Object files and libraries</td><td>Linker: combines code and resolves references</td><td>An executable (.exe)</td></tr>
+ </tbody></table></div><p>Stopping after compilation can produce an object file without producing an executable. Use the build output to identify which stage failed.</p>`,
+ b08:`<h3>Defining a function versus calling it</h3>
+ <div class="tbl"><table><thead><tr><th>Event</th><th>Does the function body run?</th></tr></thead><tbody>
+ <tr><td>A definition describes the body</td><td>No</td></tr>
+ <tr><td>Execution reaches a call to that function</td><td>Yes; then execution returns to the caller</td></tr>
+ </tbody></table></div><p>Follow the actual calls in your program. A body containing an output call produces no message until that body is executed.</p>`
+};
+window.STUDY.blocks.forEach(b=>{if(VISUALS[b.id])b.visual=VISUALS[b.id];});
 })();
 
 window.STUDY.how = `<h2>Short study sessions</h2>
-<p><b>Watch → Check → Practice.</b> Watch one part, answer one question from memory, then try one task. Aim for the video length plus roughly 3–8 minutes. Setup or a difficult task may take longer.</p>
-<p><b>Check:</b> use your own words. Only the visible checklist counts. 80% is enough to continue; correct the main gap without chasing perfect wording.</p>
+<p><b>Watch → Check → Practice.</b> When Casey codes, pause after a meaningful change and write it yourself on Windows. Predict what should happen, build/run, then compare. This is your practice; do not do the same implementation twice.</p>
+<p><b>Check:</b> use your own words. Only the visible checklist counts. 80% is enough. Below that, one retry is available, then the page explains the main gap. No repeated attempts for perfect wording. If your coding prediction answers the core question, use it here.</p>
 <p><b>Practice:</b> note what happened. Mark the task tried only after you have run or checked it. “Finished” means you reached the end; “checked” means you passed the check and reported trying the task.</p>
+<p>On a Mac-only day, leave Windows code pending. Finish it on Windows before building code that depends on it. At a feature boundary, use a normal practice slot for a small independent change or debugging task with the tutorial closed.</p>
+<p>Use “Show the idea” or the notes for a confusing concept. Quick diagrams come first; Manim is available when motion helps. LearnHarness is optional and parked.</p>
 <p>Explanations, code references and interview/debug drills are optional. There is no mandatory guess, second quiz or flashcard step.</p>
 <p><b>Review:</b> spend up to five minutes on due items in the Review tab. The page and chat use the same review log. Flashcard export is optional reference material, not another required review queue.</p>
 <p>Choose your available time. Keep two minutes to save. Breaks are offered after three parts, or whenever you need one. Stop in the middle of a part if necessary; your position is saved.</p>`;

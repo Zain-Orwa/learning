@@ -244,7 +244,7 @@ const md = s=>esc(s).replace(/`([^`]+)`/g,"<code>$1</code>").replace(/\*\*([^*]+
 $("#eyebrow").textContent=D.eyebrow||""; $("#h1").textContent=D.title||document.title;
 
 /* ---------- state + persistence ---------- */
-const FRESH={v:3,cur:D.blocks[0].id,step:"watch",tab:"path",done:{},completed:{},vt:{},recall:{},cmp:{},guess:{},guesses:{},lb:{},lbShow:{},rfb:{},cdate:{},ivans:{},ivfb:{},dbgs:{},dbgans:{},dbgfb:{},session:null,park:{},answers:{},fb:{},cards:{},checkAnswers:{},checkFb:{},practice:{},practiceDone:{},notes:{},speed:1,lastVisit:0,sessionParts:0,brk:null,stopped:false};
+const FRESH={v:4,cur:D.blocks[0].id,step:"watch",tab:"path",done:{},completed:{},vt:{},recall:{},cmp:{},guess:{},guesses:{},lb:{},lbShow:{},rfb:{},cdate:{},ivans:{},ivfb:{},dbgs:{},dbgans:{},dbgfb:{},session:null,park:{},answers:{},fb:{},cards:{},checkAnswers:{},checkFb:{},checkAttempts:{},reviewChecks:{},practice:{},practiceDone:{},notes:{},speed:1,lastVisit:0,sessionParts:0,brk:null,stopped:false};
 let S=JSON.parse(JSON.stringify(FRESH));
 const LS=D.storageKey||"study-kit";
 try{const raw=localStorage.getItem(LS); if(raw) S=Object.assign(S,JSON.parse(raw));}catch(e){}
@@ -330,12 +330,15 @@ const idxOf=b=>D.blocks.indexOf(b);
 function migrate(){
   S.guesses=S.guesses||{};S.lb=S.lb||{};S.lbShow=S.lbShow||{};
   S.checkAnswers=S.checkAnswers||{};S.checkFb=S.checkFb||{};S.practice=S.practice||{};S.practiceDone=S.practiceDone||{};
+  S.checkAttempts=S.checkAttempts||{};S.reviewChecks=S.reviewChecks||{};
+  // Preserve a prior short check as an attempt; old Recall grades are history only.
+  Object.entries(S.checkFb).forEach(([id,fb])=>{if(!S.checkAttempts[id]&&Number.isFinite(fb.score))S.checkAttempts[id]=[{answer:S.checkAnswers[id]||"",fb}];});
   Object.keys(S.guess||{}).forEach(id=>{if(!S.guesses[id])S.guesses[id]=[S.guess[id]]});
   if(!["watch","recall","experiment"].includes(S.step)){
     const d=S.done[S.cur]||{};
     S.step=d.watch?(d.recall?"experiment":"recall"):"watch";
   }
-  S.v=3;
+  S.v=4;
 }
 function stepsFor(b){return STEPS.filter(([k])=>k!=="experiment"||b.practice||b.experiment)}
 function blockDone(b){const d=S.done[b.id]||{};return stepsFor(b).filter(([k])=>d[k]).length}
@@ -348,8 +351,36 @@ function progress(){let tot=0,dn=0;D.blocks.forEach(b=>{tot+=stepsFor(b).length;
 function checkFor(b){return b.check||{q:b.questions[0].q,rubric:[[b.questions[0].a,100]]};}
 function rubricText(rubric){return rubric.map(([idea,weight],i)=>`${i+1}. ${idea} (${weight}%)`).join("\n");}
 function rubricHTML(rubric){return `<details class="model"><summary>What this check expects</summary><ul>${rubric.map(([idea,weight])=>`<li>${md(idea)} (${weight}%)</li>`).join("")}</ul></details>`;}
-function checkPrompt(b,check,answer){return `Check a short answer to this question only. ${GRADE_RULES}\nPART: ${b.title}\nQUESTION: ${check.q}\nFIXED CHECKLIST:\n${rubricText(check.rubric)}\nANSWER: ${answer}\n${JSON_SHAPE}`;}
+function checkPrompt(b,check,answer,attempt=1){return `Check a short answer to this question only. ${GRADE_RULES}\nATTEMPT: ${attempt} of 2. ${attempt===2?"If below 80%, explain the main gap directly. Do not ask another question.":"At most one retry; never ask for perfect wording."}\nPART: ${b.title}\nQUESTION: ${check.q}\nFIXED CHECKLIST:\n${rubricText(check.rubric)}\nANSWER: ${answer}\n${JSON_SHAPE}`;}
+function attemptsFor(id){return S.checkAttempts[id]||(S.checkAttempts[id]=[]);}
+function checkClosed(attempts){return attempts.length>=2||attempts.some(a=>a.fb.score>=80);}
+const checking=new Set();
+async function gradeAttempt(key,attempts,b,check,answer,isCurrent){
+  answer=answer.trim();
+  if(!answer||checkClosed(attempts)||checking.has(key))return false;
+  if(attempts.some(a=>a.answer===answer)){toast("Change your answer for the retry, or continue.");return false;}
+  checking.add(key);
+  try{
+    const fb=normFb(await sample.json(checkPrompt(b,check,answer,attempts.length+1)),check.rubric);
+    // Edits made during a request must not inherit that request's score or use a retry.
+    if(!isCurrent()||checkClosed(attempts))return false;
+    attempts.push({answer,fb});save();return true;
+  }finally{checking.delete(key);}
+}
+function checkFeedback(attempts,review=false){
+  if(!attempts.length)return "";
+  const fb=attempts[attempts.length-1].fb;
+  if(fb.score>=80)return renderScore(fb)+`<p class="small">Check passed. ${review?"Save this review":"Continue to practice"}; no rewording needed.</p>`;
+  if(attempts.length<2)return renderScore(fb)+`<p class="small">One retry is available, or continue with the correction.</p>`;
+  const gap=[...(fb.missing||[])].sort((a,b)=>b.pct-a.pct)[0];
+  return renderScore({...fb,missing:[],guide:""})+`<p><b>The key idea:</b> ${esc(gap?gap.point:fb.guide||"Read the checklist for the core idea.")}</p><p class="small">${review?"Save this review with your first score.":"Continue to practice."} Check this again in a later review.</p>`;
+}
 function checked(b){return !!(S.checkFb[b.id]&&S.checkFb[b.id].score>=80&&S.practiceDone[b.id]&&(S.practice[b.id]||"").trim());}
+function pendingPractice(){return D.blocks.filter(b=>S.completed[b.id]&&(S.practice[b.id]||"").trim()&&!S.practiceDone[b.id]);}
+function pendingHTML(){
+  const pending=pendingPractice();if(!pending.length)return "";
+  return `<details class="plan"><summary>${pending.length} practical task${pending.length===1?"":"s"} still to try</summary><p class="small">On Windows, finish these before adding code that depends on them.</p><ul>${pending.map(b=>`<li><button class="btn ghost small" data-practicepart="${b.id}">Part ${idxOf(b)+1}: ${esc(b.title)}</button> ${esc(S.practice[b.id])}</li>`).join("")}</ul></details>`;
+}
 function blockContext(b){
   const strip=h=>String(h||"").replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim();
   return `VIDEO: "${D.title}"${D.eyebrow?" ("+D.eyebrow+")":""}.
@@ -608,8 +639,8 @@ function welcomeHTML(){
   ${due?`<div class="row"><button class="btn" data-go="warmup">Review: ${due} item${due>1?"s":""} due</button><button class="btn ghost" data-go="continue">Continue studying</button></div>`:`<div class="row"><button class="btn" data-go="continue">Continue</button></div>`}</div>`;
 }
 /* ---------- time: estimates and the session planner ---------- */
-const est=b=>{const [st,en]=range(b);return Math.ceil((en-st)/60)+Math.max(3,b.practiceMinutes||5)};
-const estLeft=b=>Math.max(1,Math.round(est(b)*(1-blockDone(b)/stepsFor(b).length)));
+const est=b=>{const [st,en]=range(b);return Math.ceil((en-st)/60)+1+(b.practiceMinutes||5)};
+const estLeft=b=>{const d=S.done[b.id]||{},[st,en]=range(b),at=Math.max(st,Math.min(en,S.vt[b.id]||st));return Math.max(1,Math.ceil((d.watch?0:(en-at)/60)+(d.recall?0:1)+(d.experiment?0:(b.practiceMinutes||5))))};
 function sessionActive(){const x=S.session;return x&&(Date.now()-x.start)<(x.min*60000+3*3600000)}
 function minsLeft(){const x=S.session;return x?Math.round((x.start+x.min*60000-Date.now())/60000):null}
 function planHTML(){
@@ -620,6 +651,7 @@ function planHTML(){
   if(!x.min) return "";
   let budget=Math.max(0,left-2), items=[];
   if(due){const w=Math.min(5,Math.ceil(due*1.5));items.push(`Review: ${due} item${due>1?"s":""} (~${w} min)`);budget-=w;}
+  for(const b of pendingPractice()){const need=b.practiceMinutes||5;items.push(`Finish pending practice: Part ${idxOf(b)+1} (~${need} min)`);budget-=need;}
   let i=frontier(), first=true;
   while(i<D.blocks.length){const b=D.blocks[i],need=first?estLeft(b):est(b);
     if(need>budget&&!first) break;
@@ -725,12 +757,12 @@ function renderInterviewTab(){
 function renderPath(){
   if(S.brk) return renderBreak();
   if(S.stopped) return renderStopped();
-  if(S.cur==="__qa") return welcomeHTML()+`<div class="grid">${stackHTML("__qa")}<section class="block"><div class="eyebrow">After the video</div><h2>Q&amp;A</h2><div class="pane">${D.qa.html}<div id="nextbox"></div></div></section></div>`;
+  if(S.cur==="__qa") return welcomeHTML()+pendingHTML()+`<div class="grid">${stackHTML("__qa")}<section class="block"><div class="eyebrow">After the video</div><h2>Q&amp;A</h2><div class="pane">${D.qa.html}<div id="nextbox"></div></div></section></div>`;
   let b=blockById(S.cur)||D.blocks[0];
   if(!unlocked(b)){b=D.blocks[Math.min(frontier(),D.blocks.length-1)];S.cur=b.id;S.step="watch";}
   const steps=stepsFor(b); if(!steps.find(([k])=>k===S.step)||!stepOpen(b,S.step)) S.step=steps.find(([k])=>!(S.done[b.id]||{})[k])?.[0]||"watch";
   const d=S.done[b.id]||{}, idx=idxOf(b);
-  return welcomeHTML()+planHTML()+`<div class="grid">${stackHTML(b.id)}
+  return welcomeHTML()+pendingHTML()+planHTML()+`<div class="grid">${stackHTML(b.id)}
   <section class="block" aria-labelledby="bt">
     <div class="bhead"><div><div class="eyebrow">Part ${idx+1} of ${D.blocks.length}</div><h2 id="bt">${esc(b.title)}</h2></div><span class="tsr">▶ ${b.start} – ${b.end}</span></div>
     <div class="steps" role="tablist">${steps.map(([k,l])=>`<button role="tab" data-step="${k}" aria-selected="${S.step===k}" class="${d[k]?"done":""}" ${stepOpen(b,k)?"":"disabled"}>${l}</button>`).join("")}</div>
@@ -759,6 +791,7 @@ function renderStepRaw(b,k){
 
     return `<p><b>Watch ${b.start} → ${b.end}</b> (${fmt(en-st)}).</p>
     <p><b>Focus:</b> ${md(b.focus||b.oneLiner||b.summary)}</p>
+    <p class="small">When Casey codes: pause after a meaningful change, write it yourself on Windows, predict the result, then build and check it. That counts as your practice.</p>
     ${loader}
     <div class="park" id="parkbox"><h3>Parking lot</h3><p class="small muted">Want to search something? Don't leave. Write it here and keep watching. We look at it after this part.</p>
     <div class="row"><input type="text" id="parkin" placeholder="e.g. what does LPSTR stand for?" autocomplete="off"><button class="btn small" id="parkgo">Park it</button></div>
@@ -769,12 +802,13 @@ function renderStepRaw(b,k){
     <p class="stepnote">Keys: Space = play/pause · ← = back 5 s. The player won't go past ${b.end}.</p>`;
   }
   if(k==="recall"){
-    const check=checkFor(b), fb=S.checkFb[b.id];
+    const check=checkFor(b), attempts=attemptsFor(b.id), closed=checkClosed(attempts);
     return `<p><b>From memory:</b> ${md(check.q)}</p><p class="small muted">A few sentences are enough.</p>
-    <textarea data-shortcheck="${b.id}" placeholder="Your answer…">${esc(S.checkAnswers[b.id]||"")}</textarea>
-    <div class="row">${sample?`<button class="btn" id="quickcheck">Check my answer</button>`:`<button class="btn ghost" id="quickcopy">Copy for tutor</button>`}</div>
-    <div class="copybox" id="quickcb"></div><div id="quickfb">${fb?renderScore(fb):""}</div>
+    <textarea data-shortcheck="${b.id}" placeholder="Your answer…" ${closed?"readonly":""}>${esc(S.checkAnswers[b.id]||"")}</textarea>
+    <div class="row">${closed?"":sample?`<button class="btn" id="quickcheck" ${checking.has(b.id)?"disabled":""}>${attempts.length?"Check my retry":"Check my answer"}</button>`:`<button class="btn ghost" id="quickcopy">Copy for tutor</button>`}</div>
+    <div class="copybox" id="quickcb"></div><div id="quickfb">${checkFeedback(attempts)}</div>
     ${rubricHTML(check.rubric)}
+    ${b.visual?`<button class="btn ghost small" data-reference="visual">Show the idea</button>`:""}
     <button class="btn ghost small" data-reference="explain">Need an explanation?</button>
     ${sample?`<details class="model" id="chathelp"><summary>Ask about this part</summary><div class="chatlog" id="chatlog">${(S.notes[b.id]||[]).map(m=>`<div class="msg ${m.r==="user"?"u":"a"}">${esc(m.c)}</div>`).join("")}</div><textarea id="chatin" placeholder="Your question…"></textarea><button class="btn" id="chatgo">Ask</button></details>`:""}
     ${(S.park[b.id]||[]).length?`<div class="park"><h3>Your questions</h3><ul class="plist" id="plist">${parkItems(b,true)}</ul></div>`:""}`;
@@ -786,6 +820,7 @@ function renderStepRaw(b,k){
     + b.explain + (b.prereq?`<div class="callout"><b>Prerequisite, explained now:</b> ${b.prereq}</div>`:"")
     + (b.mistake?`<div class="callout later"><b>Common beginner mistake:</b> ${md(b.mistake)}</div>`:"");
   if(k==="experiment") return `<p><b>One task (~${b.practiceMinutes||5} min).</b></p>${b.practice||b.experiment}
+    <p class="small">If you already wrote and verified this change while watching, record that result here. Do not repeat it. For a coding task: predict → write → build/run → compare.</p>
     <p class="small muted">Write one line about what you observed. If you cannot try it now, note what remains to do.</p>
     <textarea data-practice="${b.id}" placeholder="What happened? Or: still to do…">${esc(S.practice[b.id]||"")}</textarea>
     <label class="small"><input type="checkbox" data-practiced="${b.id}" ${S.practiceDone[b.id]?"checked":""}> I tried the task and checked the result</label>
@@ -794,6 +829,7 @@ function renderStepRaw(b,k){
     ${(b.interview||[]).length?`<details class="model"><summary>Optional interview practice</summary>${b.interview.map((iv,i)=>ivBlock(b,i,iv,true)).join("")}</details>`:""}`;
 
   if(k==="code") return b.code;
+  if(k==="visual") return b.visual||"";
   return "";
 }
 const GRADE_RULES=`Grade only the ideas explicitly requested in the QUESTION and its FIXED CHECKLIST. Context and reference notes are background, never extra requirements. Award each listed idea up to its stated weight, in the same order. Never invent criteria or bonus deductions. Accept correct ideas in any words; ignore grammar, spelling, filler words and minor speech-transcription errors. Wrong claims affect only the relevant criterion. Be concise: one sentence on what is right. If below 80%, give ONE short hint or correction for the main gap. At 80%+ with no major misconception, let the learner continue; do not demand 100% or another wording. Do not repeat the full answer or every note. Return awards, one number per checklist item. Simple English.`;
@@ -846,7 +882,7 @@ function renderBreak(){
 }
 function renderStopped(){
   const f=frontier(), nb=D.blocks[f];
-  return `<section class="block center"><div class="eyebrow">Saved</div><h2>Good session.</h2>
+  return pendingHTML()+`<section class="block center"><div class="eyebrow">Saved</div><h2>Good session.</h2>
   <p>${nb?`Next time you start at <b>Part ${f+1}: ${esc(nb.title)}</b>.`:"Next time: the next video and your due reviews."}</p>
   ${helperReady?`<p id="syncmsg" class="small">Saving to your repo and pushing to GitHub…</p><div id="nextbox"></div>
   <div class="row" style="justify-content:center"><button class="btn ghost" data-go="resume">Actually, keep going</button></div></section>`
@@ -872,10 +908,11 @@ async function showNext(){
 function positionBlock(){
   const f=frontier(), b=blockById(S.cur), d=new Date().toISOString().slice(0,10);
   const step=(STEPS.find(([k])=>k===S.step)||[])[1]||"Watch";
-  if(allDone()) return `## Study position\n- Course: ${D.course||D.title}\n- Section: all ${D.blocks.length} parts done; next is the Q&A\n- Step: Q&A\n- Completed (part id, date): ${completedList()}\n- Updated: ${d}`;
+  const pending=pendingPractice(), pendingNote=pending.length?`\n- Practice still to try: ${pending.map(x=>x.id).join(", ")}`:"";
+  if(allDone()) return `## Study position\n- Course: ${D.course||D.title}\n- Section: all ${D.blocks.length} parts done; next is the Q&A\n- Step: Q&A\n- Completed (part id, date): ${completedList()}${pendingNote}\n- Updated: ${d}`;
   const nb=(S.brk||S.stopped)?D.blocks[f]:b, i=idxOf(nb), st=(S.brk||S.stopped)?"Watch":step;
   const into=S.vt[nb.id]?Math.max(0,S.vt[nb.id]-secs(nb.start)):0;
-  return `## Study position\n- Course: ${D.course||D.title}\n- Section: ${i+1} of ${D.blocks.length} ("${nb.title}", ${nb.start}-${nb.end})\n- Step: ${st}${into>1?` (video at ${fmt(into)} into the part, episode time ${fmt(secs(nb.start)+into)})`:""}\n- Parts done: ${Object.keys(S.completed).length}\n- Completed (part id, date): ${completedList()}\n- Updated: ${d}`;
+  return `## Study position\n- Course: ${D.course||D.title}\n- Section: ${i+1} of ${D.blocks.length} ("${nb.title}", ${nb.start}-${nb.end})\n- Step: ${st}${into>1?` (video at ${fmt(into)} into the part, episode time ${fmt(secs(nb.start)+into)})`:""}\n- Parts done: ${Object.keys(S.completed).length}\n- Completed (part id, date): ${completedList()}${pendingNote}\n- Updated: ${d}`;
 }
 function tickBreak(){
   const el=$("#bclock"); if(!el||!S.brk||!S.brk.until){clearInterval(brkTimer);brkTimer=null;return}
@@ -885,7 +922,10 @@ function tickBreak(){
 
 /* ---------- review / parked / tools / how ---------- */
 let dueReviews=[], reviewsLoaded=false, reviewsError="", reviewResult="";
-const reviewAnswers={}, reviewFeedback={}, reviewFirstScores={};
+function reviewCheck(row){
+  const key=row.unit+"@"+row.next;
+  return S.reviewChecks[key]||(S.reviewChecks[key]={answer:"",attempts:[]});
+}
 async function refreshReviews(){
   if(!helperReady)return;
   try{const r=await (await fetch("/api/reviews")).json();if(r.error)throw new Error(r.error);dueReviews=r.due||[];reviewsLoaded=true;reviewsError="";}
@@ -909,11 +949,11 @@ function renderReview(){
   if(!row)return `<section class="block">${head}<p>No reviews due.</p><button class="btn" data-go="continue">Continue studying</button>${exp}</section>`;
   const item=reviewItem(row);
   if(!item){const kit=row.source.split("#")[0];return `<section class="block">${head}<p>${esc(row.title)}</p><a class="btn" href="/${esc(kit)}/study-kit.html">Open this lesson to review</a></section>`;}
-  const {check}=item, fb=reviewFeedback[row.unit];
+  const {check}=item, record=reviewCheck(row), closed=checkClosed(record.attempts);
   return `<section class="block">${head}<p>${md(check.q)}</p>${item.scenario||""}
-  <textarea data-reviewanswer="${esc(row.unit)}" placeholder="From memory…">${esc(reviewAnswers[row.unit]||"")}</textarea>
-  <div class="row">${sample?`<button class="btn" id="checkreview">Check answer</button>`:`<button class="btn ghost" id="copyreview">Copy for tutor</button>`}${fb?`<button class="btn" id="savereview">Save review, next</button>`:""}<button class="btn ghost" data-go="continue">Continue studying</button></div>
-  <div class="copybox" id="reviewcb"></div><div id="reviewfb">${fb?renderScore(fb):""}</div>${rubricHTML(check.rubric)}${exp}</section>`;
+  <textarea data-reviewanswer="${esc(row.unit)}" placeholder="From memory…" ${closed?"readonly":""}>${esc(record.answer)}</textarea>
+  <div class="row">${closed?"":sample?`<button class="btn" id="checkreview" ${checking.has(row.unit)?"disabled":""}>${record.attempts.length?"Check my retry":"Check answer"}</button>`:`<button class="btn ghost" id="copyreview">Copy for tutor</button>`}${record.attempts.length?`<button class="btn" id="savereview">Save review, next</button>`:""}<button class="btn ghost" data-go="continue">Continue studying</button></div>
+  <div class="copybox" id="reviewcb"></div><div id="reviewfb">${checkFeedback(record.attempts,true)}${record.attempts.length?`<p class="small">The first score (${record.attempts[0].fb.score}%) sets the next review date.</p>`:""}</div>${rubricHTML(check.rubric)}${exp}</section>`;
 }
 function renderParked(){
   const mine=[];D.blocks.forEach((b,i)=>(S.park[b.id]||[]).forEach(p=>{if(p.status!=="done")mine.push({b,i,p})}));
@@ -970,6 +1010,7 @@ $("#view").addEventListener("keydown",e=>{ if(e.target.id==="parkin"&&e.key==="E
 $("#view").addEventListener("click",async e=>{
   const t=e.target.closest("button"); if(!t) return;
   if(t.dataset.reference){referenceStep=t.dataset.reference==="back"?null:t.dataset.reference;render();return}
+  if(t.dataset.practicepart){const b=blockById(t.dataset.practicepart);if(b&&S.completed[b.id]){referenceStep=null;welcome=false;S.stopped=false;S.brk=null;S.cur=b.id;S.step="experiment";S.tab="path";save();render();}return}
   if(t.dataset.tts){ttsCmd(t.dataset.tts);return}
   if(t.dataset.ivsay){ivSay(t);return}
   if(t.dataset.go){const g=t.dataset.go;
@@ -986,26 +1027,28 @@ $("#view").addEventListener("click",async e=>{
   if(t.id==="reloadreviews"){refreshReviews();return}
   if(["checkreview","copyreview","savereview"].includes(t.id)){
     const row=dueReviews[0];if(!row)return;const item=reviewItem(row);if(!item)return;
-    const answer=(reviewAnswers[row.unit]||"").trim();if(!answer){toast("Try a short answer first.");return}
-    const prompt=checkPrompt(item.b,{...item.check,q:(item.scenario?item.scenario.replace(/<[^>]+>/g," ")+" ":"")+item.check.q},answer);
+    const record=reviewCheck(row),answer=record.answer.trim();if(!answer){toast("Try a short answer first.");return}
+    const check={...item.check,q:(item.scenario?item.scenario.replace(/<[^>]+>/g," ")+" ":"")+item.check.q};
+    const prompt=checkPrompt(item.b,check,answer,record.attempts.length+1);
     if(t.id==="copyreview"){copy(prompt,$("#reviewcb"));return}
     t.disabled=true;
     try{
-      if(t.id==="checkreview"){reviewFeedback[row.unit]=normFb(await sample.json(prompt),item.check.rubric);if(reviewFirstScores[row.unit]===undefined)reviewFirstScores[row.unit]=reviewFeedback[row.unit].score;render();}
+      if(t.id==="checkreview"){await gradeAttempt(row.unit,record.attempts,item.b,check,answer,()=>record.answer.trim()===answer);render();}
       else{
-        const fb=reviewFeedback[row.unit];if(!fb)return;
-        const r=await (await fetch("/api/review",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({unit:row.unit,score:reviewFirstScores[row.unit]})})).json();
-        if(r.error)throw new Error(r.error);reviewResult=r.message;delete reviewFeedback[row.unit];await refreshReviews();
+        if(!record.attempts.length||checking.has(row.unit))return;
+        const r=await (await fetch("/api/review",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({unit:row.unit,score:record.attempts[0].fb.score})})).json();
+        if(r.error)throw new Error(r.error);reviewResult=r.message;save();await refreshReviews();
       }
     }catch(e){const box=$("#reviewfb");if(box)box.textContent=e.message||"Could not save. Try again."}finally{t.disabled=false}return;
   }
   if(t.id==="quickcheck"||t.id==="quickcopy"){
-    const b=blockById(S.cur),answer=(S.checkAnswers[b.id]||"").trim(),check=checkFor(b);
+    const b=blockById(S.cur),answer=(S.checkAnswers[b.id]||"").trim(),check=checkFor(b),attempts=attemptsFor(b.id);
     if(!answer){toast("Try a short answer first.");return}
-    const prompt=checkPrompt(b,check,answer);
+    if(checkClosed(attempts))return;
+    const prompt=checkPrompt(b,check,answer,attempts.length+1);
     if(t.id==="quickcopy"){copy(prompt,$("#quickcb"));return}
     t.disabled=true;const box=$("#quickfb");box.textContent="Checking…";
-    try{const r=await sample.json(prompt);const fb=normFb(r,check.rubric);if((S.checkAnswers[b.id]||"").trim()!==answer)return;S.checkFb[b.id]=fb;save();box.innerHTML=renderScore(fb);}
+    try{if(await gradeAttempt(b.id,attempts,b,check,answer,()=>(S.checkAnswers[b.id]||"").trim()===answer)){S.checkFb[b.id]=attempts[attempts.length-1].fb;save();}render();}
     catch(err){box.textContent=err.message||"Could not check. Try again."}finally{t.disabled=false}return;
   }
   if(t.id==="markNext"){referenceStep=null;welcome=false;goNextStep();return}
@@ -1044,7 +1087,7 @@ $("#view").addEventListener("input",e=>{
   const sc=e.target.dataset.shortcheck;if(sc){S.checkAnswers[sc]=e.target.value;delete S.checkFb[sc];const fb=$("#quickfb");if(fb)fb.innerHTML="";save()}
   const pd=e.target.dataset.practiced;if(pd){S.practiceDone[pd]=e.target.checked;save()}
   const pr=e.target.dataset.practice;if(pr){S.practice[pr]=e.target.value;S.practiceDone[pr]=false;const cb=document.querySelector(`[data-practiced="${pr}"]`);if(cb)cb.checked=false;save()}
-  const ra=e.target.dataset.reviewanswer;if(ra){reviewAnswers[ra]=e.target.value;delete reviewFeedback[ra];const btn=$("#savereview");if(btn)btn.remove();const fb=$("#reviewfb");if(fb)fb.innerHTML="";}
+  const ra=e.target.dataset.reviewanswer;if(ra){const row=dueReviews.find(r=>r.unit===ra);if(row){const record=reviewCheck(row);if(!checkClosed(record.attempts)){record.answer=e.target.value;save();}}}
   const a=e.target.dataset.ans; if(a){S.answers[a]=e.target.value;save()}
   const r=e.target.dataset.recall; if(r){S.recall[r]=e.target.value;save()}
   const v=e.target.dataset.iv; if(v){S.ivans[v]=e.target.value;save()}

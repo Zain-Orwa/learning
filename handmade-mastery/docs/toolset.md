@@ -91,23 +91,25 @@ Every tool we use, what it's for, which machine it runs on, and how to set it up
 ### [ ] VS Code + Neovim extension (Mac)
 - Neovim: `brew install neovim`. Same extensions as on Windows.
 
-### [ ] Anki (FSRS)
+### Optional, parked: Anki (FSRS)
+- The shared `journey/REVIEWS.md` is the default. Do not install or maintain
+  a second daily queue unless Zain chooses it.
 - **Install:** https://apps.ankiweb.net (desktop; AnkiDroid is free on Android,
   AnkiMobile is paid on iOS).
 - **Turn on FSRS:** deck options → FSRS (built in since Anki 23.10).
 - **Import a day's cards:** File → Import → `courses/<course>/dayNN/cards.tsv`.
   The file's header sets tab separator and tags.
 
-### [ ] LearnHarness: concept teaching, practice, knowledge graph
-- **Get:** https://learnharness.ai (signed macOS Apple Silicon DMG).
-  Source: https://github.com/amosblomqvist/learnharness (your fork: Zain-Orwa/learnharness).
-- **Models:** add a provider key in Settings. For Claude, it needs
-  `ANTHROPIC_API_KEY` (pay per use from https://console.anthropic.com).
-  A Claude Pro/Max subscription doesn't work here.
-  **Decision still open**, see `journey/STATE.md`.
-- **Claude Code skill (optional):** copy `skills/learnharness/` from the
-  LearnHarness repo into `~/.claude/skills/`. Claude Code can then read your
-  LearnHarness learning history (read-only).
+### Parked: LearnHarness
+- Source: https://github.com/amosblomqvist/learnharness
+  (recorded fork: Zain-Orwa/learnharness).
+- Decision, 2026-11-15: continue with the existing study page and tutor.
+  No LearnHarness account, installation or model key is needed for this course.
+  Revisit only for a specific gap; check current setup/auth requirements then.
+- The read-only reader found no data at the normal Mac path
+  `~/Library/Application Support/LearnHarness/data` on 2026-11-15. This does
+  not rule out a moved installation; no learning records were created or changed.
+- Visualization uses quick diagrams and the existing Manim tool below.
 
 ### [x] Manim: animated explanations
 - **One-time setup (Mac), from the repo root:** `./tools/animate/setup-mac.sh`
