@@ -45,3 +45,5 @@ The old tasks (`trig_015H…`, `trig_013u…`) may still run on the old account:
 twice, open the Claude app logged into the old account and turn the old ones off.
 
 **2026-11-15, phone-only:** both prompts now say the reminders are phone-only (answer by voice or typing in the chat; never an editor, compiler, debugger or computer). Debug challenges use only read-the-error, spot-the-bug and "it runs but…". Both live tasks were updated with these exact prompts.
+
+**2026-11-15, phone first:** Daily review asks on the phone only the due units that can be answered by reading and replying; units that need the computer stay due for the next laptop session, and it says how many are waiting. Live task updated with the exact prompt.
