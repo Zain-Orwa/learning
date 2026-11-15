@@ -285,3 +285,11 @@ Newest at the bottom. Each entry: date, decision, why.
 - Regression tests passed. A disposable browser preview verified Part 3,
   four explanation rows, the left media stack and no horizontal overflow at
   1440 pixels. The cabin poster appears until a local video is selected.
+
+
+## 2026-11-15: Use the sidebar height for course sections
+- Course navigation uses all available sidebar height before its outer
+  scrollbar appears. Decorative scenery sits behind the list and no longer
+  reserves empty space below it. Expanded lesson lists keep their own scroll.
+- Rebuilt the page and passed the engine regression checks. Learning position
+  and answers were not changed by this layout adjustment.

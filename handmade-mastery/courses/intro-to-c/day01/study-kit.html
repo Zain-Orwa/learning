@@ -245,6 +245,14 @@ dialog{padding:0;width:min(730px,calc(100vw - 32px));max-height:85vh;border:1px 
 @media(max-width:760px){.winter-header{height:70px}.learning-row{grid-template-columns:1fr}.lesson-media-stack .video-frame{min-height:0}.video-frame video{aspect-ratio:16/9;min-height:0}.lesson-header h1{font-size:25px}.study-navigation button{font-size:11px}.takeaway p{font-size:13px}.code-split{grid-template-columns:1fr 1fr}.course-sidebar{background:#05353d}}
 @media(max-width:540px){.code-split{grid-template-columns:1fr}.lesson-surface{padding:16px 12px}.takeaway p{font-size:14px}.tool-body{font-size:14px}.audio-card .card-subtitle{font-size:11px}.code-card .card-subtitle{font-size:11px}}
 
+/* Course navigation gets the available height; scenery never reserves list space. */
+.course-sidebar{isolation:isolate}
+.course-heading,.course-progress{flex-shrink:0}
+.course-sidebar #course-tree{flex:1;min-height:0;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#58818b transparent;padding-bottom:12px}
+.course-sidebar .sidebar-scenery{position:absolute;left:0;right:0;bottom:0;height:230px;min-height:0;margin:0;z-index:-1;pointer-events:none;background-size:cover}
+.course-lessons{max-height:clamp(180px,45vh,420px);overflow-y:auto}
+@media(min-width:1001px){.course-sidebar{height:calc(100dvh - 98px);min-height:0}}
+
 /* Explanation card: frosted winter panel with a wooden title plate (see explanation.js). */
 .xcard{--xc-ink:#10262e;--xc-pad:clamp(14px,5cqi,26px);--xc-serif:"Merriweather",Georgia,"Times New Roman",serif;container-type:inline-size;position:relative;margin-top:12px;border:2px solid #163842;border-radius:22px;color:var(--xc-ink);font-family:var(--xc-serif);
   background:

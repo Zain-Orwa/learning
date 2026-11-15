@@ -68,3 +68,6 @@ return 404, so it is not the owning account.
 - Final winter reference applied: dark teal shell, compact frosted cards,
   left video/takeaway/audio stack and structured Explanation alongside it.
 - Saved lesson position and learning history remain unchanged by this UI work.
+
+- Sidebar refinement: course sections use the full available height;
+  expanded lesson lists scroll internally when long.
