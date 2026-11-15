@@ -3,7 +3,7 @@
 <title>Intro to C on Windows, Day 1 Study Kit</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Merriweather:ital,wght@0,400;0,700;0,900;1,400&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* Layout: debugger-style split. Left "call stack" of parts (future parts locked), right the current part.
    The current step carries the yellow instruction-pointer arrow. The video player lives inside the Watch step. */
@@ -213,6 +213,82 @@ td.mono{font-family:var(--f-mono);font-size:13px;white-space:nowrap}
 .ivsay svg{width:14px;height:14px;fill:currentColor}
 .ivsay.on{background:var(--ip);color:var(--ip-ink);border-color:var(--ip)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/* Explanation card: frosted winter panel with a wooden title plate (see explanation.js). */
+.xcard{--xc-ink:#10262e;--xc-pad:clamp(14px,5cqi,26px);--xc-serif:"Merriweather",Georgia,"Times New Roman",serif;container-type:inline-size;position:relative;margin-top:12px;border:2px solid #163842;border-radius:22px;color:var(--xc-ink);font-family:var(--xc-serif);
+  background:
+    linear-gradient(0deg,#1d5361 0,#1d5361e0 46px,#0000 150px),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .06 0 0 0 0 .2 0 0 0 0 .24 0 0 0 .16 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='480'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.011' numOctaves='3' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .5 -.12'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E"),
+    radial-gradient(130% 85% at 50% 30%,#bddbe0 0%,#a4c9d0 40%,#80b1bc 70%,#4d8592 100%);
+  box-shadow:0 10px 22px #04202859,0 2px 0 #0a2a3240,inset 0 0 0 1px #6fa5b2,inset 0 0 40px #2a6370;}
+/* Snow resting on the top edge, heavier at the corners. */
+.xcard::before{content:"";position:absolute;left:-4px;right:-4px;top:-12px;height:34px;z-index:2;pointer-events:none;filter:drop-shadow(0 1px 1px #0b3a4559);
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 34' preserveAspectRatio='none'%3E%3Cpath transform='translate(0 2)' fill='%23b9d7e0' d='M0 14C6 6 16 3 30 4c30 2 60-1 100 1s80-1 120 0 80-2 110-1c20 0 34 3 40 10v8c-3 2-5 8-9 9-3 0-3-7-7-9-8-2-16 1-24-1s-30-2-60-1-60-1-90 0-60-1-90 0-50-1-70 0c-10 1-20 0-26 2-5 2-5 11-10 11-4 0-3-9-8-12-3-1-5-3-6-4z'/%3E%3Cpath fill='%23fbfeff' d='M0 14C6 6 16 3 30 4c30 2 60-1 100 1s80-1 120 0 80-2 110-1c20 0 34 3 40 10v8c-3 2-5 8-9 9-3 0-3-7-7-9-8-2-16 1-24-1s-30-2-60-1-60-1-90 0-60-1-90 0-50-1-70 0c-10 1-20 0-26 2-5 2-5 11-10 11-4 0-3-9-8-12-3-1-5-3-6-4z'/%3E%3C/svg%3E") top/100% 100% no-repeat;}
+.xc-inner{position:relative;margin:6px;padding:0 var(--xc-pad) clamp(16px,4.6cqi,26px);border:1.5px solid #e2f3f6b8;border-radius:16px;box-shadow:inset 0 1px 0 #ffffff59}
+.xcard .xc-icon{display:block;flex:none}
+.xcard .xc-icon svg{display:block;width:100%;height:auto}
+
+/* 2 · Wooden title plate */
+.xcard .xc-plate{position:relative;z-index:3;display:inline-flex;align-items:center;gap:.42em;margin:-15px 0 clamp(12px,4cqi,20px) calc(-1 * var(--xc-pad) - 12px);padding:.3em 1.35em .34em 1.3em;min-width:min(66%,380px);font:900 clamp(22px,6.6cqi,34px)/1.12 var(--xc-serif);letter-spacing:-.01em;color:#f8e6b2;text-shadow:0 2px 0 #1b0f06,0 -1px 0 #0006;border:1.5px solid #1e130a;border-radius:6px 12px 10px 5px / 8px 6px 12px 9px;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='70'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.006 .32' numOctaves='3' seed='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .1 0 0 0 0 .06 0 0 0 0 .02 0 0 0 .7 -.1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23w)'/%3E%3C/svg%3E"),
+    linear-gradient(180deg,#704d32 0%,#5a3c24 42%,#43291a 100%);
+  box-shadow:inset 0 2px 0 #a07a55aa,inset 0 -3px 0 #22150ccc,0 4px 6px #062a3366}
+.xcard .xc-plate::before{content:"";position:absolute;left:-4px;right:-5px;top:-7px;height:19px;filter:drop-shadow(0 1px 0 #2a1a0d66);pointer-events:none;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 20' preserveAspectRatio='none'%3E%3Cpath fill='%23f7fcfe' d='M0 9C3 4 10 2 22 3c14 1 22-2 40-1s30 2 50 0 34-1 52 0c14 1 24 1 30 3 4 1 6 3 6 6v3c-2 1-3 5-6 5s-3-4-6-4c-10 0-22 1-34 0s-30 1-46 0-26-1-40 0c-8 0-9 4-12 4s-3-4-6-4c-8 0-14 1-20 0-6-1-10-3-10-5z'/%3E%3C/svg%3E") top/100% 100% no-repeat}
+.xcard .xc-plate::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 13px 52%,#d7c6a6 0 1.3px,#21140a 1.9px 3.6px,#0000 4.1px),radial-gradient(circle at calc(100% - 13px) 52%,#d7c6a6 0 1.3px,#21140a 1.9px 3.6px,#0000 4.1px)}
+.xcard .xc-plate-icon{width:1.12em;filter:drop-shadow(0 2px 0 #1b0f06)}
+
+/* 3 · The idea in one sentence: amber brush stroke, the strongest highlight */
+.xc-idea{position:relative;display:grid;grid-template-columns:auto minmax(0,1fr);gap:clamp(10px,3cqi,16px);align-items:start;margin:0 calc(-.55 * var(--xc-pad)) clamp(12px,3.8cqi,20px);padding:clamp(12px,3.4cqi,18px) clamp(14px,4.6cqi,26px) clamp(14px,3.8cqi,20px) clamp(10px,3cqi,16px);
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 140' preserveAspectRatio='none'%3E%3Cdefs%3E%3ClinearGradient id='g' x2='1'%3E%3Cstop offset='0' stop-color='%23f2cf78' stop-opacity='0'/%3E%3Cstop offset='.07' stop-color='%23f2cf78' stop-opacity='.92'/%3E%3Cstop offset='.5' stop-color='%23f8e2a6'/%3E%3Cstop offset='.92' stop-color='%23f0ca72' stop-opacity='.92'/%3E%3Cstop offset='1' stop-color='%23f0ca72' stop-opacity='0'/%3E%3C/linearGradient%3E%3Cfilter id='r' x='-6%25' y='-12%25' width='112%25' height='124%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012 .2' numOctaves='3' seed='5'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='24'/%3E%3C/filter%3E%3C/defs%3E%3Cpath filter='url(%23r)' fill='url(%23g)' d='M14 16C80 5 220 12 300 7s80 6 92 12l-4 104c-88 10-228 4-298 8S18 128 10 118z'/%3E%3Cpath filter='url(%23r)' stroke='%23fcefc9' stroke-width='5' opacity='.55' d='M32 36h330M22 76h352M44 110h300'/%3E%3C/svg%3E") center/100% 100% no-repeat}
+.xc-idea-icon{width:clamp(38px,11cqi,56px);margin-top:.2em;filter:drop-shadow(0 2px 1px #6b3f1a40)}
+.xcard .xc-idea h3{margin:0 0 .18em;font:900 clamp(18px,5.3cqi,27px)/1.2 var(--xc-serif);letter-spacing:-.01em;color:#1d1307}
+.xc-idea p{margin:0;font:400 clamp(15px,4.2cqi,21px)/1.45 var(--xc-serif);color:#1b1910}
+
+/* 4 · Real-life picture: brighter frosted box with a signpost */
+.xc-picture{display:grid;grid-template-columns:clamp(96px,28cqi,132px) minmax(0,1fr);align-items:center;margin-bottom:clamp(8px,2.4cqi,14px);padding:clamp(8px,2.2cqi,12px) clamp(12px,3.6cqi,18px) clamp(8px,2.2cqi,12px) clamp(6px,2cqi,10px);border:1.5px solid #eef9fb;border-radius:16px;background:linear-gradient(180deg,#d4eaef,#bcdbe2);box-shadow:inset 0 1px 0 #fff9,inset 0 -10px 18px #8fbfcb59,0 2px 5px #0f465238}
+.xc-sign svg{display:block;width:100%;height:auto}
+.xc-sign-text{font-family:var(--xc-serif);font-weight:900;fill:#f7e3ad;paint-order:stroke;stroke:#2a170a;stroke-width:.7px}
+.xc-picture p{margin:0 0 0 clamp(8px,2.4cqi,14px);padding:.15em 0 .15em clamp(10px,3cqi,16px);border-left:1.5px solid #3f6f7b;font:400 clamp(14.5px,4cqi,19.5px)/1.45 var(--xc-serif)}
+.xc-picture strong{font-weight:900;color:#0c1f26}
+
+/* 5 · Core technical rows */
+.xc-rows{list-style:none;margin:0 0 clamp(8px,2.4cqi,14px);padding:0}
+.xc-rows li{position:relative;display:grid;grid-template-columns:clamp(34px,9.6cqi,48px) minmax(0,1fr);gap:clamp(10px,3cqi,16px);align-items:center;padding:clamp(9px,2.7cqi,14px) clamp(4px,1.8cqi,12px)}
+.xc-rows li+li::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(180deg,#4a808c8c 50%,#e4f4f7a6 50%);-webkit-mask-image:linear-gradient(90deg,#0000,#000 8%,#000 92%,#0000);mask-image:linear-gradient(90deg,#0000,#000 8%,#000 92%,#0000)}
+.xc-rows .xc-icon{filter:drop-shadow(0 1.5px 0 #0b2e363d)}
+.xc-rows p{margin:0;font:400 clamp(14.5px,4.1cqi,20px)/1.5 var(--xc-serif)}
+.xcard .xc-pill{background:linear-gradient(180deg,#fce59f,#f6d47e);color:#22160a;font-weight:900;padding:.06em .55em .1em;border-radius:.75em;box-shadow:inset 0 -1px 0 #d8ac50,0 0 0 1px #efce7c;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.xcard .xc-label,.xcard .xc-nowrap{white-space:nowrap}
+.xcard .xc-label{font-family:var(--f-display);font-weight:800;letter-spacing:.03em}
+.xcard code{font-family:var(--f-mono);font-size:.84em;padding:0 .25em;border-radius:4px;background:#e8f4f7b3;color:#123540}
+
+/* 6 · Clarification: parchment callout */
+.xc-note{display:grid;grid-template-columns:clamp(30px,8.6cqi,42px) minmax(0,1fr);gap:clamp(10px,3cqi,16px);align-items:start;margin:clamp(6px,2cqi,10px) 0 clamp(18px,5cqi,28px);padding:clamp(12px,3.6cqi,18px) clamp(14px,4cqi,22px);border:1.5px solid #d6b45a;border-radius:16px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .4 0 0 0 0 .32 0 0 0 0 .15 0 0 0 .12 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E"),linear-gradient(180deg,#f3efda,#e4e0c5);
+  box-shadow:inset 0 1px 0 #fffbea,inset 0 0 0 3px #faf5df80,0 3px 7px #0d3e4a38}
+.xc-note .xc-icon{margin-top:.1em;filter:drop-shadow(0 1.5px 0 #6b451240)}
+.xc-note p{margin:0;font:italic 400 clamp(14.5px,4cqi,19.5px)/1.5 var(--xc-serif);color:#29251a}
+
+/* 7 · Read the full explanation */
+.xcard .xc-more{display:inline-flex;align-items:center;gap:.4em;margin:0 0 0 2px;padding:0 0 .28em;background:none;border:0;border-bottom:1.5px solid #e8cb6e;border-radius:0;font:700 clamp(19px,4.8cqi,22px)/1.2 var(--xc-serif);color:#f6e3a1;text-shadow:0 1px 2px #0a2b34e6,0 0 10px #0a2b3599;cursor:pointer;transition:color .15s,border-color .15s}
+.xcard .xc-more span{display:inline-block;transition:transform .15s}
+.xcard .xc-more:hover{color:#fff3c6;border-color:#ffe08a}
+.xcard .xc-more:hover span{transform:translateX(3px)}
+.xcard .xc-more:focus-visible{outline:3px solid #fff6d6;outline-offset:4px;border-radius:4px;box-shadow:0 0 0 7px #0b2e36}
+
+/* Narrow cards: keep icons beside the text, trim only the spacing. */
+@container (max-width:340px){
+  .xcard .xc-plate{min-width:0}
+}
+/* Narrow: the signpost sits above the analogy so both stay readable. */
+@container (max-width:380px){
+  .xc-picture{grid-template-columns:1fr;justify-items:center}
+  .xc-sign{width:128px}
+  .xc-picture p{justify-self:stretch;margin:6px 0 0;padding:8px 0 0;border-left:0;border-top:1.5px solid #3f6f7b}
+}
+
 </style>
 
 <div class="wrap">
@@ -1018,6 +1094,28 @@ const T = {
   mistake:"Thinking `#include <windows.h>` adds Windows's code to your program. It adds only declarations; the code lives in Windows's DLLs."}
 };
 window.STUDY.blocks.forEach(b=>Object.assign(b, T[b.id]||{}));
+})();
+
+/* ---- explanation cards: the compact Explanation panel (tools/study-kit/explanation.js).
+   oneLiner and analogy above supply "The idea in one sentence" and "Real-life picture";
+   each card adds short concept rows (icon, optional label, text, highlighted terms) and one
+   clarification. The full explain HTML stays behind "Read the full explanation". ---- */
+(function(){
+const C = {
+ b01:{"concepts": [{"icon": "arrow", "text": "The toolchain is the chain of programs that turns text you type into something a CPU runs.", "highlights": ["toolchain"]}, {"icon": "box", "text": "Install Visual Studio Community and pick the Desktop development with C++ workload.", "highlights": ["Desktop development with C++"]}, {"icon": "file", "label": "cl.exe", "text": "is the compiler, which turns your text file into an object file.", "highlights": ["object file"]}, {"icon": "chain", "label": "link.exe", "text": "is the linker, which turns object files into the .exe."}], "clarification": "Hold one picture for the whole day: text file → compiler → object file → linker → .exe → Windows loads it → the CPU runs it. Every later part fills in one arrow."},
+ b02:{"concepts": [{"icon": "gear", "text": "Every Windows .exe carries a flag in its header called the subsystem.", "highlights": ["subsystem"]}, {"icon": "terminal", "label": "CONSOLE", "text": "means \"give me a text console window when I start\"."}, {"icon": "window", "label": "WINDOWS", "text": "means \"don't, I'll make my own windows\"."}], "clarification": "This flag is what Casey means by \"you have to build an app as one or the other\". The two project types in the wizard mostly just set this flag, and with it which startup function name the linker expects."},
+ b03:{"concepts": [{"icon": "gear", "text": "A configuration says which kind of build: Debug or Release, for the Win32 or x64 platform.", "highlights": ["configuration"]}, {"icon": "file", "label": "PARSE", "text": "reads the characters and works out the structure, like \"this is a function\".", "highlights": ["structure"]}, {"icon": "tag", "label": "UNDERSTAND", "text": "checks the meaning, like whether a name exists and the types fit."}, {"icon": "chip", "label": "EMIT", "text": "writes out machine code, numbers that a particular CPU decodes as instructions.", "highlights": ["machine code"]}], "clarification": "Compile errors come from the parse and understand steps. The compiler has to know its target, because x64 and ARM chips encode instructions differently, so the same C becomes different bytes."},
+ b04:{"concepts": [{"icon": "chip", "text": "A core is a full execution engine, with its own math units and memory units.", "highlights": ["execution engine"]}, {"icon": "chip", "text": "Casey's two Xeon chips have 4 cores each and 2 hyperthreads per core: 2 × 4 × 2 = 16 logical processors.", "highlights": ["16 logical processors"]}, {"icon": "arrow", "text": "Each .cpp file compiles on its own, so the compiler can give different files to different logical processors at the same time."}, {"icon": "terminal", "text": "The `1>` before each output line tells you which build job printed it.", "highlights": ["build job"]}], "clarification": "Casey pictures a core switching between its threads, but on modern chips both threads run at once and share the core's execution units. So a hyperthread is not a whole extra core: two threads usually finish somewhat faster than one, but nowhere near twice as fast."},
+ b05:{"concepts": [{"icon": "file", "text": "The compiler works on only one .cpp at a time, called a translation unit.", "highlights": ["translation unit"]}, {"icon": "file", "text": "An .obj file holds mostly finished machine code, plus the names it defines and the names it still needs.", "highlights": ["names it defines", "names it still needs"]}, {"icon": "chain", "text": "The linker matches every needed name to a defined name and patches the real addresses into the code.", "highlights": ["real addresses"]}, {"icon": "tag", "text": "`unresolved external symbol` means the linker searched every .obj and library and found no definition for that name.", "highlights": ["no definition"]}], "clarification": "In Casey's error, the code asking for WinMain is _tmainCRTStartup: startup code that comes with the compiler, not a call you wrote. Linker errors usually have no line number, because they are about symbols, not about one line of text."},
+ b06:{"concepts": [{"icon": "box", "text": "A Windows .exe uses a documented format called PE (Portable Executable), and its header stores an AddressOfEntryPoint.", "highlights": ["PE", "AddressOfEntryPoint"]}, {"icon": "arrow", "text": "Windows reads the headers, maps code and data into memory, then starts the CPU at the entry point address.", "highlights": ["entry point address"]}, {"icon": "tag", "text": "For windowed programs, the linker looks for the predefined name `WinMain`, and the `/ENTRY` switch can override it.", "highlights": ["predefined name"]}, {"icon": "book", "text": "You look up WinMain and every other Windows function on Microsoft Learn, formerly MSDN.", "highlights": ["Microsoft Learn"]}], "clarification": "This solves the handoff problem: Windows and your program were never linked together, so the file format is how Windows finds the first code to run. Casey says WinMain for now, but warns it is not really the entry point and explains why on Day 2."},
+ b07:{"concepts": [{"icon": "book", "text": "`HINSTANCE` and `LPSTR` aren't C keywords but new names for basic types, defined in Windows header files.", "highlights": ["header files"]}, {"icon": "tag", "label": "H", "text": "means handle, an opaque ID you pass back to Windows to refer to something it manages.", "highlights": ["opaque ID"]}, {"icon": "tag", "label": "LP", "text": "means a \"long\" (far) pointer from 16-bit Windows, and today it is just a pointer.", "highlights": ["just a pointer"]}, {"icon": "flag", "text": "`_In_` and `_Out_` are SAL annotations that show which way data flows, with no effect on what the program does.", "highlights": ["SAL"]}], "clarification": "If you don't know these names, that is not a gap in your C: Windows made them up. Casey's point is that Hungarian prefixes go stale (LP outlived its meaning) and just add noise, so he asks you not to use them."},
+ b08:{"concepts": [{"icon": "terminal", "text": "OutputDebugStringA sends text to whatever debugger is attached, and Visual Studio shows it in the Output window.", "highlights": ["OutputDebugStringA", "Output window"]}, {"icon": "tag", "label": "DEFINITION", "text": "is the signature plus the body: return type, name and parameters, then the code in braces.", "highlights": ["signature", "body"]}, {"icon": "arrow", "label": "CALL", "text": "`foo();` runs the body at that spot, then the program continues after the call."}, {"icon": "book", "text": "Comments are notes for people: `//` ignores the rest of the line, `/* … */` ignores everything between the markers, across lines.", "highlights": ["Comments"]}], "clarification": "Casey's vanishing-output demo shows that code in a function nobody calls never runs. At the CPU level a call is a jump there and back, and how it finds the way back (the stack) is parked for Intro to C Day 3."},
+ b09:{"concepts": [{"icon": "tag", "text": "A string literal is text in double quotes that the compiler stores inside your program.", "highlights": ["string literal"]}, {"icon": "flag", "text": "A statement is one complete instruction, like a call, and only `;` ends it, not a line break.", "highlights": ["statement"]}, {"icon": "list", "text": "The compiler first chops your text into tokens: names, keywords, punctuation and literals.", "highlights": ["tokens"]}, {"icon": "gear", "text": "`OutputDebug StringA` becomes two tokens, and the compiler complains that it doesn't know `OutputDebug`."}], "clarification": "Chopping text into tokens is the \"parse\" step from block 3. Whitespace is only there to separate tokens, so indentation and line breaks never change what the program does."},
+ b10:{"concepts": [{"icon": "arrow", "label": "int", "text": "is the whole number WinMain hands back, and it becomes the program's exit code (by convention 0 means \"fine\").", "highlights": ["exit code"]}, {"icon": "flag", "label": "CALLBACK", "text": "is not a C keyword but a macro that windows.h replaces with a marker for Windows's agreed calling convention.", "highlights": ["macro"]}, {"icon": "chain", "text": "A calling convention means the exact rules for passing arguments and returning values.", "highlights": ["calling convention"]}, {"icon": "list", "text": "The four parameters: `hInstance` (handle to our own program), `hPrevInstance` (always 0), `lpCmdLine` (launch text), `nCmdShow` (normal, minimized or maximized)."}], "clarification": "Casey's reason for CALLBACK is the part to remember: Windows and your program were compiled separately, so they need a shared agreement on how functions are called."},
+ b11:{"concepts": [{"icon": "arrow", "text": "The compiler reads your file top to bottom, once, so it must see a declaration before any call.", "highlights": ["top to bottom"]}, {"icon": "file", "label": "NO DECLARATION", "text": "gives a compile error: identifier not found.", "highlights": ["identifier not found"]}, {"icon": "chain", "label": "DECLARATION ONLY", "text": "compiles, but linking fails with an unresolved external.", "highlights": ["unresolved external"]}, {"icon": "chain", "label": "WITH DEFINITION", "text": "links, because the linker finds the body anywhere in the build and patches in foo's address.", "highlights": ["finds the body"]}], "clarification": "With only a declaration, the compiler emits the call and records \"needs foo\" for the linker. This is how one .cpp calls a function defined in another .cpp, and it is why unresolved externals exist at all."},
+ b12:{"concepts": [{"icon": "tag", "label": "KEYWORDS", "text": "like `void` and `int` are the language itself and work on every C compiler."}, {"icon": "book", "label": "EVERYTHING ELSE", "text": "like `HINSTANCE` and `OutputDebugStringA` are declarations and macros Microsoft wrote in header files.", "highlights": ["header files"]}, {"icon": "gear", "text": "The preprocessor, a text pass before the compiler, also expands includes inside included files, giving one long translation unit.", "highlights": ["preprocessor", "translation unit"]}, {"icon": "chain", "text": "The body of `OutputDebugStringA` lives in kernel32.dll, and the linker connects to it through the import library kernel32.lib.", "highlights": ["kernel32.dll", "kernel32.lib"]}], "clarification": "Declaration from a header, definition from a library: it is the same mechanism as foo in block 11, just at a larger scale. Because windows.h includes many more headers, a dozen-line program becomes an enormous file for the compiler."}
+};
+window.STUDY.blocks.forEach(b=>{ if(C[b.id]) b.explainCard=C[b.id]; });
 })();
 
 /* ---- interview corner: real interview-style questions on this day's material ----
@@ -1942,6 +2040,7 @@ function loadVideo(file){
 }
 document.addEventListener("keydown",e=>{
   if(!playerBlock||!vw.isConnected) return;
+  if($("#study-dialog")?.open) return;
   if(e.target.closest&&e.target.closest("input,textarea,select,button")) return;
   if(e.code==="Space"){e.preventDefault();vw.querySelector('[data-v="play"]').click()}
   if(e.code==="ArrowLeft"){e.preventDefault();const [st]=range(playerBlock);vid.currentTime=Math.max(st,vid.currentTime-5)}
@@ -1980,7 +2079,7 @@ function withWords(html,say){
   return html.replace(/<\/pre>|<\/table>/g,m=>{const s=say[n++]; return s?m+inWords(s):m;});
 }
 function ttsSegments(){ // the pieces that have a Kokoro mp3, in reading order (pieces without one are skipped)
-  const pane=$("#pane"); if(!pane) return [];
+  const pane=$("#study-dialog")?.open?$("#dialog-body"):$("#pane"); if(!pane) return [];
   const map=stepAudio()||{};
   const els=[...pane.querySelectorAll("h3,p,li,.callout,.inwords .ln")].filter(el=>!el.closest("pre,table,.listen,details"));
   return els.filter(el=>!els.some(o=>o!==el&&o.contains(el))).map(el=>{const key=el.textContent.replace(/\s+/g," ").trim();
@@ -2601,6 +2700,77 @@ async function chat(){
   try{const r=await sample([{role:"user",content:rules},...log.slice(-8).map(m=>({role:m.r,content:m.c}))],{cache:false,onText:({text})=>{out.textContent=text}});log.push({r:"assistant",c:r.text});save();}
   catch(err){out.textContent=err.text||"Couldn't answer this time. Try again."}
 }
+/* Explanation card: a reusable, data-driven panel. Lesson data may set b.explainCard:
+   { title, summary:{title,text}, analogy:{title,text},
+     concepts:[{icon, label?, text, highlights?:[]}], clarification, fullExplanation }
+   Anything missing falls back to the block's oneLiner, analogy and explain fields. */
+const XC_ICONS={
+book:'<svg viewBox="0 0 32 32"><path d="M2.5 9.5v15c5-1.6 9.4-1 13.5 1.8 4.1-2.8 8.5-3.4 13.5-1.8v-15" fill="none" stroke="#f7e4b0" stroke-width="2.2" stroke-linejoin="round"/><path d="M4.5 7.2c4-1.2 7.8-.6 11.5 2v15.2c-3.7-2.5-7.5-3.1-11.5-2z" fill="#3a2414" stroke="#f7e4b0" stroke-width="2" stroke-linejoin="round"/><path d="M27.5 7.2c-4-1.2-7.8-.6-11.5 2v15.2c3.7-2.5 7.5-3.1 11.5-2z" fill="#3a2414" stroke="#f7e4b0" stroke-width="2" stroke-linejoin="round"/></svg>',
+target:'<svg viewBox="0 0 40 40"><circle cx="18" cy="22" r="15" fill="#c8562f" stroke="#5a2412" stroke-width="1.4"/><circle cx="18" cy="22" r="11.2" fill="#f6e7c6"/><circle cx="18" cy="22" r="7.6" fill="#c8562f"/><circle cx="18" cy="22" r="4" fill="#f6e7c6"/><circle cx="18" cy="22" r="1.7" fill="#7a2c14"/><path d="M18.6 21.4 33 7" stroke="#5a3a20" stroke-width="2.2" stroke-linecap="round"/><path d="M31 5.2 35.6 3l-1.3 4.7 4.2.4-4 3.3-3.6-.6-.6-3.6z" fill="#d9a441" stroke="#5a3a20" stroke-width="1" stroke-linejoin="round"/></svg>',
+gear:'<svg viewBox="0 0 32 32"><path d="M13.6 2.5h4.8l.8 3.6 2.6 1.1 3.1-2 3.4 3.4-2 3.1 1.1 2.6 3.6.8v4.8l-3.6.8-1.1 2.6 2 3.1-3.4 3.4-3.1-2-2.6 1.1-.8 3.6h-4.8l-.8-3.6-2.6-1.1-3.1 2-3.4-3.4 2-3.1-1.1-2.6-3.6-.8v-4.8l3.6-.8 1.1-2.6-2-3.1 3.4-3.4 3.1 2 2.6-1.1z" fill="#4f7d8c" stroke="#1d3d47" stroke-width="1.3" stroke-linejoin="round"/><circle cx="16" cy="16" r="5" fill="#a9c9d2" stroke="#1d3d47" stroke-width="1.3"/><path d="M8.5 11.5a9 9 0 0 1 6-4.4" stroke="#9cc3ce" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg>',
+terminal:'<svg viewBox="0 0 34 30"><rect x="1.5" y="2" width="31" height="25" rx="4.5" fill="#173039" stroke="#0a181d" stroke-width="1.4"/><rect x="3.5" y="4" width="27" height="21" rx="2.8" fill="#1f3f4a"/><path d="m8 10 5 4-5 4" fill="none" stroke="#eaf5f7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 19.5h8" stroke="#eaf5f7" stroke-width="2.2" stroke-linecap="round"/></svg>',
+window:'<svg viewBox="0 0 32 32"><rect x="2" y="2.5" width="28" height="27" rx="4.5" fill="#2f6676" stroke="#12323b" stroke-width="1.4"/><rect x="5.5" y="6" width="9.6" height="9" rx="1.6" fill="#f4e8c8"/><rect x="17" y="6" width="9.6" height="9" rx="1.6" fill="#f4e8c8"/><rect x="5.5" y="17" width="9.6" height="9" rx="1.6" fill="#f4e8c8"/><rect x="17" y="17" width="9.6" height="9" rx="1.6" fill="#dcebee"/></svg>',
+info:'<svg viewBox="0 0 34 34"><circle cx="17" cy="17" r="14.5" fill="#f2c44f" stroke="#6b4512" stroke-width="1.8"/><circle cx="17" cy="17" r="11.6" fill="none" stroke="#fbe28f" stroke-width="1.2"/><circle cx="17" cy="10.4" r="2" fill="#4a2e0c"/><path d="M14.4 14.6h3.9v8.6h1.6v1.8h-5.6v-1.8h1.5v-6.8h-1.4z" fill="#4a2e0c"/></svg>',
+file:'<svg viewBox="0 0 32 32"><path d="M7 2.5h12.5L26 9v20.5H7z" fill="#f8f0da" stroke="#3a2614" stroke-width="1.4" stroke-linejoin="round"/><path d="M19.5 2.5V9H26" fill="#e7d7ae" stroke="#3a2614" stroke-width="1.4" stroke-linejoin="round"/><path d="M10.5 14h12M10.5 18h12M10.5 22h8" stroke="#8d7651" stroke-width="1.5" stroke-linecap="round"/></svg>',
+chip:'<svg viewBox="0 0 32 32"><path d="M11 3v4M16 3v4M21 3v4M11 25v4M16 25v4M21 25v4M3 11h4M3 16h4M3 21h4M25 11h4M25 16h4M25 21h4" stroke="#b98d35" stroke-width="2" stroke-linecap="round"/><rect x="6.5" y="6.5" width="19" height="19" rx="3" fill="#24434d" stroke="#0f2329" stroke-width="1.4"/><rect x="11" y="11" width="10" height="10" rx="1.5" fill="#6f9cab"/></svg>',
+chain:'<svg viewBox="0 0 32 32"><g fill="none" stroke="#1d3d47" stroke-width="3.4"><rect x="3" y="11" width="15" height="10" rx="5" transform="rotate(-35 10.5 16)"/><rect x="14" y="11" width="15" height="10" rx="5" transform="rotate(-35 21.5 16)"/></g><g fill="none" stroke="#9cc3ce" stroke-width="1.5"><rect x="3" y="11" width="15" height="10" rx="5" transform="rotate(-35 10.5 16)"/><rect x="14" y="11" width="15" height="10" rx="5" transform="rotate(-35 21.5 16)"/></g></svg>',
+box:'<svg viewBox="0 0 32 32"><path d="M3.5 10 16 4l12.5 6v13L16 29 3.5 23z" fill="#a8743f" stroke="#3a2414" stroke-width="1.4" stroke-linejoin="round"/><path d="M3.5 10 16 16l12.5-6M16 16v13" fill="none" stroke="#3a2414" stroke-width="1.4" stroke-linejoin="round"/><path d="M3.5 10 16 16 28.5 10 16 4z" fill="#c9935a" stroke="#3a2414" stroke-width="1.4" stroke-linejoin="round"/><path d="m9.6 7 12.6 6.1v4.6" fill="none" stroke="#f1dca8" stroke-width="2"/></svg>',
+flag:'<svg viewBox="0 0 32 32"><path d="M7 3v27" stroke="#4a3220" stroke-width="2.4" stroke-linecap="round"/><path d="M8 5c5-2 8 2 13 0s5-1 7 0v11c-2-1-3-2-7 0s-8-2-13 0z" fill="#d9a441" stroke="#5a3a1a" stroke-width="1.3" stroke-linejoin="round"/></svg>',
+tag:'<svg viewBox="0 0 32 32"><path d="M3.5 5.5v10L17 29l12-12L15.5 3.5h-10z" fill="#f0c45a" stroke="#6b4512" stroke-width="1.4" stroke-linejoin="round"/><circle cx="10" cy="10" r="2.4" fill="#fbf1d0" stroke="#6b4512" stroke-width="1.3"/></svg>',
+arrow:'<svg viewBox="0 0 32 32"><path d="M3 13h15V7l11 9-11 9v-6H3z" fill="#d9a441" stroke="#5a3a1a" stroke-width="1.4" stroke-linejoin="round"/></svg>',
+list:'<svg viewBox="0 0 32 32"><rect x="4" y="3" width="24" height="26" rx="2.5" fill="#f6ecd2" stroke="#3a2614" stroke-width="1.4"/><g fill="#c8562f"><circle cx="9.5" cy="10" r="1.6"/><circle cx="9.5" cy="16" r="1.6"/><circle cx="9.5" cy="22" r="1.6"/></g><path d="M13 10h10M13 16h10M13 22h7" stroke="#6a5534" stroke-width="1.5" stroke-linecap="round"/></svg>'
+};
+function xcIcon(name,cls=''){return `<span class="xc-icon ${cls}" aria-hidden="true">${XC_ICONS[name]||XC_ICONS.book}</span>`;}
+/* Signpost illustration; the two board words come from the analogy title. */
+function xcSign(title){
+  const words=String(title||'Real-life picture').split(/\s+/),top=words[0]||'',low=words.slice(1).join(' ');
+  const fit=t=>Math.min(14,92/Math.max(1,t.length*.6)).toFixed(1);
+  // Snow on top of a board of width w: numbers are joined with spaces so "16" and ".6" never merge into "16.6".
+  const cap=(x,w,y)=>{const n=v=>+v.toFixed(2),k=f=>n(w*f);
+    return `<path d="M ${[x,n(y+1.5)].join(' ')} q ${[k(.18),-4,k(.42),-2.2].join(' ')} t ${[k(.4),-.6].join(' ')} q ${[k(.14),.4,k(.18),2.2].join(' ')} c ${[-k(.08),1.2,-k(.2),.6,-k(.3),1.6, -k(.1),-1.4,-k(.36),-.4,-k(.5),0, -k(.12),.2,-k(.2),-.4,-k(.2),-1].join(' ')} z" fill="#fbfeff"/>`;};
+  return `<span class="xc-sign" aria-hidden="true"><svg viewBox="0 0 120 96"><path d="M6 94c14-8 34-8 54-7s38 2 54 7z" fill="#e6f3f6"/><g stroke-linecap="round" stroke-width="2" fill="none"><path d="M42 92c-2-6-6-10-11-12M47 91c0-6-2-11-5-14" stroke="#4f7e5c"/><path d="M71 92c2-7 6-11 11-13M76 92c3-5 7-8 12-9M66 91c0-5 1-9 3-12" stroke="#3f6b4c"/></g><rect x="52" y="8" width="10" height="85" rx="2" fill="#5b3c22" stroke="#2f1d0f" stroke-width="1.4"/><path d="M55 14v74" stroke="#75502f" stroke-width="1.4"/><path d="M50.5 9c2-3.6 11-3.6 13 0 .5 1.8-1.4 1.6-2 3-1-1.4-2.6-.8-3.6 0-1-1.2-6-.4-7.4-3z" fill="#fbfeff"/><path d="M4 20h86l12 12-12 12H4z" fill="#86552d" stroke="#2f1d0f" stroke-width="1.6" stroke-linejoin="round"/><path d="M7 27h78M7 37h80" stroke="#6e4423" stroke-width="1.1"/>${cap(4,86,18)}<text x="48" y="37" text-anchor="middle" font-size="${fit(top)}" class="xc-sign-text">${esc(top)}</text><path d="M24 52h80l12 12-12 12H24z" fill="#7d4f2a" stroke="#2f1d0f" stroke-width="1.6" stroke-linejoin="round"/><path d="M27 59h74M27 69h76" stroke="#663f20" stroke-width="1.1"/>${cap(24,80,50)}<text x="66" y="69" text-anchor="middle" font-size="${fit(low)}" class="xc-sign-text">${esc(low)}</text></svg></span>`;
+}
+/* Mark the first whole-word occurrence of each key term with a pill. Matching runs on the raw
+   text, so entities, `code` spans and earlier pills are never split or nested. */
+function xcHighlight(text,terms){
+  text=String(text||'');const taken=[];
+  for(const m of text.matchAll(/`[^`]+`/g))taken.push([m.index,m.index+m[0].length,null]);
+  const word=/\w/,free=(a,b)=>!taken.some(([x,y])=>a<y&&b>x);
+  for(const term of terms||[]){
+    if(!term)continue;
+    for(let i=text.indexOf(term);i>=0;i=text.indexOf(term,i+1)){
+      const j=i+term.length,edge=(word.test(term[0])&&word.test(text[i-1]||''))||(word.test(term[term.length-1])&&word.test(text[j]||''));
+      if(!edge&&free(i,j)){taken.push([i,j,term]);break;}
+    }
+  }
+  let out='',at=0;
+  for(const [i,j,term] of taken.filter(t=>t[2]).sort((p,q)=>p[0]-q[0])){out+=md(text.slice(at,i))+`<mark class="xc-pill${term.length<=18?' xc-nowrap':''}">${md(term)}</mark>`;at=j;}
+  return out+md(text.slice(at));
+}
+function explanationData(b){
+  const c=b.explainCard||{},intro=(b.explain||'').match(/<p>([\s\S]*?)<\/p>/i);
+  return {
+    title:c.title||'Explanation',
+    summary:c.summary||(b.oneLiner?{title:'The idea in one sentence',text:b.oneLiner}:null),
+    analogy:c.analogy||(b.analogy?{title:'Real-life picture',text:b.analogy}:null),
+    concepts:c.concepts||(intro?[{icon:'book',html:intro[1]}]:[]),
+    clarification:c.clarification||'',
+    fullExplanation:c.fullExplanation||b.explain||''
+  };
+}
+function explanationPanel(b){
+  const x=explanationData(b),id=`xc-${b.id}`;
+  const row=c=>`<li>${xcIcon(c.icon)}<p>${c.label?`<mark class="xc-pill xc-label">${esc(c.label)}</mark> `:''}${c.html!=null?c.html:xcHighlight(c.text,c.highlights)}</p></li>`;
+  return `<section class="xcard" aria-labelledby="${id}"><div class="xc-inner">
+<h2 class="xc-plate" id="${id}">${xcIcon('book','xc-plate-icon')}<span>${esc(x.title)}</span></h2>
+${x.summary?`<div class="xc-idea">${xcIcon('target','xc-idea-icon')}<div><h3>${esc(x.summary.title)}:</h3><p>${md(x.summary.text)}</p></div></div>`:''}
+${x.analogy?`<div class="xc-picture">${xcSign(x.analogy.title)}<p><strong>${esc(x.analogy.title)}:</strong> ${md(x.analogy.text)}</p></div>`:''}
+${x.concepts.length?`<ul class="xc-rows">${x.concepts.map(row).join('')}</ul>`:''}
+${x.clarification?`<aside class="xc-note">${xcIcon('info')}<p>${md(x.clarification)}</p></aside>`:''}
+${x.fullExplanation?`<button class="xc-more" data-ui="full-explanation">Read the full explanation <span aria-hidden="true">→</span></button>`:''}
+</div></section>`;
+}
+
 save(); render();
 })();
 </script>

@@ -1,7 +1,7 @@
 <title>__TITLE__</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Merriweather:ital,wght@0,400;0,700;0,900;1,400&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* Layout: debugger-style split. Left "call stack" of parts (future parts locked), right the current part.
    The current step carries the yellow instruction-pointer arrow. The video player lives inside the Watch step. */
@@ -211,6 +211,7 @@ td.mono{font-family:var(--f-mono);font-size:13px;white-space:nowrap}
 .ivsay svg{width:14px;height:14px;fill:currentColor}
 .ivsay.on{background:var(--ip);color:var(--ip-ink);border-color:var(--ip)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/*EXPLAIN_STYLE*/
 </style>
 
 <div class="wrap">
@@ -445,6 +446,7 @@ function loadVideo(file){
 }
 document.addEventListener("keydown",e=>{
   if(!playerBlock||!vw.isConnected) return;
+  if($("#study-dialog")?.open) return;
   if(e.target.closest&&e.target.closest("input,textarea,select,button")) return;
   if(e.code==="Space"){e.preventDefault();vw.querySelector('[data-v="play"]').click()}
   if(e.code==="ArrowLeft"){e.preventDefault();const [st]=range(playerBlock);vid.currentTime=Math.max(st,vid.currentTime-5)}
@@ -483,7 +485,7 @@ function withWords(html,say){
   return html.replace(/<\/pre>|<\/table>/g,m=>{const s=say[n++]; return s?m+inWords(s):m;});
 }
 function ttsSegments(){ // the pieces that have a Kokoro mp3, in reading order (pieces without one are skipped)
-  const pane=$("#pane"); if(!pane) return [];
+  const pane=$("#study-dialog")?.open?$("#dialog-body"):$("#pane"); if(!pane) return [];
   const map=stepAudio()||{};
   const els=[...pane.querySelectorAll("h3,p,li,.callout,.inwords .ln")].filter(el=>!el.closest("pre,table,.listen,details"));
   return els.filter(el=>!els.some(o=>o!==el&&o.contains(el))).map(el=>{const key=el.textContent.replace(/\s+/g," ").trim();
@@ -1104,6 +1106,7 @@ async function chat(){
   try{const r=await sample([{role:"user",content:rules},...log.slice(-8).map(m=>({role:m.r,content:m.c}))],{cache:false,onText:({text})=>{out.textContent=text}});log.push({r:"assistant",c:r.text});save();}
   catch(err){out.textContent=err.text||"Couldn't answer this time. Try again."}
 }
+/*EXPLAIN_APP*/
 save(); render();
 })();
 </script>

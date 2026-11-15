@@ -1,0 +1,75 @@
+/* Explanation card: frosted winter panel with a wooden title plate (see explanation.js). */
+.xcard{--xc-ink:#10262e;--xc-pad:clamp(14px,5cqi,26px);--xc-serif:"Merriweather",Georgia,"Times New Roman",serif;container-type:inline-size;position:relative;margin-top:12px;border:2px solid #163842;border-radius:22px;color:var(--xc-ink);font-family:var(--xc-serif);
+  background:
+    linear-gradient(0deg,#1d5361 0,#1d5361e0 46px,#0000 150px),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .06 0 0 0 0 .2 0 0 0 0 .24 0 0 0 .16 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='480'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.011' numOctaves='3' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .5 -.12'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E"),
+    radial-gradient(130% 85% at 50% 30%,#bddbe0 0%,#a4c9d0 40%,#80b1bc 70%,#4d8592 100%);
+  box-shadow:0 10px 22px #04202859,0 2px 0 #0a2a3240,inset 0 0 0 1px #6fa5b2,inset 0 0 40px #2a6370;}
+/* Snow resting on the top edge, heavier at the corners. */
+.xcard::before{content:"";position:absolute;left:-4px;right:-4px;top:-12px;height:34px;z-index:2;pointer-events:none;filter:drop-shadow(0 1px 1px #0b3a4559);
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 34' preserveAspectRatio='none'%3E%3Cpath transform='translate(0 2)' fill='%23b9d7e0' d='M0 14C6 6 16 3 30 4c30 2 60-1 100 1s80-1 120 0 80-2 110-1c20 0 34 3 40 10v8c-3 2-5 8-9 9-3 0-3-7-7-9-8-2-16 1-24-1s-30-2-60-1-60-1-90 0-60-1-90 0-50-1-70 0c-10 1-20 0-26 2-5 2-5 11-10 11-4 0-3-9-8-12-3-1-5-3-6-4z'/%3E%3Cpath fill='%23fbfeff' d='M0 14C6 6 16 3 30 4c30 2 60-1 100 1s80-1 120 0 80-2 110-1c20 0 34 3 40 10v8c-3 2-5 8-9 9-3 0-3-7-7-9-8-2-16 1-24-1s-30-2-60-1-60-1-90 0-60-1-90 0-50-1-70 0c-10 1-20 0-26 2-5 2-5 11-10 11-4 0-3-9-8-12-3-1-5-3-6-4z'/%3E%3C/svg%3E") top/100% 100% no-repeat;}
+.xc-inner{position:relative;margin:6px;padding:0 var(--xc-pad) clamp(16px,4.6cqi,26px);border:1.5px solid #e2f3f6b8;border-radius:16px;box-shadow:inset 0 1px 0 #ffffff59}
+.xcard .xc-icon{display:block;flex:none}
+.xcard .xc-icon svg{display:block;width:100%;height:auto}
+
+/* 2 · Wooden title plate */
+.xcard .xc-plate{position:relative;z-index:3;display:inline-flex;align-items:center;gap:.42em;margin:-15px 0 clamp(12px,4cqi,20px) calc(-1 * var(--xc-pad) - 12px);padding:.3em 1.35em .34em 1.3em;min-width:min(66%,380px);font:900 clamp(22px,6.6cqi,34px)/1.12 var(--xc-serif);letter-spacing:-.01em;color:#f8e6b2;text-shadow:0 2px 0 #1b0f06,0 -1px 0 #0006;border:1.5px solid #1e130a;border-radius:6px 12px 10px 5px / 8px 6px 12px 9px;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='70'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.006 .32' numOctaves='3' seed='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .1 0 0 0 0 .06 0 0 0 0 .02 0 0 0 .7 -.1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23w)'/%3E%3C/svg%3E"),
+    linear-gradient(180deg,#704d32 0%,#5a3c24 42%,#43291a 100%);
+  box-shadow:inset 0 2px 0 #a07a55aa,inset 0 -3px 0 #22150ccc,0 4px 6px #062a3366}
+.xcard .xc-plate::before{content:"";position:absolute;left:-4px;right:-5px;top:-7px;height:19px;filter:drop-shadow(0 1px 0 #2a1a0d66);pointer-events:none;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 20' preserveAspectRatio='none'%3E%3Cpath fill='%23f7fcfe' d='M0 9C3 4 10 2 22 3c14 1 22-2 40-1s30 2 50 0 34-1 52 0c14 1 24 1 30 3 4 1 6 3 6 6v3c-2 1-3 5-6 5s-3-4-6-4c-10 0-22 1-34 0s-30 1-46 0-26-1-40 0c-8 0-9 4-12 4s-3-4-6-4c-8 0-14 1-20 0-6-1-10-3-10-5z'/%3E%3C/svg%3E") top/100% 100% no-repeat}
+.xcard .xc-plate::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 13px 52%,#d7c6a6 0 1.3px,#21140a 1.9px 3.6px,#0000 4.1px),radial-gradient(circle at calc(100% - 13px) 52%,#d7c6a6 0 1.3px,#21140a 1.9px 3.6px,#0000 4.1px)}
+.xcard .xc-plate-icon{width:1.12em;filter:drop-shadow(0 2px 0 #1b0f06)}
+
+/* 3 · The idea in one sentence: amber brush stroke, the strongest highlight */
+.xc-idea{position:relative;display:grid;grid-template-columns:auto minmax(0,1fr);gap:clamp(10px,3cqi,16px);align-items:start;margin:0 calc(-.55 * var(--xc-pad)) clamp(12px,3.8cqi,20px);padding:clamp(12px,3.4cqi,18px) clamp(14px,4.6cqi,26px) clamp(14px,3.8cqi,20px) clamp(10px,3cqi,16px);
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 140' preserveAspectRatio='none'%3E%3Cdefs%3E%3ClinearGradient id='g' x2='1'%3E%3Cstop offset='0' stop-color='%23f2cf78' stop-opacity='0'/%3E%3Cstop offset='.07' stop-color='%23f2cf78' stop-opacity='.92'/%3E%3Cstop offset='.5' stop-color='%23f8e2a6'/%3E%3Cstop offset='.92' stop-color='%23f0ca72' stop-opacity='.92'/%3E%3Cstop offset='1' stop-color='%23f0ca72' stop-opacity='0'/%3E%3C/linearGradient%3E%3Cfilter id='r' x='-6%25' y='-12%25' width='112%25' height='124%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012 .2' numOctaves='3' seed='5'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='24'/%3E%3C/filter%3E%3C/defs%3E%3Cpath filter='url(%23r)' fill='url(%23g)' d='M14 16C80 5 220 12 300 7s80 6 92 12l-4 104c-88 10-228 4-298 8S18 128 10 118z'/%3E%3Cpath filter='url(%23r)' stroke='%23fcefc9' stroke-width='5' opacity='.55' d='M32 36h330M22 76h352M44 110h300'/%3E%3C/svg%3E") center/100% 100% no-repeat}
+.xc-idea-icon{width:clamp(38px,11cqi,56px);margin-top:.2em;filter:drop-shadow(0 2px 1px #6b3f1a40)}
+.xcard .xc-idea h3{margin:0 0 .18em;font:900 clamp(18px,5.3cqi,27px)/1.2 var(--xc-serif);letter-spacing:-.01em;color:#1d1307}
+.xc-idea p{margin:0;font:400 clamp(15px,4.2cqi,21px)/1.45 var(--xc-serif);color:#1b1910}
+
+/* 4 · Real-life picture: brighter frosted box with a signpost */
+.xc-picture{display:grid;grid-template-columns:clamp(96px,28cqi,132px) minmax(0,1fr);align-items:center;margin-bottom:clamp(8px,2.4cqi,14px);padding:clamp(8px,2.2cqi,12px) clamp(12px,3.6cqi,18px) clamp(8px,2.2cqi,12px) clamp(6px,2cqi,10px);border:1.5px solid #eef9fb;border-radius:16px;background:linear-gradient(180deg,#d4eaef,#bcdbe2);box-shadow:inset 0 1px 0 #fff9,inset 0 -10px 18px #8fbfcb59,0 2px 5px #0f465238}
+.xc-sign svg{display:block;width:100%;height:auto}
+.xc-sign-text{font-family:var(--xc-serif);font-weight:900;fill:#f7e3ad;paint-order:stroke;stroke:#2a170a;stroke-width:.7px}
+.xc-picture p{margin:0 0 0 clamp(8px,2.4cqi,14px);padding:.15em 0 .15em clamp(10px,3cqi,16px);border-left:1.5px solid #3f6f7b;font:400 clamp(14.5px,4cqi,19.5px)/1.45 var(--xc-serif)}
+.xc-picture strong{font-weight:900;color:#0c1f26}
+
+/* 5 · Core technical rows */
+.xc-rows{list-style:none;margin:0 0 clamp(8px,2.4cqi,14px);padding:0}
+.xc-rows li{position:relative;display:grid;grid-template-columns:clamp(34px,9.6cqi,48px) minmax(0,1fr);gap:clamp(10px,3cqi,16px);align-items:center;padding:clamp(9px,2.7cqi,14px) clamp(4px,1.8cqi,12px)}
+.xc-rows li+li::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(180deg,#4a808c8c 50%,#e4f4f7a6 50%);-webkit-mask-image:linear-gradient(90deg,#0000,#000 8%,#000 92%,#0000);mask-image:linear-gradient(90deg,#0000,#000 8%,#000 92%,#0000)}
+.xc-rows .xc-icon{filter:drop-shadow(0 1.5px 0 #0b2e363d)}
+.xc-rows p{margin:0;font:400 clamp(14.5px,4.1cqi,20px)/1.5 var(--xc-serif)}
+.xcard .xc-pill{background:linear-gradient(180deg,#fce59f,#f6d47e);color:#22160a;font-weight:900;padding:.06em .55em .1em;border-radius:.75em;box-shadow:inset 0 -1px 0 #d8ac50,0 0 0 1px #efce7c;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.xcard .xc-label,.xcard .xc-nowrap{white-space:nowrap}
+.xcard .xc-label{font-family:var(--f-display);font-weight:800;letter-spacing:.03em}
+.xcard code{font-family:var(--f-mono);font-size:.84em;padding:0 .25em;border-radius:4px;background:#e8f4f7b3;color:#123540}
+
+/* 6 · Clarification: parchment callout */
+.xc-note{display:grid;grid-template-columns:clamp(30px,8.6cqi,42px) minmax(0,1fr);gap:clamp(10px,3cqi,16px);align-items:start;margin:clamp(6px,2cqi,10px) 0 clamp(18px,5cqi,28px);padding:clamp(12px,3.6cqi,18px) clamp(14px,4cqi,22px);border:1.5px solid #d6b45a;border-radius:16px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .4 0 0 0 0 .32 0 0 0 0 .15 0 0 0 .12 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E"),linear-gradient(180deg,#f3efda,#e4e0c5);
+  box-shadow:inset 0 1px 0 #fffbea,inset 0 0 0 3px #faf5df80,0 3px 7px #0d3e4a38}
+.xc-note .xc-icon{margin-top:.1em;filter:drop-shadow(0 1.5px 0 #6b451240)}
+.xc-note p{margin:0;font:italic 400 clamp(14.5px,4cqi,19.5px)/1.5 var(--xc-serif);color:#29251a}
+
+/* 7 · Read the full explanation */
+.xcard .xc-more{display:inline-flex;align-items:center;gap:.4em;margin:0 0 0 2px;padding:0 0 .28em;background:none;border:0;border-bottom:1.5px solid #e8cb6e;border-radius:0;font:700 clamp(19px,4.8cqi,22px)/1.2 var(--xc-serif);color:#f6e3a1;text-shadow:0 1px 2px #0a2b34e6,0 0 10px #0a2b3599;cursor:pointer;transition:color .15s,border-color .15s}
+.xcard .xc-more span{display:inline-block;transition:transform .15s}
+.xcard .xc-more:hover{color:#fff3c6;border-color:#ffe08a}
+.xcard .xc-more:hover span{transform:translateX(3px)}
+.xcard .xc-more:focus-visible{outline:3px solid #fff6d6;outline-offset:4px;border-radius:4px;box-shadow:0 0 0 7px #0b2e36}
+
+/* Narrow cards: keep icons beside the text, trim only the spacing. */
+@container (max-width:340px){
+  .xcard .xc-plate{min-width:0}
+}
+/* Narrow: the signpost sits above the analogy so both stay readable. */
+@container (max-width:380px){
+  .xc-picture{grid-template-columns:1fr;justify-items:center}
+  .xc-sign{width:128px}
+  .xc-picture p{justify-self:stretch;margin:6px 0 0;padding:8px 0 0;border-left:0;border-top:1.5px solid #3f6f7b}
+}

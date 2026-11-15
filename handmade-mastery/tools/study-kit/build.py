@@ -9,6 +9,8 @@ import json, pathlib, re, sys
 here = pathlib.Path(__file__).parent
 day = pathlib.Path(sys.argv[1])
 engine = (here / "engine.html").read_text(encoding="utf-8")
+engine = engine.replace("/*EXPLAIN_STYLE*/", (here / "explanation.css").read_text(encoding="utf-8"))
+engine = engine.replace("/*EXPLAIN_APP*/", (here / "explanation.js").read_text(encoding="utf-8"))
 data = (day / "data.js").read_text(encoding="utf-8")
 if "</script" in data.lower():
     sys.exit("data.js must not contain </script>")

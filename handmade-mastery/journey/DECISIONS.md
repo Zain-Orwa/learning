@@ -253,3 +253,21 @@ Newest at the bottom. Each entry: date, decision, why.
   No real learner results were generated. Also corrected a missing-asset
   logging error found in that preview. Windows compilation was not needed
   for this study-tool change; learner code was not edited.
+
+## 2026-11-15: Explanation panel as a visual learning card
+- The Explain view's Explanation panel is now a reusable, data-driven card
+  (`tools/study-kit/explanation.js` + `explanation.css`), built to Zain's
+  reference image: wooden title plate, amber "idea in one sentence", signpost
+  "Real-life picture", short concept rows with yellow key-term pills, a
+  parchment clarification, and "Read the full explanation" opening the full
+  notes (with Listen and "In words") in the dialog.
+- Content per part lives in `data.js` as `explainCard` (concept rows +
+  clarification), drawn only from each part's existing explain notes and
+  reviewed for accuracy. Parts without a card fall back to the first paragraph.
+- The separate "Key Takeaway" box is hidden when the card already shows the
+  same one-sentence idea, so it is not read twice.
+- The component loads through its own build slots (`/*EXPLAIN_STYLE*/`,
+  `/*EXPLAIN_APP*/`) and is committed separately from the unfinished winter
+  lesson layout. That layout (`winter.js`) is what places the card on the
+  Explain view and opens the full-explanation dialog; the Takeaway rule and
+  dialog wiring live there and ship with it.
