@@ -319,3 +319,11 @@ Newest at the bottom. Each entry: date, decision, why.
   a muted pine-green tint across the whole card, a checkmark and their
   existing Finished/Checked label. The current part uses an amber border
   and heading tint. No completion state is inferred from merely opening it.
+
+
+## 2026-11-15: Persist completed and selected study tabs
+- Completed tabs show a tick and muted green treatment; the selected tab
+  stays amber. Required steps save and advance through the existing flow.
+- Supporting views have an explicit Mark finished action, recorded separately
+  from required progress. Merely browsing never counts as completion.
+- Selected views are saved per part and restored when reloading the helper.

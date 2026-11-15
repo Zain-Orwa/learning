@@ -59,3 +59,5 @@ dialog{padding:0;width:min(730px,calc(100vw - 32px));max-height:85vh;border:1px 
 .course-group.is-current>summary:hover,.course-group.is-current>summary:focus-visible{background:#dbaf4e45;color:#fff7dc}
 .part-lessons .btn:not(:disabled):hover{background:#f8e3af;color:#25434b;border-color:#efc778}
 @media(prefers-reduced-motion:reduce){.course-group,.course-group>summary{transition:none}}
+
+.study-navigation button.is-finished{color:#d9f0d8;background:#447a613d;box-shadow:inset 0 -2px #8fbd98;border-radius:8px 8px 0 0}.study-navigation button.is-finished .step-check{color:#bce0af}.study-navigation button:hover{background:#75bfc12e;color:#fff1be}.study-navigation button[aria-selected="true"],.study-navigation button.is-finished[aria-selected="true"]{color:#35280d;background:linear-gradient(#fff3b5,#efb448);border-radius:10px;box-shadow:inset 0 0 0 2px #fff0b2,0 0 10px #ffc55980}.study-navigation button[aria-selected="true"] .step-check{color:#30573b}

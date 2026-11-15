@@ -80,3 +80,6 @@ return 404, so it is not the owning account.
 
 - Sidebar states: finished parts have a green-teal tint/checkmark; the current
   part has amber accents. Part headings highlight on hover and keyboard focus.
+
+- Completed study tabs retain ticks and green coloring; selected views are
+  saved per part. Optional-view completion stays separate from core progress.

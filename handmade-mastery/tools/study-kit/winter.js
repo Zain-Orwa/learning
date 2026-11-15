@@ -19,8 +19,11 @@ function overview(b){return `<div class="study-primary" id="pane"><div class="le
 
 function deferredTitle(text){return plainText(text).split(/\s*\(/)[0].replace(/\.\s+He says.*$/,'');}
 function toolsRail(b){const deferred=b.deferred||[],count=(b.cards||[]).length;return `<aside class="learning-tools" aria-label="Learning tools"><section class="tool-card flashcard-tool"><h2 class="wood">${uiIcon('cards')} Flashcards</h2><div class="tool-body"><div class="card-illustration" aria-hidden="true"><span></span><span></span><span>✦</span></div><p>Key concepts from this lesson.</p><span class="count-pill">${count} card${count===1?'':'s'}</span><button class="btn amber" data-ui="flashcards" ${count?'':'disabled'}>Study Flashcards →</button></div></section><section class="tool-card"><h2>${uiIcon('flask')} Experiment / Prediction</h2><div class="tool-body"><p>Before trying it, make a prediction:</p><div class="prediction-prompt">${md(b.guess||checkFor(b).q)}</div><button class="btn amber" data-ui="prediction">${uiIcon('play')} Make a Prediction</button><button class="btn ghost" data-ui="experiment">${uiIcon('flask')} Run Experiment</button></div></section><section class="tool-card"><h2>${uiIcon('layers')} Deferred Topics</h2><div class="tool-body"><p>Important ideas we'll come back to later.</p>${deferred.length?`<ul class="deferred-list">${deferred.slice(0,4).map((text,i)=>`<li><button data-ui="deferred" data-index="${i}">${esc(deferredTitle(text))}</button></li>`).join('')}</ul>`:`<p class="empty-tool">No deferred topics in this part.</p>`}</div></section></aside>`;}
-function selectStudyView(key){if(!VIEW_STEPS.some(([k])=>k===key))return false;referenceStep=key;flashcardIndex=0;flashcardAnswer=false;return true;}
-function navigationHTML(b){const current=referenceStep||S.step;return `<nav class="study-navigation" role="tablist" aria-label="Study workflow">${VIEW_STEPS.map(([key,label,icon])=>{const done=STEPS.some(([k])=>k===key)&&!!((S.done[b.id]||{})[key]);return `<button id="study-tab-${key}" role="tab" data-view="${key}" aria-controls="lesson-panel" aria-selected="${current===key}" tabindex="${current===key?0:-1}">${uiIcon(icon)}${label}${done?'<span class="step-check" aria-label="Completed">✓</span>':''}</button>`;}).join('')}</nav>`;}
+function selectStudyView(key){if(!VIEW_STEPS.some(([k])=>k===key))return false;referenceStep=key;S.lessonViews=S.lessonViews||{};S.lessonViews[S.cur]=key;save();flashcardIndex=0;flashcardAnswer=false;return true;}
+function tabFinished(b,key){return !!((STEPS.some(([k])=>k===key)&&(S.done[b.id]||{})[key])||(S.optionalDone?.[b.id]||{})[key]||(key==='answer'&&S.checkFb[b.id]?.score>=80));}
+function finishSupportView(){const b=activeLesson(),view=referenceStep||S.step;if(STEPS.some(([k])=>k===view))return false;if(view==='guess'&&!(S.predictions?.[b.id]||'').trim()){toast('Write a short prediction first.');return false;}S.optionalDone=S.optionalDone||{};(S.optionalDone[b.id]=S.optionalDone[b.id]||{})[view]=true;const i=VIEW_STEPS.findIndex(([k])=>k===view);selectStudyView(VIEW_STEPS[Math.min(i+1,VIEW_STEPS.length-1)][0]);save();return true;}
+function supportFinishButton(b,view){return !STEPS.some(([k])=>k===view)?`<div class="lesson-action"><button class="btn amber" data-ui="finish-support">${tabFinished(b,view)?'Completed ✓ · Continue →':'Mark finished ✓ · Continue →'}</button></div>`:'';}
+function navigationHTML(b){const current=referenceStep||S.step;return `<nav class="study-navigation" role="tablist" aria-label="Study workflow">${VIEW_STEPS.map(([key,label,icon])=>{const done=tabFinished(b,key);return `<button id="study-tab-${key}" role="tab" class="${done?'is-finished':''}" data-view="${key}" aria-controls="lesson-panel" aria-selected="${current===key}" tabindex="${current===key?0:-1}">${uiIcon(icon)}${label}${done?'<span class="step-check" aria-label="Completed">✓</span>':''}</button>`;}).join('')}</nav>`;}
 
 const baseRenderStepRaw=renderStepRaw;
 renderStepRaw=function(b,key){
@@ -35,7 +38,7 @@ renderPath=function(){
   if(S.cur==='__qa')return `<section class="block"><h2>Questions &amp; answers</h2>${D.qa?.html||''}<div id="nextbox"></div></section>`;
   const b=activeLesson(),view=referenceStep||S.step;
   const content=view==='explain'?overview(b):`<section class="frost-card reading-pane study-primary"><div class="pane" id="pane">${renderStep(b,view)}</div>${STEPS.some(([k])=>k===view)&&stepOpen(b,view)?`<div class="next"><button class="btn amber" data-ui="advance-view">${view==='watch'?'I watched it → Recall':view==='recall'?'Continue to practice →':'Finish part'}</button></div>`:''}</section>`;
-  return `<header class="lesson-header"><div><div class="eyebrow">Part ${idxOf(b)+1} of ${D.blocks.length}</div><h1>Day 1 — ${esc(b.title)}</h1></div><span class="tsr">▶ ${b.start} – ${b.end}</span></header>${navigationHTML(b)}<div class="lesson-columns"><div id="lesson-panel" role="tabpanel" aria-labelledby="study-tab-${view}">${content}</div>${toolsRail(b)}</div>`;
+  return `<header class="lesson-header"><div><div class="eyebrow">Part ${idxOf(b)+1} of ${D.blocks.length}</div><h1>Day 1 — ${esc(b.title)}</h1></div><span class="tsr">▶ ${b.start} – ${b.end}</span></header>${navigationHTML(b)}<div class="lesson-columns"><div id="lesson-panel" role="tabpanel" aria-labelledby="study-tab-${view}">${content}${supportFinishButton(b,view)}</div>${toolsRail(b)}</div>`;
 };
 function courseTreeHTML(){
   const f=frontier();
@@ -98,6 +101,7 @@ document.addEventListener('click',async e=>{
   if(target.dataset.sess||target.dataset.reference||target.dataset.practicepart){closeDialog();return;}
   if(target.dataset.view){closeDialog();selectStudyView(target.dataset.view);render();return;}
   const b=activeLesson(),action=target.dataset.ui;
+  if(action==='finish-support'){if(finishSupportView())render();return;}
   if(action==='advance-view'){const view=referenceStep||S.step;if(STEPS.some(([k])=>k===view)&&stepOpen(b,view)){S.step=view;goNextStep();}return;}
   if(action==='home'){e.preventDefault();S.tab='path';referenceStep='explain';save();render();}
   if(action==='courses')document.body.classList.toggle('courses-open');

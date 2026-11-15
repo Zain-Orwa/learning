@@ -302,7 +302,7 @@ helperSample.json=async input=>(await helperCall(input,true)).data;
     const ping=await (await fetch("/api/ping")).json(); if(!ping.ok) return;
     const remote=await (await fetch("/api/progress?kit="+encodeURIComponent(kitPath))).json();
     if(remote&&remote.lastVisit&&remote.lastVisit>=localLast){
-      S=Object.assign(JSON.parse(JSON.stringify(FRESH)),remote); migrate(); S.tab="path";
+      S=Object.assign(JSON.parse(JSON.stringify(FRESH)),remote); migrate(); S.tab="path"; referenceStep=S.lessonViews?.[S.cur]||S.step;
       S.stopped=false;
       welcome=(Date.now()-remote.lastVisit>30*60*1000)&&Object.keys(S.done).length>0;
       if(welcome){S.sessionParts=0;S.brk=null;S.stopped=false;S.session=null;}
@@ -471,7 +471,7 @@ document.addEventListener("keydown",e=>{
    D.audio = {blockId: {step: {text: "audio/file.mp3"}}}. The browser's own voice is never used: a piece
    with no mp3 (or a file that fails to load) is skipped. */
 const AUD=D.audio||{}, AU=new Audio();
-let referenceStep="explain";
+let referenceStep=S.lessonViews?.[S.cur]||"explain";
 let tts={segs:[],i:0,on:false,gen:0};
 const stepAudio=()=>(AUD[S.cur]||{})[referenceStep||S.step]||null;
 const ttsHint=()=>"Natural voice. Code is read as the “In words” version.";
@@ -1016,6 +1016,7 @@ function goNextStep(){
     if(nb){S.cur=nb.id;S.step="watch";S.brk=S.sessionParts%LONG_EVERY===0?{from:b.id,until:null}:null;}
     else{S.cur=D.qa?"__qa":b.id; toast("Last part finished");}
   }
+  S.lessonViews=S.lessonViews||{};S.lessonViews[S.cur]=S.step;
   save();render();window.scrollTo({top:0});
 }
 function addPark(){
