@@ -1,8 +1,8 @@
 {
- "v": 3,
+ "v": 4,
  "cur": "b03",
  "step": "watch",
- "tab": "review",
+ "tab": "path",
  "done": {
   "b01": {
    "guess": true,
@@ -152,10 +152,7 @@
  "dbgs": {},
  "dbgans": {},
  "dbgfb": {},
- "session": {
-  "start": 1794759059224,
-  "min": 60
- },
+ "session": null,
  "park": {},
  "answers": {
   "b01?0": "so as a beginner also can follow along during the series, because he mentioned that he will not stop and explain basic things like what is ?: operators do. and addition to that is like a testing for the series.",
@@ -348,6 +345,8 @@
  },
  "checkAnswers": {},
  "checkFb": {},
+ "checkAttempts": {},
+ "reviewChecks": {},
  "practice": {},
  "practiceDone": {},
  "notes": {
@@ -363,9 +362,10 @@
   ]
  },
  "speed": 1.25,
- "lastVisit": 1794759071741,
+ "lastVisit": 1794780398940,
  "sessionParts": 0,
  "brk": null,
  "stopped": false,
- "finished": false
+ "finished": false,
+ "ttsRate": 1.25
 }

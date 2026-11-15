@@ -211,20 +211,33 @@ td.mono{font-family:var(--f-mono);font-size:13px;white-space:nowrap}
 .ivsay svg{width:14px;height:14px;fill:currentColor}
 .ivsay.on{background:var(--ip);color:var(--ip-ink);border-color:var(--ip)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/*WINTER_STYLE*/
 /*EXPLAIN_STYLE*/
 </style>
 
-<div class="wrap">
-  <header class="top">
-    <div>
-      <div class="eyebrow" id="eyebrow"></div>
-      <h1 id="h1"></h1>
+<div class="app-shell">
+  <header class="winter-header">
+    <button class="icon-button mobile-menu" data-ui="courses" aria-label="Open course navigation">☰</button>
+    <a class="brand" href="#" data-ui="home"><span class="brand-cabin" aria-hidden="true"></span><span>Handmade Hero Study Platform</span></a>
+    <div class="header-controls">
+      <div class="search-wrap"><span class="search-symbol" aria-hidden="true">⌕</span><input id="lesson-search" type="search" placeholder="Search lessons, topics, code…" aria-label="Search lessons, topics, code" aria-controls="search-results" aria-expanded="false" autocomplete="off"><kbd>⌘K</kbd><div id="search-results" class="search-results" hidden></div></div>
+      <button class="icon-button notifications" id="notifications-button" data-ui="notifications" aria-label="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg><i id="notification-dot" hidden></i></button>
+      <div class="profile-wrap"><button id="profile-button" class="profile-button" data-ui="profile" aria-expanded="false" aria-controls="profile-popover"><span class="avatar" aria-hidden="true">Z</span><span id="profile-name">Zain</span><span aria-hidden="true">⌄</span></button>
+      <div id="profile-popover" class="profile-popover" hidden><nav class="tabs" id="tabs" aria-label="Study tools"></nav><button data-ui="planner">Plan this session</button><button data-ui="history">Study history</button><button data-ui="rename">Edit profile name</button><button data-go="stop">Stop for today</button><p id="saved" role="status">Saved in this browser</p><span id="timer" hidden></span></div></div>
     </div>
-    <div class="meter" aria-live="polite"><span id="pct">0%</span><span class="bar"><i id="pctbar" style="width:0"></i></span><span id="saved" class="small">saved in this browser</span><span id="timer" class="small" hidden></span></div>
   </header>
-  <nav class="tabs" id="tabs" aria-label="Sections"></nav>
-  <main id="view"></main>
+  <div class="app-layout">
+    <aside class="course-sidebar" id="course-sidebar" aria-label="Course navigation">
+      <div class="course-heading"><h2>Handmade Hero</h2><p>Complete Study Courses</p></div>
+      <div class="course-progress"><div><span id="course-position">Part 1 of 12</span><span id="pct">0%</span></div><span class="progress-track"><i id="pctbar"></i></span></div>
+      <nav id="course-tree" aria-label="Course sections"></nav>
+      <div class="sidebar-scenery" aria-hidden="true"></div>
+    </aside>
+    <button class="sidebar-backdrop" data-ui="courses" aria-label="Close course navigation" hidden></button>
+    <main id="view" class="lesson-surface"></main>
+  </div>
 </div>
+<dialog id="study-dialog" aria-labelledby="dialog-title"><div class="dialog-heading"><h2 id="dialog-title"></h2><button class="icon-button" data-ui="close-dialog" aria-label="Close dialog">×</button></div><div id="dialog-body"></div></dialog>
 <div class="toast" id="toast" role="status"></div>
 
 <script>
@@ -242,7 +255,7 @@ const secs = t=>String(t).split(":").reduce((a,x)=>a*60+(+x),0);
 const fmt = s=>{s=Math.max(0,Math.round(s));const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return (h?h+":"+String(m).padStart(2,"0"):m)+":"+String(x).padStart(2,"0")};
 const md = s=>esc(s).replace(/`([^`]+)`/g,"<code>$1</code>").replace(/\*\*([^*]+)\*\*/g,"<b>$1</b>");
 
-$("#eyebrow").textContent=D.eyebrow||""; $("#h1").textContent=D.title||document.title;
+document.title=D.title+" · Handmade Hero Study Platform";
 
 /* ---------- state + persistence ---------- */
 const FRESH={v:4,cur:D.blocks[0].id,step:"watch",tab:"path",done:{},completed:{},vt:{},recall:{},cmp:{},guess:{},guesses:{},lb:{},lbShow:{},rfb:{},cdate:{},ivans:{},ivfb:{},dbgs:{},dbgans:{},dbgfb:{},session:null,park:{},answers:{},fb:{},cards:{},checkAnswers:{},checkFb:{},checkAttempts:{},reviewChecks:{},practice:{},practiceDone:{},notes:{},speed:1,lastVisit:0,sessionParts:0,brk:null,stopped:false};
@@ -289,7 +302,7 @@ helperSample.json=async input=>(await helperCall(input,true)).data;
     const ping=await (await fetch("/api/ping")).json(); if(!ping.ok) return;
     const remote=await (await fetch("/api/progress?kit="+encodeURIComponent(kitPath))).json();
     if(remote&&remote.lastVisit&&remote.lastVisit>=localLast){
-      S=Object.assign(JSON.parse(JSON.stringify(FRESH)),remote); migrate();
+      S=Object.assign(JSON.parse(JSON.stringify(FRESH)),remote); migrate(); S.tab="path";
       S.stopped=false;
       welcome=(Date.now()-remote.lastVisit>30*60*1000)&&Object.keys(S.done).length>0;
       if(welcome){S.sessionParts=0;S.brk=null;S.stopped=false;S.session=null;}
@@ -411,6 +424,7 @@ function ptick(){
   if(vid.currentTime>=en-0.05){ if(!vid.paused) vid.pause(); if(Math.abs(vid.currentTime-en)>0.2) vid.currentTime=en; partEnded(); }
   const t=Math.min(Math.max(vid.currentTime,st),en);
   vw.querySelector(".pbar i").style.width=((t-st)/(en-st)*100)+"%";
+  vw.querySelector(".pbar").setAttribute("aria-valuenow",String(Math.round((t-st)/(en-st)*100)));
   vw.querySelector(".ptime").textContent=fmt(t-st)+" / "+fmt(en-st);
   const pb=vw.querySelector('[data-v="play"]'), st2=vid.paused?"play":"pause"; if(pb.dataset.icon!==st2){pb.dataset.icon=st2;pb.innerHTML=ICON[st2];pb.setAttribute("aria-label",vid.paused?"Play":"Pause");pb.title=vid.paused?"Play (Space)":"Pause (Space)";}
   if(Date.now()-lastSave>3000){lastSave=Date.now();S.vt[b.id]=t;save();}
@@ -457,7 +471,7 @@ document.addEventListener("keydown",e=>{
    D.audio = {blockId: {step: {text: "audio/file.mp3"}}}. The browser's own voice is never used: a piece
    with no mp3 (or a file that fails to load) is skipped. */
 const AUD=D.audio||{}, AU=new Audio();
-let referenceStep=null;
+let referenceStep="explain";
 let tts={segs:[],i:0,on:false,gen:0};
 const stepAudio=()=>(AUD[S.cur]||{})[referenceStep||S.step]||null;
 const ttsHint=()=>"Natural voice. Code is read as the “In words” version.";
@@ -989,6 +1003,7 @@ function render(){
   autoAsk();
 }
 function goNextStep(){
+  referenceStep=null;
   const b=blockById(S.cur); if(!b) return;
   if(S.step==="recall"&&!(S.checkAnswers[b.id]||"").trim()){toast("Try a short answer first.");return}
   if(S.step==="experiment"&&!(S.practice[b.id]||"").trim()){toast("Note the result, or what remains to do.");return}
@@ -1009,7 +1024,7 @@ function addPark(){
   inp.value=""; save(); $("#plist").innerHTML=parkItems(b,false); toast("Parked. Keep watching.");
 }
 $("#view").addEventListener("keydown",e=>{ if(e.target.id==="parkin"&&e.key==="Enter"){e.preventDefault();addPark();} });
-$("#view").addEventListener("click",async e=>{
+document.addEventListener("click",async e=>{
   const t=e.target.closest("button"); if(!t) return;
   if(t.dataset.reference){referenceStep=t.dataset.reference==="back"?null:t.dataset.reference;render();return}
   if(t.dataset.practicepart){const b=blockById(t.dataset.practicepart);if(b&&S.completed[b.id]){referenceStep=null;welcome=false;S.stopped=false;S.brk=null;S.cur=b.id;S.step="experiment";S.tab="path";save();render();}return}
@@ -1024,7 +1039,7 @@ $("#view").addEventListener("click",async e=>{
     if(g==="resume"){S.stopped=false;save();render();return}
     if(g==="copypos"){copy(positionText(),$("#poscb"));return}
   }
-  if(t.dataset.blk){referenceStep=null;welcome=false;S.cur=t.dataset.blk;const b=blockById(S.cur);S.step=b?(stepsFor(b).find(([k])=>!(S.done[b.id]||{})[k])||["watch"])[0]:"watch";save();render();$(".block")?.scrollIntoView({block:"start"});return}
+  if(t.dataset.blk){referenceStep="explain";welcome=false;S.tab="path";S.cur=t.dataset.blk;const b=blockById(S.cur);S.step=b?(stepsFor(b).find(([k])=>!(S.done[b.id]||{})[k])||["watch"])[0]:"watch";save();render();$(".block")?.scrollIntoView({block:"start"});return}
   if(t.dataset.step){referenceStep=null;S.step=t.dataset.step;save();render();return}
   if(t.id==="reloadreviews"){refreshReviews();return}
   if(["checkreview","copyreview","savereview"].includes(t.id)){
@@ -1085,7 +1100,7 @@ $("#view").addEventListener("click",async e=>{
     else{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([rows],{type:"text/tab-separated-values"}));a.download=name;a.click();}
     return}
 });
-$("#view").addEventListener("input",e=>{
+document.addEventListener("input",e=>{
   const sc=e.target.dataset.shortcheck;if(sc){S.checkAnswers[sc]=e.target.value;delete S.checkFb[sc];const fb=$("#quickfb");if(fb)fb.innerHTML="";save()}
   const pd=e.target.dataset.practiced;if(pd){S.practiceDone[pd]=e.target.checked;save()}
   const pr=e.target.dataset.practice;if(pr){S.practice[pr]=e.target.value;S.practiceDone[pr]=false;const cb=document.querySelector(`[data-practiced="${pr}"]`);if(cb)cb.checked=false;save()}
@@ -1107,6 +1122,7 @@ async function chat(){
   catch(err){out.textContent=err.text||"Couldn't answer this time. Try again."}
 }
 /*EXPLAIN_APP*/
+/*WINTER_APP*/
 save(); render();
 })();
 </script>

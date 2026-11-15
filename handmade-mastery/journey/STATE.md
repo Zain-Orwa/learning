@@ -33,7 +33,6 @@ _Last updated: 2026-11-15_
 - Completed (part id, date): b01 2026-11-01, b02 2026-11-02
 - Updated: 2026-11-15
 
-
 ## Debugging log
 _(one line per challenge: date, bug class, score, time)_
 
@@ -64,3 +63,8 @@ On 2026-11-15 a Claude account was checked: it has no tasks and both ids
 return 404, so it is not the owning account.
 
 - 2026-11-15: Reminders re-created on the claude.ai chat account (Daily review `trig_01LaGmv4hWn3FBSPhof4G13y`, Debug challenge `trig_01Up8nKs72sre7b9sSxpivaq`). Old account's tasks may still run; turn them off if reminders come twice. Details: docs/scheduled-tasks.md.
+
+## Study page appearance
+- Final winter reference applied: dark teal shell, compact frosted cards,
+  left video/takeaway/audio stack and structured Explanation alongside it.
+- Saved lesson position and learning history remain unchanged by this UI work.

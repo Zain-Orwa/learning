@@ -271,3 +271,17 @@ Newest at the bottom. Each entry: date, decision, why.
   lesson layout. That layout (`winter.js`) is what places the card on the
   Explain view and opens the full-explanation dialog; the Takeaway rule and
   dialog wiring live there and ship with it.
+
+
+## 2026-11-15: Match the final winter lesson reference
+- Use the final Part 3 reference: dark teal lesson surface, warm headings,
+  video/takeaway/audio in the left stack, tall Explanation beside it, and
+  the code/pseudocode panel underneath. Keep the three learning-tools cards.
+- Explanation remains reusable and structured: wooden title, amber summary,
+  blue analogy, highlighted technical rows, parchment clarification and full
+  explanation dialog. Compact typography and icy borders match the reference.
+- Retain real course content and saved progress. Extra reference tabs remain
+  supporting views; they do not add required study work.
+- Regression tests passed. A disposable browser preview verified Part 3,
+  four explanation rows, the left media stack and no horizontal overflow at
+  1440 pixels. The cabin poster appears until a local video is selected.

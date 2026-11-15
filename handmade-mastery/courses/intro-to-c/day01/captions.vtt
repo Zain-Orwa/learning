@@ -1,0 +1,4318 @@
+WEBVTT
+
+00:00:01.000 --> 00:00:03.000
+OK.
+
+00:00:03.000 --> 00:00:06.000
+Assuming this is working, I would
+
+00:00:06.000 --> 00:00:10.000
+love to welcome everyone to this test stream.
+
+00:00:10.000 --> 00:00:12.000
+Basically, what I wanted to do is I
+
+00:00:12.000 --> 00:00:18.000
+am planning on starting a project on Monday, which is probably
+
+00:00:18.000 --> 00:00:19.000
+very ill-advised, and I appreciate that.
+
+00:00:19.000 --> 00:00:22.000
+But I'm planning to start a project where
+
+00:00:22.000 --> 00:00:27.000
+I am going to show how to code a complete game in C, which
+
+00:00:27.000 --> 00:00:29.000
+is a pretty big undertaking.
+
+00:00:29.000 --> 00:00:32.000
+And I thought about it, whether it was a good idea for a while,
+
+00:00:32.000 --> 00:00:33.000
+and I wasn't sure.
+
+00:00:33.000 --> 00:00:35.000
+But I finally decided that I really wanted to do it.
+
+00:00:35.000 --> 00:00:37.000
+And I always wanted to do it just to have
+
+00:00:37.000 --> 00:00:40.000
+a documentation that you could basically,
+
+00:00:40.000 --> 00:00:43.000
+well, a document, I should say, of a live recording of,
+
+00:00:43.000 --> 00:00:47.000
+like, here's everything that we did to make an actual game
+
+00:00:47.000 --> 00:00:51.000
+that you could play from scratch.
+
+00:00:51.000 --> 00:00:53.000
+And so I don't know how that'll go.
+
+00:00:53.000 --> 00:00:55.000
+Nobody may care about that at all
+
+00:00:55.000 --> 00:00:57.000
+until the game is pretty far along or something like that.
+
+00:00:57.000 --> 00:00:59.000
+But I really, really wanted to do it.
+
+00:00:59.000 --> 00:01:02.000
+And so I'm going to be starting that on Monday,
+
+00:01:02.000 --> 00:01:05.000
+but before then I wanted to practice the streaming
+
+00:01:05.000 --> 00:01:07.000
+to make sure that all of the stuff was going well
+
+00:01:07.000 --> 00:01:10.000
+because computers of course, as you know,
+
+00:01:10.000 --> 00:01:12.000
+are oh so reliable these days.
+
+00:01:12.000 --> 00:01:14.000
+And so I kind of have a feeling
+
+00:01:14.000 --> 00:01:15.000
+that there will be plenty of kinks to iron out.
+
+00:01:15.000 --> 00:01:17.000
+And so what I thought I'd do
+
+00:01:17.000 --> 00:01:20.000
+is spend a couple of days doing test streams
+
+00:01:20.000 --> 00:01:22.000
+where I will at least do something useful,
+
+00:01:22.000 --> 00:01:27.000
+which is explain how to do C programming on a computer
+
+00:01:27.000 --> 00:01:30.000
+because, I mean, let's face it, lots of people
+
+00:01:30.000 --> 00:01:31.000
+don't know how to do that.
+
+00:01:31.000 --> 00:01:36.000
+And if anyone wants to follow along as I program the game in C
+
+00:01:36.000 --> 00:01:38.000
+and go through all the explanations of why
+
+00:01:38.000 --> 00:01:40.000
+I'm writing the game code that way,
+
+00:01:40.000 --> 00:01:44.000
+I won't be wanting to stop and explain little things like,
+
+00:01:44.000 --> 00:01:45.000
+what is the question mark operator,
+
+00:01:45.000 --> 00:01:49.000
+or how does the stack work, or something like that,
+
+00:01:49.000 --> 00:01:51.000
+unless that's a particularly relevant topic at the time.
+
+00:01:51.000 --> 00:01:54.000
+So I was hoping to basically do a couple of streams
+
+00:01:54.000 --> 00:01:56.000
+that I could archive and just put up
+
+00:01:56.000 --> 00:01:59.000
+on the website that's like, if you don't know how to program C at all,
+
+00:01:59.000 --> 00:02:02.000
+if you literally have no idea, but would like to watch this series,
+
+00:02:02.000 --> 00:02:05.000
+go watch these couple of videos, and that'll get you up to speed
+
+00:02:05.000 --> 00:02:07.000
+on just what's going on so you can start to follow.
+
+00:02:07.000 --> 00:02:10.000
+And granted, you'll still have to do a bunch of work to practice
+
+00:02:10.000 --> 00:02:13.000
+and learn how to program at all, because if you don't know any programming,
+
+00:02:13.000 --> 00:02:15.000
+you're not going to be able to just jump right in.
+
+00:02:15.000 --> 00:02:17.000
+But at least that'll get you started,
+
+00:02:17.000 --> 00:02:20.000
+and then you can presumably at least start to follow the videos
+
+00:02:20.000 --> 00:02:22.000
+and understand the majority of them.
+
+00:02:22.000 --> 00:02:29.000
+So what this video is going to be is it was going to be literally showing how I would start
+
+00:02:29.000 --> 00:02:33.000
+to program C on a machine and how to do some of the basics of programming C.
+
+00:02:33.000 --> 00:02:37.000
+So this is on a Windows machine because that's the most common programming machine that people
+
+00:02:37.000 --> 00:02:42.000
+are going to have. And the thing that you have to do right off the bat, which is actually kind
+
+00:02:42.000 --> 00:02:46.000
+of annoying and you don't have to do this if you're on Linux, but the thing you have to do
+
+00:02:46.000 --> 00:02:51.000
+on a Windows machine is you have to find a C compiler. And currently you don't have a lot of
+
+00:02:51.000 --> 00:02:57.000
+options, even though LLVM, which is a common one on other platforms, is sort of able to
+
+00:02:57.000 --> 00:03:02.000
+build CNOW. It's not able to actually do the entire process. So what you have to do is
+
+00:03:02.000 --> 00:03:09.000
+you have to go get something called Microsoft Visual Studio Express. And this is basically
+
+00:03:09.000 --> 00:03:17.000
+a free version of their, you know, thing that their professional C programming environment.
+
+00:03:17.000 --> 00:03:19.000
+And you'll see when you get to this page,
+
+00:03:19.000 --> 00:03:21.000
+they want to give you a lot of other stuff
+
+00:03:21.000 --> 00:03:23.000
+that you really don't want.
+
+00:03:23.000 --> 00:03:26.000
+When you look on here, you can see stuff like, oh,
+
+00:03:26.000 --> 00:03:28.000
+team foundation server.
+
+00:03:28.000 --> 00:03:30.000
+And since you're just someone who's
+
+00:03:30.000 --> 00:03:34.000
+trying to program C at home, you probably don't have a team.
+
+00:03:34.000 --> 00:03:36.000
+Or if you do, they probably don't have a foundation
+
+00:03:36.000 --> 00:03:39.000
+or don't want their foundation to be comprised primarily
+
+00:03:39.000 --> 00:03:40.000
+of something from Microsoft.
+
+00:03:40.000 --> 00:03:42.000
+I know I certainly wouldn't.
+
+00:03:42.000 --> 00:03:44.000
+And they're also going to try and give you
+
+00:03:44.000 --> 00:03:45.000
+things like this Express for Web, which
+
+00:03:45.000 --> 00:03:49.000
+is something that you use to program,
+
+00:03:49.000 --> 00:03:51.000
+like, if you want to do web deployment,
+
+00:03:51.000 --> 00:03:53.000
+ASP.net and other things like this,
+
+00:03:53.000 --> 00:03:54.000
+which we definitely want to do.
+
+00:03:54.000 --> 00:03:56.000
+So the one that you actually want to get
+
+00:03:56.000 --> 00:04:00.000
+is this one here, which is Express 2013 for Windows,
+
+00:04:00.000 --> 00:04:03.000
+which is the thing that actually lets us compile C++, which
+
+00:04:03.000 --> 00:04:04.000
+is what we want.
+
+00:04:04.000 --> 00:04:06.000
+So I'm going to start that downloading,
+
+00:04:06.000 --> 00:04:10.000
+or at least I'm going to go through this awesome crazy
+
+00:04:10.000 --> 00:04:12.000
+circus here that you have to do to download,
+
+00:04:12.000 --> 00:04:14.000
+and off it goes.
+
+00:04:14.000 --> 00:04:15.000
+And now we're going to kind of have
+
+00:04:15.000 --> 00:04:18.000
+to skip a little bit of this process only
+
+00:04:18.000 --> 00:04:21.000
+because there's a challenge response that they do,
+
+00:04:21.000 --> 00:04:22.000
+which people will have to do on their own.
+
+00:04:22.000 --> 00:04:25.000
+I obviously can't show you how to do that.
+
+00:04:25.000 --> 00:04:29.000
+You will have to basically install this guy.
+
+00:04:29.000 --> 00:04:31.000
+Let's see.
+
+00:04:31.000 --> 00:04:34.000
+Loading identity providers.
+
+00:04:34.000 --> 00:04:35.000
+So yeah, you will have to go through and you'll
+
+00:04:35.000 --> 00:04:37.000
+have to fill this out.
+
+00:04:37.000 --> 00:04:39.000
+Unfortunately, you'll have to get like a Microsoft login
+
+00:04:39.000 --> 00:04:42.000
+of some kind in order to get it.
+
+00:04:42.000 --> 00:04:45.000
+But once you get it, it will allow you to install Visual Studio,
+
+00:04:45.000 --> 00:04:48.000
+and you will be able to do, basically,
+
+00:04:48.000 --> 00:04:51.000
+substantively what I'm about to do after you get that installed.
+
+00:04:51.000 --> 00:04:53.000
+It'll probably make you reboot your machine, which I also
+
+00:04:53.000 --> 00:04:55.000
+can't do on a live stream, of course,
+
+00:04:55.000 --> 00:04:56.000
+because if I were to reboot the machine,
+
+00:04:56.000 --> 00:04:58.000
+the stream would stop.
+
+00:04:58.000 --> 00:05:00.000
+But after you do that, you will
+
+00:05:00.000 --> 00:05:03.000
+get a newer version, essentially,
+
+00:05:03.000 --> 00:05:04.000
+of this particular product.
+
+00:05:04.000 --> 00:05:06.000
+This is the older version that was installed
+
+00:05:06.000 --> 00:05:07.000
+on this machine.
+
+00:05:07.000 --> 00:05:09.000
+It's Visual Studio 2008.
+
+00:05:09.000 --> 00:05:12.000
+And as you can see, we've got stuff on here,
+
+00:05:12.000 --> 00:05:16.000
+which is kind of not actually stuff I can open, obviously.
+
+00:05:16.000 --> 00:05:19.000
+I'm not allowed to show you any of the secret witness things.
+
+00:05:19.000 --> 00:05:21.000
+That would be very bad for them.
+
+00:05:21.000 --> 00:05:25.000
+But what you can do to actually start programming
+
+00:05:25.000 --> 00:05:28.000
+in this particular environment is you go to new
+
+00:05:28.000 --> 00:05:29.000
+and you go to project.
+
+00:05:29.000 --> 00:05:31.000
+And what that'll do is that will allow you
+
+00:05:31.000 --> 00:05:33.000
+to create one of their dummy projects,
+
+00:05:33.000 --> 00:05:35.000
+which I'll show you how to build,
+
+00:05:35.000 --> 00:05:36.000
+only for a little while
+
+00:05:36.000 --> 00:05:38.000
+because we'll kind of immediately get off that.
+
+00:05:38.000 --> 00:05:40.000
+But what it basically does is it brings up
+
+00:05:40.000 --> 00:05:46.000
+a giant window full of all of the things that you could build with this.
+
+00:05:46.000 --> 00:05:49.000
+And most of them are things that we are not concerned with.
+
+00:05:49.000 --> 00:05:52.000
+You can see there's a bunch of template things here you can use for .NET.
+
+00:05:52.000 --> 00:05:56.000
+You can see there's all sorts of things here, MSC, which is like an antiquated library.
+
+00:05:56.000 --> 00:05:58.000
+And you don't care about any of these things.
+
+00:05:58.000 --> 00:06:02.000
+The only thing you want to do is build a Win32 application.
+
+00:06:02.000 --> 00:06:03.000
+And there's two options here.
+
+00:06:03.000 --> 00:06:06.000
+One is for a Win32 console application.
+
+00:06:06.000 --> 00:06:08.000
+One is for a Win32 project.
+
+00:06:08.000 --> 00:06:10.000
+And the difference between these two
+
+00:06:10.000 --> 00:06:12.000
+is actually extremely rudimentary.
+
+00:06:12.000 --> 00:06:15.000
+All it is is, for some reason, way back when they actually
+
+00:06:15.000 --> 00:06:19.000
+did the original version of Windows,
+
+00:06:19.000 --> 00:06:25.000
+they decided to segregate how you built basically applications that
+
+00:06:25.000 --> 00:06:27.000
+could run from a command line, which is something
+
+00:06:27.000 --> 00:06:29.000
+we'll look at in the future, and ones that are actually
+
+00:06:29.000 --> 00:06:32.000
+more like apps like they have a window and stuff like this.
+
+00:06:32.000 --> 00:06:36.000
+And because they did that, you have to build an app
+
+00:06:36.000 --> 00:06:37.000
+as one or the other.
+
+00:06:37.000 --> 00:06:41.000
+And this is actually something that's basically impossible to get around.
+
+00:06:41.000 --> 00:06:45.000
+There are workarounds for it if you really care, but basically there is no way on Windows,
+
+00:06:45.000 --> 00:06:50.000
+unlike say on Linux or Mac OS, there is no way to actually build something
+
+00:06:50.000 --> 00:06:57.000
+that both works from a command line and works in the standard application mode.
+
+00:06:57.000 --> 00:07:00.000
+But we don't have to care about that too much because we're going to be
+
+00:07:00.000 --> 00:07:03.000
+building a game and games don't really have to do anything from the command
+
+00:07:03.000 --> 00:07:07.000
+line in sort of that sort of way.
+
+00:07:07.000 --> 00:07:10.000
+So what we're going to do is select Win32 Project, which
+
+00:07:10.000 --> 00:07:12.000
+is what's set up for actually building.
+
+00:07:12.000 --> 00:07:13.000
+Oh, sorry.
+
+00:07:13.000 --> 00:07:14.000
+I got to enter a name here.
+
+00:07:14.000 --> 00:07:19.000
+So we're going to call this, we're going to call this Test.
+
+00:07:19.000 --> 00:07:20.000
+OK.
+
+00:07:20.000 --> 00:07:23.000
+And what that'll do is that'll bring up this silly little
+
+00:07:23.000 --> 00:07:24.000
+wizard here.
+
+00:07:24.000 --> 00:07:26.000
+And the wizard is basically going to ask you a bunch of
+
+00:07:26.000 --> 00:07:27.000
+stuff, none of which you want.
+
+00:07:27.000 --> 00:07:29.000
+So what you want to do is just check empty project so
+
+00:07:29.000 --> 00:07:31.000
+that it will get out of your way.
+
+00:07:31.000 --> 00:07:33.000
+And it will kind of give you another option here to do
+
+00:07:33.000 --> 00:07:36.000
+other things like the console application, DLLs, which
+
+00:07:36.000 --> 00:07:39.000
+separate issues, static libraries, which we don't need to worry about right now, but
+
+00:07:39.000 --> 00:07:42.000
+are things you might want to know in the future.
+
+00:07:42.000 --> 00:07:47.000
+And we'll go to Windows application, which will basically just give us our own sort of,
+
+00:07:47.000 --> 00:07:51.000
+I don't know why that thing keeps going.
+
+00:07:51.000 --> 00:07:55.000
+This will basically give us our own sort of dumping ground where we can put stuff
+
+00:07:55.000 --> 00:07:56.000
+in and build it.
+
+00:07:56.000 --> 00:08:00.000
+Now the way that Microsoft Visual Studio works is it has this thing called a solution
+
+00:08:00.000 --> 00:08:01.000
+explorer.
+
+00:08:01.000 --> 00:08:04.000
+And one thing that will often happen to you when you're developing is it will
+
+00:08:04.000 --> 00:08:05.000
+go away.
+
+00:08:05.000 --> 00:08:09.000
+something that's like this or perhaps you'll get something that's even completely blank,
+
+00:08:09.000 --> 00:08:14.000
+so that has nothing in it like this. And you can get back to this solution explorer thing by going
+
+00:08:14.000 --> 00:08:19.000
+to view solution explorer. Now what is the solution you may ask? What was the problem even? You may
+
+00:08:19.000 --> 00:08:26.000
+also ask and that's a very valid question. But the answer is there wasn't necessarily a problem
+
+00:08:26.000 --> 00:08:29.000
+unless you consider the problem being that Microsoft makes it very hard to build things.
+
+00:08:29.000 --> 00:08:34.000
+Solution was just something that they started calling a project at some point.
+
+00:08:34.000 --> 00:08:39.000
+And so really a solution is just their word for a thing that you are going to build.
+
+00:08:39.000 --> 00:08:43.000
+It's like a basically a list of things that need to get built and how they're going to build them.
+
+00:08:43.000 --> 00:08:49.000
+And so instead of having an intuitive name like files explorer or project explorer,
+
+00:08:49.000 --> 00:08:52.000
+it's called solution explorer and you have to go to it.
+
+00:08:52.000 --> 00:08:58.000
+When you go to the solution explorer, you will basically get something here that works a lot like,
+
+00:08:58.000 --> 00:09:01.000
+you know, the file explorer in Windows.
+
+00:09:01.000 --> 00:09:03.000
+It's hierarchical and you can collapse it.
+
+00:09:03.000 --> 00:09:08.000
+And they made some folders in here, but we don't really have to care about these folders very much.
+
+00:09:08.000 --> 00:09:11.000
+And we can add our own folders or rename folders.
+
+00:09:11.000 --> 00:09:17.000
+So if we wanted to rename one of these, you know, we could go in here and call this whatever we wanted and that's fine.
+
+00:09:17.000 --> 00:09:22.000
+But what we need to do in order to start building something is actually have some files in here to build
+
+00:09:22.000 --> 00:09:25.000
+so that it will know what we are trying to build.
+
+00:09:25.000 --> 00:09:28.000
+So in order to do that, I'm just going to right-click on this
+
+00:09:28.000 --> 00:09:31.000
+and go into Add, and I'm going to pick New Item.
+
+00:09:31.000 --> 00:09:34.000
+So that will let us make a new file, basically,
+
+00:09:34.000 --> 00:09:36.000
+that we can actually build.
+
+00:09:36.000 --> 00:09:38.000
+So that will pop up a massive window of stuff,
+
+00:09:38.000 --> 00:09:40.000
+because there's all sorts of things
+
+00:09:40.000 --> 00:09:41.000
+that you might want to do.
+
+00:09:41.000 --> 00:09:45.000
+You might want to make an SQL script file or a class
+
+00:09:45.000 --> 00:09:46.000
+diagram.
+
+00:09:46.000 --> 00:09:47.000
+Those might be good things to make,
+
+00:09:47.000 --> 00:09:49.000
+but we're not going to make those right now.
+
+00:09:49.000 --> 00:09:53.000
+Instead, we're going to make just a straight up CPP file.
+
+00:09:53.000 --> 00:09:54.000
+OK.
+
+00:09:54.000 --> 00:09:57.000
+So basically, I always forget to enter the name, don't I?
+
+00:09:57.000 --> 00:10:00.000
+So basically we just have to give our C file a name and add it.
+
+00:10:00.000 --> 00:10:04.000
+Now we will have a blank file that we can start typing into.
+
+00:10:04.000 --> 00:10:07.000
+And that is what we will use to start programming in C.
+
+00:10:07.000 --> 00:10:11.000
+Now, programming in C has not advanced much over the years,
+
+00:10:11.000 --> 00:10:13.000
+unfortunately.
+
+00:10:13.000 --> 00:10:16.000
+Obviously C and C++, they're both pretty old.
+
+00:10:16.000 --> 00:10:20.000
+But I think C++ was sometime early 80s.
+
+00:10:20.000 --> 00:10:23.000
+C was a good decade before that, I want to say.
+
+00:10:23.000 --> 00:10:27.000
+And yet, just the same, even though they're so old,
+
+00:10:27.000 --> 00:10:31.000
+the way in which you actually enter C code into a computer
+
+00:10:31.000 --> 00:10:35.000
+and the way it is actually built is still almost the same
+
+00:10:35.000 --> 00:10:36.000
+as it was back then.
+
+00:10:36.000 --> 00:10:38.000
+You basically just have text files.
+
+00:10:38.000 --> 00:10:41.000
+They're basic plain old text files,
+
+00:10:41.000 --> 00:10:42.000
+less complicated than something
+
+00:10:42.000 --> 00:10:44.000
+that you would type into Microsoft Word.
+
+00:10:44.000 --> 00:10:47.000
+Like they literally don't even have annotation or anything.
+
+00:10:47.000 --> 00:10:49.000
+They're just raw text.
+
+00:10:49.000 --> 00:10:54.000
+And that raw text is then interpreted by the tools
+
+00:10:54.000 --> 00:10:56.000
+to do the things that we need to do.
+
+00:10:56.000 --> 00:10:58.000
+And that's done with the compiler and stuff
+
+00:10:58.000 --> 00:11:00.000
+that we'll be talking about in a second.
+
+00:11:00.000 --> 00:11:02.000
+But basically just understand that nothing we're going to do
+
+00:11:02.000 --> 00:11:04.000
+is going to be anything other than entering text
+
+00:11:04.000 --> 00:11:06.000
+into a computer.
+
+00:11:06.000 --> 00:11:07.000
+OK.
+
+00:11:07.000 --> 00:11:11.000
+So the first thing to do is to say, well, OK,
+
+00:11:11.000 --> 00:11:13.000
+we haven't actually done anything here.
+
+00:11:13.000 --> 00:11:18.000
+This is some text in a file.
+
+00:11:18.000 --> 00:11:22.000
+And what you will notice is that this basically,
+
+00:11:22.000 --> 00:11:24.000
+every time I type in here, there's a little yellow bar
+
+00:11:24.000 --> 00:11:26.000
+that sort of appears next to it.
+
+00:11:26.000 --> 00:11:28.000
+And that just tells you that these are new lines that you
+
+00:11:28.000 --> 00:11:30.000
+have typed since you have saved.
+
+00:11:30.000 --> 00:11:34.000
+And you can see that I've got a little star there that now
+
+00:11:34.000 --> 00:11:36.000
+adds to it, just like in most applications that says,
+
+00:11:36.000 --> 00:11:39.000
+this file has been modified since it has been saved.
+
+00:11:39.000 --> 00:11:43.000
+Now, if I want to save it, I can just go to file save test.cpp.
+
+00:11:43.000 --> 00:11:46.000
+Or if I want it some shorthand, I can hit Control S.
+
+00:11:46.000 --> 00:11:47.000
+And there it saves it.
+
+00:11:47.000 --> 00:11:51.000
+And you'll notice that the yellow bars now change to a green bar.
+
+00:11:51.000 --> 00:11:52.000
+And what does a green bar mean?
+
+00:11:52.000 --> 00:11:54.000
+Well, a green bar is basically something
+
+00:11:54.000 --> 00:11:57.000
+that lets you know that although the file is saved,
+
+00:11:57.000 --> 00:11:59.000
+there was still a change recently there.
+
+00:11:59.000 --> 00:12:01.000
+And I believe, although I am not a frequent user
+
+00:12:01.000 --> 00:12:03.000
+of Visual Studio, that it will basically
+
+00:12:03.000 --> 00:12:07.000
+remove the green bar once we actually compile this
+
+00:12:07.000 --> 00:12:10.000
+into a working program so that you know what changes you've
+
+00:12:10.000 --> 00:12:13.000
+made since the last time you've updated your program.
+
+00:12:13.000 --> 00:12:14.000
+OK.
+
+00:12:14.000 --> 00:12:20.000
+So let's say I want to actually run the process of making something out of this text file.
+
+00:12:20.000 --> 00:12:23.000
+Well, the thing that you do there is you say build solution.
+
+00:12:23.000 --> 00:12:27.000
+And build solution will go through everything that we have in here.
+
+00:12:27.000 --> 00:12:32.000
+And it will actually do the work necessary to make this in to a program.
+
+00:12:32.000 --> 00:12:34.000
+And we'll talk about all those steps in a little while.
+
+00:12:34.000 --> 00:12:39.000
+So when I hit build solution, you will notice that if I did not have an output window open,
+
+00:12:39.000 --> 00:12:41.000
+it magically made one for me.
+
+00:12:41.000 --> 00:12:44.000
+It just pops up. There's really nothing you can do about it.
+
+00:12:44.000 --> 00:12:51.000
+And what it does is it prints out what happened when it tried to build the program.
+
+00:12:51.000 --> 00:12:55.000
+So it starts out by giving me a line which says what it was trying to build.
+
+00:12:55.000 --> 00:12:58.000
+So it says build started project test.
+
+00:12:58.000 --> 00:13:04.000
+Now that's what we wanted. You can see in here we've essentially when it created our automatic project for us,
+
+00:13:04.000 --> 00:13:09.000
+it created a solution called test and it put inside it one default project which is called test.
+
+00:13:09.000 --> 00:13:13.000
+And the reason I call it a default project, you can see it's bold, is because you can
+
+00:13:13.000 --> 00:13:18.000
+actually go in here and there's a thing called Set as Startup Project and some other things
+
+00:13:18.000 --> 00:13:19.000
+like this.
+
+00:13:19.000 --> 00:13:24.000
+There's basically a notion of what the project is you're going to build when you build
+
+00:13:24.000 --> 00:13:25.000
+the solution.
+
+00:13:25.000 --> 00:13:28.000
+Because we could actually stack other projects in here that build other programs, which
+
+00:13:28.000 --> 00:13:32.000
+we don't all want to build and other sorts of nonsense like this.
+
+00:13:32.000 --> 00:13:35.000
+Most of that is not really necessary when you're doing development unless you start
+
+00:13:35.000 --> 00:13:38.000
+developing on a very large and complex project.
+
+00:13:38.000 --> 00:13:40.000
+But if you're just building a game by yourself,
+
+00:13:40.000 --> 00:13:43.000
+it's unlike you'll need to ever do anything like that.
+
+00:13:43.000 --> 00:13:45.000
+And I often don't build anything from here.
+
+00:13:45.000 --> 00:13:46.000
+So one of the things we're going to cover later
+
+00:13:46.000 --> 00:13:48.000
+is how to build things without using this.
+
+00:13:48.000 --> 00:13:51.000
+But that said, test is the project
+
+00:13:51.000 --> 00:13:53.000
+that we will build when we do build solution.
+
+00:13:53.000 --> 00:13:55.000
+And so what this was telling us here
+
+00:13:55.000 --> 00:13:57.000
+is it was going to build that project.
+
+00:13:57.000 --> 00:14:01.000
+And there's a configuration line which says debug win32.
+
+00:14:01.000 --> 00:14:04.000
+And what the configuration means
+
+00:14:04.000 --> 00:14:07.000
+is basically what sort of build it was trying to do.
+
+00:14:07.000 --> 00:14:10.000
+Because as we'll see later on, there's actually
+
+00:14:10.000 --> 00:14:14.000
+multiple ways you can build the same set of C code.
+
+00:14:14.000 --> 00:14:17.000
+Some of them are designed to target different platforms.
+
+00:14:17.000 --> 00:14:21.000
+For example, you may want to target a 32-bit copy of Windows
+
+00:14:21.000 --> 00:14:23.000
+or a 64-bit copy of Windows.
+
+00:14:23.000 --> 00:14:25.000
+And that would be part of the configuration.
+
+00:14:25.000 --> 00:14:28.000
+You might also be trying to do things
+
+00:14:28.000 --> 00:14:32.000
+that are based on a debug developer build, so something
+
+00:14:32.000 --> 00:14:35.000
+that has a lot of test code compiled into it.
+
+00:14:35.000 --> 00:14:37.000
+Special menus for you, the editor for the game
+
+00:14:37.000 --> 00:14:40.000
+or something might be built in this mode.
+
+00:14:40.000 --> 00:14:42.000
+But then there might be another build called
+
+00:14:42.000 --> 00:14:46.000
+Release or Retail, depending on how you do your naming scheme,
+
+00:14:46.000 --> 00:14:48.000
+which will build these things out.
+
+00:14:48.000 --> 00:14:51.000
+And so basically, configuration is something
+
+00:14:51.000 --> 00:14:55.000
+that affects the way in which these text files are actually
+
+00:14:55.000 --> 00:14:58.000
+interpreted by the various things that we do in order
+
+00:14:58.000 --> 00:15:02.000
+to get to an application that is somehow different
+
+00:15:02.000 --> 00:15:05.000
+from the other configurations that we might build.
+
+00:15:05.000 --> 00:15:08.000
+So now the next line you can see here is compiling.
+
+00:15:08.000 --> 00:15:12.000
+And what that is, is compilation is the general term.
+
+00:15:12.000 --> 00:15:14.000
+It's not a particularly specific term,
+
+00:15:14.000 --> 00:15:16.000
+although we actually use it to mean something specific oftentimes.
+
+00:15:16.000 --> 00:15:20.000
+It's actually a very general term that technically means moving
+
+00:15:20.000 --> 00:15:23.000
+something from one format into another, basically.
+
+00:15:23.000 --> 00:15:27.000
+It's sort of like a translation in some sense.
+
+00:15:27.000 --> 00:15:31.000
+A compiler is something that parses a text file typically.
+
+00:15:31.000 --> 00:15:33.000
+It turns it into something semantic.
+
+00:15:33.000 --> 00:15:35.000
+It understands the meaning of that text file,
+
+00:15:35.000 --> 00:15:37.000
+what we were trying to do with that text file.
+
+00:15:37.000 --> 00:15:42.000
+And then it turns it into some other thing that we wanted.
+
+00:15:42.000 --> 00:15:44.000
+Now, in this case, what it's going to do
+
+00:15:44.000 --> 00:15:47.000
+is we're actually trying to get it to produce,
+
+00:15:47.000 --> 00:15:50.000
+at the end of the day, an actual program that we can run.
+
+00:15:50.000 --> 00:15:53.000
+It's executable, something that you would click on in Windows
+
+00:15:53.000 --> 00:15:57.000
+to run, like with the little icon, dot exe, that thing.
+
+00:15:57.000 --> 00:15:58.000
+We want to build that thing.
+
+00:15:58.000 --> 00:16:01.000
+And in order to build that thing,
+
+00:16:01.000 --> 00:16:03.000
+Basically, the text code that we write
+
+00:16:03.000 --> 00:16:05.000
+has to be translated into something
+
+00:16:05.000 --> 00:16:07.000
+that the computer can run.
+
+00:16:07.000 --> 00:16:09.000
+And that is what the compilation step does.
+
+00:16:09.000 --> 00:16:11.000
+And there's another step after compilation
+
+00:16:11.000 --> 00:16:12.000
+that we'll talk about.
+
+00:16:12.000 --> 00:16:14.000
+But the compilation step is basically
+
+00:16:14.000 --> 00:16:16.000
+in charge of doing the majority of the work
+
+00:16:16.000 --> 00:16:20.000
+to translate our text file from something humans read
+
+00:16:20.000 --> 00:16:23.000
+into something that a CPU can read,
+
+00:16:23.000 --> 00:16:27.000
+and specifically oftentimes a specific processor,
+
+00:16:27.000 --> 00:16:28.000
+meaning the compilation will be
+
+00:16:28.000 --> 00:16:33.000
+compiling from a text file into say x86 code or x64 code,
+
+00:16:33.000 --> 00:16:37.000
+something for the actual CPU that you are trying to target,
+
+00:16:37.000 --> 00:16:39.000
+not abstractly.
+
+00:16:39.000 --> 00:16:44.000
+So given that, after we see the compilation line,
+
+00:16:44.000 --> 00:16:46.000
+we know the compiler has started, and we now
+
+00:16:46.000 --> 00:16:49.000
+go to a list of what files it's actually compiling.
+
+00:16:49.000 --> 00:16:53.000
+Now we only have one file, which is test.cpp.
+
+00:16:53.000 --> 00:16:56.000
+And so not surprisingly, it tries to compile that file.
+
+00:16:56.000 --> 00:16:58.000
+Now you will note in front of all of these,
+
+00:16:58.000 --> 00:17:04.000
+there is a little number with a sort of greater than symbol.
+
+00:17:04.000 --> 00:17:08.000
+And what that is is totally irrelevant for the most part
+
+00:17:08.000 --> 00:17:10.000
+to what you're going to be doing for development.
+
+00:17:10.000 --> 00:17:13.000
+It's not really something you need to pay attention to,
+
+00:17:13.000 --> 00:17:14.000
+but just in case you were wondering,
+
+00:17:14.000 --> 00:17:17.000
+if you are on a machine that happens
+
+00:17:17.000 --> 00:17:18.000
+to have a lot of processors.
+
+00:17:18.000 --> 00:17:22.000
+So if I go in here, if I basically just
+
+00:17:22.000 --> 00:17:25.000
+used the hotkey, one of my favorite hotkeys,
+
+00:17:25.000 --> 00:17:28.000
+Control Shift Escape to bring up the Task Manager,
+
+00:17:28.000 --> 00:17:32.000
+You will notice that this machine has a lot of processors.
+
+00:17:32.000 --> 00:17:35.000
+In this thing called CPU usage history,
+
+00:17:35.000 --> 00:17:39.000
+there is one of these for every logical processor
+
+00:17:39.000 --> 00:17:41.000
+in the machine.
+
+00:17:41.000 --> 00:17:44.000
+Now, a logical processor is, or I shouldn't say logical
+
+00:17:44.000 --> 00:17:47.000
+processor, perhaps that's the wrong word.
+
+00:17:47.000 --> 00:17:48.000
+I'm going to stick with logical processor.
+
+00:17:48.000 --> 00:17:51.000
+Now, logical processor is not an individual processor.
+
+00:17:51.000 --> 00:17:54.000
+It's basically a logical unit that can run code.
+
+00:17:54.000 --> 00:17:56.000
+And there's two different kinds of these.
+
+00:17:56.000 --> 00:17:57.000
+And we might as well talk about them now,
+
+00:17:57.000 --> 00:18:01.000
+but I'm going to talk about them certainly more later on
+
+00:18:01.000 --> 00:18:03.000
+in the actual series, not in this introductory series.
+
+00:18:03.000 --> 00:18:06.000
+But basically, the way a processor is divided internally,
+
+00:18:06.000 --> 00:18:08.000
+or the way your computer is divided internally,
+
+00:18:08.000 --> 00:18:11.000
+obviously, there are actual physical processors in there.
+
+00:18:11.000 --> 00:18:13.000
+So most people have one physical processor
+
+00:18:13.000 --> 00:18:15.000
+in their machine, obviously.
+
+00:18:15.000 --> 00:18:18.000
+But other machines have two or three or four,
+
+00:18:18.000 --> 00:18:20.000
+maybe even dozens of processors in them.
+
+00:18:20.000 --> 00:18:24.000
+Certainly not consumer boxes, but certain server types
+
+00:18:24.000 --> 00:18:27.000
+might have 32 processors in a machine, for example.
+
+00:18:27.000 --> 00:18:30.000
+Those physical processors obviously are chips they were made by Intel.
+
+00:18:30.000 --> 00:18:32.000
+They are stuck in the machine.
+
+00:18:32.000 --> 00:18:37.000
+They have a nice big old heat sink on them to compete to prevent them from overheating.
+
+00:18:37.000 --> 00:18:43.000
+And when you power on your machine, they are what executes everything except the graphics code or things like the networking,
+
+00:18:43.000 --> 00:18:46.000
+which is sometimes on separate cards or separate chips.
+
+00:18:46.000 --> 00:18:47.000
+The CPU is what does all the work.
+
+00:18:47.000 --> 00:18:52.000
+But in addition to being a physical unit,
+
+00:18:52.000 --> 00:18:56.000
+the CPU itself is actually divided internally into processing units,
+
+00:18:56.000 --> 00:19:00.000
+which actually can run code sort of separately.
+
+00:19:00.000 --> 00:19:02.000
+Those are typically called cores.
+
+00:19:02.000 --> 00:19:07.000
+So inside a single CPU, you might have four cores,
+
+00:19:07.000 --> 00:19:09.000
+or eight cores, or something like this.
+
+00:19:09.000 --> 00:19:12.000
+And you will see these oftentimes advertised in Intel advertising,
+
+00:19:12.000 --> 00:19:15.000
+and of course more cores is better, but what is a core?
+
+00:19:15.000 --> 00:19:18.000
+Well, a core is basically something that is capable
+
+00:19:18.000 --> 00:19:22.000
+of doing the work of a standalone CPU for the most part.
+
+00:19:22.000 --> 00:19:25.000
+It is something that would have been a CPU in the old days
+
+00:19:25.000 --> 00:19:29.000
+when CPUs could only execute one thing at a time.
+
+00:19:29.000 --> 00:19:31.000
+Now you have processors capable of executing multiple things
+
+00:19:31.000 --> 00:19:32.000
+at a time.
+
+00:19:32.000 --> 00:19:36.000
+And each one of those units is called a core inside.
+
+00:19:36.000 --> 00:19:39.000
+And the cores typically have a bunch of things in them.
+
+00:19:39.000 --> 00:19:41.000
+They have units capable of doing mathematics.
+
+00:19:41.000 --> 00:19:44.000
+They have units capable of doing memory addressing
+
+00:19:44.000 --> 00:19:45.000
+all these sorts of things.
+
+00:19:45.000 --> 00:19:48.000
+And then they will talk to the memory in your system.
+
+00:19:48.000 --> 00:19:50.000
+They'll talk to the bus.
+
+00:19:50.000 --> 00:19:52.000
+They'll talk to all sorts of things in the system
+
+00:19:52.000 --> 00:19:53.000
+in order to do their job.
+
+00:19:53.000 --> 00:20:00.000
+by and large a core is the thing that actually does the computation, but even that is still not really
+
+00:20:00.000 --> 00:20:08.000
+what you might call a logical processing unit nowadays. And the reason for that is they've subdivided that even further
+
+00:20:08.000 --> 00:20:12.000
+down to things called hyper threads. And of course,
+
+00:20:12.000 --> 00:20:19.000
+hyper threads are basically a thing where a processor's core
+
+00:20:19.000 --> 00:20:23.000
+is actually able to maintain the state
+
+00:20:23.000 --> 00:20:28.000
+of multiple cores as if it were multiple cores,
+
+00:20:28.000 --> 00:20:30.000
+even though it is only capable
+
+00:20:30.000 --> 00:20:32.000
+of executing any one given core at a time.
+
+00:20:32.000 --> 00:20:36.000
+So for example, you think of a CPU core
+
+00:20:36.000 --> 00:20:38.000
+as being able to remember, say, what it was running,
+
+00:20:38.000 --> 00:20:40.000
+where it is in the program,
+
+00:20:40.000 --> 00:20:42.000
+what the state of the things it was it was operating on,
+
+00:20:42.000 --> 00:20:43.000
+these sorts of things,
+
+00:20:43.000 --> 00:20:46.000
+and we'll get into what all of those are in detail later.
+
+00:20:46.000 --> 00:20:48.000
+But a core is basically doing this work
+
+00:20:48.000 --> 00:20:50.000
+of running an application.
+
+00:20:50.000 --> 00:20:54.000
+that core can actually store multiple of those states,
+
+00:20:54.000 --> 00:20:57.000
+almost like a multitasking operating system you can think of as
+
+00:20:57.000 --> 00:21:01.000
+there's the task bar and it's got different tasks that it has.
+
+00:21:01.000 --> 00:21:06.000
+Well, a core can actually do that tasking in a sense itself.
+
+00:21:06.000 --> 00:21:09.000
+Even though it's only running one thing at a given time,
+
+00:21:09.000 --> 00:21:16.000
+it could keep say four additional states that it can really quickly switch to.
+
+00:21:16.000 --> 00:21:20.000
+And so what happens is those actually show up, often times,
+
+00:21:20.000 --> 00:21:23.000
+in the operating system as a logical processing unit,
+
+00:21:23.000 --> 00:21:27.000
+because to the operating system, they sort of look like a processor.
+
+00:21:27.000 --> 00:21:30.000
+They are effectively running something,
+
+00:21:30.000 --> 00:21:33.000
+even though only one of them on a particular core
+
+00:21:33.000 --> 00:21:34.000
+is actually inflated at a given time.
+
+00:21:34.000 --> 00:21:36.000
+Now, there's tons more to talk about there,
+
+00:21:36.000 --> 00:21:38.000
+but I am prone to tangent, so I thought
+
+00:21:38.000 --> 00:21:40.000
+I'd mention some of that when I booted up here.
+
+00:21:40.000 --> 00:21:42.000
+So as you can see, there are a lot of logical processing
+
+00:21:42.000 --> 00:21:43.000
+units on this.
+
+00:21:43.000 --> 00:21:48.000
+this many processors in the actual machine. In fact I don't actually know
+
+00:21:48.000 --> 00:21:56.000
+if I can go on here. I think, let me see, if this actually will tell us what kind
+
+00:21:56.000 --> 00:22:03.000
+of processor it is. Yes, it is a Xeon. It is a two processor box, although it
+
+00:22:03.000 --> 00:22:06.000
+doesn't actually tell me how many threads per, I mean how many cores per
+
+00:22:06.000 --> 00:22:10.000
+processor it actually has. But we could go look up what a W5580 is and we
+
+00:22:10.000 --> 00:22:15.000
+You could see how many it has, but I think it's probably only got maybe four per, I don't
+
+00:22:15.000 --> 00:22:17.000
+know, I'm not really sure.
+
+00:22:17.000 --> 00:22:22.000
+But anyway, each one of these would correspond basically to one individual, one of those
+
+00:22:22.000 --> 00:22:27.000
+hyper threads, and it would show me basically how much usage that particular thread is
+
+00:22:27.000 --> 00:22:29.000
+getting right now.
+
+00:22:29.000 --> 00:22:33.000
+Okay, so hopefully that gives you a little bit of perspective on this.
+
+00:22:33.000 --> 00:22:37.000
+I wonder too, you know what, nowadays they've kind of added to this thing.
+
+00:22:37.000 --> 00:22:40.000
+I wonder too if there's any way I can get more information
+
+00:22:40.000 --> 00:22:43.000
+about things like hyper threads on these.
+
+00:22:43.000 --> 00:22:45.000
+Like if they even show hyper threads,
+
+00:22:45.000 --> 00:22:47.000
+I feel like in the old days you could toggle this
+
+00:22:47.000 --> 00:22:49.000
+and say whether you were showing processors
+
+00:22:49.000 --> 00:22:50.000
+or logical processors.
+
+00:22:50.000 --> 00:22:51.000
+I don't know.
+
+00:22:51.000 --> 00:22:55.000
+I do not know.
+
+00:22:55.000 --> 00:23:00.000
+No, it doesn't look like there's much here for that.
+
+00:23:00.000 --> 00:23:01.000
+Yeah.
+
+00:23:01.000 --> 00:23:02.000
+All right.
+
+00:23:01.000 --> 00:23:04.000
+Well, anyway, that is not really relevant to what we're doing.
+
+00:23:04.000 --> 00:23:05.000
+So I'm going to skip it.
+
+00:23:04.000 --> 00:23:06.000
+But maybe later on we will go try
+
+00:23:06.000 --> 00:23:09.000
+to find out how to get a little more information
+
+00:23:09.000 --> 00:23:10.000
+and take a look at those things.
+
+00:23:10.000 --> 00:23:13.000
+Anyway, so there are a lot of processors in this system.
+
+00:23:13.000 --> 00:23:17.000
+And when you build something, obviously,
+
+00:23:17.000 --> 00:23:18.000
+compilers can get a little slow.
+
+00:23:18.000 --> 00:23:20.000
+And if you have a lot of things to compile,
+
+00:23:20.000 --> 00:23:21.000
+they could take some time.
+
+00:23:21.000 --> 00:23:23.000
+And so one of the things that compilers do
+
+00:23:23.000 --> 00:23:25.000
+is they are multi-threaded sometimes,
+
+00:23:25.000 --> 00:23:27.000
+depending on which one you're talking about.
+
+00:23:27.000 --> 00:23:31.000
+And they will try to compile using more than one logical
+
+00:23:31.000 --> 00:23:32.000
+processing unit.
+
+00:23:31.000 --> 00:23:36.000
+So they'll try to use more of the CPU resources
+
+00:23:36.000 --> 00:23:37.000
+to get the compile done faster.
+
+00:23:37.000 --> 00:23:41.000
+But this little thing here represents, if I remember correctly,
+
+00:23:41.000 --> 00:23:43.000
+it's been a long time since I've ever really used one of these.
+
+00:23:43.000 --> 00:23:51.000
+It just lets you know a sequence number of basically which sort of spawn of the compiler
+
+00:23:51.000 --> 00:23:53.000
+was reporting this message.
+
+00:23:53.000 --> 00:23:58.000
+Because you may have multiple compilations going, multiple different CPUs doing compilations.
+
+00:23:58.000 --> 00:24:03.000
+And I believe that basically just tells you which one you're looking at at that time.
+
+00:24:03.000 --> 00:24:06.000
+So if we were to do a more complicated compilation with multiple files,
+
+00:24:06.000 --> 00:24:10.000
+3s 4s going on there as it spooled off jobs in a more complex fashion. But for
+
+00:24:10.000 --> 00:24:13.000
+the moment we're only seeing ones because it only had one file to compile and
+
+00:24:13.000 --> 00:24:19.000
+did not bother to launch extra threads to do that. Anyway, so this is the file
+
+00:24:19.000 --> 00:24:23.000
+that was compiling and we will see here the first time we got an error. And
+
+00:24:23.000 --> 00:24:27.000
+what an error is is an error means basically it was trying to read the
+
+00:24:27.000 --> 00:24:31.000
+text file that we gave it and it did not like what it found. Now that is
+
+00:24:31.000 --> 00:24:33.000
+unsurprising because I basically just typed a bunch of gibberish in here.
+
+00:24:33.000 --> 00:24:37.000
+but what we can do is when we double click on this it will tell us where the
+
+00:24:37.000 --> 00:24:42.000
+problem is. It will then stop basically what it's doing. So when you have errors
+
+00:24:42.000 --> 00:24:46.000
+it will list the errors that it found, it will list them up usually to a
+
+00:24:46.000 --> 00:24:49.000
+certain number of errors and usually that's parameterizable, but after it
+
+00:24:49.000 --> 00:24:52.000
+gets to a certain number of errors it will stop the compilation and it will
+
+00:24:52.000 --> 00:24:56.000
+basically just report that it failed the compilation and you can see it
+
+00:24:56.000 --> 00:25:01.000
+says one errors here and it says zero succeeded one failed and you know
+
+00:25:01.000 --> 00:25:03.000
+It lets us know if they're ones that it skipped because it
+
+00:25:03.000 --> 00:25:06.000
+didn't think it needed to do any work, that sort of thing.
+
+00:25:06.000 --> 00:25:07.000
+And it'll also save a build log for us,
+
+00:25:07.000 --> 00:25:10.000
+which are pretty useless most of the time.
+
+00:25:10.000 --> 00:25:12.000
+But if you want to look at the build log,
+
+00:25:12.000 --> 00:25:14.000
+basically it saves an HTML file that
+
+00:25:14.000 --> 00:25:17.000
+has sort of a log of what happened in the build for,
+
+00:25:17.000 --> 00:25:18.000
+I guess, for posterity.
+
+00:25:18.000 --> 00:25:21.000
+Or if you want to do some kind of thing where you save
+
+00:25:21.000 --> 00:25:23.000
+build logs or do other kinds of stuff with that.
+
+00:25:23.000 --> 00:25:25.000
+Maybe you are running these in some way
+
+00:25:25.000 --> 00:25:26.000
+that you're viewing remotely.
+
+00:25:26.000 --> 00:25:27.000
+There's reasons for build logs,
+
+00:25:27.000 --> 00:25:30.000
+but we're certainly not going to have any use for it.
+
+00:25:30.000 --> 00:25:31.000
+OK.
+
+00:25:31.000 --> 00:25:34.000
+So that rather exciting process there where we just hit build
+
+00:25:34.000 --> 00:25:37.000
+and we get an error is what we're going to be doing
+
+00:25:37.000 --> 00:25:38.000
+in order to produce an executable.
+
+00:25:38.000 --> 00:25:41.000
+And in order to get to the next step of actually producing
+
+00:25:41.000 --> 00:25:45.000
+an executable, what we are going to have to do
+
+00:25:45.000 --> 00:25:49.000
+is we are going to have to give it some code that it actually
+
+00:25:49.000 --> 00:25:50.000
+understands.
+
+00:25:50.000 --> 00:25:55.000
+And basically, I'm going to type in some wrote code now.
+
+00:25:55.000 --> 00:25:57.000
+And then I'm going to explain to you sort of what it does.
+
+00:25:57.000 --> 00:25:59.000
+It's sort of the simplest thing
+
+00:25:59.000 --> 00:26:02.000
+that we can possibly type in to get to the next stage.
+
+00:26:02.000 --> 00:26:05.000
+And here it is.
+
+00:26:05.000 --> 00:26:10.000
+So if I now try to build this, you will notice,
+
+00:26:10.000 --> 00:26:13.000
+and don't worry, we'll get to this in a second,
+
+00:26:13.000 --> 00:26:16.000
+you will notice that what it does is it gets past
+
+00:26:16.000 --> 00:26:17.000
+that step we were before.
+
+00:26:17.000 --> 00:26:19.000
+We got to test.cpp.
+
+00:26:19.000 --> 00:26:22.000
+And it actually was able to sort of move past that
+
+00:26:22.000 --> 00:26:24.000
+and move on to doing other things.
+
+00:26:24.000 --> 00:26:28.000
+Now, it tried to launch the Microsoft resource compiler.
+
+00:26:28.000 --> 00:26:31.000
+And that was because we have a resource files thing in here
+
+00:26:31.000 --> 00:26:33.000
+and it created this project for us
+
+00:26:33.000 --> 00:26:34.000
+and it seems we're gonna have them.
+
+00:26:34.000 --> 00:26:36.000
+A resource compiler is nothing fancy.
+
+00:26:36.000 --> 00:26:38.000
+It sounds a lot better than it is.
+
+00:26:38.000 --> 00:26:39.000
+You're like, oh, resource compiler.
+
+00:26:39.000 --> 00:26:40.000
+I could compile my game's resource with that.
+
+00:26:40.000 --> 00:26:44.000
+Not very likely, and you probably don't want to do that
+
+00:26:44.000 --> 00:26:47.000
+for myriad reasons, but what the resource compiler
+
+00:26:47.000 --> 00:26:50.000
+actually does is the resource compiler does things
+
+00:26:50.000 --> 00:26:54.000
+like packing up an icon for your application
+
+00:26:54.000 --> 00:26:59.000
+and sticking it in somewhere where Windows can find it
+
+00:26:59.000 --> 00:27:00.000
+in the executable so that it can display it
+
+00:27:00.000 --> 00:27:02.000
+next year executable and things like that.
+
+00:27:02.000 --> 00:27:04.000
+So it is something that you do need to know how to do.
+
+00:27:04.000 --> 00:27:06.000
+Eventually, but right now we don't care at all.
+
+00:27:06.000 --> 00:27:08.000
+Obviously it didn't need to actually do anything,
+
+00:27:08.000 --> 00:27:09.000
+so it finished that up.
+
+00:27:09.000 --> 00:27:10.000
+But then it got to the step that I actually wanted
+
+00:27:10.000 --> 00:27:13.000
+to talk about, which is linking.
+
+00:27:13.000 --> 00:27:19.000
+Now what linking is, is linking is sort of a back half
+
+00:27:19.000 --> 00:27:21.000
+to this compilation process.
+
+00:27:21.000 --> 00:27:26.000
+Now what we could do, a compiler certainly could take a text file
+
+00:27:26.000 --> 00:27:28.000
+and it could directly make an executable out of it
+
+00:27:28.000 --> 00:27:30.000
+if that text file contained everything that it needed
+
+00:27:30.000 --> 00:27:31.000
+to define the executable.
+
+00:27:31.000 --> 00:27:37.000
+But what usually happens more often, and partly for legacy reasons
+
+00:27:37.000 --> 00:27:41.000
+at this point, but what can you do?
+
+00:27:41.000 --> 00:27:44.000
+What happens more often is you have a lot of text files.
+
+00:27:44.000 --> 00:27:46.000
+So the code for a game could be hundreds of thousands
+
+00:27:46.000 --> 00:27:47.000
+of lines of code.
+
+00:27:47.000 --> 00:27:49.000
+It could be split up into lots of these CPP files
+
+00:27:49.000 --> 00:27:52.000
+that we're going to learn how to write here.
+
+00:27:52.000 --> 00:27:57.000
+And in order to quote unquote save compilation time
+
+00:27:57.000 --> 00:28:00.000
+and various other reasons, what it often
+
+00:28:00.000 --> 00:28:02.000
+wants to do is be able to compile each file
+
+00:28:02.000 --> 00:28:06.000
+into an intermediate file doing one part of the compilation
+
+00:28:06.000 --> 00:28:08.000
+process, one part of the producing executable.
+
+00:28:08.000 --> 00:28:10.000
+And that intermediate file will basically
+
+00:28:10.000 --> 00:28:12.000
+be the process that takes the text
+
+00:28:12.000 --> 00:28:16.000
+and turns it into mostly code that the CPU connects to you.
+
+00:28:16.000 --> 00:28:20.000
+but there are a bunch of things that aren't quite done yet,
+
+00:28:20.000 --> 00:28:23.000
+then those intermediate files don't always have to be updated.
+
+00:28:23.000 --> 00:28:26.000
+They only have to be updated when the particular source file
+
+00:28:26.000 --> 00:28:27.000
+that they came from changed.
+
+00:28:27.000 --> 00:28:31.000
+So for example, this test.cpp, if I don't change test.cpp,
+
+00:28:31.000 --> 00:28:33.000
+it won't have to recompile test.cpp.
+
+00:28:33.000 --> 00:28:36.000
+If I had tons of other files, foo.cpp, bar.cpp,
+
+00:28:36.000 --> 00:28:39.000
+all these other CPP files, and I changed just one of them,
+
+00:28:39.000 --> 00:28:41.000
+it would only have to do the recompilation on just one
+
+00:28:41.000 --> 00:28:42.000
+of them.
+
+00:28:41.000 --> 00:28:44.000
+But since all of them have to be pulled in and made
+
+00:28:44.000 --> 00:28:47.000
+into an executable at the end, they basically
+
+00:28:47.000 --> 00:28:49.000
+have a second stage to the compilation process,
+
+00:28:49.000 --> 00:28:50.000
+which is called linking.
+
+00:28:50.000 --> 00:28:52.000
+And that's what this line does here.
+
+00:28:52.000 --> 00:28:54.000
+And what linking is about is linking
+
+00:28:54.000 --> 00:28:57.000
+is about gathering all of that processing together,
+
+00:28:57.000 --> 00:29:01.000
+all of those intermediate files, and basically resolving
+
+00:29:01.000 --> 00:29:05.000
+the places where they point to each other.
+
+00:29:05.000 --> 00:29:09.000
+So I may do a bunch of things in test.cpp
+
+00:29:09.000 --> 00:29:13.000
+that are going to call out and or reference to,
+
+00:29:13.000 --> 00:29:19.000
+or use data from other CPP files that I compiled.
+
+00:29:19.000 --> 00:29:22.000
+And since the compiler is only looking
+
+00:29:22.000 --> 00:29:25.000
+at each individual CPP file as it goes and compiles them,
+
+00:29:25.000 --> 00:29:27.000
+it can't resolve those references.
+
+00:29:27.000 --> 00:29:30.000
+It can't tell where the things are
+
+00:29:30.000 --> 00:29:31.000
+that things are pointed to because it's only
+
+00:29:31.000 --> 00:29:33.000
+seeing one individual file.
+
+00:29:33.000 --> 00:29:36.000
+And so what the linker does in this link stage,
+
+00:29:36.000 --> 00:29:38.000
+there's a thing called a linker that gets executed
+
+00:29:38.000 --> 00:29:40.000
+separate from the compiler.
+
+00:29:40.000 --> 00:29:42.000
+And what it is, is it is something
+
+00:29:42.000 --> 00:29:45.000
+that gathers all those together, resolves the references,
+
+00:29:45.000 --> 00:29:50.000
+packages this into one EXE, which you can then ship.
+
+00:29:50.000 --> 00:29:53.000
+Now, when I say which you can then ship,
+
+00:29:53.000 --> 00:29:55.000
+that was the good old days.
+
+00:29:55.000 --> 00:29:58.000
+There's a lot of reasons why you can't actually just ship it,
+
+00:29:58.000 --> 00:30:00.000
+thanks to Microsoft and their Tyler's pursuit
+
+00:30:00.000 --> 00:30:02.000
+of making building applications complicated.
+
+00:30:02.000 --> 00:30:05.000
+But I'm gonna hold off on that from now
+
+00:30:05.000 --> 00:30:08.000
+so that we can focus on just the basics of the process
+
+00:30:08.000 --> 00:30:10.000
+since it's a lot to absorb
+
+00:30:10.000 --> 00:30:11.000
+and I don't wanna overcomplicate it
+
+00:30:11.000 --> 00:30:13.000
+more than it already is.
+
+00:30:13.000 --> 00:30:14.000
+Okay.
+
+00:30:14.000 --> 00:30:16.000
+So in the linking stage,
+
+00:30:16.000 --> 00:30:18.000
+you will see that we have gotten to our next error.
+
+00:30:18.000 --> 00:30:21.000
+And that error is this line right here.
+
+00:30:21.000 --> 00:30:23.000
+You'll notice that it doesn't give me a line number
+
+00:30:23.000 --> 00:30:25.000
+and that is because Microsoft's linker
+
+00:30:25.000 --> 00:30:27.000
+is not particularly good.
+
+00:30:27.000 --> 00:30:28.000
+I don't know if they fixed this
+
+00:30:28.000 --> 00:30:29.000
+in one of the more modern versions,
+
+00:30:29.000 --> 00:30:32.000
+but even as of 2008,
+
+00:30:32.000 --> 00:30:34.000
+their linker never bothered to tell you
+
+00:30:34.000 --> 00:30:35.000
+where your errors are.
+
+00:30:35.000 --> 00:30:38.000
+So all you get is which function
+
+00:30:38.000 --> 00:30:41.000
+it was referenced in, if that makes sense.
+
+00:30:41.000 --> 00:30:45.000
+So basically, you will know very little.
+
+00:30:45.000 --> 00:30:48.000
+You'll know what file maybe made the error possibly,
+
+00:30:48.000 --> 00:30:51.000
+and you'll know what function was causing the problem,
+
+00:30:51.000 --> 00:30:52.000
+or things like that.
+
+00:30:52.000 --> 00:30:54.000
+And we'll kind of get to what all those mean
+
+00:30:54.000 --> 00:30:55.000
+and how to suss them out later.
+
+00:30:55.000 --> 00:30:57.000
+But basically, you get very cryptic error message
+
+00:30:57.000 --> 00:30:58.000
+for a linker.
+
+00:30:57.000 --> 00:31:00.000
+Fortunately, most of the time, linker errors
+
+00:31:00.000 --> 00:31:02.000
+are simpler errors than compiler errors,
+
+00:31:02.000 --> 00:31:06.000
+so it's not too hard to figure out what they mean.
+
+00:31:06.000 --> 00:31:08.000
+So looking at this error, what it says
+
+00:31:08.000 --> 00:31:13.000
+is unresolved external symbol underscore win main at 16,
+
+00:31:13.000 --> 00:31:16.000
+reference and function t main CRT startup.
+
+00:31:16.000 --> 00:31:19.000
+It then goes on to tell us that that was a fatal error.
+
+00:31:19.000 --> 00:31:22.000
+So there was one unresolved external.
+
+00:31:22.000 --> 00:31:24.000
+And now what that means, just what I was just saying,
+
+00:31:24.000 --> 00:31:27.000
+an unresolved external, what external means in this case
+
+00:31:27.000 --> 00:31:30.000
+is external to the compilation unit
+
+00:31:30.000 --> 00:31:32.000
+in which it was being used.
+
+00:31:32.000 --> 00:31:35.000
+So when I compile test.cpp or something,
+
+00:31:35.000 --> 00:31:38.000
+it's got a corresponding file that the compiler produced
+
+00:31:38.000 --> 00:31:40.000
+that the linker is then pulling in,
+
+00:31:40.000 --> 00:31:43.000
+things that are external to that file are called externals.
+
+00:31:43.000 --> 00:31:45.000
+And when you see one unresolved external,
+
+00:31:45.000 --> 00:31:48.000
+it means that it came across one of these
+
+00:31:48.000 --> 00:31:49.000
+that it couldn't resolve.
+
+00:31:49.000 --> 00:31:52.000
+It couldn't find any actual definition of that
+
+00:31:52.000 --> 00:31:53.000
+anywhere else in the other file.
+
+00:31:53.000 --> 00:31:54.000
+So what can it do?
+
+00:31:54.000 --> 00:31:56.000
+It can't finish linking
+
+00:31:56.000 --> 00:31:57.000
+because it can't figure out
+
+00:31:57.000 --> 00:32:00.000
+what it was supposed to do there.
+
+00:32:00.000 --> 00:32:01.000
+So again, we get an error.
+
+00:32:01.000 --> 00:32:02.000
+This time it says two errors,
+
+00:32:02.000 --> 00:32:04.000
+but really it was only one error.
+
+00:32:04.000 --> 00:32:06.000
+But that's just the way I guess it decided
+
+00:32:06.000 --> 00:32:07.000
+to print it out.
+
+00:32:07.000 --> 00:32:11.000
+what the second error is, but hey, what are you going to do?
+
+00:32:11.000 --> 00:32:15.000
+Anyway, now that we see what our link error is,
+
+00:32:15.000 --> 00:32:17.000
+we can start to debug it.
+
+00:32:17.000 --> 00:32:20.000
+So what actually happens if you think about it
+
+00:32:20.000 --> 00:32:22.000
+when you run an executable, there
+
+00:32:22.000 --> 00:32:25.000
+is something kind of complicated that has to occur,
+
+00:32:25.000 --> 00:32:29.000
+which is that Windows is actually the program that's
+
+00:32:29.000 --> 00:32:30.000
+running on your machine.
+
+00:32:30.000 --> 00:32:33.000
+So the processor in your machine is executing Windows.
+
+00:32:33.000 --> 00:32:35.000
+And now we have built something
+
+00:32:35.000 --> 00:32:38.000
+that we would like Windows to start executing.
+
+00:32:38.000 --> 00:32:44.000
+But Windows and our program were not linked together, right?
+
+00:32:44.000 --> 00:32:46.000
+This linking step that I just explained where, hey,
+
+00:32:46.000 --> 00:32:48.000
+we can write some stuff and it pulls it all together
+
+00:32:48.000 --> 00:32:51.000
+and it references each other and everyone's happy.
+
+00:32:51.000 --> 00:32:54.000
+It makes sense if we typed in all the code.
+
+00:32:54.000 --> 00:32:57.000
+But if we only typed in some code that
+
+00:32:57.000 --> 00:33:00.000
+has to be started by Windows or started
+
+00:33:00.000 --> 00:33:02.000
+by some operating system, well, how does it know where
+
+00:33:02.000 --> 00:33:03.000
+to start?
+
+00:33:03.000 --> 00:33:05.000
+How does it actually get started?
+
+00:33:05.000 --> 00:33:09.000
+And the answer to that is basically that the linking process,
+
+00:33:09.000 --> 00:33:12.000
+even though it seems like we're going to finish it here in a minute,
+
+00:33:12.000 --> 00:33:16.000
+is never actually really finished in an executable,
+
+00:33:16.000 --> 00:33:19.000
+unless what you're building is the whole operating system.
+
+00:33:19.000 --> 00:33:23.000
+If you are building a kernel that runs the entire machine,
+
+00:33:23.000 --> 00:33:25.000
+then in some sense you've built the entire program
+
+00:33:25.000 --> 00:33:27.000
+and linking can resolve all externals.
+
+00:33:27.000 --> 00:33:30.000
+And even that maybe isn't totally true,
+
+00:33:30.000 --> 00:33:33.000
+because even in that case, there is a BIOS in your computer,
+
+00:33:33.000 --> 00:33:37.000
+And that BIAS has to know how to load something
+
+00:33:37.000 --> 00:33:39.000
+and start executing it, which is the kernel that's on the disk.
+
+00:33:39.000 --> 00:33:42.000
+So it's complicated if you actually
+
+00:33:42.000 --> 00:33:44.000
+want to go all the way down to the bottom
+
+00:33:44.000 --> 00:33:46.000
+and open up the Russian nesting dolls all the way down
+
+00:33:46.000 --> 00:33:48.000
+to what's actually happening in your machine
+
+00:33:48.000 --> 00:33:50.000
+when you actually turn it on.
+
+00:33:50.000 --> 00:33:54.000
+But assuming that you're already running a program like Windows,
+
+00:33:54.000 --> 00:33:58.000
+that's an operating system set up to run executable content,
+
+00:33:58.000 --> 00:34:01.000
+the question is, how does Windows actually know where to start?
+
+00:34:01.000 --> 00:34:04.000
+How does it know what to even do with this file?
+
+00:34:04.000 --> 00:34:07.000
+And the answer is that executable file formats.
+
+00:34:07.000 --> 00:34:10.000
+Executables are files on your disk, just like a bitmap
+
+00:34:10.000 --> 00:34:12.000
+or anything else.
+
+00:34:12.000 --> 00:34:14.000
+The executable file format is basically set up
+
+00:34:14.000 --> 00:34:16.000
+in a way that Windows understands
+
+00:34:16.000 --> 00:34:18.000
+so that it can open it and read it
+
+00:34:18.000 --> 00:34:21.000
+and read out of it information
+
+00:34:21.000 --> 00:34:25.000
+that tells it where to actually start executing.
+
+00:34:25.000 --> 00:34:28.000
+So when Windows wants to run some of your code,
+
+00:34:28.000 --> 00:34:31.000
+it basically can load that file into memory,
+
+00:34:31.000 --> 00:34:33.000
+Do some work on it that it needs to do,
+
+00:34:33.000 --> 00:34:35.000
+which we'll talk about again in a little bit.
+
+00:34:35.000 --> 00:34:37.000
+And then it will use information that
+
+00:34:37.000 --> 00:34:41.000
+was put in the executable by this linker, in fact,
+
+00:34:41.000 --> 00:34:45.000
+which tells it where in the file we wanted it to actually
+
+00:34:45.000 --> 00:34:46.000
+start executing.
+
+00:34:46.000 --> 00:34:48.000
+So in memory, where should it actually
+
+00:34:48.000 --> 00:34:50.000
+jump to to actually start executing it?
+
+00:34:50.000 --> 00:34:52.000
+Tell the CPU, here's where the code is.
+
+00:34:52.000 --> 00:34:54.000
+Go run it.
+
+00:34:54.000 --> 00:34:58.000
+And the answer to that is, oh, sorry.
+
+00:34:58.000 --> 00:34:59.000
+I shouldn't say the answer to that.
+
+00:34:59.000 --> 00:35:06.000
+The way in which we tell the linker where we want it to tell windows where to start is
+
+00:35:06.000 --> 00:35:13.000
+that we use a predefined name and we name something that name so that it can find it
+
+00:35:13.000 --> 00:35:14.000
+in our code.
+
+00:35:14.000 --> 00:35:20.000
+Now that's not entirely true because we actually could go into the linker itself and there
+
+00:35:20.000 --> 00:35:24.000
+are settings which we could modify that would tell it to use some other name, for
+
+00:35:24.000 --> 00:35:26.000
+example, Foo here.
+
+00:35:26.000 --> 00:35:29.000
+But most of the time, nobody actually does code that way.
+
+00:35:29.000 --> 00:35:32.000
+Most people, people just use the default name.
+
+00:35:32.000 --> 00:35:40.000
+And that default name is actually, well, I'm going to say it's WinMain.
+
+00:35:40.000 --> 00:35:43.000
+As we'll see in a second, it's not actually WinMain, but I don't want to spoil the surprise.
+
+00:35:43.000 --> 00:35:46.000
+So I'm going to say that it's WinMain for now.
+
+00:35:46.000 --> 00:35:50.000
+And what you can actually do if you, you know, you're not going to probably remember
+
+00:35:50.000 --> 00:35:53.000
+a lot of this stuff that I'm saying, and I totally respect that.
+
+00:35:53.000 --> 00:35:56.000
+I don't remember all this stuff all the time either.
+
+00:35:56.000 --> 00:36:01.000
+I always am looking things up on MSDN, which I will show you in a second.
+
+00:36:01.000 --> 00:36:05.000
+If you type WinMain into your Google search box,
+
+00:36:05.000 --> 00:36:09.000
+you will get the first hit as this site called msdn.microsoft.com,
+
+00:36:09.000 --> 00:36:13.000
+which we are going to be using a lot as we learn to program C in Windows
+
+00:36:13.000 --> 00:36:17.000
+because it is basically a repository for all of the stuff that
+
+00:36:17.000 --> 00:36:20.000
+is Windows-specific about programming.
+
+00:36:20.000 --> 00:36:22.000
+And since we're going to be programming in Windows for a while,
+
+00:36:22.000 --> 00:36:25.000
+that matters to us because we are constantly going to have to look things
+
+00:36:25.000 --> 00:36:30.000
+up at least in the first couple of weeks, look up things that tell us how to interface
+
+00:36:30.000 --> 00:36:36.000
+with the operating system. Now in here you can see the definition of WinMain, the documentation
+
+00:36:36.000 --> 00:36:40.000
+for it, it tells us a bunch of stuff. If you are a beginning C programmer you will understand
+
+00:36:40.000 --> 00:36:45.000
+none of this, and that is okay. One of the things I am definitely going to do in
+
+00:36:45.000 --> 00:36:48.000
+this series is go over things many times, we're going to go over things in depth.
+
+00:36:48.000 --> 00:36:51.000
+So you don't have to worry about the fact that a lot of the stuff that we're
+
+00:36:51.000 --> 00:36:57.000
+going to do may not be completely understandable to you at the moment. I will always try to
+
+00:36:57.000 --> 00:37:01.000
+explain as much as you need to know then and then we will go into more detail later as
+
+00:37:01.000 --> 00:37:05.000
+necessary because I don't want to get too bogged down. I do want to get bogged down fairly
+
+00:37:05.000 --> 00:37:09.000
+often but I don't want to get too bogged down. And you can also email me anytime
+
+00:37:09.000 --> 00:37:13.000
+you have a question and we will try to work those questions into future editions
+
+00:37:13.000 --> 00:37:20.000
+of the series. So this right here is what is called a function prototype and we're
+
+00:37:20.000 --> 00:37:21.000
+going to be dealing with these a lot.
+
+00:37:21.000 --> 00:37:25.000
+But basically what it does is it tells you
+
+00:37:25.000 --> 00:37:28.000
+the way in which a particular piece of code
+
+00:37:28.000 --> 00:37:30.000
+needs to start executing.
+
+00:37:30.000 --> 00:37:33.000
+And we'll get into a lot of stuff with these later.
+
+00:37:33.000 --> 00:37:34.000
+So I won't belabor the point.
+
+00:37:34.000 --> 00:37:37.000
+But basically this is the predefined entry point
+
+00:37:37.000 --> 00:37:41.000
+that we will be getting called at when we start executing.
+
+00:37:41.000 --> 00:37:44.000
+And so if we want to define it in our C program,
+
+00:37:44.000 --> 00:37:47.000
+we have to basically do something like this.
+
+00:37:47.000 --> 00:37:52.000
+We have to go in and define this just the way that they did in here.
+
+00:37:52.000 --> 00:37:57.000
+And when we define this, the linker will now see this symbol, this wind main symbol.
+
+00:37:57.000 --> 00:38:05.000
+And it will know that that is the place that we wanted our execution for Windows to start.
+
+00:38:05.000 --> 00:38:09.000
+Now, if I go to build again, and you'll see there's a shortcut to it here, which is F7.
+
+00:38:09.000 --> 00:38:12.000
+So it's good to learn this because you build programs a lot.
+
+00:38:12.000 --> 00:38:17.000
+If I build it with F7, you'll notice one other thing that happened here.
+
+00:38:17.000 --> 00:38:19.000
+before we get into errors and such.
+
+00:38:19.000 --> 00:38:20.000
+One other thing that happened here is
+
+00:38:20.000 --> 00:38:22.000
+it saved the file automatically.
+
+00:38:22.000 --> 00:38:24.000
+I don't know if you noticed the green line,
+
+00:38:24.000 --> 00:38:26.000
+the yellow line turning green.
+
+00:38:26.000 --> 00:38:28.000
+One of the things that happens by default
+
+00:38:28.000 --> 00:38:33.000
+in the setup for Microsoft Visual Studio
+
+00:38:33.000 --> 00:38:34.000
+is that when you build something,
+
+00:38:34.000 --> 00:38:36.000
+it will save files that are unsaved.
+
+00:38:36.000 --> 00:38:37.000
+That's actually something you can change here
+
+00:38:37.000 --> 00:38:39.000
+in the tools options.
+
+00:38:39.000 --> 00:38:41.000
+If you want to change that stuff,
+
+00:38:41.000 --> 00:38:44.000
+there's things in here that affect things like that.
+
+00:38:44.000 --> 00:38:46.000
+I don't happen to remember exactly where that one is.
+
+00:38:46.000 --> 00:38:52.000
+I think it might be in documents, but I don't know.
+
+00:38:52.000 --> 00:38:53.000
+Maybe it's in build projects.
+
+00:38:53.000 --> 00:38:55.000
+I have no idea where it is.
+
+00:38:55.000 --> 00:38:57.000
+You will have to hunt for it, my friends,
+
+00:38:57.000 --> 00:39:00.000
+because I have no idea where that actually is.
+
+00:39:00.000 --> 00:39:04.000
+But let's see.
+
+00:39:04.000 --> 00:39:05.000
+There it is.
+
+00:39:05.000 --> 00:39:08.000
+Before building, save all changes.
+
+00:39:08.000 --> 00:39:10.000
+And you can set that to other things,
+
+00:39:10.000 --> 00:39:11.000
+like don't save whatever.
+
+00:39:11.000 --> 00:39:13.000
+So that's just a customization you're liking,
+
+00:39:13.000 --> 00:39:15.000
+but you will notice that is why you didn't have
+
+00:39:15.000 --> 00:39:21.000
+before I built it. So if I hit F7 it builds the file and you will see that we have gotten some errors here.
+
+00:39:21.000 --> 00:39:26.000
+And the errors are because we have started to use window-specific things
+
+00:39:26.000 --> 00:39:31.000
+and window-specific things aren't defined by default in our C code.
+
+00:39:31.000 --> 00:39:35.000
+So what we have to do is we have to bring in something that defines them.
+
+00:39:35.000 --> 00:39:38.000
+And again don't worry too much about this because we were about to discuss it in detail.
+
+00:39:38.000 --> 00:39:41.000
+I just want to finish this one process first before we go back here.
+
+00:39:41.000 --> 00:39:47.000
+So I have done that and now you will see, oh, lovely.
+
+00:39:47.000 --> 00:39:50.000
+And I suppose I will have to remove these for a moment
+
+00:39:50.000 --> 00:39:52.000
+to also build this.
+
+00:39:52.000 --> 00:39:53.000
+Yes, fabulous.
+
+00:39:53.000 --> 00:39:54.000
+I'm gonna put those back in
+
+00:39:54.000 --> 00:39:56.000
+because I wanted to talk about those.
+
+00:39:56.000 --> 00:39:57.000
+I was hoping they would be allowed.
+
+00:39:57.000 --> 00:40:01.000
+Okay, so that did a successful build
+
+00:40:01.000 --> 00:40:02.000
+but I wanna break this into two parts
+
+00:40:02.000 --> 00:40:05.000
+because I can't leave these in declarations in there
+
+00:40:05.000 --> 00:40:08.000
+until, if I want to actually build it.
+
+00:40:08.000 --> 00:40:12.000
+So this particular definition basically
+
+00:40:12.000 --> 00:40:16.000
+uses a bunch of words that Windows has defined themselves.
+
+00:40:16.000 --> 00:40:18.000
+And we're going to talk a lot about how we define those things
+
+00:40:18.000 --> 00:40:19.000
+and things later.
+
+00:40:19.000 --> 00:40:22.000
+But I wanted to just point out some of them quickly.
+
+00:40:22.000 --> 00:40:25.000
+These things are all stuff that Windows
+
+00:40:25.000 --> 00:40:27.000
+defined that are specific to Windows.
+
+00:40:27.000 --> 00:40:30.000
+They're all things that you won't probably ever actually
+
+00:40:30.000 --> 00:40:33.000
+see if you're programming in a higher level language.
+
+00:40:33.000 --> 00:40:36.000
+I've never really programmed in C sharp specifically.
+
+00:40:36.000 --> 00:40:39.000
+So maybe some of this stuff still creeps through.
+
+00:40:39.000 --> 00:40:40.000
+That's entirely possible.
+
+00:40:40.000 --> 00:40:42.000
+But a lot of higher level languages
+
+00:40:42.000 --> 00:40:44.000
+obscure the underlying things that
+
+00:40:44.000 --> 00:40:45.000
+are happening in the Windows code.
+
+00:40:45.000 --> 00:40:48.000
+And so you never will actually see them.
+
+00:40:48.000 --> 00:40:51.000
+But when we are programming in C, and specifically
+
+00:40:51.000 --> 00:40:53.000
+when we program in low level C, that we
+
+00:40:53.000 --> 00:40:56.000
+want to directly interface with Windows as much as possible
+
+00:40:56.000 --> 00:40:59.000
+to avoid any sort of intermediaries,
+
+00:40:59.000 --> 00:41:01.000
+we will have to deal with a lot of these.
+
+00:41:01.000 --> 00:41:04.000
+Now, I'll get into what these specifically mean in a bit,
+
+00:41:04.000 --> 00:41:06.000
+but you will see words like this.
+
+00:41:06.000 --> 00:41:12.000
+L P stir. Now what is L P stir mean? What what does that mean? Even an experienced C programmer
+
+00:41:12.000 --> 00:41:17.000
+who's never programmed in Windows before would not know what LP stir meant. So it is not the
+
+00:41:17.000 --> 00:41:21.000
+fact that I haven't explained what this definition is or how any of this stuff in this file
+
+00:41:21.000 --> 00:41:24.000
+works. That is why you don't understand it if you're beginning if you get a program
+
+00:41:24.000 --> 00:41:30.000
+or serve program C. This is actually complete gobbledygook to a experienced C programmer
+
+00:41:30.000 --> 00:41:34.000
+who hasn't actually ever programmed Windows before because these are things that Windows
+
+00:41:34.000 --> 00:41:39.000
+made up. They made them up to use to reference specific things in their
+
+00:41:39.000 --> 00:41:43.000
+operating system which we will have to interface with. An h instance, for example,
+
+00:41:43.000 --> 00:41:48.000
+is a running program. It's something that refers to a running program. An LP
+
+00:41:48.000 --> 00:41:52.000
+stirrer is something that is a pointer to a string, like a string of
+
+00:41:52.000 --> 00:41:57.000
+characters, like some text, for example. And you will notice something that
+
+00:41:57.000 --> 00:42:01.000
+occurs in these that is kind of frustrating. These weird little h's
+
+00:42:01.000 --> 00:42:04.000
+Because, hey, instance, well, that makes some sense.
+
+00:42:04.000 --> 00:42:05.000
+That's English, right?
+
+00:42:05.000 --> 00:42:07.000
+I mean, that makes some sense to you.
+
+00:42:07.000 --> 00:42:09.000
+It's an instance of a program.
+
+00:42:09.000 --> 00:42:11.000
+STR, that kind of makes some sense.
+
+00:42:11.000 --> 00:42:14.000
+It could be like a string, STR string, that makes sense.
+
+00:42:14.000 --> 00:42:18.000
+But like LP and H, and it's repeated over here.
+
+00:42:18.000 --> 00:42:20.000
+OK, PREV instance, previous instance,
+
+00:42:20.000 --> 00:42:22.000
+that makes sense, instance, that makes sense.
+
+00:42:22.000 --> 00:42:24.000
+CMD line, command line, I can read this
+
+00:42:24.000 --> 00:42:26.000
+even if I don't understand anything
+
+00:42:26.000 --> 00:42:27.000
+about programming, it's English.
+
+00:42:27.000 --> 00:42:30.000
+But these weird little things here, H and LP,
+
+00:42:30.000 --> 00:42:37.000
+Those are confusing. Well, where did they come from? The answer is they come from something a long long time ago in Windows history
+
+00:42:37.000 --> 00:42:40.000
+Called Hungarian notation and if you want to know if that's racist
+
+00:42:40.000 --> 00:42:47.000
+Well, it probably is it's just nobody ever complained about it being racist because most people aren't racist against Hungarians
+
+00:42:47.000 --> 00:42:49.000
+I don't think they're not a typically
+
+00:42:49.000 --> 00:42:54.000
+Oppressed class here in Washington State. So probably no one got upset about it
+
+00:42:54.000 --> 00:42:56.000
+But to be honest with you it's pretty racist to call it Hungarian notation
+
+00:42:56.000 --> 00:43:02.000
+The reason it was called Hungarian notation is because the guy who introduced it was Hungarian.
+
+00:43:02.000 --> 00:43:13.000
+I think it was Charles Simonyi. I don't actually know. I don't remember who it was, but Hungarian notation is the sort of antiquated at this point, I hope,
+
+00:43:13.000 --> 00:43:23.000
+notion that you should prefix everything that you ever type into a programming language with some characters that tell you what the thing actually is.
+
+00:43:23.000 --> 00:43:27.000
+So some kind of notion of what the thing is.
+
+00:43:27.000 --> 00:43:29.000
+P in this case was pointer.
+
+00:43:29.000 --> 00:43:33.000
+I think L was long, meaning it was a pointer
+
+00:43:33.000 --> 00:43:35.000
+that was into memory in the old 16 bit days
+
+00:43:35.000 --> 00:43:37.000
+that was outside the page.
+
+00:43:37.000 --> 00:43:38.000
+I don't even remember.
+
+00:43:38.000 --> 00:43:39.000
+I'm not gonna pretend
+
+00:43:39.000 --> 00:43:41.000
+because I didn't even program much 16 bit windows.
+
+00:43:41.000 --> 00:43:44.000
+So I don't, at this point, my memory of what LP stands for
+
+00:43:44.000 --> 00:43:45.000
+is completely gone.
+
+00:43:45.000 --> 00:43:46.000
+H is handle.
+
+00:43:46.000 --> 00:43:49.000
+It means something that you would use to talk
+
+00:43:49.000 --> 00:43:52.000
+to windows in an opaque way about something.
+
+00:43:52.000 --> 00:43:53.000
+And you will see these littered everywhere.
+
+00:43:53.000 --> 00:43:57.000
+They are super annoying because they really just do not help
+
+00:43:57.000 --> 00:43:59.000
+and they make things harder to read.
+
+00:43:59.000 --> 00:44:01.000
+I cannot emphasize enough, please don't do this.
+
+00:44:01.000 --> 00:44:03.000
+This is a terrible idea.
+
+00:44:03.000 --> 00:44:04.000
+What can I say?
+
+00:44:04.000 --> 00:44:08.000
+Now, you will see in modern code, some people still
+
+00:44:08.000 --> 00:44:10.000
+do a variant of this.
+
+00:44:10.000 --> 00:44:14.000
+They will do things like P foo if something
+
+00:44:14.000 --> 00:44:16.000
+is a pointer to foo, which we'll talk about in a while.
+
+00:44:16.000 --> 00:44:19.000
+They'll do M foo if something is a member, which
+
+00:44:19.000 --> 00:44:21.000
+is if you're doing object-oriented programming, which
+
+00:44:21.000 --> 00:44:22.000
+we won't really cover.
+
+00:44:21.000 --> 00:44:23.000
+So you'll never find out what that is,
+
+00:44:23.000 --> 00:44:26.000
+but you can go watch someone else's programming stream
+
+00:44:26.000 --> 00:44:27.000
+to learn about that.
+
+00:44:27.000 --> 00:44:29.000
+Anyway, that's what these annoying things are.
+
+00:44:29.000 --> 00:44:31.000
+And you can pretty much ignore them most of the time,
+
+00:44:31.000 --> 00:44:33.000
+although if you know how to read it, it does help you.
+
+00:44:33.000 --> 00:44:36.000
+If you just happen to try to decipher something
+
+00:44:36.000 --> 00:44:38.000
+in Windows that's somewhat obtuse,
+
+00:44:38.000 --> 00:44:39.000
+maybe you can use that to help you.
+
+00:44:39.000 --> 00:44:41.000
+So there is that.
+
+00:44:41.000 --> 00:44:44.000
+Anyway, the part that I want to talk about
+
+00:44:44.000 --> 00:44:47.000
+before we get into explaining exactly what all this code
+
+00:44:47.000 --> 00:44:54.000
+does and how C works sort of at a basic level is these things right here.
+
+00:44:54.000 --> 00:44:59.000
+So what you will find if you actually look at Windows Code is you will see
+
+00:44:59.000 --> 00:45:03.000
+that there's a lot of annotation in it that is not actually designed to be
+
+00:45:03.000 --> 00:45:07.000
+processed in C necessarily, but that is designed to be processed by something
+
+00:45:07.000 --> 00:45:11.000
+else, say a documentation system that also reads the same files or what's
+
+00:45:11.000 --> 00:45:15.000
+called a middle compiler, which is a thing that is used to produce secondary
+
+00:45:15.000 --> 00:45:19.000
+files for object-linketing and embedding and all this other Windows crap.
+
+00:45:19.000 --> 00:45:25.000
+We don't care about any of that stuff, but you will see things like this that
+
+00:45:25.000 --> 00:45:29.000
+annotate some of the functions that you call, and basically what this means in
+
+00:45:29.000 --> 00:45:35.000
+is it's telling you what direction the data is flowing. Now it's not actually
+
+00:45:35.000 --> 00:45:38.000
+something we want to have in here when we actually define it, it's strictly for
+
+00:45:38.000 --> 00:45:42.000
+their header files, but when you see it when you look at MSDN you will see
+
+00:45:42.000 --> 00:45:47.000
+it there and that is what that means. It means that this is something that is going to Windows.
+
+00:45:47.000 --> 00:45:55.000
+It's being passed into Windows as opposed to an out parameter which is something that would be passed out to you, back from Windows.
+
+00:45:55.000 --> 00:46:03.000
+And we will look at those, we will see those working many times as we go through getting a Windows program going obviously.
+
+00:46:03.000 --> 00:46:08.000
+Okay, so I'm going to go in here and delete those because you don't want to leave those in, I guess.
+
+00:46:08.000 --> 00:46:11.000
+I guess. I've never actually tried before to leave the man.
+
+00:46:11.000 --> 00:46:13.000
+I was kind of hoping you could just so that you could just cut and paste directly,
+
+00:46:13.000 --> 00:46:15.000
+but I guess you can't. So when we build,
+
+00:46:15.000 --> 00:46:19.000
+we now have a successfully building program.
+
+00:46:19.000 --> 00:46:23.000
+And what this does is this means we actually have produced an executable
+
+00:46:23.000 --> 00:46:27.000
+file and if we want to, we can actually run the executable.
+
+00:46:27.000 --> 00:46:32.000
+So in here, you can see there was build solution, right?
+
+00:46:32.000 --> 00:46:35.000
+But in debug, in the debug menu,
+
+00:46:35.000 --> 00:46:39.000
+you will also see that there is a way to actually run the program,
+
+00:46:39.000 --> 00:46:41.000
+which is start debugging.
+
+00:46:41.000 --> 00:46:44.000
+And that will actually run our program and off we go.
+
+00:46:44.000 --> 00:46:46.000
+That was our program.
+
+00:46:46.000 --> 00:46:47.000
+Did you love it?
+
+00:46:47.000 --> 00:46:49.000
+I know it's very exciting.
+
+00:46:49.000 --> 00:46:52.000
+So I know it seems strange, but that actually did run our program.
+
+00:46:52.000 --> 00:46:56.000
+Our program doesn't do anything, so it just started it and then exited it.
+
+00:46:56.000 --> 00:46:59.000
+But you can also see here some debug information that was printed out
+
+00:46:59.000 --> 00:47:03.000
+by the actual startup code, which is telling us some things.
+
+00:47:03.000 --> 00:47:07.000
+I'm sorry, but this is actually by the debugger, which is actually telling us some things for example
+
+00:47:07.000 --> 00:47:12.000
+It's telling us that it loaded test.ac and it tried to produce some debug you know loads of debugging information for it
+
+00:47:12.000 --> 00:47:18.000
+It loaded some other things that it depends on so and so forth. So we actually did run our program. Isn't that exciting?
+
+00:47:18.000 --> 00:47:21.000
+Well, let's complete that before I explain what everything does
+
+00:47:21.000 --> 00:47:23.000
+with one
+
+00:47:23.000 --> 00:47:33.000
+Simple thing that we can actually see
+
+00:47:33.000 --> 00:47:35.000
+Very exciting
+
+00:47:35.000 --> 00:47:44.000
+We are going to run this and oh no, we are not oh man. I get to explain everything tonight
+
+00:47:44.000 --> 00:47:57.000
+So as you can see now, the program that, as I modified, added one line to it, and now it actually prints out as part of its behavior to the debug output, it prints out a string that we wrote.
+
+00:47:57.000 --> 00:48:09.000
+Very exciting. I know that you are all very excited. I am very excited as well about this, and I think it is safe to say that once I explain how this works, you are so on your way to creating a game with Windows.
+
+00:48:09.000 --> 00:48:13.000
+game with Windows. I mean, if you can print something out to the debug window, how much
+
+00:48:13.000 --> 00:48:21.000
+more work could it even be to make a game? Certainly not much. Well, maybe it's a little
+
+00:48:21.000 --> 00:48:26.000
+more. But I'm sure we'll be able to cover it all in future episodes. So, now that we
+
+00:48:26.000 --> 00:48:31.000
+have a working Windows program, even though it really doesn't do very much, let's go
+
+00:48:31.000 --> 00:48:35.000
+through and see what everything did. I'd like to start first with the thing that
+
+00:48:35.000 --> 00:48:39.000
+I typed in that couldn't actually be called by Windows because it was just a sub function,
+
+00:48:39.000 --> 00:48:44.000
+didn't actually do anything, and wasn't in the format that it wanted in terms of linking
+
+00:48:44.000 --> 00:48:46.000
+us.
+
+00:48:46.000 --> 00:48:50.000
+What this is in C is a function definition.
+
+00:48:50.000 --> 00:48:54.000
+Now hopefully most people are coming from other programming languages or have a passing
+
+00:48:54.000 --> 00:48:59.000
+familiarity with what a function is, so I won't belabor the point too much.
+
+00:48:59.000 --> 00:49:04.000
+But basically what a function is, is it something, it's sort of a reusable piece
+
+00:49:04.000 --> 00:49:05.000
+of a program.
+
+00:49:05.000 --> 00:49:10.000
+something where I can put some code in, I can put some stuff in that it can do, and
+
+00:49:10.000 --> 00:49:13.000
+then I can use it anywhere I want to.
+
+00:49:13.000 --> 00:49:18.000
+So anytime I want to basically go do the things that the function does, I can do what's
+
+00:49:18.000 --> 00:49:22.000
+called a function call, and I can call into it.
+
+00:49:22.000 --> 00:49:29.000
+Now without actually explaining the signature quite yet, we can actually see this in action
+
+00:49:29.000 --> 00:49:35.000
+by moving the line that printed stuff out up into my function that I had defined
+
+00:49:35.000 --> 00:49:40.000
+Now, when I run, you will notice I no longer get the print out.
+
+00:49:40.000 --> 00:49:42.000
+You know, it's not there.
+
+00:49:42.000 --> 00:49:44.000
+So, too bad.
+
+00:49:44.000 --> 00:49:45.000
+How do I actually do it?
+
+00:49:45.000 --> 00:49:48.000
+Well, I just function call that function,
+
+00:49:48.000 --> 00:49:52.000
+and now the things that it does get done where the function call occurred.
+
+00:49:52.000 --> 00:49:55.000
+And you can see now our printout is back.
+
+00:49:55.000 --> 00:50:02.000
+So, basically, what a function is, is it's something that holds some code for us in a way that we can reuse.
+
+00:50:02.000 --> 00:50:04.000
+And coding is about reuse a lot.
+
+00:50:04.000 --> 00:50:11.000
+There's a lot of stuff in coding that has to do with sort of building little pieces that then work together to make a program.
+
+00:50:11.000 --> 00:50:15.000
+It's very, very difficult if you were to sit down and write the entire program in one function.
+
+00:50:15.000 --> 00:50:18.000
+That would be really, really difficult to do.
+
+00:50:18.000 --> 00:50:22.000
+And there's a lot of reasons why you would not want to do that, which hopefully will come apparent as we go on.
+
+00:50:22.000 --> 00:50:24.000
+But that is what a function is.
+
+00:50:24.000 --> 00:50:28.000
+And now you'll notice our function has a couple parts to it.
+
+00:50:28.000 --> 00:50:30.000
+The first thing it has is this word void.
+
+00:50:30.000 --> 00:50:35.000
+What the word void means there is this section before the name of the function, which is foo.
+
+00:50:35.000 --> 00:50:41.000
+This section here tells us if the function returns anything.
+
+00:50:41.000 --> 00:50:47.000
+And what that means is when this function is called by somebody, when someone asks it to do the work,
+
+00:50:47.000 --> 00:50:53.000
+does it provide anything back to that caller, to the person who invokes it?
+
+00:50:53.000 --> 00:50:58.000
+And there's actually more ways that you can actually have that happen than just this,
+
+00:50:58.000 --> 00:51:01.000
+But this is the most basic way.
+
+00:51:01.000 --> 00:51:05.000
+What void means in C is basically nothing.
+
+00:51:05.000 --> 00:51:09.000
+It's like saying, I don't provide anything back.
+
+00:51:09.000 --> 00:51:13.000
+I am not going to give you something when you call me.
+
+00:51:13.000 --> 00:51:16.000
+So the void in front of foo just says,
+
+00:51:16.000 --> 00:51:18.000
+this function produces no value for its caller.
+
+00:51:18.000 --> 00:51:24.000
+It does not actually return anything to the person who calls it.
+
+00:51:24.000 --> 00:51:27.000
+The next part of our function declaration, as you can see here,
+
+00:51:27.000 --> 00:51:33.000
+In parentheses is another void and what that is is sort of the opposite of the return part.
+
+00:51:33.000 --> 00:51:37.000
+It's what does this function expect to get from the person who calls it?
+
+00:51:37.000 --> 00:51:45.000
+So what things are going to be sent down to this function in order to get it to do the work that it needs to do?
+
+00:51:45.000 --> 00:51:48.000
+And as you can see it's also void which means nothing.
+
+00:51:48.000 --> 00:51:51.000
+This is a function that returns nothing and takes nothing.
+
+00:51:51.000 --> 00:51:57.000
+And of course, that makes perfect sense given the fact that output debug string just prints out a string.
+
+00:51:57.000 --> 00:52:00.000
+It doesn't need anything to do its work.
+
+00:52:00.000 --> 00:52:03.000
+So that is our function.
+
+00:52:03.000 --> 00:52:05.000
+Now, ooh, didn't mean to collapse it.
+
+00:52:05.000 --> 00:52:10.000
+You can see these little plus and minuses here allow you to collapse functions if you're trying to, I don't know, make things more legible.
+
+00:52:10.000 --> 00:52:19.000
+So after that, which is basically the thing that tells us, it's called the function prototype or the function signature, this right here.
+
+00:52:19.000 --> 00:52:25.000
+This is called a function signature or prototype.
+
+00:52:25.000 --> 00:52:29.000
+And what it does is basically,
+
+00:52:29.000 --> 00:52:31.000
+it defines the circumstances, if you will,
+
+00:52:31.000 --> 00:52:33.000
+for how this function is called.
+
+00:52:33.000 --> 00:52:34.000
+What does it take?
+
+00:52:33.000 --> 00:52:35.000
+What does it return?
+
+00:52:35.000 --> 00:52:37.000
+We then have the function body, right?
+
+00:52:37.000 --> 00:52:39.000
+This part right here is the function body.
+
+00:52:39.000 --> 00:52:42.000
+Oh, and I will note this right here,
+
+00:52:42.000 --> 00:52:44.000
+these two little slashes,
+
+00:52:44.000 --> 00:52:45.000
+are just something that says,
+
+00:52:45.000 --> 00:52:46.000
+I'm about to type some stuff
+
+00:52:46.000 --> 00:52:47.000
+that's just a note to myself.
+
+00:52:47.000 --> 00:52:48.000
+It's a comment.
+
+00:52:48.000 --> 00:52:51.000
+It has nothing to do with the code,
+
+00:52:51.000 --> 00:52:54.000
+but it has something to do with my thought process.
+
+00:52:54.000 --> 00:52:57.000
+And so C allows me to do that anywhere I want to.
+
+00:52:57.000 --> 00:52:59.000
+C and C++ have two style of comments.
+
+00:52:59.000 --> 00:53:05.000
+There's this kind, which are bracketed by these little guys,
+
+00:53:05.000 --> 00:53:06.000
+which is a lot like HTML.
+
+00:53:06.000 --> 00:53:08.000
+If you ever program an HTML, you've
+
+00:53:08.000 --> 00:53:11.000
+got these two things that you can
+
+00:53:11.000 --> 00:53:15.000
+use to enclose things as a comment that
+
+00:53:15.000 --> 00:53:16.000
+doesn't actually get processed.
+
+00:53:16.000 --> 00:53:17.000
+So that's something that does it there.
+
+00:53:17.000 --> 00:53:19.000
+And that basically says from here,
+
+00:53:19.000 --> 00:53:21.000
+Everything ignore until you see one of these, right?
+
+00:53:21.000 --> 00:53:24.000
+So it can be multiple lines and all that stuff.
+
+00:53:24.000 --> 00:53:28.000
+This kind is a kind that was introduced with C++.
+
+00:53:28.000 --> 00:53:29.000
+And what that does is it says,
+
+00:53:29.000 --> 00:53:31.000
+ignore everything to the end of the line,
+
+00:53:31.000 --> 00:53:32.000
+but as soon as you get to the end of the line,
+
+00:53:32.000 --> 00:53:33.000
+start processing again.
+
+00:53:33.000 --> 00:53:35.000
+And that's just basically to cut down on some typing.
+
+00:53:35.000 --> 00:53:37.000
+It means you didn't have to type one of these at the end.
+
+00:53:37.000 --> 00:53:39.000
+It's a little convenience.
+
+00:53:39.000 --> 00:53:40.000
+It's not really that important,
+
+00:53:40.000 --> 00:53:42.000
+but you'll find that it's more convenient
+
+00:53:42.000 --> 00:53:44.000
+as you start to type them in.
+
+00:53:44.000 --> 00:53:46.000
+So anyway, that's the prototype of my function.
+
+00:53:46.000 --> 00:53:47.000
+And this is the body.
+
+00:53:47.000 --> 00:53:52.000
+The body of the function is what it actually executes.
+
+00:53:52.000 --> 00:53:55.000
+So when this function is invoked, this
+
+00:53:55.000 --> 00:53:57.000
+is the code that will occur.
+
+00:53:57.000 --> 00:54:00.000
+And everything in between these two curly braces
+
+00:54:00.000 --> 00:54:02.000
+are things that will occur.
+
+00:54:02.000 --> 00:54:04.000
+So all the code that we put in here
+
+00:54:04.000 --> 00:54:08.000
+will occur on invocation of the function.
+
+00:54:08.000 --> 00:54:10.000
+So pretty simple, right?
+
+00:54:10.000 --> 00:54:11.000
+Not much to it.
+
+00:54:11.000 --> 00:54:13.000
+And you can see you really don't
+
+00:54:13.000 --> 00:54:15.000
+need much else to understand what our function actually
+
+00:54:15.000 --> 00:54:17.000
+does, the code inside the function.
+
+00:54:17.000 --> 00:54:21.000
+It's awfully simple because all it does is it calls another function a function
+
+00:54:21.000 --> 00:54:28.000
+We didn't define called output debug string a and I'm gonna talk about what the a is in a second
+
+00:54:28.000 --> 00:54:35.000
+Anyway, as you can see when I want to call a function the syntax actually looks something like the prototype of the function
+
+00:54:35.000 --> 00:54:39.000
+These parentheses here much like they defined what I was going to take
+
+00:54:39.000 --> 00:54:46.000
+These parentheses contain the things that I'm going to pass to the function.
+
+00:54:46.000 --> 00:54:51.000
+So in this case, I didn't take anything. But output debug string takes a string.
+
+00:54:51.000 --> 00:54:58.000
+And in C, the way that you define a basic string, just a simple string, is you put quotes, double quotes.
+
+00:54:58.000 --> 00:55:01.000
+Anything in between the double quotes is part of the string.
+
+00:55:01.000 --> 00:55:07.000
+So this is a string that I have made, and I am passing it to output debug string so that it can print it out.
+
+00:55:07.000 --> 00:55:15.000
+Output debug string is a function that works with the operating system in order to actually send stuff to our debug output stream
+
+00:55:15.000 --> 00:55:18.000
+Which the debugger captures and prints over here now?
+
+00:55:18.000 --> 00:55:22.000
+We'll talk a little bit more about that although debugging services on windows is probably not something
+
+00:55:22.000 --> 00:55:23.000
+We're going to cover in too much deep detail
+
+00:55:23.000 --> 00:55:28.000
+But I will talk a little bit more about how that stuff works more in-depth after we kind of go through and are more comfortable with
+
+00:55:28.000 --> 00:55:30.000
+Just basic c code
+
+00:55:30.000 --> 00:55:35.000
+Okay, so after that function is called you'll notice there's a semi colon a
+
+00:55:35.000 --> 00:55:42.000
+A semicolon is a way in C of telling the compiler that you're finished with a particular logical line of code.
+
+00:55:42.000 --> 00:55:50.000
+Now, it's not a particularly useful piece of syntax. It is a relatively useless piece of syntax.
+
+00:55:50.000 --> 00:55:55.000
+A lot of languages don't need semicolons, and a lot of languages only need semicolons once in a while,
+
+00:55:55.000 --> 00:55:59.000
+or end of line delimiters, I should say it once in a while, end of statement delimiters.
+
+00:55:59.000 --> 00:56:05.000
+But basically all it does in C and C++ is let the compiler know that the things on that line
+
+00:56:05.000 --> 00:56:12.000
+the things that were part of a logical piece of code have now concluded and so there might be more things on here that are
+
+00:56:12.000 --> 00:56:14.000
+Part of this logical line of code and we'll sort of see more of those later
+
+00:56:14.000 --> 00:56:19.000
+But basically the semi colon says that's the end and that's called a statement
+
+00:56:19.000 --> 00:56:22.000
+One line of code like that's terminated by a semi colon
+
+00:56:22.000 --> 00:56:27.000
+Because it could actually go on for longer the end of line the actual end of the text line
+
+00:56:27.000 --> 00:56:30.000
+doesn't really mean anything in C++.
+
+00:56:30.000 --> 00:56:32.000
+It's not like Python or languages
+
+00:56:32.000 --> 00:56:34.000
+where white space means something.
+
+00:56:34.000 --> 00:56:36.000
+In general, like this white space here
+
+00:56:36.000 --> 00:56:39.000
+that I used to indent to put this thing
+
+00:56:39.000 --> 00:56:41.000
+so I could see that it was part of this function more easily,
+
+00:56:41.000 --> 00:56:42.000
+that's purely my decision.
+
+00:56:42.000 --> 00:56:45.000
+C doesn't care, C++ doesn't care about that.
+
+00:56:45.000 --> 00:56:48.000
+Similarly, it doesn't care about this white space.
+
+00:56:48.000 --> 00:56:50.000
+Basically the only time C were to care about white space
+
+00:56:50.000 --> 00:56:53.000
+would be if you were to insert it into something
+
+00:56:53.000 --> 00:56:54.000
+that was supposed to be a single name.
+
+00:56:54.000 --> 00:56:58.000
+White space does break up names in C.
+
+00:56:58.000 --> 00:57:01.000
+And so basically, outputDbug stringA would not work.
+
+00:57:01.000 --> 00:57:04.000
+If I were to compile this, you would see that it would say
+
+00:57:04.000 --> 00:57:07.000
+that it doesn't know what outputDbug is.
+
+00:57:07.000 --> 00:57:08.000
+And the reason is because it saw the space
+
+00:57:08.000 --> 00:57:10.000
+and thought that that was a complete name,
+
+00:57:10.000 --> 00:57:12.000
+that it should start to look and see what it means,
+
+00:57:12.000 --> 00:57:13.000
+and it can't do that.
+
+00:57:13.000 --> 00:57:14.000
+So I'm going to get rid of that
+
+00:57:14.000 --> 00:57:16.000
+and go back to where we were.
+
+00:57:16.000 --> 00:57:20.000
+So anyway, that is basically how a line of code looks
+
+00:57:20.000 --> 00:57:23.000
+in C inside a function.
+
+00:57:23.000 --> 00:57:26.000
+Now, let's go down to our more complicated function over here,
+
+00:57:26.000 --> 00:57:28.000
+the one that Windows calls.
+
+00:57:28.000 --> 00:57:31.000
+So if you look here, it's got a whole lot of decoration on it,
+
+00:57:31.000 --> 00:57:33.000
+a lot more than we have here.
+
+00:57:33.000 --> 00:57:34.000
+It's got something called int at the beginning.
+
+00:57:34.000 --> 00:57:37.000
+Now we know that that is the place
+
+00:57:37.000 --> 00:57:38.000
+where the return value goes,
+
+00:57:38.000 --> 00:57:42.000
+where the thing that comes back from the function is placed.
+
+00:57:42.000 --> 00:57:46.000
+This, in this case, int in C is a special keyword.
+
+00:57:46.000 --> 00:57:47.000
+It means integer.
+
+00:57:47.000 --> 00:57:50.000
+So much like void is a special keyword in C
+
+00:57:50.000 --> 00:57:52.000
+that tells it nothing.
+
+00:57:52.000 --> 00:57:55.000
+int is a special keyword that says an integer value is going to come back.
+
+00:57:55.000 --> 00:58:01.000
+A number, basically a whole number, negative 5, 12, something like this,
+
+00:58:01.000 --> 00:58:07.000
+is going to be returned from this function to whoever calls it whenever they call it.
+
+00:58:07.000 --> 00:58:13.000
+Callback is a piece of syntactic icing,
+
+00:58:13.000 --> 00:58:18.000
+which actually expands to something else entirely.
+
+00:58:18.000 --> 00:58:21.000
+It is what we call macro in C, and we'll look at those a little bit later on
+
+00:58:21.000 --> 00:58:23.000
+when I dive into this windows.h file.
+
+00:58:23.000 --> 00:58:26.000
+And basically what it does is it expands
+
+00:58:26.000 --> 00:58:29.000
+to some special decoration that are used
+
+00:58:29.000 --> 00:58:32.000
+only in Windows,
+
+00:58:32.000 --> 00:58:34.000
+only for this particular Windows call point.
+
+00:58:34.000 --> 00:58:38.000
+And it's decoration that tells the linker
+
+00:58:38.000 --> 00:58:42.000
+and the compiler that this function is special.
+
+00:58:42.000 --> 00:58:46.000
+It is a function that must adhere to a special convention
+
+00:58:46.000 --> 00:58:49.000
+because since Windows was not compiled
+
+00:58:49.000 --> 00:58:50.000
+as part of our program
+
+00:58:49.000 --> 00:58:53.000
+and our program is not compiled as part of Windows,
+
+00:58:53.000 --> 00:58:57.000
+they will have to agree on how functions are called,
+
+00:58:57.000 --> 00:58:58.000
+if that makes sense.
+
+00:58:58.000 --> 00:59:00.000
+They will have to agree on a convention.
+
+00:59:00.000 --> 00:59:01.000
+And we'll talk about that a little more
+
+00:59:01.000 --> 00:59:02.000
+when we start to talk about exactly
+
+00:59:02.000 --> 00:59:05.000
+how C actually generates this code.
+
+00:59:05.000 --> 00:59:09.000
+But I think that'll probably be next video.
+
+00:59:09.000 --> 00:59:11.000
+So anyway, put that in the back of your mind for now,
+
+00:59:11.000 --> 00:59:13.000
+but suffice to say this is a special macro
+
+00:59:13.000 --> 00:59:14.000
+that we're going to look at in the future
+
+00:59:14.000 --> 00:59:17.000
+that tells the compiler and the linker
+
+00:59:17.000 --> 00:59:19.000
+that this is a special function,
+
+00:59:19.000 --> 00:59:20.000
+not like our run in the mill function.
+
+00:59:20.000 --> 00:59:22.000
+And then it has certain constraints
+
+00:59:22.000 --> 00:59:24.000
+that have to be met when it is compiled.
+
+00:59:24.000 --> 00:59:26.000
+We then have the parameters to the function,
+
+00:59:26.000 --> 00:59:28.000
+the things that the caller provides.
+
+00:59:28.000 --> 00:59:30.000
+These are things that are being passed into the function
+
+00:59:30.000 --> 00:59:31.000
+that the function can use.
+
+00:59:31.000 --> 00:59:33.000
+We didn't use any, we said void here,
+
+00:59:33.000 --> 00:59:37.000
+but WinMain uses a few.
+
+00:59:37.000 --> 00:59:38.000
+I shouldn't say it uses a few.
+
+00:59:38.000 --> 00:59:41.000
+It has access to a few.
+
+00:59:41.000 --> 00:59:43.000
+The first one, this h instance,
+
+00:59:43.000 --> 00:59:46.000
+is actually just a handle to ourselves.
+
+00:59:46.000 --> 00:59:50.000
+What it is, is it's basically a handle that we can use
+
+00:59:50.000 --> 00:59:51.000
+when we're talking to Windows again,
+
+00:59:51.000 --> 00:59:53.000
+if we should need to talk to Windows,
+
+00:59:53.000 --> 00:59:56.000
+to refer to our running program.
+
+00:59:56.000 --> 00:59:58.000
+So for example, let's say we need to do something
+
+00:59:58.000 --> 01:00:00.000
+that is very Windows-specific, a very Windows-specific service,
+
+01:00:00.000 --> 01:00:02.000
+and we're going to ask the Windows kernel,
+
+01:00:02.000 --> 01:00:04.000
+hey, we need you to do something
+
+01:00:04.000 --> 01:00:06.000
+to our running executable.
+
+01:00:06.000 --> 01:00:08.000
+We need you to tell us about the memory that it's using,
+
+01:00:08.000 --> 01:00:10.000
+or we're gonna access the debug heap.
+
+01:00:10.000 --> 01:00:11.000
+We're gonna do some stuff,
+
+01:00:11.000 --> 01:00:15.000
+and we're specifically referencing this copy,
+
+01:00:15.000 --> 01:00:18.000
+our copy in memory of our executable code.
+
+01:00:18.000 --> 01:00:20.000
+That is what this handle does.
+
+01:00:20.000 --> 01:00:23.000
+It is a handle that we can pass back to Windows
+
+01:00:23.000 --> 01:00:24.000
+to refer to ourselves.
+
+01:00:24.000 --> 01:00:27.000
+Now it turns out you don't really need to actually
+
+01:00:27.000 --> 01:00:28.000
+remember this or use it very often
+
+01:00:28.000 --> 01:00:31.000
+because most of the time you can get it by back channel
+
+01:00:31.000 --> 01:00:32.000
+but we'll cover that later too.
+
+01:00:32.000 --> 01:00:34.000
+Prev Instance you can completely ignore.
+
+01:00:34.000 --> 01:00:36.000
+It is a legacy thing.
+
+01:00:36.000 --> 01:00:38.000
+You will never need it in game programming.
+
+01:00:38.000 --> 01:00:41.000
+It's basically something that you needed to use
+
+01:00:41.000 --> 01:00:43.000
+in older versions of Windows sometimes
+
+01:00:43.000 --> 01:00:48.000
+in order to do things that had to do with previous runs of your program or things like this,
+
+01:00:48.000 --> 01:00:52.000
+previous versions of your program that were running in memory and so on.
+
+01:00:52.000 --> 01:00:58.000
+This right here, much like this string that we created, this is the first thing we have
+
+01:00:58.000 --> 01:01:06.000
+actually printed string, this LPster LP command line is basically what got sent to us when
+
+01:01:06.000 --> 01:01:08.000
+we were run.
+
+01:01:08.000 --> 01:01:14.000
+Now the interesting thing about that is although it's called LP command line and is referring
+
+01:01:14.000 --> 01:01:17.000
+to it as if we're going to call something from a command line which we have not talked
+
+01:01:17.000 --> 01:01:22.000
+about yet and which you may have no idea what it is but I will show you briefly what it
+
+01:01:22.000 --> 01:01:23.000
+actually is.
+
+01:01:23.000 --> 01:01:29.000
+If you go into all programs you can go to a thing called accessories and in accessories
+
+01:01:29.000 --> 01:01:32.000
+there is a command prompt.
+
+01:01:32.000 --> 01:01:35.000
+If you go to that you will get this thing.
+
+01:01:35.000 --> 01:01:38.000
+This is a command line and we will be talking about how to use it later.
+
+01:01:38.000 --> 01:01:41.000
+But what it allows you to do is it allows you to run things
+
+01:01:41.000 --> 01:01:44.000
+like I can run notepad, for example, from it.
+
+01:01:44.000 --> 01:01:47.000
+It allows you to run things, and you can pass stuff to them
+
+01:01:47.000 --> 01:01:49.000
+on here that they will receive.
+
+01:01:49.000 --> 01:01:51.000
+Now, of course, if I tried to pass that,
+
+01:01:51.000 --> 01:01:53.000
+it'd be like, I don't know what you're talking about,
+
+01:01:53.000 --> 01:01:55.000
+because notepad doesn't want to hear any of that.
+
+01:01:55.000 --> 01:01:57.000
+But when you look at this, you'll think, oh, LP command
+
+01:01:57.000 --> 01:01:58.000
+line.
+
+01:01:58.000 --> 01:02:00.000
+Well, I don't really need that, because my thing is not
+
+01:02:00.000 --> 01:02:02.000
+going to be called from that command line.
+
+01:02:02.000 --> 01:02:04.000
+And we just talked about it at the very beginning of this
+
+01:02:04.000 --> 01:02:05.000
+episode, the fact that we're not
+
+01:02:05.000 --> 01:02:07.000
+going to be building a console application or a command line
+
+01:02:07.000 --> 01:02:08.000
+application.
+
+01:02:08.000 --> 01:02:09.000
+So I don't care about that.
+
+01:02:09.000 --> 01:02:11.000
+Well, not exactly true.
+
+01:02:11.000 --> 01:02:14.000
+If you go in here and you open up something,
+
+01:02:14.000 --> 01:02:18.000
+let's say, a notepad itself, and I go to properties,
+
+01:02:18.000 --> 01:02:21.000
+you will notice that there's a bunch of stuff in here.
+
+01:02:21.000 --> 01:02:25.000
+Well, this target line, this thing that says target,
+
+01:02:25.000 --> 01:02:29.000
+it actually allows you to put the command line after here.
+
+01:02:29.000 --> 01:02:31.000
+So it's entirely possible to ship Windows programs
+
+01:02:31.000 --> 01:02:33.000
+that are not run from the command line,
+
+01:02:33.000 --> 01:02:34.000
+that will never be run from the command line
+
+01:02:34.000 --> 01:02:36.000
+because no one will ever run them there
+
+01:02:36.000 --> 01:02:38.000
+that still take a command line.
+
+01:02:38.000 --> 01:02:41.000
+And so it's important to know that that's there.
+
+01:02:41.000 --> 01:02:42.000
+Now, there's other ways to get at that too,
+
+01:02:42.000 --> 01:02:44.000
+but again, we'll talk about some of those later.
+
+01:02:44.000 --> 01:02:46.000
+But that's what that's passing in.
+
+01:02:46.000 --> 01:02:49.000
+And finally, int and command show
+
+01:02:49.000 --> 01:02:51.000
+is basically a parameter that gets back again
+
+01:02:51.000 --> 01:02:54.000
+to this sort of properties thing.
+
+01:02:54.000 --> 01:02:57.000
+I don't even know if it's still there.
+
+01:02:57.000 --> 01:03:00.000
+So I'm just gonna see if it is.
+
+01:03:00.000 --> 01:03:03.000
+And advanced, no.
+
+01:03:03.000 --> 01:03:09.000
+Details, compatibility, I don't know.
+
+01:03:09.000 --> 01:03:12.000
+There it is, nevermind, it was on the home thing all the time.
+
+01:03:12.000 --> 01:03:14.000
+Now you'd notice that for legacy reasons,
+
+01:03:14.000 --> 01:03:16.000
+there's no one who almost no one ever uses this,
+
+01:03:16.000 --> 01:03:18.000
+but there is still a dropdown that says
+
+01:03:18.000 --> 01:03:20.000
+whether you want to run a particular application
+
+01:03:20.000 --> 01:03:23.000
+minimized or maximized or just in the normal window
+
+01:03:23.000 --> 01:03:24.000
+that it would open if it wasn't told
+
+01:03:24.000 --> 01:03:25.000
+to do anything specific.
+
+01:03:25.000 --> 01:03:28.000
+Well, that gets passed to you right here,
+
+01:03:28.000 --> 01:03:29.000
+end command show.
+
+01:03:29.000 --> 01:03:35.000
+And that is basically a number that corresponds to which of those things was selected.
+
+01:03:35.000 --> 01:03:38.000
+And we'll look at that in a little more detail later.
+
+01:03:38.000 --> 01:03:41.000
+It's not particularly exciting, but you know, you might as well, it's there.
+
+01:03:41.000 --> 01:03:44.000
+So anyway, those are the things that we are passing when we start up.
+
+01:03:44.000 --> 01:03:46.000
+And then we have another function body just like we had up here.
+
+01:03:46.000 --> 01:03:49.000
+And we call a function just like this called a function.
+
+01:03:49.000 --> 01:03:50.000
+And that function is our own function.
+
+01:03:50.000 --> 01:03:53.000
+And it does output debug string.
+
+01:03:53.000 --> 01:03:57.000
+That is a complete C program with a function calling in even.
+
+01:03:57.000 --> 01:04:03.000
+but that you don't quite know everything about because there's things in here that are defined elsewhere.
+
+01:04:03.000 --> 01:04:11.000
+And so the question becomes, well, you know, if I was to do this, if I was to just run that,
+
+01:04:11.000 --> 01:04:18.000
+you will notice that I couldn't do it because it says that foo identifier was not found, right?
+
+01:04:18.000 --> 01:04:21.000
+Because I deleted that from my program.
+
+01:04:21.000 --> 01:04:27.000
+And when we get to the... well, okay, you know what? I should mention one other thing.
+
+01:04:27.000 --> 01:04:33.000
+You may wonder at this point, since there was no Foo, why wasn't that a linker error instead of a compilation error?
+
+01:04:33.000 --> 01:04:40.000
+Because this is a compilation error. Remember I said in the past, a linker is the thing that gathers things up into one piece
+
+01:04:40.000 --> 01:04:50.000
+so that they can essentially be taken and made into, you know, and have their references sort of recombined
+
+01:04:50.000 --> 01:04:52.000
+and all point to each other in the proper way.
+
+01:04:52.000 --> 01:04:55.000
+So you would think that that error would come then, right?
+
+01:04:55.000 --> 01:04:56.000
+Why does it come during compilation?
+
+01:04:56.000 --> 01:04:58.000
+Because it should have come at the step
+
+01:04:58.000 --> 01:04:59.000
+when people try to resolve references.
+
+01:04:59.000 --> 01:05:01.000
+Well, the reason for that,
+
+01:05:01.000 --> 01:05:03.000
+and this is actually a good thing to bring up,
+
+01:05:03.000 --> 01:05:08.000
+I'm happy that I remembered that.
+
+01:05:08.000 --> 01:05:12.000
+One of the reasons that that happens is because C
+
+01:05:12.000 --> 01:05:15.000
+and C++ are languages in which you are never allowed
+
+01:05:15.000 --> 01:05:18.000
+to use something which has not been defined yet.
+
+01:05:18.000 --> 01:05:21.000
+In C, there were looser restrictions on this.
+
+01:05:21.000 --> 01:05:25.000
+And so some things in C would work even if you didn't define them yet.
+
+01:05:25.000 --> 01:05:27.000
+In C++, they tightened that down.
+
+01:05:27.000 --> 01:05:28.000
+They tightened the ratchet on that.
+
+01:05:28.000 --> 01:05:31.000
+So you always have to define things before they are called.
+
+01:05:31.000 --> 01:05:34.000
+Since this isn't defined, it can't be called.
+
+01:05:34.000 --> 01:05:36.000
+Now that may lead to you wondering, well,
+
+01:05:36.000 --> 01:05:42.000
+if you can't actually call something unless it's defined,
+
+01:05:42.000 --> 01:05:46.000
+well, how are there ever unresolved external symbols at link time?
+
+01:05:46.000 --> 01:05:47.000
+It doesn't even make any sense.
+
+01:05:47.000 --> 01:05:52.000
+And the answer to that is C allows you to do what's called a forward declaration.
+
+01:05:52.000 --> 01:05:54.000
+Functions are split into two parts essentially.
+
+01:05:54.000 --> 01:05:59.000
+They are split into a declaration and a definition.
+
+01:05:59.000 --> 01:06:02.000
+Now a definition is the full thing.
+
+01:06:02.000 --> 01:06:03.000
+It's the full function.
+
+01:06:03.000 --> 01:06:05.000
+It has the prototype and it's got the body.
+
+01:06:05.000 --> 01:06:09.000
+So it actually is the thing that you need if you wanted to run it.
+
+01:06:09.000 --> 01:06:14.000
+But you can instead make just what's called a declaration and a declaration
+
+01:06:14.000 --> 01:06:15.000
+looks like this.
+
+01:06:15.000 --> 01:06:16.000
+It is the first part.
+
+01:06:16.000 --> 01:06:19.000
+And you know what? Let's make another function.
+
+01:06:19.000 --> 01:06:20.000
+I'm sorry, another comment.
+
+01:06:20.000 --> 01:06:23.000
+Function declaration.
+
+01:06:23.000 --> 01:06:26.000
+Function definition.
+
+01:06:26.000 --> 01:06:29.000
+Maybe I'll do it this way.
+
+01:06:29.000 --> 01:06:31.000
+Don't you just love the pretty green comments?
+
+01:06:31.000 --> 01:06:32.000
+They're so lovely.
+
+01:06:32.000 --> 01:06:37.000
+Anyway, inside here, we basically have the same exact stuff
+
+01:06:37.000 --> 01:06:39.000
+that we had here.
+
+01:06:39.000 --> 01:06:42.000
+But instead of it actually providing the body,
+
+01:06:42.000 --> 01:06:44.000
+it just puts the semicolon and ends.
+
+01:06:44.000 --> 01:06:47.000
+It basically uses that I'm done semicolon marker
+
+01:06:47.000 --> 01:06:49.000
+to say, I'm not actually going to tell you the body.
+
+01:06:49.000 --> 01:06:51.000
+I'm just going to tell you the signature.
+
+01:06:51.000 --> 01:06:55.000
+And once you have that signature, you
+
+01:06:55.000 --> 01:06:57.000
+will see that I can actually build.
+
+01:06:57.000 --> 01:07:00.000
+And you'll notice that now our compiler has become a link error.
+
+01:07:00.000 --> 01:07:02.000
+And the reason it became a link error is because now it's
+
+01:07:02.000 --> 01:07:05.000
+legal to call the function during compilation.
+
+01:07:05.000 --> 01:07:08.000
+And the compiler will just assume
+
+01:07:08.000 --> 01:07:10.000
+that since it has all the information it
+
+01:07:10.000 --> 01:07:12.000
+needs to call the function, which is the signature,
+
+01:07:12.000 --> 01:07:13.000
+it knows what it needs to pass.
+
+01:07:13.000 --> 01:07:14.000
+It knows what it will get back.
+
+01:07:14.000 --> 01:07:17.000
+It just goes ahead and does the compilation
+
+01:07:17.000 --> 01:07:21.000
+necessary to produce that call and leaves essentially a marker in there that says,
+
+01:07:21.000 --> 01:07:24.000
+hey, linker, when you find this function,
+
+01:07:24.000 --> 01:07:28.000
+please patch it in here because I would like to call it. All right.
+
+01:07:28.000 --> 01:07:31.000
+So, wow, this is a,
+
+01:07:31.000 --> 01:07:34.000
+this is quite the, the laryngitis inducing stream.
+
+01:07:34.000 --> 01:07:39.000
+I'm going to have to talk quieter, I guess from now on. Anyway.
+
+01:07:39.000 --> 01:07:43.000
+So, uh, we actually fully defined our function.
+
+01:07:43.000 --> 01:07:45.000
+So we have a fully buildable program.
+
+01:07:45.000 --> 01:07:48.000
+But who defined this function?
+
+01:07:48.000 --> 01:07:51.000
+For that matter, who defined this stuff?
+
+01:07:51.000 --> 01:07:52.000
+You'll notice that these things in
+
+01:07:52.000 --> 01:07:55.000
+blue that are automatically being syntax
+
+01:07:55.000 --> 01:07:57.000
+highlighted by Visual Studio,
+
+01:07:57.000 --> 01:07:59.000
+these things in blue,
+
+01:07:59.000 --> 01:08:01.000
+they are keywords, they are built into the compiler.
+
+01:08:01.000 --> 01:08:04.000
+You can actually type these in along with say the brackets,
+
+01:08:04.000 --> 01:08:06.000
+the semicolons, the parentheses.
+
+01:08:06.000 --> 01:08:08.000
+These are part of the language.
+
+01:08:08.000 --> 01:08:09.000
+They will work anywhere.
+
+01:08:09.000 --> 01:08:13.000
+They will work on any C compiler that you ever want to use.
+
+01:08:13.000 --> 01:08:15.000
+But all this stuff, where did that come from?
+
+01:08:15.000 --> 01:08:16.000
+That's not in the second power.
+
+01:08:16.000 --> 01:08:17.000
+You'll notice it's not turning blue.
+
+01:08:17.000 --> 01:08:18.000
+It is not a keyword.
+
+01:08:18.000 --> 01:08:21.000
+I can tell you that.
+
+01:08:21.000 --> 01:08:22.000
+And neither is this guy.
+
+01:08:22.000 --> 01:08:25.000
+And we didn't define that function, so where did it come from?
+
+01:08:25.000 --> 01:08:28.000
+The answer is this defined that function.
+
+01:08:28.000 --> 01:08:30.000
+So we're going to get to the last line here,
+
+01:08:30.000 --> 01:08:32.000
+and then we're going to wrap it up for tonight,
+
+01:08:32.000 --> 01:08:35.000
+because I want to try and keep these to roughly an hour,
+
+01:08:35.000 --> 01:08:37.000
+and we are about at an hour in 10 minutes.
+
+01:08:37.000 --> 01:08:40.000
+So OK.
+
+01:08:40.000 --> 01:08:45.000
+This is a line which says, I want you to go find this file.
+
+01:08:45.000 --> 01:08:47.000
+It is actually a file name.
+
+01:08:47.000 --> 01:08:51.000
+It could have a complete path if you wanted, whatever.
+
+01:08:51.000 --> 01:08:53.000
+It could be a full on, you know, anything,
+
+01:08:53.000 --> 01:08:55.000
+any file name you want to put in there.
+
+01:08:55.000 --> 01:08:58.000
+Although in general, most of the time you use forward
+
+01:08:58.000 --> 01:08:59.000
+slashes, even though you're on Windows,
+
+01:08:59.000 --> 01:09:02.000
+because forward slashes work for includes,
+
+01:09:02.000 --> 01:09:03.000
+no matter where you are,
+
+01:09:03.000 --> 01:09:05.000
+whereas back slashes only work on Windows,
+
+01:09:05.000 --> 01:09:06.000
+but that's minutia.
+
+01:09:06.000 --> 01:09:08.000
+Anyway, point being, it's a file name,
+
+01:09:08.000 --> 01:09:11.000
+any file on the drive, you can include.
+
+01:09:11.000 --> 01:09:14.000
+And really all it means for all intents and purposes
+
+01:09:14.000 --> 01:09:19.000
+is go get this file and stick the entire contents of it
+
+01:09:19.000 --> 01:09:20.000
+right here.
+
+01:09:20.000 --> 01:09:24.000
+So this essentially makes our very simple program,
+
+01:09:24.000 --> 01:09:26.000
+that's only a dozen or so lines long,
+
+01:09:26.000 --> 01:09:29.000
+it actually makes this a very long program
+
+01:09:29.000 --> 01:09:32.000
+because it goes and puts this file.
+
+01:09:32.000 --> 01:09:34.000
+Oh, I should tell you how to do that.
+
+01:09:34.000 --> 01:09:37.000
+If you right click on one and it knows where to find it,
+
+01:09:37.000 --> 01:09:42.000
+you can go open document and it will jump right to that file, which is kind of nice.
+
+01:09:42.000 --> 01:09:45.000
+Okay, so this is windows.h, which is the file that we included.
+
+01:09:45.000 --> 01:09:47.000
+Now it may not look like much.
+
+01:09:47.000 --> 01:09:50.000
+It may look like a bunch of gobbledygook, but relatively minor gobbledygook.
+
+01:09:50.000 --> 01:09:51.000
+It's not.
+
+01:09:51.000 --> 01:09:52.000
+It's absolutely massive.
+
+01:09:52.000 --> 01:09:56.000
+And the reason for that is it's all just a bunch of more includes.
+
+01:09:56.000 --> 01:09:58.000
+It's going to include this, right?
+
+01:09:58.000 --> 01:10:02.000
+It's going to go down here and it's going to include this.
+
+01:10:02.000 --> 01:10:06.000
+And it's going to include all of these things, right?
+
+01:10:06.000 --> 01:10:10.000
+Who knows? You'd have to go interpret all the crazy stuff in there to even know what it's including.
+
+01:10:10.000 --> 01:10:13.000
+And all of those things include more things.
+
+01:10:13.000 --> 01:10:15.000
+Half of these things have includes in them as well.
+
+01:10:15.000 --> 01:10:17.000
+This one includes this one.
+
+01:10:17.000 --> 01:10:19.000
+So there's a huge nightmare.
+
+01:10:19.000 --> 01:10:21.000
+I'm going to go ahead and close these with this little X,
+
+01:10:21.000 --> 01:10:22.000
+so I don't actually need these to be open.
+
+01:10:22.000 --> 01:10:27.000
+But anyway, pound including this, pound includes windows.h,
+
+01:10:27.000 --> 01:10:33.000
+which pounds includes all kinds of stuff from the operating systems include files.
+
+01:10:33.000 --> 01:10:50.000
+And those include files are designed to define a bunch of functions like these that you used to interface with Windows and a bunch of special macros and types and other things that we'll get into next week that are designed for you to be able to receive information from Windows as well.
+
+01:10:50.000 --> 01:10:59.000
+And so that is who defined this, that is who defined all of these things, and that is why this is a complete program because without it it would not be.
+
+01:10:59.000 --> 01:11:05.000
+Alright, now I think that's a good place to stop because the next step here is
+
+01:11:05.000 --> 01:11:08.000
+we're going to start to look at exactly how this program worked. We're going to
+
+01:11:08.000 --> 01:11:12.000
+step into the assembly language that was actually generated. We're going to look at
+
+01:11:12.000 --> 01:11:15.000
+how linking actually works. We're going to talk about the C runtime library and
+
+01:11:15.000 --> 01:11:22.000
+we're going to look at why I said win main was actually a little bit of a
+
+01:11:22.000 --> 01:11:28.000
+misdirection. Why it's not really the entry point for your program even though
+
+01:11:28.000 --> 01:11:31.000
+So I said it was the entry point for the program and it sure seems to have been the
+
+01:11:31.000 --> 01:11:34.000
+entry point for the program.
+
+01:11:34.000 --> 01:11:41.000
+All that we will get to tomorrow, I believe, as we further continue our introduction to
+
+01:11:41.000 --> 01:11:42.000
+see programming on Windows.
+
+01:11:42.000 --> 01:11:49.000
+I hope you have enjoyed this stream and I am going to stop the recording now, but
+
+01:11:49.000 --> 01:11:56.000
+I will continue to take questions on the live stream and I will split those into
+
+01:11:56.000 --> 01:12:01.000
+a separate recording.
