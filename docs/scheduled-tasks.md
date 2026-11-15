@@ -24,6 +24,11 @@ connector. Their live prompts, schedules, enabled state and notification
 settings have **not been inspected or changed here**. Earlier saved records
 say the November 8 prompt update was still pending.
 
+**2026-11-15, Claude session:** `RemoteTrigger list` on the Claude account
+used here returned no tasks, and `get` for both ids above returned 404
+"Trigger not found". So this account is **not** the owner. Nothing was
+created or changed, and the live tasks are still unverified.
+
 On the **original Claude account**, run `/reminders` from the updated repo.
 It should update the two existing tasks with the canonical prompts above,
 then verify the returned settings. Record the verification date and actual

@@ -60,3 +60,5 @@ leave any untried Windows work pending on a Mac-only day.
 On the original Claude account, run `/reminders` from the updated repo to
 update the two existing cloud tasks. Their live prompts, schedules and
 notification settings have not been inspected or changed in this session.
+On 2026-11-15 a Claude account was checked: it has no tasks and both ids
+return 404, so it is not the owning account.
