@@ -43,3 +43,5 @@ canonical prompts above. Verified from the create results: Daily review `trig_01
 18:45 Berlin). Both enabled, cloud-only, push notifications on, email off, auto approval.
 The old tasks (`trig_015H…`, `trig_013u…`) may still run on the old account: if a reminder comes
 twice, open the Claude app logged into the old account and turn the old ones off.
+
+**2026-11-15, phone-only:** both prompts now say the reminders are phone-only (answer by voice or typing in the chat; never an editor, compiler, debugger or computer). Debug challenges use only read-the-error, spot-the-bug and "it runs but…". Both live tasks were updated with these exact prompts.
