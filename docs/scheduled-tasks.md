@@ -9,8 +9,8 @@ other accounts unless Zain requests a migration.
 
 | Existing task | Schedule | Existing id | Canonical prompt |
 |---|---|---|---|
-| Daily review | Daily, 12:48 Europe/Berlin | `trig_015H7qGd7zXdGP9ACCUadnzw` | `.agents/skills/reminders/daily-review.txt` |
-| Debug challenge | Mon/Wed/Fri/Sun, 18:45 Europe/Berlin | `trig_013u5WqvEma6ksmyvTh6PDjA` | `.agents/skills/reminders/debug-challenge.txt` |
+| Daily review | Daily, 12:48 Europe/Berlin | `trig_01LaGmv4hWn3FBSPhof4G13y` (new account; old: `trig_015H7qGd7zXdGP9ACCUadnzw`) | `.agents/skills/reminders/daily-review.txt` |
+| Debug challenge | Mon/Wed/Fri/Sun, 18:45 Europe/Berlin | `trig_01Up8nKs72sre7b9sSxpivaq` (new account; old: `trig_013u5WqvEma6ksmyvTh6PDjA`) | `.agents/skills/reminders/debug-challenge.txt` |
 
 The daily prompt caps review at five minutes and adds no automatic interview
 or debugging work. The debug prompt invites optional practice; real debugging
@@ -34,3 +34,12 @@ It should update the two existing tasks with the canonical prompts above,
 then verify the returned settings. Record the verification date and actual
 results here and in `handmade-mastery/journey/STATE.md`. Until then, keep this
 item pending. Do not describe local prompt edits as completed cloud updates.
+
+**2026-11-15, migration (Zain asked for it):** the original owner account could not be found, so
+both reminders were created fresh on the Claude account Zain uses for claude.ai chat, with the
+canonical prompts above. Verified from the create results: Daily review `trig_01LaGmv4hWn3FBSPhof4G13y`
+(`CRON_TZ=Europe/Berlin 48 12 * * *`, first run 2026-11-16 12:48 Berlin) and Debug challenge
+`trig_01Up8nKs72sre7b9sSxpivaq` (`CRON_TZ=Europe/Berlin 45 18 * * 0,1,3,5`, first run 2026-11-15
+18:45 Berlin). Both enabled, cloud-only, push notifications on, email off, auto approval.
+The old tasks (`trig_015H…`, `trig_013u…`) may still run on the old account: if a reminder comes
+twice, open the Claude app logged into the old account and turn the old ones off.

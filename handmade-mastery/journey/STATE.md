@@ -62,3 +62,5 @@ update the two existing cloud tasks. Their live prompts, schedules and
 notification settings have not been inspected or changed in this session.
 On 2026-11-15 a Claude account was checked: it has no tasks and both ids
 return 404, so it is not the owning account.
+
+- 2026-11-15: Reminders re-created on the claude.ai chat account (Daily review `trig_01LaGmv4hWn3FBSPhof4G13y`, Debug challenge `trig_01Up8nKs72sre7b9sSxpivaq`). Old account's tasks may still run; turn them off if reminders come twice. Details: docs/scheduled-tasks.md.
