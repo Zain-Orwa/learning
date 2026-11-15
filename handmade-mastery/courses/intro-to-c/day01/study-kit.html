@@ -259,6 +259,22 @@ dialog{padding:0;width:min(730px,calc(100vw - 32px));max-height:85vh;border:1px 
 
 #lesson-panel{min-width:0}.study-navigation button[aria-selected="true"]{color:#35280d}.study-navigation button[aria-selected="true"] .step-check{color:#365748}
 
+/* Sidebar states stay within the pine, frost and amber palette. */
+.course-group{transition:background-color .15s ease,border-color .15s ease,box-shadow .15s ease}
+.course-group>summary{border-radius:7px;transition:background-color .15s ease,color .15s ease}
+.course-group>summary:hover,.course-group>summary:focus-visible{background:#72c6cd38;color:#fff4ce}
+.course-group.is-finished{background:#245649e8;border-color:#82b9a0;box-shadow:inset 3px 0 #8ebfa1}
+.course-group.is-finished>summary{color:#edf6e9}
+.course-group.is-finished>summary small{color:#deeed6;background:#75a48a30;border:1px solid #8fb99a66;border-radius:12px;padding:3px 7px;white-space:nowrap}
+.course-group.is-finished[open]>summary{background:#61977b26;border-bottom-color:#85b49c55}
+.course-group.is-finished>summary:hover,.course-group.is-finished>summary:focus-visible{background:#91c7a43d;color:#fff7d9}
+.course-group.is-current{border-color:#e8bb68;box-shadow:inset 3px 0 #edba58,0 0 0 1px #e5ad4226}
+.course-group.is-current>summary{color:#fff0c1;background:#c99a442b}
+.course-group.is-current>summary small{color:#ffe6a4}
+.course-group.is-current>summary:hover,.course-group.is-current>summary:focus-visible{background:#dbaf4e45;color:#fff7dc}
+.part-lessons .btn:not(:disabled):hover{background:#f8e3af;color:#25434b;border-color:#efc778}
+@media(prefers-reduced-motion:reduce){.course-group,.course-group>summary{transition:none}}
+
 /* Explanation card: frosted winter panel with a wooden title plate (see explanation.js). */
 .xcard{--xc-ink:#10262e;--xc-pad:clamp(14px,5cqi,26px);--xc-serif:"Merriweather",Georgia,"Times New Roman",serif;container-type:inline-size;position:relative;margin-top:12px;border:2px solid #163842;border-radius:22px;color:var(--xc-ink);font-family:var(--xc-serif);
   background:
@@ -2886,7 +2902,7 @@ function courseTreeHTML(){
   return D.blocks.map((part,i)=>{
     const key=part.id,open=Object.prototype.hasOwnProperty.call(courseOpen,key)?courseOpen[key]:key===S.cur;
     const status=S.completed[key]?(checked(part)?'Checked':'Finished'):i>f?'Upcoming':key===S.cur?'Current':'';
-    return `<details class="course-group" data-chapter="${key}" ${open?'open':''}><summary><span>Part ${i+1} — ${esc(part.title)}</span><small>${status}</small></summary><div class="part-lessons"><p>${part.start}–${part.end}</p><button class="btn ghost small" data-blk="${key}" aria-current="${key===S.cur}" ${i>f?'disabled':''}>${i>f?'Complete the earlier parts first':'Open this lesson →'}</button></div></details>`;
+    return `<details class="course-group${S.completed[key]?' is-finished':''}${key===S.cur?' is-current':''}" data-chapter="${key}" ${open?'open':''}><summary><span>Part ${i+1} — ${esc(part.title)}</span><small>${S.completed[key]?'<span aria-hidden="true">✓</span> ':''}${status}</small></summary><div class="part-lessons"><p>${part.start}–${part.end}</p><button class="btn ghost small" data-blk="${key}" aria-current="${key===S.cur}" ${i>f?'disabled':''}>${i>f?'Complete the earlier parts first':'Open this lesson →'}</button></div></details>`;
   }).join('');
 }
 function renderCourseTree(){

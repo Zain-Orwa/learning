@@ -77,3 +77,6 @@ return 404, so it is not the owning account.
 
 - Horizontal navigation now selects one highlighted inline view consistently;
   browsing tabs does not advance the saved lesson or complete study work.
+
+- Sidebar states: finished parts have a green-teal tint/checkmark; the current
+  part has amber accents. Part headings highlight on hover and keyboard focus.

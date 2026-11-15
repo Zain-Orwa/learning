@@ -42,7 +42,7 @@ function courseTreeHTML(){
   return D.blocks.map((part,i)=>{
     const key=part.id,open=Object.prototype.hasOwnProperty.call(courseOpen,key)?courseOpen[key]:key===S.cur;
     const status=S.completed[key]?(checked(part)?'Checked':'Finished'):i>f?'Upcoming':key===S.cur?'Current':'';
-    return `<details class="course-group" data-chapter="${key}" ${open?'open':''}><summary><span>Part ${i+1} — ${esc(part.title)}</span><small>${status}</small></summary><div class="part-lessons"><p>${part.start}–${part.end}</p><button class="btn ghost small" data-blk="${key}" aria-current="${key===S.cur}" ${i>f?'disabled':''}>${i>f?'Complete the earlier parts first':'Open this lesson →'}</button></div></details>`;
+    return `<details class="course-group${S.completed[key]?' is-finished':''}${key===S.cur?' is-current':''}" data-chapter="${key}" ${open?'open':''}><summary><span>Part ${i+1} — ${esc(part.title)}</span><small>${S.completed[key]?'<span aria-hidden="true">✓</span> ':''}${status}</small></summary><div class="part-lessons"><p>${part.start}–${part.end}</p><button class="btn ghost small" data-blk="${key}" aria-current="${key===S.cur}" ${i>f?'disabled':''}>${i>f?'Complete the earlier parts first':'Open this lesson →'}</button></div></details>`;
   }).join('');
 }
 function renderCourseTree(){

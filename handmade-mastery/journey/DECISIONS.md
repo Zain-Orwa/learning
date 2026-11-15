@@ -312,3 +312,10 @@ Newest at the bottom. Each entry: date, decision, why.
   prerequisites are satisfied. All supporting views remain available.
 - Added keyboard arrow/Home/End navigation and matching tab/panel labels.
   Regression checks cover every tab, one selected state and preserved progress.
+
+
+## 2026-11-15: Clear sidebar interaction and completion states
+- Hover and keyboard focus highlight each part heading. Finished parts use
+  a muted pine-green tint across the whole card, a checkmark and their
+  existing Finished/Checked label. The current part uses an amber border
+  and heading tint. No completion state is inferred from merely opening it.
