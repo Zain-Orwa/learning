@@ -34,7 +34,7 @@
  "vt": {
   "b01": 321,
   "b02": 733,
-  "b03": 733
+  "b03": 737.625034
  },
  "recall": {
   "b01": "1. how you can code C program in Windows.\n2. what do you need as tools to Code a game using Windows machine.\n3. to able to code a game you need to get a text editor and compiler that is not come out of the box like linux we have to download that.",
@@ -364,14 +364,21 @@
   ]
  },
  "speed": 1.25,
- "lastVisit": 1794783657807,
+ "lastVisit": 1794783931913,
  "sessionParts": 0,
  "brk": null,
  "stopped": false,
  "finished": false,
  "ttsRate": 1.5,
- "predictions": {},
+ "predictions": {
+  "b03": "dsifjifidi"
+ },
  "lessonViews": {
-  "b03": "guess"
+  "b03": "explain"
+ },
+ "optionalDone": {
+  "b03": {
+   "guess": true
+  }
  }
 }

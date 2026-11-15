@@ -1,0 +1,4 @@
+#!/bin/sh
+cd "$(dirname "$0")" || exit 1
+export STUDY_PORT="${STUDY_PORT:-8876}"
+exec python3 handmade-mastery/tools/study-kit/serve.py "$@"

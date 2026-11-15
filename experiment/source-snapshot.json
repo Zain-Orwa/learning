@@ -1,0 +1,14 @@
+{
+  "copied_from_commit": "ee64a5bdb1b47d11daf8ac4d41f507b9a4828865",
+  "source_sha256": {
+    "handmade-mastery/tools/study-kit/engine.html": "aa86603f927300160eb4bac7ba56e72b570b61ae26828febd09bda5d521c55d8",
+    "handmade-mastery/tools/study-kit/winter.js": "bb3129b589b0ed7373eb4c8a2bcd58c414a307d71a521ddce4376deba6c9a06b",
+    "handmade-mastery/tools/study-kit/winter.css": "2996b3dd26d2bed0ee0f61cee05e48deb23ec538cf59af7290c62643b31e8821",
+    "handmade-mastery/tools/study-kit/explanation.js": "afa112abeab71c270b582768c331d4bcd4eeef9411f90a0b64aac0594a75b7e5",
+    "handmade-mastery/tools/study-kit/explanation.css": "1a985ddfece9224cb72e404bf47bfbc3558bbb56bb9aabd2647cd3157c1586d3",
+    "handmade-mastery/tools/study-kit/build.py": "ed4747c427d8c127aa0f24b4146fa25b30ef97fc1d6fe625a083f26b2566b955",
+    "handmade-mastery/tools/study-kit/serve.py": "f6729a894a10170ef264fd075cf99f62b3eb6b96cf90cfe2438c4e9aa9a1056d",
+    "handmade-mastery/courses/intro-to-c/day01/data.js": "b9b45cb6ea5aa02bc4c82ef4d5605a9fc403ea2ef0ba8a3862589b550debbfec",
+    "handmade-mastery/courses/intro-to-c/day01/study-kit.html": "75402f402e111db2f72b1176698d04aa29a1e433e6e3fb39f8245a9eb42b2763"
+  }
+}

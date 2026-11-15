@@ -28,7 +28,7 @@ _Last updated: 2026-11-15_
 ## Study position
 - Course: intro-to-c, Day 01
 - Section: 3 of 12 ("Building: what compiling actually means", 12:13-16:55)
-- Step: Watch
+- Step: Watch (video at 0:05 into the part, episode time 12:18)
 - Parts done: 2
 - Completed (part id, date): b01 2026-11-01, b02 2026-11-02
 - Updated: 2026-11-15
@@ -86,3 +86,9 @@ return 404, so it is not the owning account.
 
 - Technical explanation rows now separate icons, amber labels and descriptions
   into aligned columns, with a stacked layout for narrow cards.
+
+## Pending UI experiment
+- A separate copy runs with `./experiment/study` on port 8876. It tries
+  Watch → Check → Practice with supporting tools kept optional.
+- Main application behavior is unchanged. Await Zain's review before promotion;
+  experiment answers and review results stay inside `experiment/`.

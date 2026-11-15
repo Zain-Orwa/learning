@@ -1,0 +1,48 @@
+# Build output (MSVC)
+build/
+*.obj
+*.exe
+*.pdb
+*.ilk
+*.idb
+*.exp
+*.lib
+*.map
+*.i
+x64/
+Debug/
+Release/
+# The command skill is not a compiler Debug directory (case-insensitive on Mac).
+!/.agents/skills/debug/
+!/.agents/skills/debug/**
+.vs/
+*.sln.docstates
+*.vcxproj.user
+
+# Media (keep videos out of git)
+*.mp4
+*.mkv
+*.wav
+
+# Claude Code local-only settings
+.claude/settings.local.json
+
+# Python cache
+__pycache__/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Animations: Manim's working files stay local; finished lesson animations are committed
+tools/animate/.venv/
+tools/animate/media/
+!**/anim/*.mp4
+
+# Voice (Kokoro): the environment and the voice samples stay local
+tools/voice/.venv/
+tools/voice/samples/
+
+# Speech to text (faster-whisper): the environment and the Whisper model stay local
+tools/transcribe/.venv/
+tools/transcribe/models/

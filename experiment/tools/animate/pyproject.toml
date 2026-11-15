@@ -1,0 +1,6 @@
+[project]
+name = "animate"
+version = "0.1.0"
+description = "Manim animations for hard ideas in the learning repo (see .claude/skills/animate)"
+requires-python = ">=3.11"
+dependencies = ["manim>=0.22,<0.23"]

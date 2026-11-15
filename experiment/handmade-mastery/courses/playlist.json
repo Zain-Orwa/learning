@@ -1,0 +1,9 @@
+[
+  {"kit": "intro-to-c/day01", "title": "Intro to C on Windows, Day 1", "video": "Intro_to_C_on_Windows_-_Day_1.mp4", "built": true},
+  {"kit": "intro-to-c/day01-qa", "title": "Intro to C, Day 1 Q&A (separate recording, if published)", "video": null, "built": false},
+  {"kit": "intro-to-c/day02", "title": "Intro to C on Windows, Day 2", "video": "Intro_to_C_on_Windows_-_Day_2.mp4", "built": false},
+  {"kit": "intro-to-c/day03", "title": "Intro to C on Windows, Day 3", "video": "Intro_to_C_on_Windows_-_Day_3.mp4", "built": false},
+  {"kit": "intro-to-c/day04", "title": "Intro to C on Windows, Day 4", "video": "Intro_to_C_on_Windows_-_Day_4.mp4", "built": false},
+  {"kit": "intro-to-c/day05", "title": "Intro to C on Windows, Day 5", "video": "Intro_to_C_on_Windows_-_Day_5.mp4", "built": false},
+  {"kit": "handmade-hero/day001", "title": "Handmade Hero Day 001: Setting Up the Windows Build", "video": "Handmade_Hero_Day_001.mp4", "built": false}
+]

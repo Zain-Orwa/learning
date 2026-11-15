@@ -101,3 +101,10 @@ do not maintain a second copy of the working agreement.
 | `/debug` | Debugging challenge from studied material: timed, graded with the debugging rubric |
 | `/reminders` | Update phone reminders on their owning account when its tools are available |
 | `/animate` | Animated explanation of a hard idea (Manim video, rendered on the Mac) or a quick drawing |
+
+## UI experiments
+
+Try proposed study-page simplifications in `experiment/` first. Keep its
+records and browser storage separate from the main app. Run and compare
+there; promote changes to the main application only after Zain confirms.
+See `experiment/README.md`. Do not sync experimental results into main history.

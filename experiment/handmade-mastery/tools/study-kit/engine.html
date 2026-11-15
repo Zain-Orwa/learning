@@ -1,0 +1,1130 @@
+<title>__TITLE__</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Merriweather:ital,wght@0,400;0,700;0,900;1,400&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: debugger-style split. Left "call stack" of parts (future parts locked), right the current part.
+   The current step carries the yellow instruction-pointer arrow. The video player lives inside the Watch step. */
+:root{
+  --paper:#f5f6f2; --panel:#ffffff; --ink:#1a222c; --muted:#5b6672; --rule:#dde1da;
+  --ip:#f2c230; --ip-ink:#3b2c00; --link:#2350c8; --code-bg:#eef0ea; --good:#2f7d4f; --warn:#a8641a; --bad:#b33a3a;
+  --chip:#e8ebe4; --screen:#0f1317; --screen-ink:#e3e7ea;
+  --f-display:"Archivo","Arial Narrow",system-ui,sans-serif;
+  --f-body:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#13171c; --panel:#1a1f26; --ink:#e3e7ea; --muted:#9aa4ad; --rule:#2c333c;
+  --ip:#e8b923; --ip-ink:#1e1600; --link:#8fb0ff; --code-bg:#0f1317; --good:#6cc48f; --warn:#e0a35a; --bad:#ec7f7f; --chip:#242b33; --screen:#07090b; --screen-ink:#e3e7ea; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#13171c; --panel:#1a1f26; --ink:#e3e7ea; --muted:#9aa4ad; --rule:#2c333c;
+  --ip:#e8b923; --ip-ink:#1e1600; --link:#8fb0ff; --code-bg:#0f1317; --good:#6cc48f; --warn:#e0a35a; --bad:#ec7f7f; --chip:#242b33; --screen:#07090b; --screen-ink:#e3e7ea; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important} /* the hidden attribute must beat any display rule (e.g. the end-of-part screen) */
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.6;margin:0}
+a{color:var(--link)}
+button,input,textarea,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--link);outline-offset:2px}
+.wrap{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 60px;max-width:1240px;margin:0 auto}
+header.top{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:end;justify-content:space-between;padding-bottom:16px;border-bottom:1px solid var(--rule)}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(28px,4vw,40px);line-height:1.05;margin:4px 0 0;text-wrap:balance;letter-spacing:-.01em}
+h2{font-family:var(--f-display);font-weight:700;font-size:24px;line-height:1.2;margin:0;text-wrap:balance}
+h3{font-family:var(--f-display);font-weight:700;font-size:18px;margin:18px 0 6px}
+.meter{display:flex;align-items:center;gap:10px;font-family:var(--f-mono);font-size:13px;color:var(--muted)}
+.meter .bar{width:160px;height:8px;background:var(--chip);border-radius:4px;overflow:hidden}
+.meter .bar i{display:block;height:100%;background:var(--ip)}
+nav.tabs{display:flex;gap:4px;flex-wrap:wrap;margin:16px 0}
+nav.tabs button{border:1px solid var(--rule);background:var(--panel);padding:6px 14px;border-radius:6px;cursor:pointer;font-family:var(--f-display);font-weight:600;font-size:15px}
+nav.tabs button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+nav.tabs .badge{font-family:var(--f-mono);font-size:12px;background:var(--ip);color:var(--ip-ink);border-radius:9px;padding:0 6px;margin-left:6px}
+.grid{display:grid;grid-template-columns:280px minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:minmax(0,1fr)}}
+/* call stack */
+.stack{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);border:1px solid var(--rule);background:var(--panel);border-radius:8px;overflow:hidden}
+@media (max-width:860px){.stack{position:static}}
+.stack .hd{font-family:var(--f-mono);font-size:12px;color:var(--muted);padding:8px 12px;border-bottom:1px solid var(--rule);display:flex;justify-content:space-between}
+.stack ol{list-style:none;margin:0;padding:0;max-height:70vh;overflow:auto}
+@media (max-width:860px){.stack ol{max-height:220px}}
+.stack li>*{box-sizing:border-box;display:grid;grid-template-columns:18px 1fr auto;gap:8px;width:100%;padding:8px 12px;border-bottom:1px solid var(--rule);font-size:14px;line-height:1.35;text-align:left;background:none;border-left:0;border-right:0;border-top:0}
+.stack li button{cursor:pointer}
+.stack li button:hover{background:var(--chip)}
+.stack li [aria-current="true"]{background:color-mix(in srgb,var(--ip) 22%,var(--panel))}
+.stack li .locked{color:var(--muted)}
+.stack .arrow{width:0;height:0;border-top:6px solid transparent;border-bottom:6px solid transparent;border-left:10px solid transparent;margin-top:5px}
+.stack [aria-current="true"] .arrow{border-left-color:var(--ip)}
+.stack .t{font-family:var(--f-display);font-weight:600}
+.stack .ts{font-family:var(--f-mono);font-size:11px;color:var(--muted);display:block;font-weight:400}
+.stack .ck{font-family:var(--f-mono);font-size:11px;color:var(--muted);white-space:nowrap}
+.stack .ck.full{color:var(--good)}
+/* block */
+.block{background:var(--panel);border:1px solid var(--rule);border-radius:8px;padding:20px clamp(16px,3vw,32px) 28px;min-width:0}
+.bhead{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:baseline;justify-content:space-between}
+.tsr{font-family:var(--f-mono);font-size:13px;background:var(--chip);padding:2px 8px;border-radius:4px;white-space:nowrap}
+.steps{display:flex;margin:18px 0 6px;overflow-x:auto;border-bottom:1px solid var(--rule)}
+.steps button{all:unset;cursor:pointer;padding:8px 12px 10px 22px;position:relative;font-family:var(--f-display);font-weight:600;font-size:14px;color:var(--muted);white-space:nowrap}
+.steps button:disabled{cursor:default;opacity:.45}
+.steps button:focus-visible{outline:2px solid var(--link)}
+.steps button.done{color:var(--ink)}
+.steps button.done::after{content:"✓";font-family:var(--f-mono);font-size:11px;color:var(--good);margin-left:5px}
+.steps button[aria-selected="true"]{color:var(--ink);box-shadow:inset 0 -3px 0 var(--ip)}
+.steps button[aria-selected="true"]::before{content:"";position:absolute;left:6px;top:13px;border-top:6px solid transparent;border-bottom:6px solid transparent;border-left:10px solid var(--ip)}
+.stepnote{font-family:var(--f-mono);font-size:12px;color:var(--muted);margin:10px 0 0}
+.pane{max-width:72ch}
+.pane p{margin:10px 0}
+.pane ul,.pane ol{padding-left:22px}
+.pane li{margin:4px 0}
+code{font-family:var(--f-mono);font-size:.86em;background:var(--code-bg);padding:1px 5px;border-radius:3px}
+pre{font-family:var(--f-mono);font-size:13.5px;line-height:1.55;background:var(--code-bg);border:1px solid var(--rule);border-radius:6px;padding:14px 16px;overflow-x:auto;margin:12px 0}
+pre code{background:none;padding:0;font-size:inherit}
+.callout{border-left:4px solid var(--ip);background:color-mix(in srgb,var(--ip) 9%,var(--panel));padding:10px 14px;border-radius:0 6px 6px 0;margin:14px 0}
+.callout.later{border-left-color:var(--muted);background:var(--chip)}
+.callout b{font-family:var(--f-display)}
+.next{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px;padding-top:14px;border-top:1px dashed var(--rule)}
+.btn{border:1px solid var(--ink);background:var(--ink);color:var(--paper);padding:8px 16px;border-radius:6px;cursor:pointer;font-family:var(--f-display);font-weight:600;font-size:15px}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--rule)}
+.btn.small{padding:4px 10px;font-size:13px}
+.btn:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;align-items:center}
+textarea,input[type=text]{width:100%;border:1px solid var(--rule);border-radius:6px;background:var(--paper);padding:8px 10px;font-family:var(--f-body);font-size:16px}
+textarea{min-height:88px;resize:vertical}
+/* player */
+.player{background:var(--screen);color:var(--screen-ink);border-radius:8px;overflow:hidden;margin:12px 0;position:relative}
+.player video{display:block;width:100%;max-width:100%;aspect-ratio:16/9;background:#000}
+.player:fullscreen{display:flex;flex-direction:column;justify-content:center}
+.player:fullscreen video{flex:1;aspect-ratio:auto;max-height:calc(100vh - 56px)}
+.pctl{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;padding:8px 12px;font-family:var(--f-mono);font-size:13px}
+.pctl button{background:transparent;border:1px solid #3a434d;color:var(--screen-ink);border-radius:5px;padding:4px 10px;cursor:pointer;font-family:var(--f-mono);font-size:13px}
+.pctl button:hover{border-color:#6b7682}
+.pctl button{display:inline-flex;align-items:center;justify-content:center;gap:2px;min-width:38px;min-height:32px}
+.pctl svg{width:18px;height:18px;fill:currentColor}
+.pbar{flex:1 1 160px;height:10px;background:#2a3139;border-radius:5px;cursor:pointer;position:relative;overflow:hidden;min-width:120px}
+.pbar i{position:absolute;inset:0 auto 0 0;background:var(--ip);border-radius:5px}
+.pend{position:absolute;inset:0;background:rgba(7,9,11,.86);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:16px}
+.pend b{font-family:var(--f-display);font-size:22px}
+.pend .btn{background:var(--ip);color:var(--ip-ink);border-color:var(--ip)}
+.pend .btn.ghost{background:transparent;color:var(--screen-ink);border-color:#6b7682}
+.drop{border:2px dashed var(--rule);border-radius:8px;padding:22px;text-align:center;margin:12px 0}
+.drop.over{border-color:var(--ip);background:color-mix(in srgb,var(--ip) 8%,var(--panel))}
+.watchfor{margin:10px 0 0}
+.park{border:1px solid var(--rule);border-radius:8px;padding:12px 14px;margin:14px 0;background:var(--paper)}
+.park h3{margin:0 0 4px;font-size:16px}
+.plist{list-style:none;padding:0;margin:8px 0 0;display:flex;flex-direction:column;gap:6px}
+.plist li{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline;border-bottom:1px dashed var(--rule);padding-bottom:6px}
+.plist .at{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.plist .txt{flex:1 1 220px;min-width:0}
+.chip{font-family:var(--f-mono);font-size:11px;text-transform:uppercase;letter-spacing:.05em;border-radius:4px;padding:1px 6px;background:var(--chip);color:var(--muted)}
+.chip.later{background:color-mix(in srgb,var(--warn) 18%,var(--panel));color:var(--warn)}
+.chip.done{background:color-mix(in srgb,var(--good) 18%,var(--panel));color:var(--good)}
+.q{border:1px solid var(--rule);border-radius:8px;padding:14px 16px;margin:14px 0}
+.q .qn{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.q .qt{font-weight:600;margin:4px 0 10px}
+.fb{margin-top:10px;padding:10px 12px;border-radius:6px;background:var(--chip);white-space:pre-wrap}
+.verdict{font-family:var(--f-mono);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.v-correct{color:var(--good)} .v-partial{color:var(--warn)} .v-missing{color:var(--bad)}
+.score{display:flex;align-items:center;gap:10px;font-family:var(--f-mono);font-weight:600}
+.score .sbar{flex:0 1 180px;height:8px;background:var(--rule);border-radius:4px;overflow:hidden}
+.score .sbar i{display:block;height:100%}
+.fb.fbs{white-space:normal}
+.miss{margin:6px 0 0;padding-left:20px}
+.guessbox{border:1px solid var(--ip);border-radius:8px;padding:12px 14px;margin:12px 0;background:color-mix(in srgb,var(--ip) 8%,var(--panel))}
+.guessbox h3{margin:0 0 4px;font-size:16px}
+.plan{border:1px solid var(--rule);background:var(--panel);border-radius:8px;padding:12px 16px;margin-bottom:16px}
+.plan b{font-family:var(--f-display)}
+.plan ol{margin:6px 0 0;padding-left:20px}
+.plan.warn{border-color:var(--warn);background:color-mix(in srgb,var(--warn) 10%,var(--panel))}
+.timechips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+#timer{font-family:var(--f-mono);background:var(--ip);color:var(--ip-ink);border-radius:4px;padding:1px 8px}
+#timer.low{background:var(--bad);color:#fff}
+.ivq{border-left:4px solid var(--link)}
+.dbg{border-left:4px solid var(--bad)}
+.dbg .clock{font-family:var(--f-mono);font-size:13px;color:var(--muted)}
+details.model{margin-top:8px} details.model summary{cursor:pointer;color:var(--muted);font-size:14px}
+.card{margin:14px 0}
+.card .face{border:1px solid var(--rule);border-radius:10px;min-height:150px;padding:22px;display:flex;flex-direction:column;justify-content:center;background:var(--panel)}
+.card .side{font-family:var(--f-mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.card .txt{font-size:19px}
+.rate{display:flex;gap:8px;flex-wrap:wrap}
+.rate button{flex:1 1 90px}
+.cardmeta{font-family:var(--f-mono);font-size:12px;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-family:var(--f-display);font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+td.mono{font-family:var(--f-mono);font-size:13px;white-space:nowrap}
+.toolgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.tool{border:1px solid var(--rule);border-radius:8px;padding:14px;background:var(--panel);min-width:0}
+.tool h3{margin:0 0 4px}
+.tool .k{font-family:var(--f-mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.chatlog{display:flex;flex-direction:column;gap:8px;margin:10px 0}
+.msg{padding:8px 12px;border-radius:8px;white-space:pre-wrap;max-width:100%}
+.msg.u{background:var(--chip);align-self:flex-end}
+.msg.a{border:1px solid var(--rule)}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+.loop{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0;font-family:var(--f-mono);font-size:13px}
+.loop span{background:var(--chip);border-radius:4px;padding:3px 8px}
+.loop span.on{background:var(--ip);color:var(--ip-ink)}
+.center{text-align:center}
+.bigtime{font-family:var(--f-mono);font-size:clamp(44px,9vw,72px);font-weight:600;letter-spacing:-.02em;margin:8px 0}
+.welcome{border:1px solid var(--ip);background:color-mix(in srgb,var(--ip) 10%,var(--panel));border-radius:8px;padding:14px 18px;margin-bottom:16px}
+.welcome b{font-family:var(--f-display)}
+.copybox{margin-top:8px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:6px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:20}
+.toast.on{opacity:1}
+.gq{margin:14px 0}
+.gq .qt{font-weight:600;margin:4px 0 8px}
+.gq .qn{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.gmine{border-left:3px solid var(--ip);padding:6px 12px;border-radius:0 6px 6px 0;background:color-mix(in srgb,var(--ip) 7%,var(--panel));white-space:pre-wrap}
+.cover{background:var(--screen);color:var(--screen-ink);border-radius:8px;aspect-ratio:16/9;max-width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:16px;margin:12px 0}
+.cover b{font-family:var(--f-display);font-size:22px}
+.cover .btn{background:var(--ip);color:var(--ip-ink);border-color:var(--ip)}
+.nudge{border-left:4px solid var(--warn);background:color-mix(in srgb,var(--warn) 10%,var(--panel));padding:8px 12px;border-radius:0 6px 6px 0;margin:12px 0}
+.anim{margin:12px 0}
+.anim video{display:block;width:100%;max-width:100%;border-radius:8px;background:#000}
+.listen{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0 6px}
+.listen .btn{display:inline-flex;align-items:center;gap:6px}
+.listen svg{width:16px;height:16px;fill:currentColor}
+.inwords{border:1px dashed var(--rule);border-radius:6px;padding:8px 14px;margin:-4px 0 14px;background:var(--panel)}
+.inwords .k{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.inwords ol{margin:6px 0 0;padding-left:22px}
+.inwords .iw{margin:6px 0 0}
+.inwords .try{border-top:1px dashed var(--rule);padding-top:6px;margin-top:8px}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.reading{background:color-mix(in srgb,var(--ip) 20%,transparent);border-radius:4px;box-shadow:0 0 0 4px color-mix(in srgb,var(--ip) 20%,transparent)}
+/* mic: speak instead of typing. attachMics() wraps every text box; the button sits in its bottom-right corner */
+.micwrap{display:block;position:relative;flex:1 1 200px;min-width:0}
+.micwrap>textarea{display:block;padding-right:58px}
+.micwrap>input{padding-right:46px}
+.mic{position:absolute;right:20px;bottom:8px;width:30px;height:30px;border-radius:50%;border:1px solid var(--rule);background:var(--panel);color:var(--muted);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0}
+.micwrap.one .mic{right:6px;bottom:auto;top:50%;transform:translateY(-50%)}
+.mic svg{width:16px;height:16px;fill:currentColor}
+.mic:hover{color:var(--ink);border-color:var(--muted)}
+.mic.rec{background:var(--bad);border-color:var(--bad);color:#fff}
+.mic:disabled{opacity:.6;cursor:default}
+.micstat{position:absolute;right:58px;bottom:12px;font-family:var(--f-mono);font-size:12px;background:var(--panel);color:var(--muted);border:1px solid var(--rule);border-radius:10px;padding:0 8px;pointer-events:none}
+.micwrap.one .micstat{right:44px;bottom:auto;top:50%;transform:translateY(-50%)}
+.micstat.rec{color:var(--bad);border-color:var(--bad)}
+.micstat.rec::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--bad);margin-right:6px;vertical-align:1px;animation:micblink 1s steps(2) infinite}
+@keyframes micblink{50%{opacity:.25}}
+.ivsay{margin-left:6px;vertical-align:middle;display:inline-flex;align-items:center;gap:4px}
+.ivsay svg{width:14px;height:14px;fill:currentColor}
+.ivsay.on{background:var(--ip);color:var(--ip-ink);border-color:var(--ip)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/*WINTER_STYLE*/
+/*EXPLAIN_STYLE*/
+</style>
+
+<div class="app-shell">
+  <header class="winter-header">
+    <button class="icon-button mobile-menu" data-ui="courses" aria-label="Open course navigation">☰</button>
+    <a class="brand" href="#" data-ui="home"><span class="brand-cabin" aria-hidden="true"></span><span>Handmade Hero Study Platform <small class="experiment-badge">Experiment</small></span></a>
+    <div class="header-controls">
+      <div class="search-wrap"><span class="search-symbol" aria-hidden="true">⌕</span><input id="lesson-search" type="search" placeholder="Search lessons, topics, code…" aria-label="Search lessons, topics, code" aria-controls="search-results" aria-expanded="false" autocomplete="off"><kbd>⌘K</kbd><div id="search-results" class="search-results" hidden></div></div>
+      <button class="icon-button notifications" id="notifications-button" data-ui="notifications" aria-label="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg><i id="notification-dot" hidden></i></button>
+      <div class="profile-wrap"><button id="profile-button" class="profile-button" data-ui="profile" aria-expanded="false" aria-controls="profile-popover"><span class="avatar" aria-hidden="true">Z</span><span id="profile-name">Zain</span><span aria-hidden="true">⌄</span></button>
+      <div id="profile-popover" class="profile-popover" hidden><nav class="tabs" id="tabs" aria-label="Study tools"></nav><button data-ui="planner">Plan this session</button><button data-ui="history">Study history</button><button data-ui="rename">Edit profile name</button><button data-go="stop">Stop for today</button><p id="saved" role="status">Saved in this browser</p><span id="timer" hidden></span></div></div>
+    </div>
+  </header>
+  <div class="app-layout">
+    <aside class="course-sidebar" id="course-sidebar" aria-label="Course navigation">
+      <div class="course-heading"><h2>Handmade Hero</h2><p>Complete Study Courses</p></div>
+      <div class="course-progress"><div><span id="course-position">Part 1 of 12</span><span id="pct">0%</span></div><span class="progress-track"><i id="pctbar"></i></span></div>
+      <nav id="course-tree" aria-label="Course sections"></nav>
+      <div class="sidebar-scenery" aria-hidden="true"></div>
+    </aside>
+    <button class="sidebar-backdrop" data-ui="courses" aria-label="Close course navigation" hidden></button>
+    <main id="view" class="lesson-surface"></main>
+  </div>
+</div>
+<dialog id="study-dialog" aria-labelledby="dialog-title"><div class="dialog-heading"><h2 id="dialog-title"></h2><button class="icon-button" data-ui="close-dialog" aria-label="Close dialog">×</button></div><div id="dialog-body"></div></dialog>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/*DATA*/
+</script>
+<script>
+(function(){
+const D = window.STUDY;
+const STEPS = [["watch","Watch"],["recall","Check"],["experiment","Practice"]];
+const SHORT_BREAK=2, LONG_BREAK=5, LONG_EVERY=3; // minutes; a long break after every 3 parts
+const $ = (s,el=document)=>el.querySelector(s);
+const esc = s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const today = ()=>Math.floor(Date.now()/86400000);
+const secs = t=>String(t).split(":").reduce((a,x)=>a*60+(+x),0);
+const fmt = s=>{s=Math.max(0,Math.round(s));const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return (h?h+":"+String(m).padStart(2,"0"):m)+":"+String(x).padStart(2,"0")};
+const md = s=>esc(s).replace(/`([^`]+)`/g,"<code>$1</code>").replace(/\*\*([^*]+)\*\*/g,"<b>$1</b>");
+
+document.title=D.title+" · Handmade Hero Study Platform";
+
+/* ---------- state + persistence ---------- */
+const FRESH={v:4,cur:D.blocks[0].id,step:"watch",tab:"path",done:{},completed:{},vt:{},recall:{},cmp:{},guess:{},guesses:{},lb:{},lbShow:{},rfb:{},cdate:{},ivans:{},ivfb:{},dbgs:{},dbgans:{},dbgfb:{},session:null,park:{},answers:{},fb:{},cards:{},checkAnswers:{},checkFb:{},checkAttempts:{},reviewChecks:{},practice:{},practiceDone:{},notes:{},speed:1,lastVisit:0,sessionParts:0,brk:null,stopped:false};
+let S=JSON.parse(JSON.stringify(FRESH));
+const LS=D.storageKey||"study-kit";
+try{const raw=localStorage.getItem(LS); if(raw) S=Object.assign(S,JSON.parse(raw));}catch(e){}
+migrate();
+const localLast=S.lastVisit||0;
+S.stopped=false; // opening the page again always means "continue"
+let welcome = S.lastVisit && (Date.now()-S.lastVisit>30*60*1000) && Object.keys(S.done).length>0;
+if(welcome){S.sessionParts=0; S.brk=null; S.stopped=false; S.session=null;}
+S.lastVisit=Date.now();
+let dbRef=null, saveT=null;
+function save(){
+  S.lastVisit=Date.now();
+  try{localStorage.setItem(LS,JSON.stringify(S));}catch(e){}
+  clearTimeout(saveT);
+  if(dbRef) saveT=setTimeout(()=>{dbRef.set({json:JSON.stringify(S),at:Date.now()}).then(()=>setSaved("saved to your account")).catch(()=>setSaved("saved in this browser"));},1500);
+  if(helperReady) saveT=setTimeout(()=>{postHelper("/api/progress").then(r=>{setSaved("saved in experiment");if(r&&r.addedReviews&&r.addedReviews.length)toast(r.addedReviews.length+" items added to your review schedule");}).catch(()=>setSaved("saved in this browser"));},1500);
+}
+/* ---------- helper mode: ./study runs a small local helper (serve.py) ---------- */
+const HELPER_PAGE=/^https?:$/.test(location.protocol)&&!window.claude;
+const kitPath=decodeURIComponent(location.pathname).replace(/^\/courses\//,"").replace(/\/study-kit\.html$/,"");
+let helperReady=false, videoFolder=null;
+function helperMeta(){
+  return {kit:kitPath,unitPrefix:D.unitPrefix||D.storageKey,unitLabel:D.unitLabel||D.title,
+    completedParts:D.blocks.filter(b=>S.completed[b.id]).map(b=>({id:b.id,n:idxOf(b)+1,title:b.title,date:S.cdate[b.id]||new Date().toISOString().slice(0,10),interview:[],debug:[]}))};
+}
+function postHelper(url,extra){
+  S.finished=allDone();
+  return fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(Object.assign({meta:helperMeta(),state:S,position:positionBlock()},extra||{}))}).then(r=>r.json());
+}
+async function helperCall(input,json){
+  const prompt=typeof input==="string"?input:input.map(m=>(m.role==="user"?"STUDENT: ":"TUTOR: ")+m.content).join("\n\n");
+  const r=await (await fetch("/api/claude",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt,json})})).json();
+  if(r.error) throw {code:"upstream_error",message:r.error,text:r.text};
+  return r;
+}
+const helperSample=async(input,opts={})=>{const r=await helperCall(input,false);opts.onText&&opts.onText({text:r.text,delta:r.text});return {text:r.text,truncated:false}};
+helperSample.json=async input=>(await helperCall(input,true)).data;
+(async()=>{
+  if(!HELPER_PAGE) return;
+  try{
+    const ping=await (await fetch("/api/ping")).json(); if(!ping.ok) return;
+    const remote=await (await fetch("/api/progress?kit="+encodeURIComponent(kitPath))).json();
+    if(remote&&remote.lastVisit&&remote.lastVisit>=localLast){
+      S=Object.assign(JSON.parse(JSON.stringify(FRESH)),remote); migrate(); S.tab="path"; referenceStep=S.lessonViews?.[S.cur]||S.step;
+      S.stopped=false;
+      welcome=(Date.now()-remote.lastVisit>30*60*1000)&&Object.keys(S.done).length>0;
+      if(welcome){S.sessionParts=0;S.brk=null;S.stopped=false;S.session=null;}
+    }
+    if(ping.claude) sample=helperSample;
+    micOK=!!ping.transcribe&&!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&window.MediaRecorder);
+    if(D.video&&D.video.file){const v=await (await fetch("/api/video?file="+encodeURIComponent(D.video.file))).json();
+      if(v.exists){videoURL="/video/"+encodeURIComponent(D.video.file);vid.src=videoURL;} else videoFolder=v.folder;}
+    helperReady=true; setSaved("saved in experiment"); save(); refreshReviews(); safeRender();
+  }catch(e){}
+})();
+function setSaved(t){$("#saved").textContent=t}
+(async()=>{
+  try{
+    if(!window.claude) return;
+    const [db,user]=await Promise.all([claude.use("db"),claude.use("user")]);
+    if(!db||!user) return;
+    const id=await user.id(); if(!id) return;
+    dbRef=db.collection("data/users/"+id).doc("progress-"+LS);
+    const snap=await dbRef.get();
+    if(snap.exists){ const remote=JSON.parse(snap.data().json||"{}"); if((remote.lastVisit||0)>(S.lastVisit||0)-60000){S=Object.assign(S,remote); migrate(); safeRender();} }
+    setSaved("saved to your account");
+  }catch(e){dbRef=null}
+})();
+let sample=null, downloads=null;
+(async()=>{try{if(window.claude){sample=await claude.use("sample"); safeRender();}}catch(e){}})();
+(async()=>{try{if(window.claude){downloads=await claude.use("downloads");}}catch(e){}})();
+function safeRender(){ if(vid && !vid.paused) return; render(); }
+function toast(t){const el=$("#toast");el.textContent=t;el.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove("on"),2000)}
+async function copy(text,box){
+  try{await navigator.clipboard.writeText(text);toast("Copied. Paste it to Claude.");}
+  catch(e){ if(box){box.innerHTML=`<textarea readonly>${esc(text)}</textarea><p class="small muted">Select all and copy this, then paste it to Claude.</p>`; box.querySelector("textarea").select();} }
+}
+
+/* ---------- helpers ---------- */
+const blockById=id=>D.blocks.find(b=>b.id===id);
+const idxOf=b=>D.blocks.indexOf(b);
+/* ---------- guesses: the part's main guess plus the key questions listed in b.pre ---------- */
+function migrate(){
+  S.guesses=S.guesses||{};S.lb=S.lb||{};S.lbShow=S.lbShow||{};
+  S.checkAnswers=S.checkAnswers||{};S.checkFb=S.checkFb||{};S.practice=S.practice||{};S.practiceDone=S.practiceDone||{};
+  S.checkAttempts=S.checkAttempts||{};S.reviewChecks=S.reviewChecks||{};
+  // Preserve a prior short check as an attempt; old Recall grades are history only.
+  Object.entries(S.checkFb).forEach(([id,fb])=>{if(!S.checkAttempts[id]&&Number.isFinite(fb.score))S.checkAttempts[id]=[{answer:S.checkAnswers[id]||"",fb}];});
+  Object.keys(S.guess||{}).forEach(id=>{if(!S.guesses[id])S.guesses[id]=[S.guess[id]]});
+  if(!["watch","recall","experiment"].includes(S.step)){
+    const d=S.done[S.cur]||{};
+    S.step=d.watch?(d.recall?"experiment":"recall"):"watch";
+  }
+  S.v=4;
+}
+function stepsFor(b){return STEPS.filter(([k])=>k!=="experiment"||b.practice||b.experiment)}
+function blockDone(b){const d=S.done[b.id]||{};return stepsFor(b).filter(([k])=>d[k]).length}
+function frontier(){const i=D.blocks.findIndex(b=>!S.completed[b.id]);return i===-1?D.blocks.length:i}
+const allDone=()=>frontier()>=D.blocks.length;
+const unlocked=b=>idxOf(b)<=frontier();
+function stepOpen(b,k){const st=stepsFor(b),i=st.findIndex(([x])=>x===k),d=S.done[b.id]||{};return i>=0&&(d[k]||st.slice(0,i).every(([x])=>d[x]))}
+function allCards(){const out=[];D.blocks.forEach(b=>(b.cards||[]).forEach((c,i)=>out.push({id:b.id+"#"+i,b,c})));return out}
+function progress(){let tot=0,dn=0;D.blocks.forEach(b=>{tot+=stepsFor(b).length;dn+=blockDone(b)});return tot?Math.round(dn*100/tot):0}
+function checkFor(b){return b.check||{q:b.questions[0].q,rubric:[[b.questions[0].a,100]]};}
+function rubricText(rubric){return rubric.map(([idea,weight],i)=>`${i+1}. ${idea} (${weight}%)`).join("\n");}
+function rubricHTML(rubric){return `<details class="model"><summary>What this check expects</summary><ul>${rubric.map(([idea,weight])=>`<li>${md(idea)} (${weight}%)</li>`).join("")}</ul></details>`;}
+function checkPrompt(b,check,answer,attempt=1){return `Check a short answer to this question only. ${GRADE_RULES}\nATTEMPT: ${attempt} of 2. ${attempt===2?"If below 80%, explain the main gap directly. Do not ask another question.":"At most one retry; never ask for perfect wording."}\nPART: ${b.title}\nQUESTION: ${check.q}\nFIXED CHECKLIST:\n${rubricText(check.rubric)}\nANSWER: ${answer}\n${JSON_SHAPE}`;}
+function attemptsFor(id){return S.checkAttempts[id]||(S.checkAttempts[id]=[]);}
+function checkClosed(attempts){return attempts.length>=2||attempts.some(a=>a.fb.score>=80);}
+const checking=new Set();
+async function gradeAttempt(key,attempts,b,check,answer,isCurrent){
+  answer=answer.trim();
+  if(!answer||checkClosed(attempts)||checking.has(key))return false;
+  if(attempts.some(a=>a.answer===answer)){toast("Change your answer for the retry, or continue.");return false;}
+  checking.add(key);
+  try{
+    const fb=normFb(await sample.json(checkPrompt(b,check,answer,attempts.length+1)),check.rubric);
+    // Edits made during a request must not inherit that request's score or use a retry.
+    if(!isCurrent()||checkClosed(attempts))return false;
+    attempts.push({answer,fb});save();return true;
+  }finally{checking.delete(key);}
+}
+function checkFeedback(attempts,review=false){
+  if(!attempts.length)return "";
+  const fb=attempts[attempts.length-1].fb;
+  if(fb.score>=80)return renderScore(fb)+`<p class="small">Check passed. ${review?"Save this review":"Continue to practice"}; no rewording needed.</p>`;
+  if(attempts.length<2)return renderScore(fb)+`<p class="small">One retry is available, or continue with the correction.</p>`;
+  const gap=[...(fb.missing||[])].sort((a,b)=>b.pct-a.pct)[0];
+  return renderScore({...fb,missing:[],guide:""})+`<p><b>The key idea:</b> ${esc(gap?gap.point:fb.guide||"Read the checklist for the core idea.")}</p><p class="small">${review?"Save this review with your first score.":"Continue to practice."} Check this again in a later review.</p>`;
+}
+function checked(b){return !!(S.checkFb[b.id]&&S.checkFb[b.id].score>=80&&S.practiceDone[b.id]&&(S.practice[b.id]||"").trim());}
+function pendingPractice(){return D.blocks.filter(b=>S.completed[b.id]&&(S.practice[b.id]||"").trim()&&!S.practiceDone[b.id]);}
+function pendingHTML(){
+  const pending=pendingPractice();if(!pending.length)return "";
+  return `<details class="plan"><summary>${pending.length} practical task${pending.length===1?"":"s"} still to try</summary><p class="small">On Windows, finish these before adding code that depends on them.</p><ul>${pending.map(b=>`<li><button class="btn ghost small" data-practicepart="${b.id}">Part ${idxOf(b)+1}: ${esc(b.title)}</button> ${esc(S.practice[b.id])}</li>`).join("")}</ul></details>`;
+}
+function blockContext(b){
+  const strip=h=>String(h||"").replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim();
+  return `VIDEO: "${D.title}"${D.eyebrow?" ("+D.eyebrow+")":""}.
+PART: ${b.title} (${b.start}-${b.end})
+WHAT CASEY COVERS: ${b.summary}
+STUDY NOTES: ${strip(b.explain).slice(0,3500)}
+TOPICS CASEY PARKS FOR LATER (do not teach these; say they come later): ${(D.parked||[]).map(p=>p.what+" ["+p.where+"]").join("; ")}`;
+}
+
+/* ---------- the video player (one element, kept alive across renders) ---------- */
+let videoURL=null, playerBlock=null, lastSave=0;
+const svg=d=>`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"/></svg>`;
+const ICON={play:svg("M8 5v14l11-7z"),pause:svg("M6 5h4v14H6zM14 5h4v14h-4z"),back:svg("M12 5V2L7 6l5 4V7a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z"),replay:svg("M6 6h2v12H6zM9.5 12l8.5 6V6z"),fs:svg("M5 5h5v2H7v3H5zM14 5h5v5h-2V7h-3zM5 14h2v3h3v2H5zM17 14h2v5h-5v-2h3z"),
+  stop:svg("M6 6h12v12H6z"),mic:svg("M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.9V21h2v-3.1a7 7 0 0 0 6-6.9z"),speak:svg("M3 9v6h4l5 5V4L7 9H3zM16.5 12A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z")};
+const vw=document.createElement("div"); vw.className="player";
+vw.innerHTML=`<video playsinline preload="metadata"></video>
+<div class="pctl"><button data-v="play" aria-label="Play" title="Play (Space)">${ICON.play}</button><button data-v="back" aria-label="Back 10 seconds" title="Back 10 seconds">${ICON.back}<span>10</span></button>
+<span class="pbar" role="slider" aria-label="Position in this part" tabindex="0"><i></i></span><span class="ptime">0:00 / 0:00</span>
+<button data-v="speed" aria-label="Playback speed" title="Speed">1×</button><button data-v="replay" aria-label="Replay this part" title="Replay this part">${ICON.replay}</button><button data-v="fs" aria-label="Full screen" title="Full screen">${ICON.fs}</button></div>
+<div class="pend" hidden><b>End of this part</b><span>The video stops here. Now answer one short question.</span><div class="row"><button class="btn" data-v="next">Next: Check →</button><button class="btn ghost" data-v="replay">Replay part</button></div></div>`;
+const vid=vw.querySelector("video");
+const range=b=>[secs(b.start),secs(b.end)];
+function ptick(){
+  const b=playerBlock; if(!b||!vid.duration) return;
+  const [st,en]=range(b);
+  if(vid.currentTime<st-0.4){vid.currentTime=st}
+  if(vid.currentTime>=en-0.05){ if(!vid.paused) vid.pause(); if(Math.abs(vid.currentTime-en)>0.2) vid.currentTime=en; partEnded(); }
+  const t=Math.min(Math.max(vid.currentTime,st),en);
+  vw.querySelector(".pbar i").style.width=((t-st)/(en-st)*100)+"%";
+  vw.querySelector(".pbar").setAttribute("aria-valuenow",String(Math.round((t-st)/(en-st)*100)));
+  vw.querySelector(".ptime").textContent=fmt(t-st)+" / "+fmt(en-st);
+  const pb=vw.querySelector('[data-v="play"]'), st2=vid.paused?"play":"pause"; if(pb.dataset.icon!==st2){pb.dataset.icon=st2;pb.innerHTML=ICON[st2];pb.setAttribute("aria-label",vid.paused?"Play":"Pause");pb.title=vid.paused?"Play (Space)":"Pause (Space)";}
+  if(Date.now()-lastSave>3000){lastSave=Date.now();S.vt[b.id]=t;save();}
+}
+(function loop(){ if(!vid.paused) ptick(); requestAnimationFrame(loop); })();
+vid.addEventListener("timeupdate",ptick); vid.addEventListener("pause",ptick); vid.addEventListener("play",()=>{vw.querySelector(".pend").hidden=true;ptick()});
+vid.addEventListener("seeking",()=>{const b=playerBlock;if(!b)return;const [st,en]=range(b);if(vid.currentTime<st)vid.currentTime=st;if(vid.currentTime>en)vid.currentTime=en;});
+vid.addEventListener("loadedmetadata",()=>{seekResume();ptick();});
+function seekResume(){const b=playerBlock;if(!b||!vid.duration)return;const [st,en]=range(b);let t=S.vt[b.id];if(!(t>=st&&t<en-1))t=st;vid.currentTime=t;vid.playbackRate=S.speed||1;vw.querySelector('[data-v="speed"]').textContent=(S.speed||1)+"×";}
+function partEnded(){
+  const b=playerBlock; if(!b) return;
+  vw.querySelector(".pend").hidden=false; S.vt[b.id]=range(b)[1];
+  const d=(S.done[b.id]=S.done[b.id]||{}); if(!d.watch){d.watch=true;save();const st=$(".steps [data-step='watch']");if(st)st.classList.add("done");const nb=$("#markNext");if(nb)nb.textContent="Next step →";}
+}
+vw.addEventListener("click",e=>{
+  const t=e.target.closest("[data-v]"); const b=playerBlock;
+  if(t&&b){const [st,en]=range(b),v=t.dataset.v;
+    if(v==="play"){ if(vid.paused){ if(vid.currentTime>=en-0.1) vid.currentTime=st; vid.play().catch(()=>{}); } else vid.pause(); }
+    if(v==="back"){vid.currentTime=Math.max(st,vid.currentTime-10)}
+    if(v==="replay"){vw.querySelector(".pend").hidden=true;vid.currentTime=st;vid.play().catch(()=>{})}
+    if(v==="speed"){const sp=[1,1.25,1.5,1.75,2,0.75];S.speed=sp[(sp.indexOf(S.speed||1)+1)%sp.length];vid.playbackRate=S.speed;t.textContent=S.speed+"×";save()}
+    if(v==="fs"){ if(document.fullscreenElement) document.exitFullscreen().catch(()=>{}); else vw.requestFullscreen?.().catch(()=>toast("Full screen isn't available here")); }
+    if(v==="next"){ if(document.fullscreenElement) document.exitFullscreen().catch(()=>{}); goNextStep(); }
+    ptick(); return;}
+  const bar=e.target.closest(".pbar"); if(bar&&b){const r=bar.getBoundingClientRect(),[st,en]=range(b);vid.currentTime=st+(en-st)*Math.min(1,Math.max(0,(e.clientX-r.left)/r.width));ptick();}
+});
+function loadVideo(file){
+  if(!file) return;
+  if(videoURL) URL.revokeObjectURL(videoURL);
+  videoURL=URL.createObjectURL(file); vid.src=videoURL;
+  if(D.video&&D.video.file&&file.name!==D.video.file) toast("Loaded "+file.name+" (expected "+D.video.file+")"); else toast("Video loaded");
+  render();
+}
+document.addEventListener("keydown",e=>{
+  if(!playerBlock||!vw.isConnected) return;
+  if($("#study-dialog")?.open) return;
+  if(e.target.closest&&e.target.closest("input,textarea,select,button")) return;
+  if(e.code==="Space"){e.preventDefault();vw.querySelector('[data-v="play"]').click()}
+  if(e.code==="ArrowLeft"){e.preventDefault();const [st]=range(playerBlock);vid.currentTime=Math.max(st,vid.currentTime-5)}
+});
+
+/* ---------- listen: read the Explain / Read code step aloud ----------
+   Kokoro only: tools/voice/make_audio.py renders each piece of text and build.py puts the map into
+   D.audio = {blockId: {step: {text: "audio/file.mp3"}}}. The browser's own voice is never used: a piece
+   with no mp3 (or a file that fails to load) is skipped. */
+const AUD=D.audio||{}, AU=new Audio();
+let referenceStep=S.lessonViews?.[S.cur]||"explain";
+let tts={segs:[],i:0,on:false,gen:0};
+const stepAudio=()=>(AUD[S.cur]||{})[referenceStep||S.step]||null;
+const ttsHint=()=>"Natural voice. Code is read as the “In words” version.";
+function listenBar(){
+  if(!stepAudio()) return `<p class="small muted">Read the notes below.</p>`;
+  return `<div class="listen"><button class="btn small" data-tts="play" id="ttsplay">${ICON.speak}<span>Listen</span></button>
+  <button class="btn ghost small" data-tts="stop" id="ttsstop" aria-label="Stop" title="Stop" hidden>${ICON.stop}</button>
+  <button class="btn ghost small" data-tts="rate" aria-label="Reading speed" title="Reading speed">${S.ttsRate||1}×</button>
+  <span class="small muted" id="ttsinfo">${ttsHint()}</span></div>`;
+}
+function inWords(s){
+  if(Array.isArray(s)||typeof s==="string"){ // old format: a plain list of lines
+    const lines=Array.isArray(s)?s:String(s).split("\n");
+    return `<div class="inwords"><div class="k">In words</div><ol>${lines.map(l=>`<li class="ln">${md(l)}</li>`).join("")}</ol></div>`;
+  }
+  return `<div class="inwords"><div class="k">In words</div>`
+    +(s.goal?`<p class="ln iw"><b>Goal:</b> ${md(s.goal)}</p>`:"")
+    +`<ol>${(s.steps||[]).map((l,i)=>`<li class="ln"><span class="vh">Step ${i+1}. </span>${md(l)}</li>`).join("")}</ol>`
+    +(s.pattern?`<p class="ln iw"><b>Pattern:</b> ${md(s.pattern)}</p>`:"")
+    +(s.tryit?`<p class="ln iw try"><b>Try it in your head:</b> ${md(s.tryit)}</p>`:"")+`</div>`;
+}
+function withWords(html,say){
+  if(!say||!say.length) return html;
+  let n=0;
+  return html.replace(/<\/pre>|<\/table>/g,m=>{const s=say[n++]; return s?m+inWords(s):m;});
+}
+function ttsSegments(){ // the pieces that have a Kokoro mp3, in reading order (pieces without one are skipped)
+  const pane=$("#study-dialog")?.open?$("#dialog-body"):$("#pane"); if(!pane) return [];
+  const map=stepAudio()||{};
+  const els=[...pane.querySelectorAll("h3,p,li,.callout,.inwords .ln")].filter(el=>!el.closest("pre,table,.listen,details"));
+  return els.filter(el=>!els.some(o=>o!==el&&o.contains(el))).map(el=>{const key=el.textContent.replace(/\s+/g," ").trim();
+    return {el,file:map[key]||null};}).filter(x=>x.file);
+}
+function ttsSpeak(resume){
+  const seg=tts.segs[tts.i]; if(!seg){ttsStop(true);return}
+  document.querySelectorAll(".reading").forEach(e=>e.classList.remove("reading"));
+  seg.el.classList.add("reading");
+  const r=seg.el.getBoundingClientRect(); if(r.top<0||r.bottom>innerHeight) seg.el.scrollIntoView({block:"center",behavior:"smooth"});
+  const info=$("#ttsinfo"); if(info) info.textContent=`${tts.i+1} / ${tts.segs.length}`;
+  const g=tts.gen; let over=false;
+  const next=()=>{if(over||g!==tts.gen)return; over=true; tts.i++; ttsSpeak();}; // a file that fails is skipped too
+  if(!(resume&&AU.src===new URL(seg.file,location.href).href)) AU.src=seg.file;
+  AU.playbackRate=S.ttsRate||1; AU.onended=next; AU.onerror=next;
+  AU.play().catch(e=>{ if(e.name==="NotAllowedError"){if(g===tts.gen){tts.on=false;ttsUi();}return} next(); });
+}
+function ttsUi(finished){
+  const p=$("#ttsplay"),s=$("#ttsstop"),i=$("#ttsinfo"); if(!p) return;
+  p.innerHTML=tts.on?ICON.pause+"<span>Pause</span>":ICON.speak+"<span>"+(tts.segs.length&&tts.i>0?"Resume":"Listen")+"</span>";
+  s.hidden=!(tts.on||tts.i>0);
+  if(i&&!tts.on&&!tts.segs.length) i.textContent=finished?"Done. Press Listen to hear it again.":ttsHint();
+}
+function ttsHush(){ tts.gen++; AU.pause(); }
+function ttsStop(finished){
+  ttsHush(); AU.removeAttribute("src");
+  tts={segs:[],i:0,on:false,gen:tts.gen};
+  document.querySelectorAll(".reading").forEach(e=>e.classList.remove("reading"));
+  ttsUi(finished);
+}
+function ttsCmd(c){
+  if(!stepAudio()) return;
+  if(c==="rate"){const r=[1,1.25,1.5,0.75];S.ttsRate=r[(r.indexOf(S.ttsRate||1)+1)%r.length];save();
+    const b=document.querySelector('[data-tts="rate"]'); if(b) b.textContent=S.ttsRate+"×";
+    AU.playbackRate=S.ttsRate; return;} // the mp3 changes speed in place
+  if(c==="stop"){ttsStop();return}
+  if(tts.on){ttsHush();tts.on=false;ttsUi();return} // pause: keeps the place (an mp3 resumes mid-sentence)
+  let resume=true;
+  if(!tts.segs.length||tts.i>=tts.segs.length){tts.segs=ttsSegments();tts.i=0;resume=false;}
+  if(!tts.segs.length){toast("Nothing to read here");return}
+  ivStop(); tts.on=true; ttsUi(); ttsSpeak(resume);
+}
+
+/* ---------- mic: speak instead of typing, in EVERY text box ----------
+   attachMics() wraps each <textarea> and text <input> (watched by a MutationObserver, so boxes added later
+   get one too) and adds a mic button in its corner. The recording goes to the helper (POST /api/transcribe:
+   ffmpeg + faster-whisper small.en, tools/transcribe/). The text is inserted at the cursor and the box's
+   normal input event saves it. Nothing is graded or sent by itself. No helper (or no speech setup): no mics. */
+let micOK=false, rec=null;
+const touched=new WeakSet(); // boxes the student has clicked into: insert at their cursor, else at the end
+document.addEventListener("focusin",e=>{if(e.target.matches&&e.target.matches("textarea,input"))touched.add(e.target)});
+const micBoxes=root=>[...root.querySelectorAll('textarea:not([readonly]):not([data-mic]),input[type=text]:not([data-mic])')];
+function attachMics(root=document){
+  if(!micOK) return;
+  micBoxes(root).forEach(el=>{
+    el.dataset.mic="1";
+    const w=document.createElement("span"); w.className="micwrap"+(el.tagName==="INPUT"?" one":"");
+    el.replaceWith(w); w.append(el);
+    w.insertAdjacentHTML("beforeend",`<button type="button" class="mic" aria-label="Speak instead of typing" title="Speak instead of typing (press again or Esc to stop)">${ICON.mic}</button><span class="micstat" hidden></span>`);
+  });
+}
+new MutationObserver(()=>{if(micOK)attachMics()}).observe(document.body,{childList:true,subtree:true});
+function boxKey(el){ // finds the same box again if render() replaced it while we waited
+  if(el.id) return "#"+CSS.escape(el.id);
+  const k=Object.keys(el.dataset).find(k=>k!=="mic");
+  return k?`[data-${k.replace(/[A-Z]/g,c=>"-"+c.toLowerCase())}="${CSS.escape(el.dataset[k])}"]`:null;
+}
+function boxBlock(el){ // the part a box belongs to (data-ans="b02?0", data-iv="b02:0", …), else the current part
+  for(const v of Object.values(el.dataset)){const b=blockById(String(v).split(/[:?]/)[0]); if(b) return b;}
+  return blockById(S.cur)||D.blocks[0];
+}
+function micPrompt(b){ // Whisper's initial_prompt: the course's and this part's key terms, so technical words come out right
+  const text=[b.summary,(b.watchFor||[]).join(" "),b.explain,b.code,b.oneLiner].join(" ");
+  const terms=new Set([...(D.terms||[]),...(b.terms||[])]);
+  for(const m of text.matchAll(/<code>([^<]{2,40})<\/code>|`([^`]{2,40})`/g)) terms.add((m[1]||m[2]).replace(/&[a-z]+;/g,"").trim());
+  for(const m of text.replace(/<[^>]+>/g," ").matchAll(/\b(?:[a-z]+[A-Z]\w*|[A-Z][a-z]+[A-Z]\w*|[A-Z]{2,}\w*)\b/g)) terms.add(m[0]);
+  const list=[...terms].filter(t=>t&&!/[{};]/.test(t)).slice(0,40).join(", ");
+  return `${D.title}. ${b.title}. C programming on Windows, Visual Studio, compiler, linker, debugger. ${list}.`.slice(0,800);
+}
+function micStatus(w,cls,text){const s=w.querySelector(".micstat"); if(!s) return; s.className="micstat"+(cls?" "+cls:""); s.textContent=text; s.hidden=!text;}
+function micButton(w,on){const b=w.querySelector(".mic"); if(!b) return; b.classList.toggle("rec",on); b.innerHTML=on?ICON.stop:ICON.mic;
+  b.setAttribute("aria-label",on?"Stop recording":"Speak instead of typing");}
+async function micStart(btn){
+  const w=btn.closest(".micwrap"), el=w.querySelector("textarea,input");
+  let stream;
+  try{stream=await navigator.mediaDevices.getUserMedia({audio:true});}
+  catch(e){toast(e.name==="NotAllowedError"?"The microphone is blocked. Allow it for this page, or type.":"No microphone found. You can type.");return}
+  const mr=new MediaRecorder(stream), chunks=[];
+  const cur=touched.has(el)?[el.selectionStart,el.selectionEnd]:null;
+  const rec0=rec={mr,w,el,key:boxKey(el),cur,b:boxBlock(el),t0:Date.now(),tick:null};
+  mr.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};
+  mr.onstop=()=>{stream.getTracks().forEach(t=>t.stop()); micSend(rec0,new Blob(chunks,{type:mr.mimeType||"audio/webm"}));};
+  mr.start(); micButton(w,true); micStatus(w,"rec","0:00");
+  rec.tick=setInterval(()=>{const s=(Date.now()-rec0.t0)/1000; micStatus(rec0.w,"rec",fmt(s)); if(s>=300) micStop();},500); // 5 min max
+}
+function micStop(){
+  if(!rec) return; const r=rec; rec=null;
+  clearInterval(r.tick); micButton(r.w,false);
+  if(r.mr.state!=="inactive") r.mr.stop();
+}
+async function micSend(r,blob){
+  const find=()=>r.el.isConnected?r.el:(r.key&&document.querySelector(r.key)); // the box may have been re-rendered
+  const status=(c,t)=>{const el=find(); const w=el&&el.closest(".micwrap"); if(w) micStatus(w,c,t);};
+  const lock=on=>{const el=find(), b=el&&el.closest(".micwrap")?.querySelector(".mic"); if(b) b.disabled=on;};
+  if(Date.now()-r.t0<600||blob.size<1000){status("","");toast("Too short. Press the mic, speak, then press it again.");return}
+  status("","Transcribing…"); lock(true);
+  try{
+    const res=await (await fetch("/api/transcribe?prompt="+encodeURIComponent(micPrompt(r.b)),{method:"POST",headers:{"Content-Type":blob.type},body:blob})).json();
+    if(res.error) throw new Error(res.error);
+    const text=(res.text||"").trim(); if(!text){toast("I didn't hear any words. Try again, a bit closer to the mic.");return}
+    const el=find(); if(!el){toast("The box is gone, so the text wasn't added.");return}
+    const v=el.value, [a,z]=r.cur||[v.length,v.length];
+    const pre=a>0&&!/\s$/.test(v.slice(0,a))?" ":"", post=z<v.length&&!/^\s/.test(v.slice(z))?" ":"";
+    el.value=v.slice(0,a)+pre+text+post+v.slice(z);
+    const end=a+pre.length+text.length; el.focus(); el.setSelectionRange(end,end); touched.add(el);
+    el.dispatchEvent(new Event("input",{bubbles:true})); // the box's normal save
+  }catch(e){toast("Couldn't turn the speech into text. Your box is unchanged.");}
+  finally{status("",""); lock(false);}
+}
+document.addEventListener("click",e=>{
+  const btn=e.target.closest(".mic"); if(!btn) return;
+  e.preventDefault(); e.stopPropagation();
+  if(rec&&rec.w===btn.closest(".micwrap")){micStop();return}
+  micStop(); micStart(btn); // only one box records at a time
+},true);
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&rec){e.preventDefault();micStop();}});
+
+/* ---------- tabs ---------- */
+const TABS=[["path","Study path"],["review","Review"],["interview","Interview"],["parked","Parked"],["tools","Toolbox"],["how","How to study"]];
+function renderTabs(){
+  const due=dueReviews.length;
+  $("#tabs").innerHTML=TABS.map(([k,l])=>`<button data-tab="${k}" aria-pressed="${S.tab===k}">${l}${k==="review"&&due?`<span class="badge">${due}</span>`:""}</button>`).join("");
+}
+$("#tabs").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;S.tab=b.dataset.tab;referenceStep=null;if(S.tab==="review")refreshReviews();save();render();window.scrollTo({top:0})});
+
+/* ---------- path view ---------- */
+function stackHTML(cur){
+  const f=frontier();
+  const items=D.blocks.map((x,i)=>{
+    const n=blockDone(x),t=stepsFor(x).length;
+    if(i>f) return `<li><div class="locked"><span></span><span><span class="t">Part ${i+1}</span><span class="ts">locked</span></span><span class="ck">🔒︎</span></div></li>`;
+    return `<li><button data-blk="${x.id}" aria-current="${x.id===cur}"><span class="arrow"></span><span><span class="t">${i+1}. ${esc(x.title)}</span><span class="ts">${x.start}–${x.end}${n<t?` · ~${n?estLeft(x):est(x)} min`:""}</span></span><span class="ck ${n===t?"full":""}">${S.completed[x.id]?(checked(x)?"checked":"finished"):n+"/"+t}</span></button></li>`;
+  });
+  if(D.qa){ const open=allDone(); items.push(open?`<li><button data-blk="__qa" aria-current="${cur==="__qa"}"><span class="arrow"></span><span><span class="t">Q&amp;A</span><span class="ts">${esc(D.qa.label||"after the video")}</span></span><span class="ck"></span></button></li>`
+    :`<li><div class="locked"><span></span><span><span class="t">Q&amp;A</span><span class="ts">locked</span></span><span class="ck">🔒︎</span></div></li>`); }
+  return `<aside class="stack" aria-label="Parts"><div class="hd"><span>CALL STACK · ${D.blocks.length} parts</span><span>${Object.keys(S.completed).length} done</span></div><ol>${items.join("")}</ol></aside>`;
+}
+function welcomeHTML(){
+  if(!welcome) return "";
+  const b=blockById(S.cur), due=dueReviews.length, step=(STEPS.find(([k])=>k===S.step)||[])[1]||"";
+  const where = S.cur==="__qa" ? "the Q&amp;A" : allDone() ? "the end of the video" : `Part ${idxOf(b)+1}, <b>${esc(b.title)}</b>, step <b>${step}</b>`;
+  return `<div class="welcome"><b>Welcome back.</b> You stopped at ${where}.
+  ${due?`<div class="row"><button class="btn" data-go="warmup">Review: ${due} item${due>1?"s":""} due</button><button class="btn ghost" data-go="continue">Continue studying</button></div>`:`<div class="row"><button class="btn" data-go="continue">Continue</button></div>`}</div>`;
+}
+/* ---------- time: estimates and the session planner ---------- */
+const est=b=>{const [st,en]=range(b);return Math.ceil((en-st)/60)+1+(b.practiceMinutes||5)};
+const estLeft=b=>{const d=S.done[b.id]||{},[st,en]=range(b),at=Math.max(st,Math.min(en,S.vt[b.id]||st));return Math.max(1,Math.ceil((d.watch?0:(en-at)/60)+(d.recall?0:1)+(d.experiment?0:(b.practiceMinutes||5))))};
+function sessionActive(){const x=S.session;return x&&(Date.now()-x.start)<(x.min*60000+3*3600000)}
+function minsLeft(){const x=S.session;return x?Math.round((x.start+x.min*60000-Date.now())/60000):null}
+function planHTML(){
+  if(S.brk||S.stopped||allDone()) return "";
+  if(!sessionActive()) return `<div class="plan"><b>How much time do you have today?</b> I'll plan what fits and tell you when to wrap up.
+    <div class="timechips">${[15,30,45,60,90].map(m=>`<button class="btn ghost small" data-sess="${m}">${m<60?m+" min":(m/60)+" h"}</button>`).join("")}<button class="btn ghost small" data-sess="0">No limit</button></div></div>`;
+  const x=S.session, left=minsLeft(), due=dueReviews.length;
+  if(!x.min) return "";
+  let budget=Math.max(0,left-2), items=[];
+  if(due){const w=Math.min(5,Math.ceil(due*1.5));items.push(`Review: ${due} item${due>1?"s":""} (~${w} min)`);budget-=w;}
+  for(const b of pendingPractice()){const need=b.practiceMinutes||5;items.push(`Finish pending practice: Part ${idxOf(b)+1} (~${need} min)`);budget-=need;}
+  let i=frontier(), first=true;
+  while(i<D.blocks.length){const b=D.blocks[i],need=first?estLeft(b):est(b);
+    if(need>budget&&!first) break;
+    items.push(`${first&&blockDone(b)?"Finish":"Do"} Part ${i+1}: ${esc(b.title)} (~${need} min)${need>budget?" — may not fit fully; stop at the end of a step":""}`);
+    budget-=need; first=false; i++; if(budget<=0) break;}
+  items.push("Last 2 min: save and Stop for today");
+  const warn=left<=2;
+  return `<div class="plan ${warn?"warn":""}"><b>${warn?(left>0?`${left} min left: finish this step, then press “Finish part” or Stop for today.`:"Time's up. Finish this step and stop for today."):`Today's plan (${x.min>=60?(x.min/60)+" h":x.min+" min"})`}</b>
+    ${warn?"":`<ol>${items.map(t=>`<li>${t}</li>`).join("")}</ol>`}
+    <div class="row"><button class="btn ghost small" data-sess="reset">Change time</button>${warn?`<button class="btn small" data-go="stop">Stop for today</button>`:""}</div></div>`;
+}
+let warned=false;
+function updateTimer(){
+  const el=$("#timer"); if(!el) return;
+  if(!sessionActive()||!S.session.min){el.hidden=true;return}
+  const l=minsLeft(); el.hidden=false; el.textContent=l>0?`${l} min left`:"time's up"; el.classList.toggle("low",l<=2);
+  if(l<=2&&!warned){warned=true;toast("2 minutes left. Save and stop when ready.");}
+}
+setInterval(updateTimer,30000);
+
+/* ---------- interview corner ---------- */
+/* The interviewer speaks with Kokoro (same voice as Listen): make_audio.py renders each question and follow-up
+   into D.audio[blockId].iv = {text: file}, plus one intro, D.audio._iv.intro. No mp3, no button. */
+const IVA=new Audio(); let ivOn=null, autoAsked=null;
+const ivFile=(b,text)=>((AUD[b.id]||{}).iv||{})[text]||null;
+const ivIntro=()=>Object.values((AUD._iv||{}).intro||{})[0]||null;
+function ivSayBtn(b,id,part,text,label){
+  if(!ivFile(b,text)) return "";
+  return `<button class="btn ghost small ivsay" data-ivsay="${id}" data-ivpart="${part}" aria-label="${label?"Ask me the question out loud":"Play this follow-up"}" title="${label?"The interviewer asks the question":"Play this follow-up"}">${ICON.speak}${label?`<span>${label}</span>`:""}</button>`;
+}
+function ivStop(){ IVA.onended=IVA.onerror=null; IVA.pause(); ivOn=null; document.querySelectorAll(".ivsay.on").forEach(x=>x.classList.remove("on")); }
+function ivPlay(files,btn){
+  ivStop(); ttsStop(); files=files.filter(Boolean); if(!files.length) return;
+  const me=ivOn={}; if(btn) btn.classList.add("on");
+  const next=()=>{ if(ivOn!==me) return; const f=files.shift(); if(!f){ivStop();return}
+    IVA.src=f; IVA.onended=next; IVA.onerror=next; IVA.play().catch(()=>{ if(ivOn===me) ivStop(); }); };
+  next();
+}
+function ivSay(btn){
+  const [bid,qi]=btn.dataset.ivsay.split(":"), b=blockById(bid), iv=b.interview[+qi], p=btn.dataset.ivpart;
+  if(btn.classList.contains("on")){ivStop();return}
+  ivPlay(p==="q"?[ivIntro(),ivFile(b,iv.q)]:[ivFile(b,iv.followups[+p.slice(1)])],btn);
+}
+function autoAsk(){ // "Auto-ask": play the first question when the Why it matters step opens
+  const b=blockById(S.cur), key=S.tab==="path"&&S.step==="why"&&b?b.id:null;
+  if(key!==autoAsked){autoAsked=key; if(key&&S.autoAsk){const btn=document.querySelector('[data-ivsay][data-ivpart="q"]'); if(btn) ivSay(btn);}}
+}
+function ivBlock(b,qi,iv,withGrade){
+  const id=b.id+":"+qi, fb=S.ivfb[id];
+  return `<div class="q ivq"><div class="qn">INTERVIEW · ${esc(iv.level||"junior")} · ${esc(iv.area||"")}</div><div class="qt">“${md(iv.q)}”${ivSayBtn(b,id,"q",iv.q,"Ask me")}</div>
+  ${withGrade?`<p class="small muted">Answer out loud first, like in a real interview: press the mic in the box and speak, or type.</p>
+  <textarea data-iv="${id}" placeholder="My answer…">${esc(S.ivans[id]||"")}</textarea>
+  <div class="row">${sample?`<button class="btn" data-ivcheck="${id}">Grade me like an interviewer</button>`:`<button class="btn ghost" data-ivcopy="${id}">Copy for Claude to grade</button>`}</div>
+  <div class="copybox" id="ivcb-${id}"></div><div id="ivfb-${id}">${fb?renderScore(fb):""}</div>`:(fb?renderScore(fb):`<p class="small muted">Not answered yet.</p>`)}
+  ${(iv.followups||[]).length?`<details class="model"><summary>Follow-ups the interviewer asks next</summary><ul>${iv.followups.map((f,j)=>`<li>${md(f)}${ivSayBtn(b,id,"f"+j,f,"")}</li>`).join("")}</ul></details>`:""}
+  <details class="model"><summary>What a strong answer includes</summary><ul>${(iv.strong||[]).map(([t,p])=>`<li>${md(t)} <span class="muted">(${p}%)</span></li>`).join("")}</ul>
+  ${(iv.redflags||[]).length?`<p class="small"><b>Red flags:</b> ${iv.redflags.map(md).join("; ")}</p>`:""}</details>
+  ${iv.grows?`<p class="small muted">${md(iv.grows)}</p>`:""}<p class="small muted">${md(iv.source||"")}</p></div>`;
+}
+function ivPrompt(b,iv,ans){
+  return `Act as a technical interviewer at a game or systems company, grading a junior candidate's answer. ${GRADE_RULES} Use only checklist items requested by the question. A follow-up is separate practice, never a hidden requirement.
+Only expect what the course has covered so far: ${blockContext(b)}
+INTERVIEW QUESTION: ${iv.q}
+CHECKLIST (with weights): ${(iv.strong||[]).map(([t,p])=>t+" ("+p+"%)").join("; ")}
+RED FLAGS: ${(iv.redflags||[]).join("; ")||"none"}
+CANDIDATE ANSWER: ${ans}`;
+}
+/* ---------- debug challenges ---------- */
+function dbgBlock(b,i,c,full){
+  const id=b.id+":"+i, st=S.dbgs[id], fb=S.dbgfb[id];
+  const head=`<div class="qn">DEBUG · level ${c.level} · target ${fmt(c.target||120)}</div><div class="qt">${md(c.title)}</div>`;
+  if(!full) return `<div class="q dbg">${head}${fb?renderScore(fb)+(fb.secs?`<p class="clock">Solved in ${fmt(fb.secs)} (target ${fmt(c.target||120)})</p>`:""):`<p class="small muted">Not tried yet.</p>`}</div>`;
+  if(!st) return `<div class="q dbg">${head}<p class="small muted">Read nothing yet. When you're ready, start the clock.</p><div class="row"><button class="btn" data-dbgstart="${id}">Start challenge</button></div></div>`;
+  return `<div class="q dbg">${head}${c.scenario}<p><b>Task:</b> ${md(c.task)}</p>
+  <textarea data-dbg="${id}" placeholder="Cause, how you found it, fix, how you'd verify…">${esc(S.dbgans[id]||"")}</textarea>
+  <div class="row">${sample?`<button class="btn" data-dbgcheck="${id}">Grade my debugging</button>`:`<button class="btn ghost" data-dbgcopy="${id}">Copy for Claude to grade</button>`}<span class="clock" data-clock="${id}">${fb&&fb.secs?`Solved in ${fmt(fb.secs)}`:""}</span></div>
+  ${c.hint?`<details class="model"><summary>Hint (costs nothing, but try first)</summary><p>${md(c.hint)}</p></details>`:""}
+  <div class="copybox" id="dbgcb-${id}"></div><div id="dbgfb-${id}">${fb?renderScore(fb):""}</div>
+  <details class="model"><summary>Solution checklist</summary><ul>${(c.strong||[]).map(([t,p])=>`<li>${md(t)} <span class="muted">(${p}%)</span></li>`).join("")}</ul><p class="small"><b>Root cause:</b> ${md(c.cause||"")}</p></details></div>`;
+}
+function dbgPrompt(b,c,ans,secs){
+  const strip=h=>String(h||"").replace(/<[^>]+>/g," ").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&").replace(/\s+/g," ").trim();
+  return `Grade a debugging challenge like a strict senior engineer in a debugging interview. ${GRADE_RULES} Use the solution checklist as the 100% answer, and reward a real debugging process (reading the exact error, a specific hypothesis, narrowing down, smallest fix, verifying). He took ${fmt(secs)} (target ${fmt(c.target||120)}); mention speed in one short sentence.
+Only expect what the course has covered so far: ${blockContext(b)}
+CHALLENGE: ${c.title}
+SCENARIO: ${strip(c.scenario)}
+TASK: ${c.task}
+SOLUTION CHECKLIST (with weights): ${(c.strong||[]).map(([t,p])=>t+" ("+p+"%)").join("; ")}
+ROOT CAUSE: ${c.cause||""}
+STUDENT ANSWER: ${ans}`;
+}
+setInterval(()=>{document.querySelectorAll("[data-clock]").forEach(el=>{const id=el.dataset.clock;if(S.dbgfb[id]&&S.dbgfb[id].secs)return;const st=S.dbgs[id];if(st)el.textContent="⏱ "+fmt((Date.now()-st)/1000);})},1000);
+
+function renderInterviewTab(){
+  const open=D.blocks.filter(b=>S.completed[b.id]&&(b.interview||[]).length);
+  const locked=D.blocks.filter(b=>!S.completed[b.id]&&(b.interview||[]).length).length;
+  return `<section class="block"><h2>Interview</h2><p class="pane">Real interview questions about what you've studied. Use these when you want extra practice. They are separate from the short lesson.</p>
+  ${open.length?open.map(b=>`<h3>Part ${idxOf(b)+1}: ${esc(b.title)}</h3>`+b.interview.map((iv,i)=>ivBlock(b,i,iv,true)).join("")).join(""):`<p class="muted">No questions yet. They unlock as you finish parts.</p>`}
+  ${(()=>{const d=D.blocks.filter(b=>S.completed[b.id]&&(b.debug||[]).length);return d.length?`<h3>Debug challenges</h3>`+d.map(b=>b.debug.map((c,i)=>dbgBlock(b,i,c,true)).join("")).join(""):""})()}
+  ${locked?`<p class="small muted">${locked} more part${locked>1?"s":""} with interview questions unlock as you study.</p>`:""}</section>`;
+}
+
+function renderPath(){
+  if(S.brk) return renderBreak();
+  if(S.stopped) return renderStopped();
+  if(S.cur==="__qa") return welcomeHTML()+pendingHTML()+`<div class="grid">${stackHTML("__qa")}<section class="block"><div class="eyebrow">After the video</div><h2>Q&amp;A</h2><div class="pane">${D.qa.html}<div id="nextbox"></div></div></section></div>`;
+  let b=blockById(S.cur)||D.blocks[0];
+  if(!unlocked(b)){b=D.blocks[Math.min(frontier(),D.blocks.length-1)];S.cur=b.id;S.step="watch";}
+  const steps=stepsFor(b); if(!steps.find(([k])=>k===S.step)||!stepOpen(b,S.step)) S.step=steps.find(([k])=>!(S.done[b.id]||{})[k])?.[0]||"watch";
+  const d=S.done[b.id]||{}, idx=idxOf(b);
+  return welcomeHTML()+pendingHTML()+planHTML()+`<div class="grid">${stackHTML(b.id)}
+  <section class="block" aria-labelledby="bt">
+    <div class="bhead"><div><div class="eyebrow">Part ${idx+1} of ${D.blocks.length}</div><h2 id="bt">${esc(b.title)}</h2></div><span class="tsr">▶ ${b.start} – ${b.end}</span></div>
+    <div class="steps" role="tablist">${steps.map(([k,l])=>`<button role="tab" data-step="${k}" aria-selected="${S.step===k}" class="${d[k]?"done":""}" ${stepOpen(b,k)?"":"disabled"}>${l}</button>`).join("")}</div>
+    <div class="pane" id="pane">${referenceStep?`<button class="btn ghost small" data-reference="back">← Back to ${S.step==="recall"?"Check":"Practice"}</button>`+renderStep(b,referenceStep):renderStep(b,S.step)}</div>
+    <div class="next"><button class="btn" id="markNext">${nextLabel(b)}</button></div>
+  </section></div>`;
+}
+function nextLabel(b){
+  const st=stepsFor(b), last=st[st.length-1][0]===S.step, d=(S.done[b.id]||{})[S.step];
+  if(S.step==="watch") return d?"Next step →":"I watched it → Check";
+  if(last) return idxOf(b)===D.blocks.length-1?"Finish the last part":"Finish part";
+  return d?"Next step →":"Continue to practice →";
+}
+function renderStep(b,k){
+  if(k==="explain"||k==="code") return listenBar()+withWords(renderStepRaw(b,k),(b.say||{})[k]);
+  return renderStepRaw(b,k);
+}
+function renderStepRaw(b,k){
+  if(k==="watch"){
+    const [st,en]=range(b);
+    const loader = videoURL ? `<div id="vslot"></div>` :
+      `<div class="drop" id="drop"><p><b>Load the video once per visit.</b> The page plays only this part and stops at ${b.end}.</p>
+       <p class="small muted">${D.video&&D.video.file?`File: <code>${esc(D.video.file)}</code>. `:""}It stays on your computer; nothing is uploaded.</p>
+       <label class="btn" for="vfile">Choose video file</label><input type="file" id="vfile" accept="video/*" hidden><p class="small muted">or drag the file here</p>
+       ${videoFolder?`<p class="small"><b>Tip:</b> put <code>${esc(D.video.file)}</code> in <code>${esc(videoFolder)}</code> and it loads by itself next time.</p>`:""}</div>`;
+
+    return `<p><b>Watch ${b.start} → ${b.end}</b> (${fmt(en-st)}).</p>
+    <p><b>Focus:</b> ${md(b.focus||b.oneLiner||b.summary)}</p>
+    <p class="small">When Casey codes: pause after a meaningful change, write it yourself on Windows, predict the result, then build and check it. That counts as your practice.</p>
+    ${loader}
+    <div class="park" id="parkbox"><h3>Parking lot</h3><p class="small muted">Want to search something? Don't leave. Write it here and keep watching. We look at it after this part.</p>
+    <div class="row"><input type="text" id="parkin" placeholder="e.g. what does LPSTR stand for?" autocomplete="off"><button class="btn small" id="parkgo">Park it</button></div>
+    <ul class="plist" id="plist">${parkItems(b,false)}</ul></div>
+    <details class="watchfor"><summary class="small">What to watch for (optional hints)</summary><ol>${b.watchFor.map(w=>`<li>${md(w)}</li>`).join("")}</ol>
+    ${b.pauseAt?`<div class="callout"><b>Pause at ${b.pauseAt.t}.</b> ${md(b.pauseAt.do)}</div>`:""}</details>
+
+    <p class="stepnote">Keys: Space = play/pause · ← = back 5 s. The player won't go past ${b.end}.</p>`;
+  }
+  if(k==="recall"){
+    const check=checkFor(b), attempts=attemptsFor(b.id), closed=checkClosed(attempts);
+    return `<p><b>From memory:</b> ${md(check.q)}</p><p class="small muted">A few sentences are enough.</p>
+    <textarea data-shortcheck="${b.id}" placeholder="Your answer…" ${closed?"readonly":""}>${esc(S.checkAnswers[b.id]||"")}</textarea>
+    <div class="row">${closed?"":sample?`<button class="btn" id="quickcheck" ${checking.has(b.id)?"disabled":""}>${attempts.length?"Check my retry":"Check my answer"}</button>`:`<button class="btn ghost" id="quickcopy">Copy for tutor</button>`}</div>
+    <div class="copybox" id="quickcb"></div><div id="quickfb">${checkFeedback(attempts)}</div>
+    ${rubricHTML(check.rubric)}
+    ${b.visual?`<button class="btn ghost small" data-ui="visual">Show the idea</button>`:""}
+    
+    ${sample?`<details class="model" id="chathelp"><summary>Ask about this part</summary><div class="chatlog" id="chatlog">${(S.notes[b.id]||[]).map(m=>`<div class="msg ${m.r==="user"?"u":"a"}">${esc(m.c)}</div>`).join("")}</div><textarea id="chatin" placeholder="Your question…"></textarea><button class="btn" id="chatgo">Ask</button></details>`:""}
+    ${(S.park[b.id]||[]).length?`<div class="park"><h3>Your questions</h3><ul class="plist" id="plist">${parkItems(b,true)}</ul></div>`:""}`;
+  }
+
+  if(k==="explain") return (b.anim?`<figure class="anim"><video src="${esc(b.anim)}" controls playsinline preload="metadata"></video></figure>`:"")
+    + (b.oneLiner?`<div class="callout"><b>The idea in one sentence:</b> ${md(b.oneLiner)}</div>`:"")
+    + (b.analogy?`<p><b>Real-life picture:</b> ${md(b.analogy)}</p>`:"")
+    + b.explain + (b.prereq?`<div class="callout"><b>Prerequisite, explained now:</b> ${b.prereq}</div>`:"")
+    + (b.mistake?`<div class="callout later"><b>Common beginner mistake:</b> ${md(b.mistake)}</div>`:"");
+  if(k==="experiment") return `<p><b>One task (~${b.practiceMinutes||5} min).</b></p>${b.practice||b.experiment}
+    <p class="small">If you already wrote and verified this change while watching, record that result here. Do not repeat it. For a coding task: predict → write → build/run → compare.</p>
+    <p class="small muted">Write one line about what you observed. If you cannot try it now, note what remains to do.</p>
+    <textarea data-practice="${b.id}" placeholder="What happened? Or: still to do…">${esc(S.practice[b.id]||"")}</textarea>
+    <label class="small"><input type="checkbox" data-practiced="${b.id}" ${S.practiceDone[b.id]?"checked":""}> I tried the task and checked the result</label>
+    ${b.code?`<button class="btn ghost small" data-ui="code-notes">Code reference</button>`:""}
+    ${(b.debug||[]).length?`<details class="model"><summary>Optional debugging practice</summary>${b.debug.map((c,i)=>dbgBlock(b,i,c,true)).join("")}</details>`:""}
+    ${(b.interview||[]).length?`<details class="model"><summary>Optional interview practice</summary>${b.interview.map((iv,i)=>ivBlock(b,i,iv,true)).join("")}</details>`:""}`;
+
+  if(k==="code") return b.code;
+  if(k==="visual") return b.visual||"";
+  return "";
+}
+const GRADE_RULES=`Grade only the ideas explicitly requested in the QUESTION and its FIXED CHECKLIST. Context and reference notes are background, never extra requirements. Award each listed idea up to its stated weight, in the same order. Never invent criteria or bonus deductions. Accept correct ideas in any words; ignore grammar, spelling, filler words and minor speech-transcription errors. Wrong claims affect only the relevant criterion. Be concise: one sentence on what is right. If below 80%, give ONE short hint or correction for the main gap. At 80%+ with no major misconception, let the learner continue; do not demand 100% or another wording. Do not repeat the full answer or every note. Return awards, one number per checklist item. Simple English.`;
+
+function scoreColor(n){return n>=80?"var(--good)":n>=50?"var(--warn)":"var(--bad)"}
+function renderScore(fb){
+  if(fb.verdict&&fb.score===undefined) return renderFb(fb);
+  const n=Math.max(0,Math.min(100,Math.round(+fb.score||0)));
+  return `<div class="fb fbs"><div class="score">Score: ${n}%<span class="sbar"><i style="width:${n}%;background:${scoreColor(n)}"></i></span></div>
+  ${fb.right?`<p style="margin:8px 0 0"><b>Right:</b> ${esc(fb.right)}</p>`:""}
+  ${(fb.missing||[]).length?`<p style="margin:8px 0 0"><b>To improve:</b></p><ul class="miss">${fb.missing.map(m=>`<li>${esc(m.point)} <span class="muted">(${Math.round(+m.pct||0)}%)</span></li>`).join("")}</ul>`:""}
+  ${fb.guide?`<p style="margin:8px 0 0"><b>Next:</b> ${esc(fb.guide)}</p>`:""}
+  ${fb.rewatch?`<p class="small muted" style="margin:6px 0 0">Rewatch: ${esc(fb.rewatch)}</p>`:""}</div>`;
+}
+function normFb(r,rubric){
+  if(!rubric.length||rubric.some(([idea,w])=>!Number.isInteger(w)||w<=0)||rubric.reduce((n,[idea,w])=>n+w,0)!==100)throw new Error("This checklist needs weights totaling 100.");
+  if(!Array.isArray(r.awards)||r.awards.length!==rubric.length) throw new Error("The check returned incomplete marks. Try again.");
+  const awards=rubric.map(([idea,weight],i)=>{
+    const n=r.awards[i]; if(typeof n!=="number"||!Number.isFinite(n)) throw new Error("The check returned invalid marks. Try again.");
+    return Math.round(Math.max(0,Math.min(weight,n)));
+  });
+  const score=Math.round(awards.reduce((a,n)=>a+n,0));
+  return {v:3,score,awards,right:String(r.right||""),missing:rubric.map(([point,weight],i)=>({point,pct:Math.round(weight-awards[i])})).filter(x=>x.pct>0),guide:score<80?String(r.guide||""):"",rewatch:String(r.rewatch||"")};
+}
+const JSON_SHAPE=`Reply with only JSON: {"awards":[points for each fixed checklist item, in order],"right":"one short sentence","guide":"one short hint or correction if below 80%, otherwise empty","rewatch":"m:ss-m:ss or empty"}`;
+
+function parkItems(b,actions){
+  return (S.park[b.id]||[]).map((p,i)=>`<li><span class="at">${fmt(p.at)}</span><span class="txt">${esc(p.t)}</span>
+   ${p.status!=="open"?`<span class="chip ${p.status}">${p.status==="later"?"later":"answered"}</span>`:""}
+   ${actions?`<span class="row" style="margin:0">${sample?`<button class="btn ghost small" data-pask="${i}">Ask Claude</button>`:`<button class="btn ghost small" data-pcopy="${i}">Copy for Claude</button>`}<button class="btn ghost small" data-pset="${i}:later">Later</button><button class="btn ghost small" data-pset="${i}:done">Answered</button></span>
+   <div class="pans small" id="pans-${i}" style="flex-basis:100%">${p.ans?esc(p.ans):""}</div>`:""}</li>`).join("");
+}
+function renderFb(fb){return `<div class="fb"><span class="verdict v-${fb.verdict}">${fb.verdict==="correct"?"Correct":fb.verdict==="partial"?"Partly there":"Not yet"}</span>\n${esc(fb.feedback)}${fb.followup?`\n\nFollow-up: ${esc(fb.followup)}`:""}</div>`}
+
+/* ---------- breaks ---------- */
+let brkTimer=null;
+function renderBreak(){
+  const B=S.brk, from=blockById(B.from), nb=D.blocks[idxOf(from)+1];
+  const long=S.sessionParts>0 && S.sessionParts%LONG_EVERY===0, mins=long?LONG_BREAK:SHORT_BREAK;
+  const nextName = nb?`Part ${idxOf(nb)+1}`:"the Q&A";
+  if(B.until){
+    const left=Math.max(0,B.until-Date.now());
+    return `<section class="block center"><div class="eyebrow">Break</div><div class="bigtime" id="bclock">${fmt(left/1000)}</div>
+    <p>${left>0?"Stand up, drink water, look away from the screen. No videos, no searching.":"Break over."}</p>
+    <div class="row" style="justify-content:center"><button class="btn" data-go="afterbreak">${left>0?"End break early, continue":"Continue to "+nextName}</button><button class="btn ghost" data-go="stop">Stop for today</button></div></section>`;
+  }
+  return `<section class="block center"><div class="eyebrow">Part ${idxOf(from)+1} of ${D.blocks.length} complete</div><h2>${esc(from.title)}: done</h2>
+  <p>${long?`That's ${S.sessionParts} parts in a row. Take a longer break.`:"Take a short break before the next part."}</p>
+  <div class="row" style="justify-content:center"><button class="btn" data-go="startbreak" data-min="${mins}">Start ${mins}-minute break</button><button class="btn ghost" data-go="afterbreak">Continue to ${nextName} now</button><button class="btn ghost" data-go="stop">Stop for today</button></div></section>`;
+}
+function renderStopped(){
+  const f=frontier(), nb=D.blocks[f];
+  return pendingHTML()+`<section class="block center"><div class="eyebrow">Saved</div><h2>Good session.</h2>
+  <p>${nb?`Next time you start at <b>Part ${f+1}: ${esc(nb.title)}</b>.`:"Next time: the next video and your due reviews."}</p>
+  ${helperReady?`<p id="syncmsg" class="small">Saving experiment progress…</p><div id="nextbox"></div>
+  <div class="row" style="justify-content:center"><button class="btn ghost" data-go="resume">Actually, keep going</button></div></section>`
+  :`<p class="small muted">Everything is saved in this browser. So every Claude account and machine knows your place: press <b>Copy position</b> and paste it to Claude with <code>/study</code>.</p>
+  <div class="row" style="justify-content:center"><button class="btn" data-go="copypos">Copy position</button><button class="btn ghost" data-go="resume">Actually, keep going</button></div><div class="copybox" id="poscb"></div></section>`}`;
+}
+function completedList(){return D.blocks.filter(b=>S.completed[b.id]).map(b=>`${b.id} ${S.cdate[b.id]||"?"}`).join(", ")||"none"}
+function positionText(){return "/study\nSave my study position:\n"+positionBlock()}
+async function finishSync(){
+  const el=$("#syncmsg");
+  try{clearTimeout(saveT);const r=await postHelper("/api/finish",{message:`Study session ${new Date().toISOString().slice(0,10)}: ${D.unitLabel||D.title}, ${Object.keys(S.completed).length}/${D.blocks.length} parts`});
+    if(el) el.innerHTML=r.ok?`<b>✓ ${esc(r.message)}</b>${r.addedReviews&&r.addedReviews.length?` ${r.addedReviews.length} new items in your review schedule.`:""} You can close this tab.`
+      :`${esc(r.message||"Couldn't push.")} Your experiment progress is saved in this copy.`;
+  }catch(e){ if(el) el.textContent="The helper isn't running, so nothing was pushed. Start it with ./study and press Stop again."; }
+  showNext();
+}
+async function showNext(){
+  const box=$("#nextbox"); if(!box||!helperReady||!allDone()) return;
+  try{const r=await (await fetch("/api/next?kit="+encodeURIComponent(kitPath))).json(); const n=r.next;
+    box.innerHTML=!n?`<p>That's the last video in the playlist.</p>`:n.built?`<p class="row" style="justify-content:center"><a class="btn" href="/courses/${n.kit}/study-kit.html">Next video: ${esc(n.title)} →</a></p>`
+      :`<p><b>Next video: ${esc(n.title)}.</b> Its study kit isn't built yet. ${n.video?`Put <code>${esc(n.video)}</code> in your videos folder, then t`:"Get the video, then t"}ell Claude Code: “build the kit for ${esc(n.title)}”.</p>`;}catch(e){}
+}
+function positionBlock(){
+  const f=frontier(), b=blockById(S.cur), d=new Date().toISOString().slice(0,10);
+  const step=(STEPS.find(([k])=>k===S.step)||[])[1]||"Watch";
+  const pending=pendingPractice(), pendingNote=pending.length?`\n- Practice still to try: ${pending.map(x=>x.id).join(", ")}`:"";
+  if(allDone()) return `## Study position\n- Course: ${D.course||D.title}\n- Section: all ${D.blocks.length} parts done; next is the Q&A\n- Step: Q&A\n- Completed (part id, date): ${completedList()}${pendingNote}\n- Updated: ${d}`;
+  const nb=(S.brk||S.stopped)?D.blocks[f]:b, i=idxOf(nb), st=(S.brk||S.stopped)?"Watch":step;
+  const into=S.vt[nb.id]?Math.max(0,S.vt[nb.id]-secs(nb.start)):0;
+  return `## Study position\n- Course: ${D.course||D.title}\n- Section: ${i+1} of ${D.blocks.length} ("${nb.title}", ${nb.start}-${nb.end})\n- Step: ${st}${into>1?` (video at ${fmt(into)} into the part, episode time ${fmt(secs(nb.start)+into)})`:""}\n- Parts done: ${Object.keys(S.completed).length}\n- Completed (part id, date): ${completedList()}${pendingNote}\n- Updated: ${d}`;
+}
+function tickBreak(){
+  const el=$("#bclock"); if(!el||!S.brk||!S.brk.until){clearInterval(brkTimer);brkTimer=null;return}
+  const left=Math.max(0,S.brk.until-Date.now()); el.textContent=fmt(left/1000);
+  if(left<=0){clearInterval(brkTimer);brkTimer=null;toast("Break over");render();}
+}
+
+/* ---------- review / parked / tools / how ---------- */
+let dueReviews=[], reviewsLoaded=false, reviewsError="", reviewResult="";
+function reviewCheck(row){
+  const key=row.unit+"@"+row.next;
+  return S.reviewChecks[key]||(S.reviewChecks[key]={answer:"",attempts:[]});
+}
+async function refreshReviews(){
+  if(!helperReady)return;
+  try{const r=await (await fetch("/api/reviews")).json();if(r.error)throw new Error(r.error);dueReviews=r.due||[];reviewsLoaded=true;reviewsError="";}
+  catch(e){reviewsError="Could not load reviews. Try again."}
+  safeRender();
+}
+function reviewItem(row){
+  const m=row.source.match(/^courses\/(.+)#([^/]+)(?:\/(iv|dbg)(\d+))?$/);
+  if(!m||m[1]!==kitPath)return null;
+  const b=blockById(m[2]);if(!b)return null;
+  if(m[3]==="iv"){const iv=(b.interview||[])[+m[4]];return iv?{b,check:{q:iv.q,rubric:iv.strong}}:null;}
+  if(m[3]==="dbg"){const c=(b.debug||[])[+m[4]];return c?{b,check:{q:c.task,rubric:c.strong},scenario:c.scenario}:null;}
+  return {b,check:{...checkFor(b),q:b.reviewQuestion||checkFor(b).q}};
+}
+function renderReview(){
+  const exp=`<details class="model"><summary>Optional flashcard export</summary><p>Use this only if you prefer Anki. The lesson does not require another flashcard queue.</p><button class="btn ghost" id="anki">Export cards (.tsv)</button></details>`;
+  if(!helperReady)return `<section class="block"><h2>Review</h2><p>Start with <code>./study</code> to load your shared review schedule, or ask your tutor for <code>/review</code>.</p>${exp}</section>`;
+  if(reviewsError)return `<section class="block"><h2>Review</h2><p>${esc(reviewsError)}</p><button class="btn" id="reloadreviews">Retry</button></section>`;
+  if(!reviewsLoaded)return `<section class="block"><h2>Review</h2><p>Loading due reviews…</p></section>`;
+  const row=dueReviews[0],head=`<h2>Review</h2><p class="small muted">${dueReviews.length} due. Keep this to about five minutes; the rest can wait.</p>${reviewResult?`<p class="fb">${esc(reviewResult)}</p>`:""}`;
+  if(!row)return `<section class="block">${head}<p>No reviews due.</p><button class="btn" data-go="continue">Continue studying</button>${exp}</section>`;
+  const item=reviewItem(row);
+  if(!item){const kit=row.source.split("#")[0];return `<section class="block">${head}<p>${esc(row.title)}</p><a class="btn" href="/${esc(kit)}/study-kit.html">Open this lesson to review</a></section>`;}
+  const {check}=item, record=reviewCheck(row), closed=checkClosed(record.attempts);
+  return `<section class="block">${head}<p>${md(check.q)}</p>${item.scenario||""}
+  <textarea data-reviewanswer="${esc(row.unit)}" placeholder="From memory…" ${closed?"readonly":""}>${esc(record.answer)}</textarea>
+  <div class="row">${closed?"":sample?`<button class="btn" id="checkreview" ${checking.has(row.unit)?"disabled":""}>${record.attempts.length?"Check my retry":"Check answer"}</button>`:`<button class="btn ghost" id="copyreview">Copy for tutor</button>`}${record.attempts.length?`<button class="btn" id="savereview">Save review, next</button>`:""}<button class="btn ghost" data-go="continue">Continue studying</button></div>
+  <div class="copybox" id="reviewcb"></div><div id="reviewfb">${checkFeedback(record.attempts,true)}${record.attempts.length?`<p class="small">The first score (${record.attempts[0].fb.score}%) sets the next review date.</p>`:""}</div>${rubricHTML(check.rubric)}${exp}</section>`;
+}
+function renderParked(){
+  const mine=[];D.blocks.forEach((b,i)=>(S.park[b.id]||[]).forEach(p=>{if(p.status!=="done")mine.push({b,i,p})}));
+  return `<section class="block"><h2>Parked</h2>
+  <h3>Your questions</h3>${mine.length?`<div class="tbl"><table><thead><tr><th>Part</th><th>Question</th><th>Status</th></tr></thead><tbody>${mine.map(({i,p})=>`<tr><td class="mono">Part ${i+1} · ${fmt(p.at)}</td><td>${esc(p.t)}</td><td><span class="chip ${p.status}">${p.status==="later"?"later":"open"}</span></td></tr>`).join("")}</tbody></table></div>`:`<p class="muted small">None yet. Questions you park while watching show up here until they're answered.</p>`}
+  <h3>What Casey parks for later</h3><p class="small muted">He says "we'll get to that later" about these. When one comes up in a later episode, you'll recognize it.</p>
+  <div class="tbl"><table><thead><tr><th>When</th><th>What he parks</th><th>Where it's covered</th></tr></thead><tbody>
+  ${(D.parked||[]).map(p=>`<tr><td class="mono">${p.t}</td><td>${md(p.what)}</td><td>${md(p.where)}</td></tr>`).join("")}</tbody></table></div></section>`;
+}
+function renderTools(){
+  return `<section class="block"><h2>Toolbox</h2><div class="toolgrid">${(D.tools||[]).map(t=>`<div class="tool"><div class="k">${esc(t.role)}</div><h3><a href="${t.url}" target="_blank" rel="noopener">${esc(t.name)}</a></h3><p class="small">${md(t.use)}</p></div>`).join("")}</div></section>`;
+}
+function renderHow(){return `<section class="block"><div class="pane">${D.how||""}</div></section>`}
+
+/* ---------- render + events ---------- */
+function render(){
+  if(vw.isConnected){vid.pause();vw.remove();}
+  playerBlock=null; ttsStop(); ivStop(); micStop(); // a recording in progress is still transcribed into its (re-rendered) box
+  renderTabs();
+  const p=progress(); $("#pct").textContent=p+"%"; $("#pctbar").style.width=p+"%";
+  $("#view").innerHTML = S.tab==="path"?renderPath():S.tab==="review"?renderReview():S.tab==="interview"?renderInterviewTab():S.tab==="parked"?renderParked():S.tab==="tools"?renderTools():renderHow();
+  updateTimer();
+  const slot=$("#vslot");
+  if(slot){ playerBlock=blockById(S.cur); slot.replaceWith(vw); vw.querySelector(".pend").hidden=true; seekResume(); ptick(); }
+  const drop=$("#drop");
+  if(drop){ $("#vfile").addEventListener("change",e=>loadVideo(e.target.files[0]));
+    drop.addEventListener("dragover",e=>{e.preventDefault();drop.classList.add("over")}); drop.addEventListener("dragleave",()=>drop.classList.remove("over"));
+    drop.addEventListener("drop",e=>{e.preventDefault();drop.classList.remove("over");loadVideo(e.dataTransfer.files[0])}); }
+  if(S.brk&&S.brk.until&&!brkTimer) brkTimer=setInterval(tickBreak,500);
+  if($("#nextbox")&&!S.stopped) showNext();
+  autoAsk();
+}
+function goNextStep(){
+  referenceStep=null;
+  const b=blockById(S.cur); if(!b) return;
+  if(S.step==="recall"&&!(S.checkAnswers[b.id]||"").trim()){toast("Try a short answer first.");return}
+  if(S.step==="experiment"&&!(S.practice[b.id]||"").trim()){toast("Note the result, or what remains to do.");return}
+  (S.done[b.id]=S.done[b.id]||{})[S.step]=true;
+  const st=stepsFor(b),i=st.findIndex(([k])=>k===S.step);
+  if(i<st.length-1){S.step=st[i+1][0];}
+  else{
+    if(!S.completed[b.id]){S.cdate[b.id]=new Date().toISOString().slice(0,10);S.sessionParts=(S.sessionParts||0)+1;} S.completed[b.id]=true;
+    const nb=D.blocks[idxOf(b)+1];
+    if(nb){S.cur=nb.id;S.step="watch";S.brk=S.sessionParts%LONG_EVERY===0?{from:b.id,until:null}:null;}
+    else{S.cur=D.qa?"__qa":b.id; toast("Last part finished");}
+  }
+  S.lessonViews=S.lessonViews||{};S.lessonViews[S.cur]=S.step;
+  save();render();window.scrollTo({top:0});
+}
+function addPark(){
+  const b=blockById(S.cur), inp=$("#parkin"); const t=inp.value.trim(); if(!t||!b) return;
+  (S.park[b.id]=S.park[b.id]||[]).push({t,at:Math.max(0,(vid.currentTime||secs(b.start))-secs(b.start)),status:"open"});
+  inp.value=""; save(); $("#plist").innerHTML=parkItems(b,false); toast("Parked. Keep watching.");
+}
+$("#view").addEventListener("keydown",e=>{ if(e.target.id==="parkin"&&e.key==="Enter"){e.preventDefault();addPark();} });
+document.addEventListener("click",async e=>{
+  const t=e.target.closest("button"); if(!t) return;
+  if(t.dataset.reference){referenceStep=t.dataset.reference==="back"?null:t.dataset.reference;render();return}
+  if(t.dataset.practicepart){const b=blockById(t.dataset.practicepart);if(b&&S.completed[b.id]){referenceStep=null;welcome=false;S.stopped=false;S.brk=null;S.cur=b.id;S.step="experiment";S.tab="path";save();render();}return}
+  if(t.dataset.tts){ttsCmd(t.dataset.tts);return}
+  if(t.dataset.ivsay){ivSay(t);return}
+  if(t.dataset.go){const g=t.dataset.go;
+    if(g==="continue"){welcome=false;S.tab="path";save();render();return}
+    if(g==="warmup"){welcome=true;S.tab="review";save();render();return}
+    if(g==="startbreak"){S.brk.until=Date.now()+(+t.dataset.min)*60000;save();render();return}
+    if(g==="afterbreak"){if(S.sessionParts%LONG_EVERY===0&&S.brk&&S.brk.until)S.sessionParts=0;S.brk=null;save();render();window.scrollTo({top:0});return}
+    if(g==="stop"){S.brk=null;S.stopped=true;S.session=null;save();render();if(helperReady)finishSync();return}
+    if(g==="resume"){S.stopped=false;save();render();return}
+    if(g==="copypos"){copy(positionText(),$("#poscb"));return}
+  }
+  if(t.dataset.blk){referenceStep="explain";welcome=false;S.tab="path";S.cur=t.dataset.blk;const b=blockById(S.cur);S.step=b?(stepsFor(b).find(([k])=>!(S.done[b.id]||{})[k])||["watch"])[0]:"watch";save();render();$(".block")?.scrollIntoView({block:"start"});return}
+  if(t.dataset.step){referenceStep=null;S.step=t.dataset.step;save();render();return}
+  if(t.id==="reloadreviews"){refreshReviews();return}
+  if(["checkreview","copyreview","savereview"].includes(t.id)){
+    const row=dueReviews[0];if(!row)return;const item=reviewItem(row);if(!item)return;
+    const record=reviewCheck(row),answer=record.answer.trim();if(!answer){toast("Try a short answer first.");return}
+    const check={...item.check,q:(item.scenario?item.scenario.replace(/<[^>]+>/g," ")+" ":"")+item.check.q};
+    const prompt=checkPrompt(item.b,check,answer,record.attempts.length+1);
+    if(t.id==="copyreview"){copy(prompt,$("#reviewcb"));return}
+    t.disabled=true;
+    try{
+      if(t.id==="checkreview"){await gradeAttempt(row.unit,record.attempts,item.b,check,answer,()=>record.answer.trim()===answer);render();}
+      else{
+        if(!record.attempts.length||checking.has(row.unit))return;
+        const r=await (await fetch("/api/review",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({unit:row.unit,score:record.attempts[0].fb.score})})).json();
+        if(r.error)throw new Error(r.error);reviewResult=r.message;save();await refreshReviews();
+      }
+    }catch(e){const box=$("#reviewfb");if(box)box.textContent=e.message||"Could not save. Try again."}finally{t.disabled=false}return;
+  }
+  if(t.id==="quickcheck"||t.id==="quickcopy"){
+    const b=blockById(S.cur),answer=(S.checkAnswers[b.id]||"").trim(),check=checkFor(b),attempts=attemptsFor(b.id);
+    if(!answer){toast("Try a short answer first.");return}
+    if(checkClosed(attempts))return;
+    const prompt=checkPrompt(b,check,answer,attempts.length+1);
+    if(t.id==="quickcopy"){copy(prompt,$("#quickcb"));return}
+    t.disabled=true;const box=$("#quickfb");box.textContent="Checking…";
+    try{if(await gradeAttempt(b.id,attempts,b,check,answer,()=>(S.checkAnswers[b.id]||"").trim()===answer)){S.checkFb[b.id]=attempts[attempts.length-1].fb;save();}render();}
+    catch(err){box.textContent=err.message||"Could not check. Try again."}finally{t.disabled=false}return;
+  }
+  if(t.id==="markNext"){referenceStep=null;welcome=false;goNextStep();return}
+  if(t.id==="parkgo"){addPark();return}
+  if(t.dataset.sess){const v=t.dataset.sess;if(v==="reset"){S.session=null;}else{S.session={start:Date.now(),min:+v};warned=false;}welcome=false;save();render();return}
+  if(t.dataset.dbgstart){S.dbgs[t.dataset.dbgstart]=Date.now();save();render();return}
+  if(t.dataset.dbgcopy||t.dataset.dbgcheck){const id=t.dataset.dbgcopy||t.dataset.dbgcheck,[bid,qi]=id.split(":"),b=blockById(bid),c=b.debug[+qi],ans=(S.dbgans[id]||"").trim();
+    if(!ans){toast("Write your answer first");return}
+    const secs=Math.round((Date.now()-(S.dbgs[id]||Date.now()))/1000);
+    if(t.dataset.dbgcopy){copy(dbgPrompt(b,c,ans,secs),$("#dbgcb-"+CSS.escape(id)));return}
+    t.disabled=true;const box=$("#dbgfb-"+CSS.escape(id));box.innerHTML=`<div class="fb muted">Thinking…</div>`;
+    try{const r=await sample.json(dbgPrompt(b,c,ans,secs)+"\n"+JSON_SHAPE);S.dbgfb[id]=Object.assign(normFb(r,c.strong),{secs});save();box.innerHTML=renderScore(S.dbgfb[id]);const cl=document.querySelector(`[data-clock="${CSS.escape(id)}"]`);if(cl)cl.textContent=`Solved in ${fmt(secs)} (target ${fmt(c.target||120)})`;}
+    catch(err){box.innerHTML=`<div class="fb">${esc(err&&err.message||"Couldn't grade this time.")} Open the solution checklist.</div>`}
+    finally{t.disabled=false}return}
+  if(t.dataset.ivcopy||t.dataset.ivcheck){const id=t.dataset.ivcopy||t.dataset.ivcheck,[bid,qi]=id.split(":"),b=blockById(bid),iv=b.interview[+qi],ans=(S.ivans[id]||"").trim();
+    if(!ans){toast("Write your answer first");return}
+    if(t.dataset.ivcopy){copy(ivPrompt(b,iv,ans),$("#ivcb-"+CSS.escape(id)));return}
+    t.disabled=true;const box=$("#ivfb-"+CSS.escape(id));box.innerHTML=`<div class="fb muted">Thinking…</div>`;
+    try{const r=await sample.json(ivPrompt(b,iv,ans)+"\n"+JSON_SHAPE);S.ivfb[id]=normFb(r,iv.strong);save();box.innerHTML=renderScore(S.ivfb[id]);}
+    catch(err){box.innerHTML=`<div class="fb">Couldn't grade this time. Open “What a strong answer includes”.</div>`}
+    finally{t.disabled=false}return}
+  if(t.dataset.pset){const [i,st]=t.dataset.pset.split(":");const b=blockById(S.cur);S.park[b.id][+i].status=st;save();$("#plist").innerHTML=parkItems(b,true);return}
+  if(t.dataset.pcopy){const b=blockById(S.cur),p=S.park[b.id][+t.dataset.pcopy];copy(`I'm studying "${D.title}", part "${b.title}" (${b.start}-${b.end}). While watching I parked this question at ${fmt(p.at)} into the part: "${p.t}". Answer it briefly in simple English. If Casey covers it later in the series, just say so and give a one-line preview.`,$("#pans-"+t.dataset.pcopy));return}
+  if(t.dataset.pask){const i=+t.dataset.pask,b=blockById(S.cur),p=S.park[b.id][i],out=$("#pans-"+i);t.disabled=true;out.textContent="Thinking…";
+    try{const r=await sample(`You are a tutor for one part of a programming video. Answer the student's parked question in under 120 words, simple English. If it's about something Casey parks for later, say so in one line and give at most a one-sentence preview.\n${blockContext(b)}\n\nQUESTION (asked at ${fmt(p.at)} into the part): ${p.t}`,{onText:({text})=>{out.textContent=text}});p.ans=r.text;p.status="done";save();$("#plist").innerHTML=parkItems(b,true);}
+    catch(err){out.textContent=err.text||"Couldn't answer this time. Try again later.";t.disabled=false}return}
+  if(t.id==="chatgo"){chat();return}
+  if(t.id==="chatclear"){S.notes[S.cur]=[];save();render();return}
+  if(t.id==="anki"){const rows=allCards().map(x=>[x.c[0],x.c[1],(D.cardTag||"study")+"::"+x.b.id].map(s=>s.replace(/\t|\n/g," ")).join("\t")).join("\n");
+    const name=(D.storageKey||"cards")+"-anki.tsv";
+    if(downloads){try{await downloads.save({filename:name,data:rows});}catch(err){toast("Export was not saved")}}
+    else{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([rows],{type:"text/tab-separated-values"}));a.download=name;a.click();}
+    return}
+});
+document.addEventListener("input",e=>{
+  const sc=e.target.dataset.shortcheck;if(sc){S.checkAnswers[sc]=e.target.value;delete S.checkFb[sc];const fb=$("#quickfb");if(fb)fb.innerHTML="";save()}
+  const pd=e.target.dataset.practiced;if(pd){S.practiceDone[pd]=e.target.checked;save()}
+  const pr=e.target.dataset.practice;if(pr){S.practice[pr]=e.target.value;S.practiceDone[pr]=false;const cb=document.querySelector(`[data-practiced="${pr}"]`);if(cb)cb.checked=false;save()}
+  const ra=e.target.dataset.reviewanswer;if(ra){const row=dueReviews.find(r=>r.unit===ra);if(row){const record=reviewCheck(row);if(!checkClosed(record.attempts)){record.answer=e.target.value;save();}}}
+  const a=e.target.dataset.ans; if(a){S.answers[a]=e.target.value;save()}
+  const r=e.target.dataset.recall; if(r){S.recall[r]=e.target.value;save()}
+  const v=e.target.dataset.iv; if(v){S.ivans[v]=e.target.value;save()}
+  const g=e.target.dataset.dbg; if(g){S.dbgans[g]=e.target.value;save()}
+  const gs=e.target.dataset.gs; if(gs){const [bid,gi]=gs.split(":");(S.guesses[bid]=S.guesses[bid]||[])[+gi]=e.target.value;save()}
+  const lbk=e.target.dataset.lb; if(lbk){S.lb[lbk]=e.target.value;save()}
+  if("autoask" in e.target.dataset){S.autoAsk=e.target.checked;save()}
+});
+async function chat(){
+  const b=blockById(S.cur); const inp=$("#chatin"); const text=inp.value.trim(); if(!text) return;
+  const log=S.notes[b.id]=S.notes[b.id]||[]; log.push({r:"user",c:text}); inp.value=""; save(); render(); $("#chathelp").open=true;
+  const out=document.createElement("div"); out.className="msg a"; out.textContent="Thinking…"; $("#chatlog").append(out);
+  const rules=`You tutor one student through this video part. Simple English. Stay inside the part's topic. If the question is about something Casey parks for later, say so in one line and give at most a one-sentence preview. Under 80 words. Answer only the question, with no repeated summary.\n${blockContext(b)}`;
+  try{const r=await sample([{role:"user",content:rules},...log.slice(-8).map(m=>({role:m.r,content:m.c}))],{cache:false,onText:({text})=>{out.textContent=text}});log.push({r:"assistant",c:r.text});save();}
+  catch(err){out.textContent=err.text||"Couldn't answer this time. Try again."}
+}
+/*EXPLAIN_APP*/
+/*WINTER_APP*/
+/*EXPERIMENT_APP*/
+save(); render();
+})();
+</script>

@@ -335,3 +335,18 @@ Newest at the bottom. Each entry: date, decision, why.
   Narrow cards stack the label above its text without shrinking readability.
 - Part 3 configuration is now a named row alongside PARSE, UNDERSTAND and
   EMIT. Existing full explanations and narration remain unchanged.
+
+
+## 2026-11-16: Review changes in a separate experiment first
+- Zain requested a full application copy to compare the proposed reductions
+  before confirming them. Created `experiment/` with lesson materials,
+  artwork/audio, tools, and copied study records, excluding installed virtual
+  environments and model caches. Existing downloaded videos are reused.
+- Changes only in the experiment: three main steps; combined Check and
+  feedback; prediction inside Practice; one Explanation/Listen panel; code
+  and flashcards remain optional. The winter design and lesson content remain.
+- Separate port 8876 and browser storage key. Saves/reviews target copied files.
+  Experimental Stop never commits, pushes or promotes anything. Main app source
+  hashes are recorded in `experiment/source-snapshot.json`.
+- Use the experiment space for future proposed changes. Await explicit
+  confirmation before adopting changes in the main application.

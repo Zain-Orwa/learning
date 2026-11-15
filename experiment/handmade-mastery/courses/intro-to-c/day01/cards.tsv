@@ -1,0 +1,67 @@
+#separator:tab
+#html:false
+#tags column:3
+What is a **toolchain**?	The chain of programs that turns source text into a running program: compiler → linker → (OS loader) → CPU.	intro-c::day01::b01
+Which Visual Studio to install today, and which workload?	Visual Studio Community (free), workload "Desktop development with C++".	intro-c::day01::b01
+What are the compiler and linker programs called in MSVC?	`cl.exe` (compiler) and `link.exe` (linker).	intro-c::day01::b01
+Console app vs. windowed app on Windows: where is the choice recorded?	In the .exe header's **subsystem** field (CONSOLE or WINDOWS), set at build time by the linker.	intro-c::day01::b02
+What does the bold project in Solution Explorer mean?	It's the **startup project**: the one that builds and runs when you press Start or F5.	intro-c::day01::b02
+Yellow vs. green change bar in VS?	Yellow = changed and not saved. Green = saved, but changed since the last build.	intro-c::day01::b02
+Why tick **Empty project**?	So the wizard doesn't generate code you didn't write. You start from a blank file.	intro-c::day01::b02
+Is a .cpp file special binary data?	No. It's plain text. The tools give it meaning.	intro-c::day01::b02
+**Compilation**, in one sentence	Translating source text into machine code for a specific target CPU (parse → understand → emit).	intro-c::day01::b03
+Debug vs. Release	Debug: unoptimized, debuggable, extra checks. Release: optimized, fast, hard to step through.	intro-c::day01::b03
+Win32 vs. x64 platform	32-bit x86 code vs. 64-bit x64 code. Same C, different machine instructions.	intro-c::day01::b03
+Where do compile errors come from?	The compiler failing to parse or make sense of the text (syntax, unknown names, wrong types).	intro-c::day01::b03
+Physical processor vs. core vs. hyperthread	Chip in the socket → full execution engine inside it → extra thread state sharing one core's hardware.	intro-c::day01::b04
+What is a **logical processor**?	Anything the OS can schedule a thread on, usually one hardware thread (hyperthread) of a core.	intro-c::day01::b04
+Is a hyperthread as good as an extra core?	No. It shares the core's execution units. It helps mostly by filling idle slots, for example while the other thread waits on memory.	intro-c::day01::b04
+Logical processors = ?	sockets × cores per socket × threads per core.	intro-c::day01::b04
+Why can compilers use many cores easily?	Each .cpp file compiles independently, so files can be compiled in parallel.	intro-c::day01::b04
+What is an object file (.obj)?	The compiler's output for one .cpp: machine code plus a table of symbols it defines and symbols it still needs.	intro-c::day01::b05
+What is a **translation unit**?	One .cpp file (after its #includes are pasted in), which the compiler translates on its own.	intro-c::day01::b05
+Linker's job in 3 verbs	Gather object files → resolve references → package one .exe.	intro-c::day01::b05
+**Unresolved external symbol** means…	Something references a name that no object file or library defines.	intro-c::day01::b05
+C2xxx vs. LNK2xxx error codes	C = compiler, about the text of one file. LNK = linker, about symbols across files.	intro-c::day01::b05
+Why is it **_WinMain@16** on 32-bit?	Name decoration: leading _ and @ plus the argument bytes (4 args × 4 bytes). No decoration on x64.	intro-c::day01::b05
+What is an **entry point**?	The address where the CPU starts executing a program. The linker writes it into the .exe header.	intro-c::day01::b06
+What file format are Windows .exe files?	PE (Portable Executable): headers (including entry point and subsystem) plus code and data sections.	intro-c::day01::b06
+Who decides the entry point, and how?	The linker, by finding a predefined symbol name (overridable with /ENTRY).	intro-c::day01::b06
+Where do you look up Windows functions?	Microsoft Learn (formerly MSDN), e.g. "WinMain function".	intro-c::day01::b06
+What tool prints an .exe's headers?	`dumpbin /headers file.exe` (or PE-bear for a GUI).	intro-c::day01::b06
+`HINSTANCE`	A handle referring to a running program (an instance of an executable in memory).	intro-c::day01::b07
+`LPSTR`	"Long pointer to string": just a pointer to characters (char *).	intro-c::day01::b07
+**Handle**	An opaque ID Windows gives you for something it manages. You hand it back to refer to that thing.	intro-c::day01::b07
+Hungarian notation	Prefixing names with type letters (h, p, lp, n…). Casey: please don't.	intro-c::day01::b07
+`_In_` / `_Out_`	SAL annotations: data flows into the call / out of the call. No runtime effect.	intro-c::day01::b07
+What does `OutputDebugStringA` do?	Sends text to the attached debugger (VS Output window, DebugView). Without a listener you don't see it.	intro-c::day01::b08
+Function definition =	Prototype (signature) + body.	intro-c::day01::b08
+What does a function call do?	Runs the function's body at that point, then continues after the call.	intro-c::day01::b08
+`void` before a function name	The function returns nothing to its caller.	intro-c::day01::b08
+`(void)` in the parameter list	The function takes no inputs.	intro-c::day01::b08
+`//` vs `/* */`	// = to end of line. /* */ = until the closing marker, multi-line.	intro-c::day01::b08
+F5 / Ctrl+F5 / F9 / F11 in VS	Run with debugger / run without / toggle breakpoint / step into.	intro-c::day01::b08
+String literal	Text in double quotes, stored in the program, e.g. "hello".	intro-c::day01::b09
+What ends a statement in C?	A semicolon `;`, not the end of the line.	intro-c::day01::b09
+Does C care about indentation?	No. Whitespace only separates tokens.	intro-c::day01::b09
+Why does `OutputDebug StringA` fail?	The space splits one name into two tokens, and `OutputDebug` is unknown.	intro-c::day01::b09
+What is a **token**?	The smallest meaningful piece of C text: a name, keyword, punctuation mark or literal.	intro-c::day01::b09
+WinMain's return `int` becomes…	The program's exit code (0 = success by convention).	intro-c::day01::b10
+`CALLBACK`	A macro (#define CALLBACK __stdcall) marking the calling convention Windows expects.	intro-c::day01::b10
+Calling convention, in one line	The agreed rules for how a function receives arguments and returns values.	intro-c::day01::b10
+`hInstance`	Handle to our own loaded program, passed back to Windows when needed.	intro-c::day01::b10
+`hPrevInstance`	Legacy from 16-bit Windows, always 0. Ignore it.	intro-c::day01::b10
+`lpCmdLine`	Text passed after the program name (console or shortcut Target).	intro-c::day01::b10
+`nCmdShow`	How the window should first appear (normal/min/max), as a number.	intro-c::day01::b10
+Declaration	Signature only, ends in `;`. Tells the compiler how to call it.	intro-c::day01::b11
+Definition	Signature + body: the actual code the linker can point calls at.	intro-c::day01::b11
+Undeclared name used → which error?	Compile error (identifier not found).	intro-c::day01::b11
+Declared but never defined → which error?	Link error (unresolved external symbol).	intro-c::day01::b11
+What does the compiler leave for the linker at a call to a declared-only function?	A relocation/marker: "patch foo's address here" (shown as UNDEF in dumpbin /symbols).	intro-c::day01::b11
+Does order matter once a declaration is at the top?	No. The definition can come later in the file, or in another file.	intro-c::day01::b11
+What does `#include "file"` do?	Pastes the file's entire contents at that line, before compilation (done by the preprocessor).	intro-c::day01::b12
+Keyword vs. header-defined name	Keywords belong to the language. Other names are declarations or macros from included files.	intro-c::day01::b12
+Why is windows.h so big?	It includes many other headers, which include more, recursively.	intro-c::day01::b12
+How do you see a file after preprocessing?	`cl /P file.cpp` → writes file.i.	intro-c::day01::b12
+Where is `OutputDebugStringA` defined?	In Windows's kernel32.dll. windows.h only declares it.	intro-c::day01::b12
+`<file.h>` vs `"file.h"`	Angle brackets: system/SDK include paths. Quotes: next to your file first.	intro-c::day01::b12
