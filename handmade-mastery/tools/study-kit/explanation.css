@@ -80,3 +80,15 @@
 @media(max-width:760px){.xcard{--xc-pad:18px}.xc-inner{padding:0 15px 17px}.xcard .xc-plate{font-size:25px}.xc-idea p,.xc-picture p,.xc-rows p{font-size:15px;line-height:1.4}.xcard .xc-idea h3{font-size:17px}.xc-note p{font-size:14px;line-height:1.4}.xc-picture{grid-template-columns:76px minmax(0,1fr)}.xc-picture .xc-sign{width:76px}.xcard .xc-more{font-size:18px}.xc-rows li{padding-block:7px}}
 
 .xc-note{margin-bottom:8px}.xc-inner{min-height:0}.xcard .xc-more{margin-bottom:0}
+
+/* Separate the concept name from its explanation for fast, orderly scanning. */
+.xc-rows{display:flex;flex-direction:column;gap:7px;margin:10px 0}
+.xc-rows li.xc-concept{display:grid;grid-template-columns:27px 110px minmax(0,1fr);align-items:start;column-gap:10px;padding:11px 8px;border:1px solid #83c1c52e;border-radius:8px;background:#032f3938}
+.xc-rows li.xc-concept+li::before{display:none}
+.xc-concept .xc-icon{margin-top:1px}
+.xc-concept-label{min-width:0;padding-top:2px}
+.xcard .xc-concept-label .xc-label{display:inline-block;white-space:normal;overflow-wrap:anywhere;font-size:10px;line-height:1.35;letter-spacing:.025em;padding:4px 7px;border-radius:6px;background:#f6d782;color:#2b220e;box-shadow:inset 0 1px #fff2bf,0 1px 2px #001d2859}
+.xc-rows .xc-concept-text{font-size:13px;line-height:1.5;margin:0;min-width:0}
+.xc-concept:not(.xc-has-label) .xc-concept-text{grid-column:2 / -1}
+.xc-concept .xc-concept-text .xc-pill{padding:1px 5px;border-radius:5px;font-size:inherit;background:#f3d88b}
+@container(max-width:360px){.xc-rows li.xc-concept{grid-template-columns:25px minmax(0,1fr);gap:5px 9px}.xc-concept-label{grid-column:2}.xc-concept.xc-has-label .xc-concept-text{grid-column:2}.xcard .xc-concept-label .xc-label{font-size:11px}.xc-rows .xc-concept-text{font-size:14px}}

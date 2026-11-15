@@ -83,3 +83,6 @@ return 404, so it is not the owning account.
 
 - Completed study tabs retain ticks and green coloring; selected views are
   saved per part. Optional-view completion stays separate from core progress.
+
+- Technical explanation rows now separate icons, amber labels and descriptions
+  into aligned columns, with a stacked layout for narrow cards.

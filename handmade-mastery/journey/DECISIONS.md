@@ -327,3 +327,11 @@ Newest at the bottom. Each entry: date, decision, why.
 - Supporting views have an explicit Mark finished action, recorded separately
   from required progress. Merely browsing never counts as completion.
 - Selected views are saved per part and restored when reloading the helper.
+
+
+## 2026-11-16: Tidy technical concept rows
+- Separate icons, amber concept labels and reading text into aligned columns.
+  Put each concept in a lightly separated row; keep selective keyword marks.
+  Narrow cards stack the label above its text without shrinking readability.
+- Part 3 configuration is now a named row alongside PARSE, UNDERSTAND and
+  EMIT. Existing full explanations and narration remain unchanged.

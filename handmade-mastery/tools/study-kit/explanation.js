@@ -58,7 +58,7 @@ function explanationData(b){
 }
 function explanationPanel(b){
   const x=explanationData(b),id=`xc-${b.id}`;
-  const row=c=>`<li>${xcIcon(c.icon)}<p>${c.label?`<mark class="xc-pill xc-label">${esc(c.label)}</mark> `:''}${c.html!=null?c.html:xcHighlight(c.text,c.highlights)}</p></li>`;
+  const row=c=>`<li class="xc-concept${c.label?' xc-has-label':''}">${xcIcon(c.icon)}${c.label?`<div class="xc-concept-label"><mark class="xc-pill xc-label">${esc(c.label)}</mark></div>`:''}<p class="xc-concept-text">${c.html!=null?c.html:xcHighlight(c.text,c.highlights)}</p></li>`;
   return `<section class="xcard" aria-labelledby="${id}"><div class="xc-inner">
 <h2 class="xc-plate" id="${id}">${xcIcon('book','xc-plate-icon')}<span>${esc(x.title)}</span></h2>
 ${x.summary?`<div class="xc-idea">${xcIcon('target','xc-idea-icon')}<div><h3>${esc(x.summary.title)}:</h3><p>${md(x.summary.text)}</p></div></div>`:''}

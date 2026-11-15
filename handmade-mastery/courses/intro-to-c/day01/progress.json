@@ -364,11 +364,14 @@
   ]
  },
  "speed": 1.25,
- "lastVisit": 1794783302835,
+ "lastVisit": 1794783657807,
  "sessionParts": 0,
  "brk": null,
  "stopped": false,
  "finished": false,
  "ttsRate": 1.5,
- "predictions": {}
+ "predictions": {},
+ "lessonViews": {
+  "b03": "guess"
+ }
 }
