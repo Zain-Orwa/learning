@@ -41,3 +41,5 @@ dialog{padding:0;width:min(730px,calc(100vw - 32px));max-height:85vh;border:1px 
 /* Real episode parts, with scrolling only once the available height is filled. */
 .course-sidebar #course-tree{overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable}
 .course-group{flex-shrink:0}.course-group>summary>span{min-width:0;flex:1;line-height:1.4}.course-group>summary small{flex-shrink:0;font-size:9px}.part-lessons{padding:10px 12px;max-height:45vh;overflow-y:auto}.part-lessons p{font:11px var(--f-display);color:#d3e9eb}.part-lessons .btn{width:100%;font-size:10px;white-space:normal}
+
+#lesson-panel{min-width:0}.study-navigation button[aria-selected="true"]{color:#35280d}.study-navigation button[aria-selected="true"] .step-check{color:#365748}

@@ -74,3 +74,6 @@ return 404, so it is not the owning account.
 
 - Sidebar now lists all 12 actual episode parts, replacing the seven sample
   chapter names. Scroll the part list to reach the later parts.
+
+- Horizontal navigation now selects one highlighted inline view consistently;
+  browsing tabs does not advance the saved lesson or complete study work.

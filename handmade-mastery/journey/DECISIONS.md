@@ -301,3 +301,14 @@ Newest at the bottom. Each entry: date, decision, why.
 - Parts expand to show their video range and lesson action. Navigation uses
   the available height and scrolls when needed; longer expanded content may
   also scroll. Future parts retain their existing learning prerequisites.
+
+
+## 2026-11-15: Consistent lesson navigation
+- Every horizontal item now selects one inline content view and highlights
+  exactly that tab. Flashcards in the bar no longer open an unrelated popup.
+  Right-hand tool buttons can still open explicit dialogs.
+- Browsing a view never changes the saved learning step or completion history.
+  Core progress advances only through the view's explicit action when its
+  prerequisites are satisfied. All supporting views remain available.
+- Added keyboard arrow/Home/End navigation and matching tab/panel labels.
+  Regression checks cover every tab, one selected state and preserved progress.

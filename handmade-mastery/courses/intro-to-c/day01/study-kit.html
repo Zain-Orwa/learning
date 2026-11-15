@@ -257,6 +257,8 @@ dialog{padding:0;width:min(730px,calc(100vw - 32px));max-height:85vh;border:1px 
 .course-sidebar #course-tree{overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable}
 .course-group{flex-shrink:0}.course-group>summary>span{min-width:0;flex:1;line-height:1.4}.course-group>summary small{flex-shrink:0;font-size:9px}.part-lessons{padding:10px 12px;max-height:45vh;overflow-y:auto}.part-lessons p{font:11px var(--f-display);color:#d3e9eb}.part-lessons .btn{width:100%;font-size:10px;white-space:normal}
 
+#lesson-panel{min-width:0}.study-navigation button[aria-selected="true"]{color:#35280d}.study-navigation button[aria-selected="true"] .step-check{color:#365748}
+
 /* Explanation card: frosted winter panel with a wooden title plate (see explanation.js). */
 .xcard{--xc-ink:#10262e;--xc-pad:clamp(14px,5cqi,26px);--xc-serif:"Merriweather",Georgia,"Times New Roman",serif;container-type:inline-size;position:relative;margin-top:12px;border:2px solid #163842;border-radius:22px;color:var(--xc-ink);font-family:var(--xc-serif);
   background:
@@ -2861,11 +2863,14 @@ function overview(b){return `<div class="study-primary" id="pane"><div class="le
 
 function deferredTitle(text){return plainText(text).split(/\s*\(/)[0].replace(/\.\s+He says.*$/,'');}
 function toolsRail(b){const deferred=b.deferred||[],count=(b.cards||[]).length;return `<aside class="learning-tools" aria-label="Learning tools"><section class="tool-card flashcard-tool"><h2 class="wood">${uiIcon('cards')} Flashcards</h2><div class="tool-body"><div class="card-illustration" aria-hidden="true"><span></span><span></span><span>✦</span></div><p>Key concepts from this lesson.</p><span class="count-pill">${count} card${count===1?'':'s'}</span><button class="btn amber" data-ui="flashcards" ${count?'':'disabled'}>Study Flashcards →</button></div></section><section class="tool-card"><h2>${uiIcon('flask')} Experiment / Prediction</h2><div class="tool-body"><p>Before trying it, make a prediction:</p><div class="prediction-prompt">${md(b.guess||checkFor(b).q)}</div><button class="btn amber" data-ui="prediction">${uiIcon('play')} Make a Prediction</button><button class="btn ghost" data-ui="experiment">${uiIcon('flask')} Run Experiment</button></div></section><section class="tool-card"><h2>${uiIcon('layers')} Deferred Topics</h2><div class="tool-body"><p>Important ideas we'll come back to later.</p>${deferred.length?`<ul class="deferred-list">${deferred.slice(0,4).map((text,i)=>`<li><button data-ui="deferred" data-index="${i}">${esc(deferredTitle(text))}</button></li>`).join('')}</ul>`:`<p class="empty-tool">No deferred topics in this part.</p>`}</div></section></aside>`;}
-function navigationHTML(b){const current=referenceStep||S.step;return `<nav class="study-navigation" role="tablist" aria-label="Study workflow">${VIEW_STEPS.map(([key,label,icon])=>{const core=STEPS.some(([k])=>k===key),done=!!((S.done[b.id]||{})[key]),disabled=core&&!stepOpen(b,key);return `<button role="tab" aria-selected="${current===key}" ${key==='cards'?'data-ui="flashcards"':core?`data-step="${key}"`:`data-reference="${key}"`} ${disabled?'disabled':''}>${uiIcon(icon)}${label}${done?'<span class="step-check">✓</span>':''}</button>`;}).join('')}</nav>`;}
+function selectStudyView(key){if(!VIEW_STEPS.some(([k])=>k===key))return false;referenceStep=key;flashcardIndex=0;flashcardAnswer=false;return true;}
+function navigationHTML(b){const current=referenceStep||S.step;return `<nav class="study-navigation" role="tablist" aria-label="Study workflow">${VIEW_STEPS.map(([key,label,icon])=>{const done=STEPS.some(([k])=>k===key)&&!!((S.done[b.id]||{})[key]);return `<button id="study-tab-${key}" role="tab" data-view="${key}" aria-controls="lesson-panel" aria-selected="${current===key}" tabindex="${current===key?0:-1}">${uiIcon(icon)}${label}${done?'<span class="step-check" aria-label="Completed">✓</span>':''}</button>`;}).join('')}</nav>`;}
+
 const baseRenderStepRaw=renderStepRaw;
 renderStepRaw=function(b,key){
   if(key==='guess')return `<h2>Make a prediction</h2><p>${md(b.guess||checkFor(b).q)}</p><textarea data-prediction="${b.id}" placeholder="What do you think will happen?">${esc((S.predictions||{})[b.id]||'')}</textarea><p class="dialog-help">Optional. Try the idea, then compare it with what actually happens.</p>`;
   if(key==='answer'){const attempts=attemptsFor(b.id);return `<h2>Your answer</h2>${S.checkAnswers[b.id]?`<p>${esc(S.checkAnswers[b.id])}</p>${checkFeedback(attempts)}`:'<p>Your core-check answer will appear here after you write it.</p>'}`;}
+  if(key==='cards')return flashcardContent();
   if(key==='why')return `<h2>Why it Matters</h2>${b.why||`<p>${md(b.summary)}</p>`}`;
   return baseRenderStepRaw(b,key);
 };
@@ -2873,8 +2878,8 @@ renderPath=function(){
   if(S.brk)return renderBreak();if(S.stopped)return renderStopped();
   if(S.cur==='__qa')return `<section class="block"><h2>Questions &amp; answers</h2>${D.qa?.html||''}<div id="nextbox"></div></section>`;
   const b=activeLesson(),view=referenceStep||S.step;
-  const content=view==='explain'?overview(b):`<section class="frost-card reading-pane study-primary"><div class="pane" id="pane">${renderStep(b,view)}</div>${!referenceStep?`<div class="next"><button class="btn amber" id="markNext">${nextLabel(b)}</button></div>`:''}</section>`;
-  return `<header class="lesson-header"><div><div class="eyebrow">Part ${idxOf(b)+1} of ${D.blocks.length}</div><h1>Day 1 — ${esc(b.title)}</h1></div><span class="tsr">▶ ${b.start} – ${b.end}</span></header>${navigationHTML(b)}<div class="lesson-columns">${content}${toolsRail(b)}</div>`;
+  const content=view==='explain'?overview(b):`<section class="frost-card reading-pane study-primary"><div class="pane" id="pane">${renderStep(b,view)}</div>${STEPS.some(([k])=>k===view)&&stepOpen(b,view)?`<div class="next"><button class="btn amber" data-ui="advance-view">${view==='watch'?'I watched it → Recall':view==='recall'?'Continue to practice →':'Finish part'}</button></div>`:''}</section>`;
+  return `<header class="lesson-header"><div><div class="eyebrow">Part ${idxOf(b)+1} of ${D.blocks.length}</div><h1>Day 1 — ${esc(b.title)}</h1></div><span class="tsr">▶ ${b.start} – ${b.end}</span></header>${navigationHTML(b)}<div class="lesson-columns"><div id="lesson-panel" role="tabpanel" aria-labelledby="study-tab-${view}">${content}</div>${toolsRail(b)}</div>`;
 };
 function courseTreeHTML(){
   const f=frontier();
@@ -2896,7 +2901,10 @@ function renderCourseTree(){
 function openDialog(title,html){const dialog=$('#study-dialog');if(!dialog.open)lastDialogFocus=document.activeElement;$('#dialog-title').textContent=title;$('#dialog-body').innerHTML=html;if(!dialog.open)dialog.showModal();attachMics(dialog);}
 function closeDialog(){const dialog=$('#study-dialog');if(dialog.open)dialog.close();lastDialogFocus?.focus?.();}
 $('#study-dialog').addEventListener('close',()=>{if(tts.on||tts.i>0)ttsStop();});
-function flashcardDialog(){const cards=activeLesson().cards||[];if(!cards.length)return;flashcardIndex=Math.min(flashcardIndex,cards.length-1);const card=cards[flashcardIndex];openDialog('Flashcards',`<p class="flashcard-counter">Card ${flashcardIndex+1} of ${cards.length}</p><div class="flashcard-face">${md(card[flashcardAnswer?1:0])}</div><div class="row"><button class="btn amber" data-ui="flip-card">${flashcardAnswer?'Show question':'Reveal answer'}</button><button class="btn ghost" data-ui="previous-card" ${flashcardIndex?'':'disabled'}>Previous</button><button class="btn ghost" data-ui="next-card" ${flashcardIndex===cards.length-1?'disabled':''}>Next →</button></div><p class="dialog-help">Optional practice. Your shared Review schedule stays the same.</p>`);}
+function flashcardContent(){const cards=activeLesson().cards||[];if(!cards.length)return '<h2>Flashcards</h2><p>No flashcards for this part.</p>';flashcardIndex=Math.min(flashcardIndex,cards.length-1);const card=cards[flashcardIndex];return `<h2>Flashcards</h2><p class="flashcard-counter">Card ${flashcardIndex+1} of ${cards.length}</p><div class="flashcard-face">${md(card[flashcardAnswer?1:0])}</div><div class="row"><button class="btn amber" data-ui="flip-card">${flashcardAnswer?'Show question':'Reveal answer'}</button><button class="btn ghost" data-ui="previous-card" ${flashcardIndex?'':'disabled'}>Previous</button><button class="btn ghost" data-ui="next-card" ${flashcardIndex===cards.length-1?'disabled':''}>Next →</button></div><p class="dialog-help">Optional practice. Your shared Review schedule stays the same.</p>`;}
+function flashcardDialog(){openDialog('Flashcards',flashcardContent());}
+function refreshFlashcards(){if($('#study-dialog').open)flashcardDialog();else render();}
+
 function fullExplanation(b){const own=(b.explainCard||{}).fullExplanation;openDialog((b.explainCard||{}).title||'Explanation',`${own||renderStep(b,'explain')}${b.visual?`<div class="row"><button class="btn ghost" data-ui="visual">Show the idea</button></div>`:''}`);}
 function searchLessons(value){const text=value.trim().toLowerCase(),box=$('#search-results'),input=$('#lesson-search');input.setAttribute('aria-expanded',text?'true':'false');if(!text){box.hidden=true;box.innerHTML='';return;}const results=D.blocks.filter(b=>(b.title+' '+b.summary+' '+codeText(b)).toLowerCase().includes(text));box.innerHTML=results.length?results.slice(0,8).map(b=>`<button data-blk="${b.id}" ${unlocked(b)?'':'disabled'}>${esc(b.title)}<small>${b.start}–${b.end}${unlocked(b)?'':' · Later in this episode'}</small></button>`).join(''):'<p>No matching lessons. Try “compiler”, “function” or “Windows”.</p>';box.hidden=false;}
 function hideSearch(){const input=$('#lesson-search');$('#search-results').hidden=true;input.setAttribute('aria-expanded','false');}
@@ -2926,21 +2934,23 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){hideSearch();$('#profile-popover').hidden=true;$('#profile-button').setAttribute('aria-expanded','false');document.body.classList.remove('courses-open');}
 });
 document.addEventListener('click',async e=>{
-  const target=e.target.closest('[data-ui], [data-blk], [data-tab], [data-sess], [data-reference], [data-practicepart]');
+  const target=e.target.closest('[data-ui], [data-view], [data-blk], [data-tab], [data-sess], [data-reference], [data-practicepart]');
   if(!e.target.closest('.search-wrap'))hideSearch();
   if(!e.target.closest('.profile-wrap')){$('#profile-popover').hidden=true;$('#profile-button').setAttribute('aria-expanded','false');}
   if(!target)return;
   if(target.dataset.blk){document.body.classList.remove('courses-open');hideSearch();return;}
   if(target.dataset.sess||target.dataset.reference||target.dataset.practicepart){closeDialog();return;}
+  if(target.dataset.view){closeDialog();selectStudyView(target.dataset.view);render();return;}
   const b=activeLesson(),action=target.dataset.ui;
+  if(action==='advance-view'){const view=referenceStep||S.step;if(STEPS.some(([k])=>k===view)&&stepOpen(b,view)){S.step=view;goNextStep();}return;}
   if(action==='home'){e.preventDefault();S.tab='path';referenceStep='explain';save();render();}
   if(action==='courses')document.body.classList.toggle('courses-open');
   if(action==='profile'){const panel=$('#profile-popover');panel.hidden=!panel.hidden;target.setAttribute('aria-expanded',String(!panel.hidden));}
   if(action==='close-dialog')closeDialog();
   if(action==='flashcards'){flashcardIndex=0;flashcardAnswer=false;flashcardDialog();}
-  if(action==='flip-card'){flashcardAnswer=!flashcardAnswer;flashcardDialog();}
-  if(action==='next-card'){flashcardIndex++;flashcardAnswer=false;flashcardDialog();}
-  if(action==='previous-card'){flashcardIndex=Math.max(0,flashcardIndex-1);flashcardAnswer=false;flashcardDialog();}
+  if(action==='flip-card'){flashcardAnswer=!flashcardAnswer;refreshFlashcards();}
+  if(action==='next-card'){flashcardIndex++;flashcardAnswer=false;refreshFlashcards();}
+  if(action==='previous-card'){flashcardIndex=Math.max(0,flashcardIndex-1);flashcardAnswer=false;refreshFlashcards();}
   if(action==='full-explanation')fullExplanation(b);
   if(action==='visual')openDialog('Show the idea',b.visual||'<p>No visual for this part yet.</p>');
   if(action==='prediction')openDialog('Make a Prediction',renderStepRaw(b,'guess')+'<div class="row"><button class="btn amber" data-ui="close-dialog">Save prediction</button></div>');
@@ -2959,6 +2969,8 @@ document.addEventListener('click',async e=>{
   if(action==='rename')openDialog('Your profile',`<label for="profile-input">Display name</label><input type="text" id="profile-input" maxlength="30" value="${esc(S.profileName||'Zain')}"><div class="row"><button class="btn amber" data-ui="save-name">Save name</button></div>`);
   if(action==='save-name'){const name=$('#profile-input').value.trim();if(!name)return;S.profileName=name.slice(0,30);save();closeDialog();renderCourseTree();}
 });
+
+document.addEventListener('keydown',e=>{const tab=e.target.closest?.('[data-view]');if(!tab||!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();const index=VIEW_STEPS.findIndex(([key])=>key===tab.dataset.view),next=e.key==='Home'?0:e.key==='End'?VIEW_STEPS.length-1:(index+(e.key==='ArrowRight'?1:-1)+VIEW_STEPS.length)%VIEW_STEPS.length;selectStudyView(VIEW_STEPS[next][0]);render();document.querySelector(`[data-view="${VIEW_STEPS[next][0]}"]`)?.focus();});
 
 save(); render();
 })();
