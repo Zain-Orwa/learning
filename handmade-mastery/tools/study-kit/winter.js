@@ -3,11 +3,10 @@ const UI_PATHS={book:'M3 4c4-1 6 0 9 2 3-2 5-3 9-2v15c-4-1-6 0-9 2-3-2-5-3-9-2V4
 function uiIcon(name){return `<svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${UI_PATHS[name]||UI_PATHS.book}"/></svg>`;}
 const WINTER_ART='../../../tools/study-kit/assets/winter-cabin.jpg';
 const VIEW_STEPS=[['guess','Guess','bulb'],['watch','Watch','play'],['recall','Recall','list'],['answer','Answer','check'],['explain','Explain','book'],['experiment','Experiment','flask'],['code','Read Code','code'],['cards','Flashcards','cards'],['why','Why it Matters','tree']];
-const COURSE_CHAPTERS=['Part 2 — Windows & the Platform','Part 3 — Software Rendering','Part 4 — Systems & Memory','Part 5 — Game Architecture','Part 6 — Assets & Content','Part 7 — Finishing the Game'];
 S.predictions=S.predictions||{};
 S.tab='path'; // Open the clean lesson view; do not change its saved learning position.
 let flashcardIndex=0,flashcardAnswer=false,lastDialogFocus=null;
-const courseOpen={intro:true};
+const courseOpen={};
 function activeLesson(){return blockById(S.cur)||D.blocks[0];}
 function plainText(html){return String(html||'').replace(/<[^>]*>/g,' ').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&amp;/g,'&').replace(/\s+/g,' ').trim();}
 function codeText(b){const m=String(b.code||'').match(/<pre[^>]*>\s*<code[^>]*>([\s\S]*?)<\/code>\s*<\/pre>/i);return m?m[1].replace(/<[^>]+>/g,'').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&amp;/g,'&').trim():'';}
@@ -35,10 +34,18 @@ renderPath=function(){
   const content=view==='explain'?overview(b):`<section class="frost-card reading-pane study-primary"><div class="pane" id="pane">${renderStep(b,view)}</div>${!referenceStep?`<div class="next"><button class="btn amber" id="markNext">${nextLabel(b)}</button></div>`:''}</section>`;
   return `<header class="lesson-header"><div><div class="eyebrow">Part ${idxOf(b)+1} of ${D.blocks.length}</div><h1>Day 1 — ${esc(b.title)}</h1></div><span class="tsr">▶ ${b.start} – ${b.end}</span></header>${navigationHTML(b)}<div class="lesson-columns">${content}${toolsRail(b)}</div>`;
 };
+function courseTreeHTML(){
+  const f=frontier();
+  return D.blocks.map((part,i)=>{
+    const key=part.id,open=Object.prototype.hasOwnProperty.call(courseOpen,key)?courseOpen[key]:key===S.cur;
+    const status=S.completed[key]?(checked(part)?'Checked':'Finished'):i>f?'Upcoming':key===S.cur?'Current':'';
+    return `<details class="course-group" data-chapter="${key}" ${open?'open':''}><summary><span>Part ${i+1} — ${esc(part.title)}</span><small>${status}</small></summary><div class="part-lessons"><p>${part.start}–${part.end}</p><button class="btn ghost small" data-blk="${key}" aria-current="${key===S.cur}" ${i>f?'disabled':''}>${i>f?'Complete the earlier parts first':'Open this lesson →'}</button></div></details>`;
+  }).join('');
+}
 function renderCourseTree(){
-  const b=activeLesson(),f=frontier();
+  const b=activeLesson();
   $('#course-position').textContent=`Part ${idxOf(b)+1} of ${D.blocks.length}`;
-  $('#course-tree').innerHTML=`<details class="course-group" data-chapter="intro" ${courseOpen.intro?'open':''}><summary>Part 1 — Getting Started <small>${Object.keys(S.completed).length}/${D.blocks.length}</small></summary><ol class="course-lessons">${D.blocks.map((x,i)=>`<li><button data-blk="${x.id}" aria-current="${x.id===S.cur}" class="${S.completed[x.id]?'completed':''}" ${i>f?'disabled':''}><span>${i===0?'Day 1':'Part '+(i+1)} — ${esc(x.title)}</span></button></li>`).join('')}</ol></details>${COURSE_CHAPTERS.map((name,i)=>`<details class="course-group" data-chapter="chapter-${i}" ${courseOpen['chapter-'+i]?'open':''}><summary>${esc(name)}</summary><p class="upcoming">These lessons open as you reach them in the course.</p></details>`).join('')}`;
+  $('#course-tree').innerHTML=courseTreeHTML();
   $('#profile-name').textContent=S.profileName||'Zain';
   const avatar=$('.profile-button .avatar');if(avatar)avatar.textContent=(S.profileName||'Zain').slice(0,1).toUpperCase();
   $('#notification-dot').hidden=!dueReviews.length;

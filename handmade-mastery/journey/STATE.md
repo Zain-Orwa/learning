@@ -71,3 +71,6 @@ return 404, so it is not the owning account.
 
 - Sidebar refinement: course sections use the full available height;
   expanded lesson lists scroll internally when long.
+
+- Sidebar now lists all 12 actual episode parts, replacing the seven sample
+  chapter names. Scroll the part list to reach the later parts.

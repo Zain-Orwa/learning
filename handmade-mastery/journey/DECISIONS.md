@@ -293,3 +293,11 @@ Newest at the bottom. Each entry: date, decision, why.
   reserves empty space below it. Expanded lesson lists keep their own scroll.
 - Rebuilt the page and passed the engine regression checks. Learning position
   and answers were not changed by this layout adjustment.
+
+
+## 2026-11-15: Show all real lesson parts in the sidebar
+- Removed seven illustrative chapter placeholders. The sidebar now lists all
+  12 actual Day 1 parts from the lesson data, matching the progress counter.
+- Parts expand to show their video range and lesson action. Navigation uses
+  the available height and scrolls when needed; longer expanded content may
+  also scroll. Future parts retain their existing learning prerequisites.

@@ -37,3 +37,7 @@ dialog{padding:0;width:min(730px,calc(100vw - 32px));max-height:85vh;border:1px 
 .course-sidebar .sidebar-scenery{position:absolute;left:0;right:0;bottom:0;height:230px;min-height:0;margin:0;z-index:-1;pointer-events:none;background-size:cover}
 .course-lessons{max-height:clamp(180px,45vh,420px);overflow-y:auto}
 @media(min-width:1001px){.course-sidebar{height:calc(100dvh - 98px);min-height:0}}
+
+/* Real episode parts, with scrolling only once the available height is filled. */
+.course-sidebar #course-tree{overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable}
+.course-group{flex-shrink:0}.course-group>summary>span{min-width:0;flex:1;line-height:1.4}.course-group>summary small{flex-shrink:0;font-size:9px}.part-lessons{padding:10px 12px;max-height:45vh;overflow-y:auto}.part-lessons p{font:11px var(--f-display);color:#d3e9eb}.part-lessons .btn{width:100%;font-size:10px;white-space:normal}

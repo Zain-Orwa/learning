@@ -345,7 +345,9 @@
  },
  "checkAnswers": {},
  "checkFb": {},
- "checkAttempts": {},
+ "checkAttempts": {
+  "b03": []
+ },
  "reviewChecks": {},
  "practice": {},
  "practiceDone": {},
@@ -362,7 +364,7 @@
   ]
  },
  "speed": 1.25,
- "lastVisit": 1794781614019,
+ "lastVisit": 1794781857653,
  "sessionParts": 0,
  "brk": null,
  "stopped": false,
