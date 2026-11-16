@@ -1,6 +1,6 @@
 # Current state
 
-_Last updated: 2026-11-15_
+_Last updated: 2026-11-16_
 
 ## Setup
 - Repo is shared between the Mac study station and Windows coding machine.
@@ -31,7 +31,7 @@ _Last updated: 2026-11-15_
 - Step: Watch (video at 0:05 into the part, episode time 12:18)
 - Parts done: 2
 - Completed (part id, date): b01 2026-11-01, b02 2026-11-02
-- Updated: 2026-11-15
+- Updated: 2026-11-16
 
 ## Debugging log
 _(one line per challenge: date, bug class, score, time)_
@@ -65,30 +65,19 @@ return 404, so it is not the owning account.
 - 2026-11-15: Reminders re-created on the claude.ai chat account (Daily review `trig_01LaGmv4hWn3FBSPhof4G13y`, Debug challenge `trig_01Up8nKs72sre7b9sSxpivaq`). Old account's tasks may still run; turn them off if reminders come twice. Details: docs/scheduled-tasks.md.
 
 ## Study page appearance
-- Final winter reference applied: dark teal shell, compact frosted cards,
-  left video/takeaway/audio stack and structured Explanation alongside it.
-- Saved lesson position and learning history remain unchanged by this UI work.
+- 2026-11-16: the experiment's page was adopted as the main page (`./study`).
+  Winter look with the game-banner palette, Watch → Check → Practice tabs,
+  a narrow one-line parts list, and click-to-pause video with a clear speed menu.
+- Study support: Explanation & Listen, Analogy, Graphics, Code & Pseudocode,
+  Flashcards, **Ask Claude** (answers stay with the part) and **My notes**
+  (per-part notes, Claude summary, Kokoro voice summary, notes path; also
+  written to `courses/<course>/dayNN/notes.md`).
+- On arrival, due part reviews open in a "Review first" popup that can't be
+  skipped (five-minute budget; the rest stays due). Interview/debug rows are
+  not forced.
+- Saved lesson position and learning history were not changed by this UI work.
 
-- Sidebar refinement: course sections use the full available height;
-  expanded lesson lists scroll internally when long.
-
-- Sidebar now lists all 12 actual episode parts, replacing the seven sample
-  chapter names. Scroll the part list to reach the later parts.
-
-- Horizontal navigation now selects one highlighted inline view consistently;
-  browsing tabs does not advance the saved lesson or complete study work.
-
-- Sidebar states: finished parts have a green-teal tint/checkmark; the current
-  part has amber accents. Part headings highlight on hover and keyboard focus.
-
-- Completed study tabs retain ticks and green coloring; selected views are
-  saved per part. Optional-view completion stays separate from core progress.
-
-- Technical explanation rows now separate icons, amber labels and descriptions
-  into aligned columns, with a stacked layout for narrow cards.
-
-## Pending UI experiment
-- A separate copy runs with `./experiment/study` on port 8876. It tries
-  Watch → Check → Practice with supporting tools kept optional.
-- Main application behavior is unchanged. Await Zain's review before promotion;
-  experiment answers and review results stay inside `experiment/`.
+## UI experiments
+- `./experiment/study` (port 8876) is the workbench for the next UI ideas.
+  Try changes there first, then copy the study-kit files here when Zain approves.
+  Experiment answers and reviews stay inside `experiment/`.

@@ -61,3 +61,14 @@ dialog{padding:0;width:min(730px,calc(100vw - 32px));max-height:85vh;border:1px 
 @media(prefers-reduced-motion:reduce){.course-group,.course-group>summary{transition:none}}
 
 .study-navigation button.is-finished{color:#d9f0d8;background:#447a613d;box-shadow:inset 0 -2px #8fbd98;border-radius:8px 8px 0 0}.study-navigation button.is-finished .step-check{color:#bce0af}.study-navigation button:hover{background:#75bfc12e;color:#fff1be}.study-navigation button[aria-selected="true"],.study-navigation button.is-finished[aria-selected="true"]{color:#35280d;background:linear-gradient(#fff3b5,#efb448);border-radius:10px;box-shadow:inset 0 0 0 2px #fff0b2,0 0 10px #ffc55980}.study-navigation button[aria-selected="true"] .step-check{color:#30573b}
+
+/* Same winter design; only the study flow is simplified in this experiment. */
+.experiment-badge{display:inline-block;font:600 10px var(--f-display);padding:4px 7px;border:1px solid #e7c174;border-radius:6px;color:#ffe7ad;background:#173f49;vertical-align:middle;margin-left:7px;text-shadow:none}
+.experiment-focus{margin-top:16px!important;padding:12px 14px;border-left:3px solid #dfb65d;background:#d9edf059;border-radius:5px}
+.experiment-prediction,.experiment-parking{border:1px solid #abcad3;border-radius:8px;padding:12px 14px;margin:12px 0;background:#d7e9ed80}
+.experiment-prediction summary,.experiment-parking summary{font:600 13px var(--f-display);cursor:pointer}
+.experiment-prediction[open] summary,.experiment-parking[open] summary{margin-bottom:12px}
+.study-navigation button{font-size:14px;padding:12px 22px;gap:8px}.study-navigation{gap:8px}
+.reading-pane .video-frame video{aspect-ratio:16/9;min-height:0;max-height:50vh}.reading-pane .video-frame{max-width:100%}
+#dialog-body .xcard{margin-top:10px}#dialog-body .audio-card{margin-top:14px}
+@media(max-width:760px){.experiment-badge{font-size:9px}.study-navigation button{font-size:12px;padding:10px 14px}}

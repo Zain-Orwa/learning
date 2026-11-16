@@ -277,6 +277,17 @@ dialog{padding:0;width:min(730px,calc(100vw - 32px));max-height:85vh;border:1px 
 
 .study-navigation button.is-finished{color:#d9f0d8;background:#447a613d;box-shadow:inset 0 -2px #8fbd98;border-radius:8px 8px 0 0}.study-navigation button.is-finished .step-check{color:#bce0af}.study-navigation button:hover{background:#75bfc12e;color:#fff1be}.study-navigation button[aria-selected="true"],.study-navigation button.is-finished[aria-selected="true"]{color:#35280d;background:linear-gradient(#fff3b5,#efb448);border-radius:10px;box-shadow:inset 0 0 0 2px #fff0b2,0 0 10px #ffc55980}.study-navigation button[aria-selected="true"] .step-check{color:#30573b}
 
+/* Same winter design; only the study flow is simplified in this experiment. */
+.experiment-badge{display:inline-block;font:600 10px var(--f-display);padding:4px 7px;border:1px solid #e7c174;border-radius:6px;color:#ffe7ad;background:#173f49;vertical-align:middle;margin-left:7px;text-shadow:none}
+.experiment-focus{margin-top:16px!important;padding:12px 14px;border-left:3px solid #dfb65d;background:#d9edf059;border-radius:5px}
+.experiment-prediction,.experiment-parking{border:1px solid #abcad3;border-radius:8px;padding:12px 14px;margin:12px 0;background:#d7e9ed80}
+.experiment-prediction summary,.experiment-parking summary{font:600 13px var(--f-display);cursor:pointer}
+.experiment-prediction[open] summary,.experiment-parking[open] summary{margin-bottom:12px}
+.study-navigation button{font-size:14px;padding:12px 22px;gap:8px}.study-navigation{gap:8px}
+.reading-pane .video-frame video{aspect-ratio:16/9;min-height:0;max-height:50vh}.reading-pane .video-frame{max-width:100%}
+#dialog-body .xcard{margin-top:10px}#dialog-body .audio-card{margin-top:14px}
+@media(max-width:760px){.experiment-badge{font-size:9px}.study-navigation button{font-size:12px;padding:10px 14px}}
+
 /* Explanation card: frosted winter panel with a wooden title plate (see explanation.js). */
 .xcard{--xc-ink:#10262e;--xc-pad:clamp(14px,5cqi,26px);--xc-serif:"Merriweather",Georgia,"Times New Roman",serif;container-type:inline-size;position:relative;margin-top:12px;border:2px solid #163842;border-radius:22px;color:var(--xc-ink);font-family:var(--xc-serif);
   background:
@@ -371,6 +382,212 @@ dialog{padding:0;width:min(730px,calc(100vw - 32px));max-height:85vh;border:1px 
 .xc-concept:not(.xc-has-label) .xc-concept-text{grid-column:2 / -1}
 .xc-concept .xc-concept-text .xc-pill{padding:1px 5px;border-radius:5px;font-size:inherit;background:#f3d88b}
 @container(max-width:360px){.xc-rows li.xc-concept{grid-template-columns:25px minmax(0,1fr);gap:5px 9px}.xc-concept-label{grid-column:2}.xc-concept.xc-has-label .xc-concept-text{grid-column:2}.xcard .xc-concept-label .xc-label{font-size:11px}.xc-rows .xc-concept-text{font-size:14px}}
+
+/* Palette from the supplied Handmade Hero game banner: pine, aurora, ice, amber. */
+:root,:root[data-theme="light"]{--paper:#0a3545;--panel:#124e5a;--ink:#e3f1ed;--muted:#aecdd2;--rule:#4c8999;--link:#ffdc7a;--chip:#1a5260;--code-bg:#082b3b;--ip:#ffc34d;--ip-ink:#34250e;--good:#a2d5b3;--warn:#f0c66c;--bad:#ffb198;--game-pine:#062d3b;--game-teal:#0c5360;--game-glow:#55d9d0;--game-ice:#b3dce3;--game-gold:#ffd36b;--game-cream:#fff0c3;--game-text:#e3f1ed}
+body{background-color:var(--game-pine);color:var(--game-text)}
+.winter-header{background:linear-gradient(90deg,#052b38b0,#06465370),url('../../../tools/study-kit/assets/game-banner.jpg') center/cover}
+.brand,.course-heading h2,.lesson-header h1{color:var(--game-cream)}
+.app-shell{border-color:#79bfc9;box-shadow:0 0 20px #2bd0cf18,0 12px 36px #001d29a6}
+.lesson-surface{background:linear-gradient(125deg,#062c3bef,#0b4854ee 65%,#062e3cf0)}
+.course-sidebar{background-color:#052e3d}
+.frost-card,.tool-card,.lesson-surface>.block{color:var(--game-text);border-color:#8dcbd3;background:linear-gradient(135deg,#226675eb,#103f50f2);box-shadow:inset 0 1px 0 #d1fbff66,inset 0 0 0 2px #81d8de1c,0 0 12px #49dcd021,0 4px 12px #001c324d}
+.reading-pane{color:var(--game-text)}
+.tool-card h2{color:var(--game-cream);background:linear-gradient(#104955,#062f3d);border-color:#5f99a7}
+.tool-card h2::before{background:#d2edf0;box-shadow:0 1px 4px #a8f3ef77}
+.tool-body,.tool-body p,.deferred-list button{color:var(--game-text)}
+.empty-tool,.card-subtitle,.dialog-help,.flashcard-counter{color:var(--muted)}
+.btn,.btn.ghost,.tool-body .btn.ghost{color:#e3f3f1;border-color:#85bcc9;background:linear-gradient(#286678db,#154858eb);box-shadow:inset 0 1px 0 #c4f4f33d,0 2px 5px #001a2838}
+.btn:not(:disabled):hover,.tool-body .btn.ghost:hover{color:#fff3cc;border-color:#b8e4e4;background:linear-gradient(#337b87,#1d5b6b)}
+.btn.amber,.amber,.study-navigation button[aria-selected="true"],.study-navigation button.is-finished[aria-selected="true"]{color:#33230c;border-color:#db9e36;background:linear-gradient(#fff0ae,#ffd36b 48%,#edab36);box-shadow:inset 0 1px 0 #fff7ce,inset 0 0 0 2px #ffefb14d,0 0 12px #ffcb5540,0 2px 4px #001d2966}
+.btn.amber:not(:disabled):hover{color:#2a200c;background:linear-gradient(#fff7c6,#ffdd7e 48%,#f4bc4b);border-color:#ffe4a1}
+dialog{color:var(--game-text);background:linear-gradient(135deg,#174e60f5,#082f41fa);border:1px solid #9bcfd8;box-shadow:inset 0 0 0 2px #94d5df24,0 0 24px #31ccc32b,0 15px 60px #001923bf}
+dialog::backdrop{background:#031e2ba8;backdrop-filter:blur(4px)}
+.dialog-heading{background:linear-gradient(#1b5665,#0d3d4f);border-bottom-color:#548f9f;box-shadow:inset 0 1px 0 #baedf238}
+.dialog-heading h2{color:var(--game-cream)}
+.dialog-heading .icon-button{color:#e0ece8}
+.dialog-heading .icon-button:hover{color:#ffe8a3;background:#80c9d033}
+#dialog-body{color:var(--game-text)}
+.flashcard-counter{font-weight:600;letter-spacing:.035em;margin:0 0 12px}
+.flashcard-face{color:#fff0bf;background:radial-gradient(ellipse at 50% 20%,#226675,#0c3a4a 80%);border:1px solid #8dc9d4;box-shadow:inset 0 1px 0 #c4eff266,inset 0 0 30px #48d7cd12,0 0 12px #49dcd018;font-size:clamp(21px,3vw,29px);line-height:1.4}
+#dialog-body textarea,textarea,input[type=text],#dialog-body input[type=text]{color:#123946;background:#c3e1e5;border-color:#8fc4ce;box-shadow:inset 0 2px 4px #1b53651a}
+textarea::placeholder,input[type=text]::placeholder{color:#527680}
+.profile-popover,.search-results{color:var(--game-text);background:#103e50f5;border-color:#70a7b6;box-shadow:inset 0 1px #c2edf23b,0 8px 24px #001b2c80}
+.profile-popover>button,.profile-popover nav button,.search-results button{color:var(--game-text)}
+.profile-popover button:hover,.profile-popover nav button[aria-pressed=true],.search-results button:hover{color:#fff0c3;background:#367a844d}
+.search-results small{color:var(--muted)}
+.experiment-focus,.experiment-parking,.experiment-prediction{color:var(--game-text);background:#082f3d80;border-color:#548f9f}
+.experiment-focus{border-left-color:var(--game-gold)}
+.audio-card,.audio-controls{background:#12465599;border-color:#79b1c0}
+.audio-controls audio::-webkit-media-controls-panel{background:#a9d4de}
+.audio-controls select{color:#123b48;background:#b7dbe2;border-color:#85b8c7}
+.code-editor,#dialog-body pre{color:#dceeed;background:#072b3b;border-color:#4f879b}
+.editor-header{color:#d9ecee;background:#154455;border-color:#568698}
+.pseudocode{color:#e3f1ed;background:#124a5b;border-color:#6ba4b7}
+.pseudocode h3{color:var(--game-cream);background:#1a5a69;border-color:#6ba4b7}
+.token-keyword{color:#ffd575}.token-string{color:#8ce3d5}.token-comment{color:#8cb4aa}.token-number{color:#b4dce6}
+.inwords,#dialog-body .inwords{background:#134858;border-color:#71a6b6;color:var(--game-text)}
+.fb,.q,.park,.plan{background:#114352;color:var(--game-text);border-color:#568d9d}
+.xcard{background:radial-gradient(ellipse at 50% 25%,#1b6470,#0b3e4f 75%,#062b3c);border-color:#a3dce1;box-shadow:inset 0 0 0 2px #4f9faa,0 0 14px #4bdfcf33}
+.xc-idea{background:linear-gradient(120deg,#edbb55,#ffe5a0 55%,#e9b34d);border-color:#ffe7a8;box-shadow:inset 0 1px #fff4c3,0 0 10px #ffce5e40}
+.xc-picture{background:linear-gradient(#b6dfe3,#8fc6d0);border-color:#c3e8e9;color:#123946}
+.xc-note{background:linear-gradient(120deg,#ebd39b,#f5e5b6);border-color:#edc96c}
+.xcard .xc-pill,.xcard .xc-concept-label .xc-label{background:#f4d27a;color:#322710;border-color:#e6bd62}
+.xcard .xc-more{color:#ffdf7b;border-color:#e5bc59}
+:focus-visible{outline-color:#ffd575}
+@media(prefers-reduced-transparency:reduce){dialog,.frost-card,.tool-card{background:#124858}dialog::backdrop{backdrop-filter:none;background:#031e2bea}}
+
+/* Experiment-only layout tweaks. Colors come from game-theme.css; nothing here changes the palette. */
+
+/* Compact course list: one line per part, number or tick on the left. */
+@media(min-width:1001px){.app-layout{grid-template-columns:212px minmax(0,1fr)}}
+.course-sidebar{padding-inline:10px}
+.course-heading{padding:0 6px 12px}
+.course-heading h2{font-size:21px}
+.course-progress{padding:10px;margin-bottom:12px}
+.part-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.part-row{display:flex;align-items:center;gap:8px;width:100%;min-height:34px;padding:6px 8px 6px 6px;text-align:left;border:1px solid #6bb8bd59;border-radius:8px;background:#02333be0;color:#e3f1ed;font:600 11px/1.3 var(--f-display);cursor:pointer;transition:background-color .15s ease,border-color .15s ease,color .15s ease}
+.part-row:not(:disabled):hover,.part-row:focus-visible{background:#72c6cd38;border-color:#9fd6da;color:#fff4ce}
+.part-mark{flex:none;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;border:1px solid #8cc3cc80;color:#cfe6ea;font:700 10px/1 var(--f-display)}
+.part-name{min-width:0;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.part-row.is-finished{background:#245649e8;border-color:#82b9a0;color:#edf6e9}
+.part-row.is-finished .part-mark{background:#8ebfa1;border-color:#a9d6b8;color:#0d3326;font-size:11px}
+.part-row.is-current{background:#c99a442b;border-color:#e8bb68;box-shadow:inset 3px 0 #edba58;color:#fff0c1}
+.part-row.is-current .part-name{white-space:normal}
+.part-row.is-current .part-mark{background:#ffd36b;border-color:#ffe4a1;color:#33230c}
+.part-row:disabled{opacity:.55;cursor:default}
+@media(prefers-reduced-motion:reduce){.part-row{transition:none}}
+
+/* Video: clear gear, speed badge, readable speed menu and a short play/pause flash. */
+.player{position:relative}
+.video-frame.has-video video,.player:fullscreen video{cursor:pointer}
+.video-frame .pctl [data-ui="video-settings"]{position:relative}
+.speed-badge{position:absolute;top:-4px;right:-7px;padding:0 3px;border-radius:4px;background:#ffd36b;color:#33230c;font:700 8.5px/13px var(--f-display);pointer-events:none}
+.video-settings{bottom:44px;right:8px;width:232px;padding:12px;color:var(--game-text);background:linear-gradient(135deg,#174e60f7,#082f41fc);border:1px solid #9bcfd8;border-radius:10px;box-shadow:inset 0 1px 0 #c4eff24d,0 0 16px #31ccc32b,0 8px 24px #001923bf}
+.vs-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;font:600 12px var(--f-display);color:var(--game-cream)}
+.vs-current{pointer-events:none;font:700 14px var(--f-display);color:var(--game-gold)}
+.vs-speeds{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px}
+.video-settings .vs-speeds button{margin:0;min-height:32px;border-radius:7px;border:1px solid #85bcc9;background:linear-gradient(#286678db,#154858eb);color:#e3f3f1;font:600 13px var(--f-display);font-variant-numeric:tabular-nums;cursor:pointer}
+.video-settings .vs-speeds button:hover{border-color:#b8e4e4;color:#fff3cc;background:linear-gradient(#337b87,#1d5b6b)}
+.video-settings .vs-speeds button[aria-checked="true"]{color:#33230c;border-color:#db9e36;background:linear-gradient(#fff0ae,#ffd36b 48%,#edab36);box-shadow:inset 0 1px 0 #fff7ce,0 0 8px #ffcb5540}
+.video-settings .vs-file{display:block;width:100%;margin:0;padding:7px 8px;border-radius:7px;border:1px solid #5f99a7;background:#0b3a4a;color:var(--game-text);font:600 11.5px var(--f-display);cursor:pointer}
+.video-settings .vs-file:hover{color:#fff3cc;border-color:#b8e4e4}
+.tap-flash{position:absolute;left:50%;top:calc(50% - 18px);width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;display:grid;place-items:center;background:#06202bb3;color:#fff;opacity:0;pointer-events:none;z-index:3}
+.tap-flash svg{width:30px;height:30px;fill:currentColor}
+.tap-flash.show{animation:tap-flash .6s ease-out}
+@keyframes tap-flash{0%{opacity:.95;transform:scale(.85)}100%{opacity:0;transform:scale(1.2)}}
+@media(prefers-reduced-motion:reduce){@keyframes tap-flash{0%{opacity:.95}100%{opacity:0}}}
+
+/* Study support popups: analogy and graphics. */
+.analogy-view{--xc-serif:"Merriweather",Georgia,"Times New Roman",serif;display:grid;grid-template-columns:110px minmax(0,1fr);gap:14px;align-items:center;padding:12px 16px 12px 10px;border:1px solid #c3e8e9;border-radius:14px;background:linear-gradient(#b6dfe3,#8fc6d0);color:#123946;box-shadow:inset 0 1px 0 #fff9}
+.analogy-view p{margin:0;padding-left:14px;border-left:1.5px solid #3f6f7b;font:400 16px/1.5 var(--xc-serif)}
+.analogy-view strong{display:block;font-weight:900;color:#0c1f26}
+@media(max-width:480px){.analogy-view{grid-template-columns:1fr;justify-items:center}.analogy-view .xc-sign{width:96px}.analogy-view p{border-left:0;border-top:1.5px solid #3f6f7b;padding:8px 0 0}}
+.graphics-visual h3{color:var(--game-cream)}
+.graphics-visual table{width:100%}
+
+/* Scrolling: the support rail and popups scroll themselves; the page behind them stays still. */
+html{scrollbar-gutter:stable}
+html:has(#study-dialog[open]){overflow:hidden}
+#study-dialog{overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#6aa5b2 transparent}
+@media(min-width:1001px){.learning-tools{position:sticky;top:12px;align-self:start;max-height:calc(100dvh - 24px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#6aa5b2 transparent;padding:2px 3px 6px;margin:-2px -3px 0}}
+.tool-divider{border:0;border-top:1px solid #5f99a780;margin:4px 2px}
+.tool-mark{margin-left:6px;color:var(--good);font-weight:700}
+.support-callout{margin:14px 0 0;padding:11px 14px;border-radius:10px;border:1px solid #edc96c;border-left-width:4px;background:#0b3a4ab3;color:var(--game-text);font-size:15px;line-height:1.5}
+.support-callout strong{color:var(--game-cream)}
+
+/* Ask Claude */
+.ask-box{margin-top:18px;padding:14px;border-radius:12px;border:1px solid #79b1c0;background:#0b3a4acc;box-shadow:inset 0 1px 0 #c4eff233}
+.ask-title{display:flex;align-items:center;gap:7px;margin:0 0 10px;font:700 14px var(--f-display);color:var(--game-cream)}
+.ask-title .ui-icon{width:18px;height:18px}
+.ask-thread{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.ask-msg{max-width:92%;padding:9px 12px;border-radius:11px;font-size:14.5px;line-height:1.5}
+.ask-msg p,.ask-msg ul{margin:0}.ask-msg p+p,.ask-msg p+ul,.ask-msg ul+p{margin-top:7px}.ask-msg ul{padding-left:18px}
+.ask-msg.is-user{align-self:flex-end;background:#2a6a78;border:1px solid #7fbcc8;color:#f1fbfa;border-bottom-right-radius:4px}
+.ask-msg.is-claude{align-self:flex-start;background:#c3e1e5;border:1px solid #9fd0d8;color:#123946;border-bottom-left-radius:4px}
+.ask-msg.is-claude code{background:#a9d1d8;color:#0c2c36}
+.ask-who{display:block;margin-bottom:2px;font:700 10px var(--f-display);letter-spacing:.06em;text-transform:uppercase;opacity:.8}
+.ask-tag{display:inline-block;margin:0 0 4px;padding:1px 7px;border-radius:9px;background:#ffd36b33;color:#ffe8a8;font:600 10px var(--f-display)}
+.ask-actions{margin-top:4px}
+.ask-msg.is-claude .quiet-link{color:#245e70;font-size:11px}
+.ask-msg.is-claude .quiet-link:disabled{color:#2f6b53;text-decoration:none;cursor:default}
+.ask-dots i{font-style:normal;animation:ask-dot 1.2s infinite}.ask-dots i:nth-child(2){animation-delay:.2s}.ask-dots i:nth-child(3){animation-delay:.4s}
+@keyframes ask-dot{0%,60%,100%{opacity:.2}30%{opacity:1}}
+@media(prefers-reduced-motion:reduce){.ask-dots i{animation:none}}
+.ask-empty{margin:0;color:var(--muted);font:13px var(--f-display)}
+.ask-error{margin:0;padding:7px 10px;border-radius:8px;background:#ffb1982a;border:1px solid #ffb19880;color:#ffd5c8;font:13px var(--f-display)}
+.ask-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.ask-chip{padding:6px 11px;border-radius:999px;border:1px solid #85bcc9;background:#154858;color:#e3f3f1;font:600 12px var(--f-display);cursor:pointer;transition:background-color .15s ease,border-color .15s ease}
+.ask-chip:not(:disabled):hover{background:#246676;border-color:#ffd36b;color:#fff3cc}
+.ask-chip:disabled{opacity:.55;cursor:default}
+.ask-compose{display:flex;gap:8px;align-items:flex-end}
+.ask-compose .micwrap{flex:1;min-width:0}
+.ask-compose textarea{flex:1;min-width:0;width:100%;min-height:46px;resize:vertical;font-size:14.5px}
+.ask-compose .btn{flex:none;min-width:72px}
+.ask-box .dialog-help{margin:7px 0 0}
+
+/* My notes */
+.notes-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:8px}
+.notes-head h3{display:flex;align-items:center;gap:7px;margin:0;font:700 15px var(--f-display);color:var(--game-cream)}
+.notes-head .ui-icon{width:18px;height:18px;flex:none}
+.notes-status{flex:none;color:var(--muted);font:12px var(--f-display)}
+.notes-text{width:100%;min-height:170px;resize:vertical;font-size:15px;line-height:1.55}
+.notes-pane .micwrap{display:block}
+.notes-actions{margin:10px 0 0}
+.notes-summary{margin-top:12px;padding:12px 14px;border-radius:12px;background:linear-gradient(120deg,#ebd39b,#f5e5b6);border:1px solid #edc96c;color:#2c2410}
+.notes-summary h4{display:flex;align-items:center;gap:6px;margin:0 0 6px;font:700 13px var(--f-display);color:#3b2c08}
+.notes-summary h4 small{margin-left:auto;font-weight:500;opacity:.75}
+.notes-summary .ui-icon{width:16px;height:16px}
+.notes-summary ul{margin:0;padding-left:18px}.notes-summary li{margin:3px 0;font-size:14.5px;line-height:1.45}
+.notes-summary .dialog-help{color:#5d4a1c}
+.notes-audio{display:block;width:100%;margin-top:10px}
+.notes-working{margin:12px 0 0;color:var(--game-gold);font:600 13px var(--f-display)}
+.notes-path{margin-top:22px;padding-top:16px;border-top:1px solid #5f99a780}
+.notes-path h3{display:flex;align-items:center;gap:7px;margin:0 0 10px;font:700 14px var(--f-display);color:var(--game-cream)}
+.notes-path h3 .ui-icon{width:18px;height:18px}
+.notes-path ol{list-style:none;margin:0 0 12px;padding:0;display:flex;flex-direction:column;gap:5px}
+.notes-path-row{display:flex;align-items:center;gap:9px;width:100%;padding:7px 9px;text-align:left;border-radius:9px;border:1px solid #6bb8bd59;background:#02333bb3;color:var(--game-text);cursor:pointer;font:inherit}
+.notes-path-row:not(:disabled):hover,.notes-path-row:focus-visible{background:#72c6cd38;border-color:#9fd6da}
+.notes-path-row:disabled{opacity:.5;cursor:default}
+.notes-path-row.has-notes .part-mark{background:#8ebfa1;border-color:#a9d6b8;color:#0d3326}
+.notes-path-row.is-here{border-color:#e8bb68;box-shadow:inset 3px 0 #edba58;background:#c99a442b}
+.np-text{display:flex;flex-direction:column;min-width:0}
+.np-title{font:600 12.5px var(--f-display);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.np-preview{font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:560px){.ask-msg{max-width:100%}.ask-compose{flex-direction:column;align-items:stretch}.notes-head{flex-direction:column;gap:2px}}
+.notes-summary code{background:#e6c77c;color:#2c2410;border:0}
+
+/* Full screen: the whole picture, letterboxed, with the controls at the bottom.
+   (.reading-pane .video-frame video caps the inline player at 50vh and crops it; that must not apply here.) */
+.video-frame .player:fullscreen{display:flex;flex-direction:column;justify-content:flex-end;width:100vw;height:100vh;margin:0;border-radius:0;background:#000}
+.video-frame .player:fullscreen video{flex:1 1 auto;width:100%;height:auto;min-height:0;max-height:none;aspect-ratio:auto;object-fit:contain;background:#000}
+.video-frame .player:fullscreen .pctl{flex:none;padding:8px 14px;gap:10px}
+.video-frame .player:-webkit-full-screen{display:flex;flex-direction:column;justify-content:flex-end;width:100vw;height:100vh;margin:0;border-radius:0;background:#000}
+.video-frame .player:-webkit-full-screen video{flex:1 1 auto;width:100%;height:auto;min-height:0;max-height:none;aspect-ratio:auto;object-fit:contain;background:#000}
+
+/* Review first popup */
+html:has(#review-gate[open]){overflow:hidden}
+#review-gate{width:min(680px,calc(100vw - 32px));overscroll-behavior:contain}
+#review-gate::backdrop{background:#021a24e6;backdrop-filter:blur(6px)}
+.rg-clock{font:700 13px var(--f-display);color:var(--game-gold);font-variant-numeric:tabular-nums}
+.rg-body{padding:16px 20px 20px;color:var(--game-text);font-size:15px}
+.rg-intro{margin:0 0 10px;color:var(--muted);font:13px var(--f-display)}
+.rg-intro:empty{display:none}
+.rg-steps{list-style:none;display:flex;gap:6px;margin:0 0 14px;padding:0}
+.rg-steps li{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;border:1px solid #8cc3cc80;color:#cfe6ea;font:700 11px var(--f-display)}
+.rg-steps li.is-done{background:#8ebfa1;border-color:#a9d6b8;color:#0d3326}
+.rg-steps li.is-now{background:#ffd36b;border-color:#ffe4a1;color:#33230c}
+.rg-meta{margin:0 0 6px;font:600 12px var(--f-display);color:var(--game-cream)}
+.rg-question{margin:0 0 12px;padding:12px 14px;border-radius:10px;border:1px solid #79b1c0;background:#0b3a4acc;font-size:16px;line-height:1.5}
+.rg-question p{margin:0}
+.rg-answer{width:100%;min-height:110px;resize:vertical;font-size:15px;line-height:1.5}
+.rg-body .micwrap{display:block}
+.rg-body .row{margin-top:10px}
+.rg-feedback{margin-top:10px}
+.rg-feedback:empty{display:none}
+.rg-done{padding:6px 0}
+.rg-big{margin:0 0 8px;font:700 20px var(--f-body);color:var(--game-cream)}
+.rg-results{margin:0 0 10px;padding-left:18px}
 
 </style>
 
@@ -2504,8 +2721,8 @@ function renderStepRaw(b,k){
     <div class="row">${closed?"":sample?`<button class="btn" id="quickcheck" ${checking.has(b.id)?"disabled":""}>${attempts.length?"Check my retry":"Check my answer"}</button>`:`<button class="btn ghost" id="quickcopy">Copy for tutor</button>`}</div>
     <div class="copybox" id="quickcb"></div><div id="quickfb">${checkFeedback(attempts)}</div>
     ${rubricHTML(check.rubric)}
-    ${b.visual?`<button class="btn ghost small" data-reference="visual">Show the idea</button>`:""}
-    <button class="btn ghost small" data-reference="explain">Need an explanation?</button>
+    ${b.visual?`<button class="btn ghost small" data-ui="visual">Show the idea</button>`:""}
+    
     ${sample?`<details class="model" id="chathelp"><summary>Ask about this part</summary><div class="chatlog" id="chatlog">${(S.notes[b.id]||[]).map(m=>`<div class="msg ${m.r==="user"?"u":"a"}">${esc(m.c)}</div>`).join("")}</div><textarea id="chatin" placeholder="Your question…"></textarea><button class="btn" id="chatgo">Ask</button></details>`:""}
     ${(S.park[b.id]||[]).length?`<div class="park"><h3>Your questions</h3><ul class="plist" id="plist">${parkItems(b,true)}</ul></div>`:""}`;
   }
@@ -2520,7 +2737,7 @@ function renderStepRaw(b,k){
     <p class="small muted">Write one line about what you observed. If you cannot try it now, note what remains to do.</p>
     <textarea data-practice="${b.id}" placeholder="What happened? Or: still to do…">${esc(S.practice[b.id]||"")}</textarea>
     <label class="small"><input type="checkbox" data-practiced="${b.id}" ${S.practiceDone[b.id]?"checked":""}> I tried the task and checked the result</label>
-    ${b.code?`<button class="btn ghost small" data-reference="code">Code reference</button>`:""}
+    ${b.code?`<button class="btn ghost small" data-ui="code-notes">Code reference</button>`:""}
     ${(b.debug||[]).length?`<details class="model"><summary>Optional debugging practice</summary>${b.debug.map((c,i)=>dbgBlock(b,i,c,true)).join("")}</details>`:""}
     ${(b.interview||[]).length?`<details class="model"><summary>Optional interview practice</summary>${b.interview.map((iv,i)=>ivBlock(b,i,iv,true)).join("")}</details>`:""}`;
 
@@ -2877,7 +3094,7 @@ ${x.fullExplanation?`<button class="xc-more" data-ui="full-explanation">Read the
 const UI_PATHS={book:'M3 4c4-1 6 0 9 2 3-2 5-3 9-2v15c-4-1-6 0-9 2-3-2-5-3-9-2V4zm9 2v15',star:'m12 2 3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1 3-6z',flask:'M9 2h6M10 2v7L4 19c-1 2 0 3 2 3h12c2 0 3-1 2-3L14 9V2M7 16h10',code:'m8 6-6 6 6 6m8-12 6 6-6 6M14 3l-4 18',cards:'M7 3h12v17H7zM4 6H2v16h12v-1',tree:'m12 2-6 7h3l-5 7h6v6h4v-6h6l-5-7h3L12 2z',headphones:'M3 14v-3a9 9 0 0 1 18 0v3M3 12h4v9H3zm14 0h4v9h-4z',bulb:'M9 21h6M9 18h6c0-4 4-4 4-9A7 7 0 0 0 5 9c0 5 4 5 4 9z',check:'m3 12 6 6L21 6',list:'M8 5h14M8 12h14M8 19h14M2 5h1M2 12h1M2 19h1',copy:'M8 8h13v14H8zM17 8V2H2v14h6',chat:'M3 3h18v14H9l-6 4V3z',play:'m8 4 12 8-12 8V4z',gear:'m9 3 1-2h4l1 2 3 2 2 1 2 4-2 2v3l1 2-3 3-2-1-3 1-2 1-4-2v-2l-2-3-2-1 1-4 2-1 2-3zM9 12a3 3 0 1 0 6 0 3 3 0 0 0-6 0',layers:'m12 2 10 6-10 6L2 8l10-6zM2 12l10 6 10-6M2 17l10 6 10-6'};
 function uiIcon(name){return `<svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${UI_PATHS[name]||UI_PATHS.book}"/></svg>`;}
 const WINTER_ART='../../../tools/study-kit/assets/winter-cabin.jpg';
-const VIEW_STEPS=[['guess','Guess','bulb'],['watch','Watch','play'],['recall','Recall','list'],['answer','Answer','check'],['explain','Explain','book'],['experiment','Experiment','flask'],['code','Read Code','code'],['cards','Flashcards','cards'],['why','Why it Matters','tree']];
+const VIEW_STEPS=[['watch','Watch','play'],['recall','Check','check'],['experiment','Practice','flask']];
 S.predictions=S.predictions||{};
 S.tab='path'; // Open the clean lesson view; do not change its saved learning position.
 let flashcardIndex=0,flashcardAnswer=false,lastDialogFocus=null;
@@ -2935,7 +3152,7 @@ function renderCourseTree(){
 function openDialog(title,html){const dialog=$('#study-dialog');if(!dialog.open)lastDialogFocus=document.activeElement;$('#dialog-title').textContent=title;$('#dialog-body').innerHTML=html;if(!dialog.open)dialog.showModal();attachMics(dialog);}
 function closeDialog(){const dialog=$('#study-dialog');if(dialog.open)dialog.close();lastDialogFocus?.focus?.();}
 $('#study-dialog').addEventListener('close',()=>{if(tts.on||tts.i>0)ttsStop();});
-function flashcardContent(){const cards=activeLesson().cards||[];if(!cards.length)return '<h2>Flashcards</h2><p>No flashcards for this part.</p>';flashcardIndex=Math.min(flashcardIndex,cards.length-1);const card=cards[flashcardIndex];return `<h2>Flashcards</h2><p class="flashcard-counter">Card ${flashcardIndex+1} of ${cards.length}</p><div class="flashcard-face">${md(card[flashcardAnswer?1:0])}</div><div class="row"><button class="btn amber" data-ui="flip-card">${flashcardAnswer?'Show question':'Reveal answer'}</button><button class="btn ghost" data-ui="previous-card" ${flashcardIndex?'':'disabled'}>Previous</button><button class="btn ghost" data-ui="next-card" ${flashcardIndex===cards.length-1?'disabled':''}>Next →</button></div><p class="dialog-help">Optional practice. Your shared Review schedule stays the same.</p>`;}
+function flashcardContent(){const cards=activeLesson().cards||[];if(!cards.length)return '<p>No flashcards for this part.</p>';flashcardIndex=Math.min(flashcardIndex,cards.length-1);const card=cards[flashcardIndex];return `<p class="flashcard-counter">Card ${flashcardIndex+1} of ${cards.length}</p><div class="flashcard-face">${md(card[flashcardAnswer?1:0])}</div><div class="row"><button class="btn amber" data-ui="flip-card">${flashcardAnswer?'Show question':'Reveal answer'}</button><button class="btn ghost" data-ui="previous-card" ${flashcardIndex?'':'disabled'}>Previous</button><button class="btn ghost" data-ui="next-card" ${flashcardIndex===cards.length-1?'disabled':''}>Next →</button></div>`;}
 function flashcardDialog(){openDialog('Flashcards',flashcardContent());}
 function refreshFlashcards(){if($('#study-dialog').open)flashcardDialog();else render();}
 
@@ -3006,6 +3223,448 @@ document.addEventListener('click',async e=>{
 });
 
 document.addEventListener('keydown',e=>{const tab=e.target.closest?.('[data-view]');if(!tab||!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();const index=VIEW_STEPS.findIndex(([key])=>key===tab.dataset.view),next=e.key==='Home'?0:e.key==='End'?VIEW_STEPS.length-1:(index+(e.key==='ArrowRight'?1:-1)+VIEW_STEPS.length)%VIEW_STEPS.length;selectStudyView(VIEW_STEPS[next][0]);render();document.querySelector(`[data-view="${VIEW_STEPS[next][0]}"]`)?.focus();});
+
+/* Experimental presentation only. Core grading, media and saving remain intact. */
+function experimentSupport(b){
+  const deferred=b.deferred||[];
+  return `<aside class="learning-tools" aria-label="Supporting tools"><section class="tool-card"><h2>${uiIcon('book')} Study support</h2><div class="tool-body"><button class="btn ghost" data-ui="full-explanation">Explanation &amp; Listen</button><button class="btn ghost" data-ui="analogy">Analogy</button><button class="btn ghost" data-ui="graphics">Graphics</button><button class="btn ghost" data-ui="code-notes">Code &amp; Pseudocode</button><button class="btn ghost" data-ui="flashcards" ${(b.cards||[]).length?'':'disabled'}>Flashcards · optional</button><hr class="tool-divider"><button class="btn ghost" data-ui="ask-claude">Ask Claude</button><button class="btn ghost" data-ui="my-notes">My notes${(S.myNotes?.[b.id]?.text||'').trim()?'<span class="tool-mark" aria-label=" (written)">✓</span>':''}</button></div></section><section class="tool-card"><h2>${uiIcon('layers')} Deferred Topics</h2><div class="tool-body"><p>Ideas for later in the course.</p>${deferred.length?`<ul class="deferred-list">${deferred.map((text,i)=>`<li><button data-ui="deferred" data-index="${i}">${esc(deferredTitle(text))}</button></li>`).join('')}</ul>`:'<p class="empty-tool">No deferred topics in this part.</p>'}</div></section></aside>`;
+}
+const experimentBaseStep=renderStepRaw;
+renderStepRaw=function(b,key){
+  if(key==='watch')return `${videoPanel(b)}<p class="experiment-focus"><strong>Focus:</strong> ${md(b.focus||b.oneLiner||b.summary)}</p><p>When Casey codes, pause and write the change yourself. Predict, build and check the result. That work counts as your practice.</p><details class="experiment-parking"><summary>Park a question for later</summary><div class="row"><input type="text" id="parkin" placeholder="Your question…" aria-label="Question to park"><button class="btn ghost" id="parkgo">Park it</button></div><ul class="plist" id="plist">${parkItems(b,false)}</ul></details>`;
+  if(key==='experiment')return `<details class="experiment-prediction"><summary>Predict the result · optional</summary><p>${md(b.guess||checkFor(b).q)}</p><textarea data-prediction="${b.id}" placeholder="What do you expect to happen?">${esc(S.predictions?.[b.id]||'')}</textarea></details>${experimentBaseStep(b,key)}`;
+  return experimentBaseStep(b,key);
+};
+fullExplanation=function(b){
+  const compact=explanationPanel(b).replace('data-ui="full-explanation"','data-ui="detail-explanation"');
+  const listen=audioPanel(b).replace(/<div class="card-title">[\s\S]*?<\/div><p class="card-subtitle">[\s\S]*?<\/p>/,'');
+  openDialog('Explanation & Listen',compact+listen+askBox(b,'explain'));
+  const audio=$('#summary-audio');if(audio)audio.playbackRate=S.ttsRate||1;
+};
+renderPath=function(){
+  if(S.brk)return renderBreak();if(S.stopped)return renderStopped();
+  if(S.cur==='__qa')return `<section class="block"><h2>Questions &amp; answers</h2>${D.qa?.html||''}<div id="nextbox"></div></section>`;
+  const b=activeLesson();
+  if(!STEPS.some(([key])=>key===(referenceStep||S.step)))referenceStep=null;
+  const view=referenceStep||S.step;
+  const label=view==='watch'?'I watched it → Check':view==='recall'?'Continue to practice →':'Finish part';
+  return `<header class="lesson-header"><div><div class="eyebrow">Part ${idxOf(b)+1} of ${D.blocks.length}</div><h1>Day 1 — ${esc(b.title)}</h1></div><span class="tsr">▶ ${b.start} – ${b.end}</span></header>${navigationHTML(b)}<div class="lesson-columns"><div id="lesson-panel" role="tabpanel" aria-labelledby="study-tab-${view}"><section class="frost-card reading-pane study-primary"><div class="pane" id="pane">${renderStep(b,view)}</div>${stepOpen(b,view)?`<div class="next"><button class="btn amber" data-ui="advance-view">${label}</button></div>`:''}</section></div>${experimentSupport(b)}</div>`;
+};
+document.addEventListener('click',e=>{
+  const button=e.target.closest('[data-ui]');if(!button)return;const b=activeLesson();
+  if(button.dataset.ui==='code-notes')openDialog('Code & Pseudocode',withWords(b.code||'<p>No code in this part.</p>',b.say?.code)+askBox(b,'code'));
+  if(button.dataset.ui==='detail-explanation')openDialog('Full explanation',renderStepRaw(b,'explain')+askBox(b,'explain'));
+  if(button.dataset.ui==='analogy')openDialog('Analogy',analogyView(b)+(b.mistake?`<div class="support-callout"><strong>Common beginner mistake:</strong> ${md(b.mistake)}</div>`:'')+askBox(b,'analogy'));
+  if(button.dataset.ui==='graphics')openDialog('Graphics',graphicsView(b)+askBox(b,'graphics'));
+});
+referenceStep=STEPS.some(([key])=>key===S.lessonViews?.[S.cur])?S.lessonViews[S.cur]:S.step;
+
+/* Study support: the analogy on its own, and the drawings made for this part. */
+function analogyView(b){
+  const a=explanationData(b).analogy;
+  return a?`<div class="analogy-view">${xcSign(a.title)}<p><strong>${esc(a.title)}:</strong> ${md(a.text)}</p></div>`:'<p class="empty-tool">No analogy for this part yet.</p>';
+}
+function graphicsView(b){
+  const parts=[];
+  if(b.anim)parts.push(`<figure class="anim"><video src="${esc(b.anim)}" controls playsinline preload="metadata"></video></figure>`);
+  if(b.visual)parts.push(`<div class="graphics-visual">${b.visual}</div>`);
+  return parts.join('')||'<p class="empty-tool">No drawing for this part yet. New drawings and animations made with <code>/animate</code> will appear here.</p>';
+}
+
+/* Compact course list: one line per part. Click a row to open that part. */
+courseTreeHTML=function(){
+  const f=frontier();
+  return `<ol class="part-list">${D.blocks.map((part,i)=>{
+    const key=part.id,done=!!S.completed[key],current=key===S.cur,locked=i>f;
+    const state=done?(checked(part)?'checked':'finished'):current?'current':locked?'complete the earlier parts first':'open';
+    return `<li><button class="part-row${done?' is-finished':''}${current?' is-current':''}" data-blk="${key}" ${current?'aria-current="page"':''} ${locked?'disabled':''} title="Part ${i+1} — ${esc(part.title)} (${part.start}–${part.end})" aria-label="Part ${i+1}: ${esc(part.title)}, ${state}"><span class="part-mark" aria-hidden="true">${done?'✓':i+1}</span><span class="part-name">${esc(part.title)}</span></button></li>`;
+  }).join('')}</ol>`;
+};
+
+/* Video: click the picture to pause or continue, a clear gear and a readable speed menu. */
+const GEAR_ICON=svg('M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96a7 7 0 0 0-1.62-.94l-.36-2.54a.48.48 0 0 0-.48-.41h-3.84a.47.47 0 0 0-.47.41l-.36 2.54a7.4 7.4 0 0 0-1.62.94l-2.39-.96a.48.48 0 0 0-.59.22L2.74 8.87a.47.47 0 0 0 .12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54a7 7 0 0 0 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.48.48 0 0 0-.12-.61zM12 15.6a3.6 3.6 0 1 1 0-7.2 3.6 3.6 0 0 1 0 7.2z');
+const VIDEO_SPEEDS=[0.75,1,1.25,1.5,1.75,2];
+const gearButton=vw.querySelector('[data-ui="video-settings"]');
+gearButton.innerHTML=`${GEAR_ICON}<span class="speed-badge" hidden></span>`;
+settings.innerHTML=`<div class="vs-head"><span id="vs-label">Playback speed</span><span class="vs-current" data-v="speed" aria-hidden="true"></span></div><div class="vs-speeds" role="radiogroup" aria-labelledby="vs-label">${VIDEO_SPEEDS.map(r=>`<button type="button" role="radio" data-speed="${r}">${r}×</button>`).join('')}</div><button type="button" class="vs-file" data-ui="choose-video">Choose video file…</button>`;
+const tapFlash=document.createElement('div');tapFlash.className='tap-flash';tapFlash.setAttribute('aria-hidden','true');vw.append(tapFlash);
+function showVideoSpeed(){
+  const rate=S.speed||1;
+  settings.querySelectorAll('[data-speed]').forEach(b=>{const on=+b.dataset.speed===rate;b.setAttribute('aria-checked',String(on));b.tabIndex=on?0:-1;});
+  settings.querySelector('.vs-current').textContent=rate+'×';
+  const badge=gearButton.querySelector('.speed-badge');badge.hidden=rate===1;badge.textContent=rate+'×';
+  gearButton.setAttribute('aria-label',`Video settings, speed ${rate}×`);
+}
+function setVideoSpeed(rate){S.speed=rate;vid.playbackRate=rate;save();showVideoSpeed();}
+function closeVideoSettings(focusGear){if(settings.hidden)return;settings.hidden=true;gearButton.setAttribute('aria-expanded','false');if(focusGear)gearButton.focus();}
+settings.addEventListener('click',e=>{const b=e.target.closest('[data-speed]');if(b){setVideoSpeed(+b.dataset.speed);return;}if(e.target.closest('[data-ui="choose-video"]'))closeVideoSettings(false);});
+settings.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){e.stopPropagation();closeVideoSettings(true);return;}
+  const b=e.target.closest('[data-speed]');if(!b||!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key))return;
+  e.preventDefault();const i=VIDEO_SPEEDS.indexOf(+b.dataset.speed),step=e.key==='ArrowLeft'||e.key==='ArrowUp'?-1:1;
+  const next=VIDEO_SPEEDS[(i+step+VIDEO_SPEEDS.length)%VIDEO_SPEEDS.length];setVideoSpeed(next);settings.querySelector(`[data-speed="${next}"]`).focus();
+});
+document.addEventListener('click',e=>{if(!e.target.closest('.video-settings,[data-ui="video-settings"]'))closeVideoSettings(false);});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeVideoSettings(false);});
+vid.addEventListener('click',e=>{
+  if(!settings.hidden){e.stopPropagation();closeVideoSettings(false);return;}
+  if(!videoURL){chooseVideo();return;}
+  vw.querySelector('[data-v="play"]').click();
+  // Paused: the big play button comes back by itself, except in full screen, so flash only where it helps.
+  if(vid.paused&&!document.fullscreenElement)return;
+  tapFlash.innerHTML=vid.paused?ICON.pause:ICON.play;tapFlash.classList.remove('show');void tapFlash.offsetWidth;tapFlash.classList.add('show');
+});
+vid.addEventListener('ratechange',showVideoSpeed);
+showVideoSpeed();
+
+/* ---------- Ask Claude and My notes: help and notes that stay with each part ----------
+   Questions and answers use the same per-part thread as the engine's "Ask about this part" (S.notes).
+   Written notes, their summary and its voice file live in S.myNotes; the whole-episode summary in S.episodeNotes.
+   With the helper (./study, or ./experiment/study in the experiment copy) running, notes are also written to <day>/notes.md so they can be read outside the page. */
+// The helper can replace S after start-up (saved progress), so always reach these through the getters.
+const myNotes=()=>S.myNotes||(S.myNotes={});
+const episodeNotes=()=>S.episodeNotes||(S.episodeNotes={});
+// TODO(human): tune the quick questions to the ones you really ask.
+const ASK_CHIPS={
+  part:["I didn't understand this part","What is the most important idea?","What should I remember for later?"],
+  explain:['Explain it more simply','Give me a real example','How does this connect to the code?'],
+  analogy:['Explain the analogy more','Give me another analogy','Where does the analogy stop working?'],
+  graphics:['Walk me through this picture','What should I notice here?'],
+  code:['Explain this code line by line','What happens if I change one line?']
+};
+const ASK_ABOUT={part:'this part',explain:'the explanation',analogy:'the analogy',graphics:'the drawing',code:'the code'};
+let askPending=null,voiceReady=null,notesFileError='';
+const askErrors={},notesPending={},notesErrors={};
+const nowISO=()=>new Date().toISOString();
+const niceTime=iso=>{const d=new Date(iso);return isNaN(d)?'':d.toLocaleString([], {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});};
+// The same file runs in the main app and in experiment/; only the start command and labels differ.
+const IN_EXPERIMENT=String(D.storageKey||'').endsWith('-experiment');
+const START_CMD=IN_EXPERIMENT?'./experiment/study':'./study';
+const claudeMissing=()=>helperReady?'Claude Code was not found on this computer, so Claude can’t answer here.':`Start the page with <code>${START_CMD}</code> so Claude can answer here.`;
+function richText(text){
+  return String(text||'').trim().split(/\n\s*\n/).map(block=>{
+    const lines=block.split('\n').map(l=>l.trim()).filter(Boolean);
+    if(lines.length&&lines.every(l=>/^[-•*]\s+/.test(l)))return `<ul>${lines.map(l=>`<li>${md(l.replace(/^[-•*]\s+/,''))}</li>`).join('')}</ul>`;
+    return `<p>${lines.map(l=>md(l)).join('<br>')}</p>`;
+  }).join('');
+}
+function setIfChanged(el,html){if(el&&el.dataset.html!==html){el.innerHTML=html;el.dataset.html=html;}} // untouched nodes keep playback and focus
+
+/* Ask Claude */
+function askThread(b){return S.notes[b.id]=S.notes[b.id]||[];}
+function askMessagesHTML(b,from){
+  const log=S.notes[b.id]||[],out=[];
+  log.forEach((m,i)=>{
+    const origin=m.from||'part';if(from!=='part'&&origin!==from)return;
+    const tag=from==='part'&&origin!=='part'?`<span class="ask-tag">about ${ASK_ABOUT[origin]||'this part'}</span>`:'';
+    if(m.r==='user')out.push(`<div class="ask-msg is-user"><span class="ask-who">You</span>${tag}<p>${esc(m.c)}</p>${m.failed?`<div class="ask-actions"><span>Not answered.</span> <button type="button" class="quiet-link" data-ui="ask-retry" data-index="${i}">Ask again</button></div>`:''}</div>`);
+    else out.push(`<div class="ask-msg is-claude"><span class="ask-who">Claude</span><div class="ask-text">${richText(m.c)}</div><div class="ask-actions"><button type="button" class="quiet-link" data-ui="ask-save-note" data-index="${i}" ${m.saved?'disabled':''}>${m.saved?'Saved to my notes ✓':'Save to my notes'}</button></div></div>`);
+  });
+  if(askPending){
+    if(askPending.id===b.id&&(from==='part'||askPending.from===from))out.push(`<div class="ask-msg is-claude is-thinking" role="status"><span class="ask-who">Claude</span><p>Thinking<span class="ask-dots" aria-hidden="true"><i>.</i><i>.</i><i>.</i></span></p></div>`);
+    else{const pb=blockById(askPending.id);out.push(`<p class="ask-empty" role="status">Claude is still answering your question about ${ASK_ABOUT[askPending.from]} (Part ${pb?idxOf(pb)+1:''}). You can ask here when it is done.</p>`);}
+  }
+  const err=askErrors[b.id+':'+from];if(err)out.push(`<p class="ask-error" role="alert">${esc(err)}</p>`);
+  return out.join('')||`<p class="ask-empty">Ask anything you did not understand. The answer stays here with this part.</p>`;
+}
+function askControlsOff(){return !!askPending||!sample;}
+function askBox(b,from){
+  const off=askControlsOff()?'disabled':'';
+  return `<section class="ask-box" data-ask-part="${b.id}" data-ask-from="${from}"><h3 class="ask-title">${uiIcon('chat')} Ask Claude about ${ASK_ABOUT[from]}</h3><div class="ask-thread" aria-live="polite">${askMessagesHTML(b,from)}</div><div class="ask-chips">${ASK_CHIPS[from].map(q=>`<button type="button" class="ask-chip" data-ask-chip="${esc(q)}" ${off}>${esc(q)}</button>`).join('')}</div><div class="ask-compose"><textarea class="ask-input" rows="2" placeholder="Type or speak your question…" aria-label="Your question about ${ASK_ABOUT[from]}"></textarea><button type="button" class="btn amber" data-ui="ask-send" ${off}>Ask</button></div><p class="dialog-help ask-help">${sample?'Enter sends · Shift+Enter starts a new line.':claudeMissing()}</p></section>`;
+}
+function askContext(b,from){
+  if(from==='analogy'){const a=explanationData(b).analogy;return a?`THE ANALOGY HE IS LOOKING AT: ${a.title}: ${plainText(md(a.text))}`:'';}
+  if(from==='code')return `THE CODE HE IS LOOKING AT:\n${codeText(b).slice(0,2500)}`;
+  if(from==='graphics')return `THE DRAWING HE IS LOOKING AT (as text): ${plainText(b.visual||'').slice(0,2000)}`;
+  if(from==='explain')return `THE IDEA IN ONE SENTENCE: ${plainText(md(b.oneLiner||b.summary||''))}`;
+  return '';
+}
+function askRules(b,from){
+  const practice=plainText(md(b.practice||''));
+  return `You tutor Zain through one part of a programming video, inside his study page. English is not his first language: use plain, simple English and short sentences. He is asking about ${ASK_ABOUT[from]}. Answer only his question, directly, in under 120 words. Stay inside this part. If he asks about something Casey parks for later, say so in one line and give at most a one-sentence preview. Use \`backticks\` for code names. No headings.${practice?`\nHIS PRACTICE TASK (he must write it himself: never give the answer or the code for it; give one short hint or ask one guiding question instead): ${practice}`:''}\n${blockContext(b)}\n${askContext(b,from)}`;
+}
+function askPrompt(b,from,history,text){
+  const past=history.map(m=>`${m.r==='user'?'ZAIN':'TUTOR'}: ${m.c}`).join('\n\n');
+  return `${askRules(b,from)}\n\n${past?`EARLIER QUESTIONS AND ANSWERS ABOUT THIS PART (oldest first):\n${past}\n\n`:''}ZAIN'S NEW QUESTION: ${text}\n\nAnswer only the new question.`;
+}
+function refreshAsk(){
+  const keep=document.activeElement,keepBox=keep?.closest?.('.ask-box');
+  document.querySelectorAll('.ask-box').forEach(box=>{
+    const b=blockById(box.dataset.askPart);if(!b)return;
+    setIfChanged(box.querySelector('.ask-thread'),askMessagesHTML(b,box.dataset.askFrom));
+    box.querySelectorAll('[data-ask-chip],[data-ui="ask-send"]').forEach(x=>{x.disabled=askControlsOff();});
+    setIfChanged(box.querySelector('.ask-help'),sample?'Enter sends · Shift+Enter starts a new line.':claudeMissing());
+  });
+  if(keepBox&&!keepBox.contains(document.activeElement)&&(!keep.isConnected||keep.disabled))keepBox.querySelector('.ask-input')?.focus({preventScroll:true}); // focus never falls back to the page
+}
+function showNewest(box){const last=box?.querySelector('.ask-thread>:last-child');if(last)last.scrollIntoView({block:'nearest'});}
+async function askClaude(box,text){
+  const b=blockById(box.dataset.askPart),from=box.dataset.askFrom;text=String(text||'').trim();
+  if(!b||!text||askPending||!sample)return false;
+  delete askErrors[b.id+':'+from];
+  const history=askThread(b).filter(m=>!m.failed).slice(-6),question={r:'user',c:text,from,at:nowISO()};
+  askThread(b).push(question);save();
+  askPending={id:b.id,from};refreshAsk();showNewest(box);
+  try{
+    const r=await sample(askPrompt(b,from,history,text),{cache:false});
+    askThread(b).push({r:'assistant',c:String(r.text||'').trim()||'(No answer. Try asking again.)',q:text,from,at:nowISO()});
+  }catch(err){question.failed=true;askErrors[b.id+':'+from]=err.text||err.message||"Couldn't answer this time. Try again.";}
+  finally{
+    // The helper may have replaced S while Claude was thinking; keep the question in the live thread.
+    const live=askThread(b);if(!live.includes(question))live.splice(Math.max(0,live.length-(question.failed?0:1)),0,question);
+    save();askPending=null;refreshAsk();showNewest(document.querySelector(`.ask-box[data-ask-part="${b.id}"][data-ask-from="${from}"]`));
+  }
+  return true;
+}
+function saveAnswerToNotes(b,index){
+  const log=S.notes[b.id]||[],answer=log[index];if(!answer||answer.r!=='assistant'||answer.saved)return;
+  let q=answer.q;if(q===undefined){for(let i=index-1;i>=0;i--){if(log[i].r==='user'){q=log[i].c;break;}}} // older entries have no stored question
+  const n=myNotes()[b.id]=myNotes()[b.id]||{text:''};
+  n.text=`${(n.text||'').trim()}${(n.text||'').trim()?'\n\n':''}${q?`Q: ${q}\n`:''}A: ${answer.c}`;n.updated=nowISO();
+  answer.saved=true;save();scheduleNotesFile();refreshAsk();updateNotesMark(b);
+}
+
+/* My notes */
+function notesFor(id){return (S.myNotes||{})[id]||{};}
+function holderFor(key){return key==='episode'?episodeNotes():notesFor(key);}
+function episodeSource(){return D.blocks.map(x=>(notesFor(x.id).text||'').trim()).join('\n␞\n');}
+function noteSource(key){return key==='episode'?episodeSource():(notesFor(key).text||'').trim();}
+function summaryStale(key){const h=holderFor(key);if(!h.summary)return false;return h.basedOn!==undefined?h.basedOn!==noteSource(key):!!h.stale;}
+function summarySlots(key){return `<div class="notes-summary" data-ns-wrap="${key}" hidden><h4>${uiIcon('star')} Summary <small data-ns-time="${key}"></small></h4><div data-ns-text="${key}"></div><p class="dialog-help" data-ns-stale="${key}" hidden>Your notes changed after this summary. Summarize again to include the new parts.</p><div data-ns-audio="${key}"></div></div><div data-ns-msg="${key}" tabindex="-1"></div>`;}
+function fillSummary(key){
+  const q=sel=>document.querySelector(`#dialog-body [${sel}="${key}"]`),wrap=q('data-ns-wrap');if(!wrap)return;
+  const h=holderFor(key),pending=notesPending[key];
+  wrap.hidden=!h.summary||pending==='summary';
+  setIfChanged(q('data-ns-time'),h.summaryAt?esc(niceTime(h.summaryAt)):'');
+  setIfChanged(q('data-ns-text'),h.summary?richText(h.summary):'');
+  q('data-ns-stale').hidden=!summaryStale(key);
+  setIfChanged(q('data-ns-audio'),pending==='voice'?'<p class="notes-working" role="status">Making the voice summary… (this can take up to a minute)</p>':h.audio?`<audio class="notes-audio" controls preload="none" src="${esc(h.audio)}" aria-label="Voice summary"></audio>`:'');
+  setIfChanged(q('data-ns-msg'),pending==='summary'?'<p class="notes-working" role="status">Claude is summarizing your notes…</p>':notesErrors[key]?`<p class="ask-error" role="alert">${esc(notesErrors[key])}</p>`:'');
+}
+function notesActionsHTML(key,kind,hasText){
+  const h=holderFor(key),busy=!!notesPending[key],ai=!!sample,voice=voiceReady!==false&&helperReady;
+  const aiTip=ai?'':` title="${helperReady?'Claude Code was not found on this computer':`Start ${START_CMD} so Claude can summarize`}"`;
+  return `<button type="button" class="btn amber" data-ui="${kind}-summarize" ${busy||!hasText||!ai?'disabled':''}${aiTip}>${h.summary?'Summarize again':'Summarize with Claude'}</button><button type="button" class="btn ghost" data-ui="${kind}-voice" ${busy||!h.summary||!voice?'disabled':''} title="${voice?'Read the summary aloud with the study voice':`Voice needs ${START_CMD} and the Kokoro voice setup`}">${h.audio?'Make the voice again':'Make voice summary'}</button>`;
+}
+function episodeHasNotes(){return D.blocks.some(x=>(notesFor(x.id).text||'').trim());}
+function notesPathHTML(b){
+  return `<section class="notes-path" aria-label="Notes for every part"><h3>${uiIcon('list')} Your notes path · Day 1</h3><ol>${D.blocks.map((x,i)=>{const t=(notesFor(x.id).text||'').trim(),open=t||x.id===b.id||unlocked(x);return `<li><button type="button" class="notes-path-row${x.id===b.id?' is-here':''}${t?' has-notes':''}" data-notes-open="${x.id}" ${open?'':'disabled'} ${x.id===b.id?'aria-current="true"':''}><span class="part-mark" aria-hidden="true">${t?'✓':i+1}</span><span class="np-text"><span class="np-title">Part ${i+1} — ${esc(x.title)}</span><span class="np-preview" data-np-preview="${x.id}">${t?esc(t.split('\n')[0].slice(0,90)):'No notes yet'}</span></span></button></li>`;}).join('')}</ol><div class="episode-box"><div class="row notes-actions" data-notes-actions="episode">${notesActionsHTML('episode','episode',episodeHasNotes())}</div>${summarySlots('episode')}</div></section>`;
+}
+function notesStatus(b){const n=notesFor(b.id);return (n.updated?'Saved '+niceTime(n.updated):'Not written yet')+(notesFileError?' · notes.md not updated: '+notesFileError:'');}
+function notesView(b){
+  const n=notesFor(b.id);
+  return `<section class="notes-pane" data-notes-part="${b.id}"><div class="notes-head"><h3>${uiIcon('book')} Part ${idxOf(b)+1} — ${esc(b.title)}</h3><span class="notes-status" aria-live="polite">${esc(notesStatus(b))}</span></div><textarea class="notes-text" data-mynotes="${b.id}" rows="8" aria-label="Your notes for part ${idxOf(b)+1}" placeholder="Write what matters: the main idea in your own words, what confused you, what to remember later…">${esc(n.text||'')}</textarea><div class="row notes-actions" data-notes-actions="${b.id}">${notesActionsHTML(b.id,'notes',!!(n.text||'').trim())}</div>${summarySlots(b.id)}</section>${notesPathHTML(b)}`;
+}
+function openNotes(b){openDialog('My notes',notesView(b));refreshNotes();checkVoice();}
+function refreshNotes(){
+  const pane=document.querySelector('#dialog-body .notes-pane');if(!pane)return;
+  const b=blockById(pane.dataset.notesPart),n=notesFor(b.id);
+  const pressed=document.activeElement?.closest?.('.notes-actions [data-ui]'),pressedUi=pressed?.dataset.ui;
+  setIfChanged(pane.querySelector(`[data-notes-actions="${b.id}"]`),notesActionsHTML(b.id,'notes',!!(n.text||'').trim()));
+  setIfChanged(document.querySelector('#dialog-body [data-notes-actions="episode"]'),notesActionsHTML('episode','episode',episodeHasNotes()));
+  fillSummary(b.id);fillSummary('episode');
+  const status=pane.querySelector('.notes-status');if(status&&status.textContent!==notesStatus(b))status.textContent=notesStatus(b);
+  const t=(n.text||'').trim(),preview=document.querySelector(`#dialog-body [data-np-preview="${b.id}"]`);if(preview)preview.textContent=t?t.split('\n')[0].slice(0,90):'No notes yet';
+  if(pressedUi&&!pressed.isConnected){ // the row was rebuilt: put focus back on the same button, or on its status line while it works
+    const again=document.querySelector(`#dialog-body [data-ui="${pressedUi}"]`),key=pressedUi.startsWith('episode')?'episode':b.id;
+    if(again&&!again.disabled)again.focus({preventScroll:true});
+    else{focusReturn=pressedUi;document.querySelector(`#dialog-body [data-ns-msg="${key}"]`)?.focus({preventScroll:true});}
+  }else if(focusReturn&&document.activeElement?.matches?.('[data-ns-msg]')){ // the work finished: back to the button that started it
+    const again=document.querySelector(`#dialog-body [data-ui="${focusReturn}"]`);
+    if(again&&!again.disabled){again.focus({preventScroll:true});focusReturn=null;}
+  }
+}
+let focusReturn=null;
+function updateNotesMark(b){const btn=document.querySelector('[data-ui="my-notes"]');if(!btn||b.id!==activeLesson().id)return;const has=!!(notesFor(b.id).text||'').trim(),mark=btn.querySelector('.tool-mark');if(has&&!mark)btn.insertAdjacentHTML('beforeend','<span class="tool-mark" aria-label=" (written)">✓</span>');if(!has&&mark)mark.remove();}
+async function checkVoice(){
+  if(voiceReady!==null||!helperReady)return;
+  try{voiceReady=!!(await (await fetch('/api/ping')).json()).voice;}catch(e){voiceReady=false;}
+  refreshNotes();
+}
+async function summarize(key,prompt){
+  if(!sample||notesPending[key])return;
+  const basedOn=noteSource(key);
+  notesPending[key]='summary';delete notesErrors[key];refreshNotes();
+  try{
+    const r=await sample(prompt,{cache:false}),h=key==='episode'?episodeNotes():(myNotes()[key]=myNotes()[key]||{text:''}); // looked up after the wait: S may have been replaced
+    h.summary=String(r.text||'').trim();h.summaryAt=nowISO();h.basedOn=basedOn;delete h.stale;delete h.audio;save();scheduleNotesFile();
+  }catch(err){notesErrors[key]=err.text||err.message||"Couldn't summarize this time. Try again.";}
+  finally{delete notesPending[key];refreshNotes();}
+}
+const SUMMARY_RULES=`Summarize Zain's own study notes. Keep his key points and his words where possible. Plain, simple English (English is not his first language). Write 3 to 6 short lines, each starting with "- ". Do not add new topics. If a note is clearly wrong, add one last line starting "- Check:" with the correct idea in one sentence.`;
+function summarizePart(b){
+  const text=(notesFor(b.id).text||'').trim();if(!text)return;
+  return summarize(b.id,`${SUMMARY_RULES}\n${blockContext(b)}\n\nHIS NOTES FOR THIS PART:\n${text.slice(0,6000)}`);
+}
+function summarizeEpisode(){
+  const rows=D.blocks.map((x,i)=>[x,(notesFor(x.id).text||'').trim(),i]).filter(r=>r[1]);if(!rows.length)return;
+  return summarize('episode',`${SUMMARY_RULES} This covers a whole episode: group the lines by idea, not by part, and keep it under 10 lines.\nVIDEO: "${D.title}".\n\n${rows.map(([x,t,i])=>`PART ${i+1} (${x.title}):\n${t.slice(0,2500)}`).join('\n\n')}`);
+}
+async function makeVoice(key){
+  const summary=holderFor(key).summary;if(!helperReady||!summary||notesPending[key])return;
+  notesPending[key]='voice';delete notesErrors[key];refreshNotes();
+  try{
+    const r=await (await fetch('/api/speak',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({kit:kitPath,id:key,text:summary.replace(/^\s*[-•*]\s+/gm,'')})})).json();
+    if(r.error)throw new Error(r.error);
+    const h=holderFor(key);if(h.summary===summary){h.audio=r.file;save();scheduleNotesFile();} // ignore a voice for a summary that has since changed
+  }catch(err){notesErrors[key]=err.message||'Could not make the voice summary.';}
+  finally{delete notesPending[key];refreshNotes();}
+}
+function notesMarkdown(){
+  const ep=episodeNotes(),out=[`# My notes — ${D.title}`,'',`_Written in the study page${IN_EXPERIMENT?' (experiment)':''}. Last saved: ${new Date().toISOString().slice(0,10)}_`,''];
+  if(ep.summary)out.push('## Whole episode summary','',ep.summary,'');
+  D.blocks.forEach((x,i)=>{const n=notesFor(x.id);if(!(n.text||'').trim()&&!n.summary)return;out.push(`## Part ${i+1} — ${x.title} (${x.start}–${x.end})`,'',(n.text||'').trim());if(n.summary)out.push('','**Summary**','',n.summary);out.push('');});
+  return out.join('\n');
+}
+let notesFileTimer=null;
+function scheduleNotesFile(){
+  if(!helperReady)return;clearTimeout(notesFileTimer);
+  notesFileTimer=setTimeout(async()=>{
+    let problem='';
+    try{const r=await fetch('/api/notes',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({kit:kitPath,markdown:notesMarkdown()})});if(!r.ok)problem=(await r.json().catch(()=>({}))).error||`error ${r.status}`;}
+    catch(e){problem='the helper is not answering';}
+    if(problem!==notesFileError){notesFileError=problem;refreshNotes();}
+  },1500);
+}
+// When the helper swaps in saved progress, keep notes and questions written in the first seconds.
+let notesOwner=S;
+function adoptEarlyNotes(){
+  if(S===notesOwner)return;const old=notesOwner;notesOwner=S;let changed=false;
+  for(const [id,n] of Object.entries(old.myNotes||{})){const cur=(S.myNotes||{})[id];if(!cur||(n.updated||'')>(cur.updated||'')){myNotes()[id]=n;changed=true;}}
+  for(const [id,log] of Object.entries(old.notes||{})){const cur=(S.notes||{})[id]||[];if(log.length>cur.length){S.notes[id]=log;changed=true;}}
+  if((old.episodeNotes?.summaryAt||'')>(S.episodeNotes?.summaryAt||'')){S.episodeNotes=old.episodeNotes;changed=true;}
+  if(changed)save();
+}
+const notesBaseRender=render;
+render=function(){adoptEarlyNotes();notesBaseRender();};
+
+document.addEventListener('input',e=>{
+  const id=e.target.dataset?.mynotes;if(!id)return;
+  adoptEarlyNotes();
+  const n=myNotes()[id]=myNotes()[id]||{text:''};n.text=e.target.value;n.updated=nowISO();
+  save();scheduleNotesFile();refreshNotes();const b=blockById(id);if(b)updateNotesMark(b);
+});
+document.addEventListener('keydown',e=>{
+  if(!e.target.classList?.contains('ask-input')||e.key!=='Enter'||e.shiftKey||e.isComposing)return;
+  e.preventDefault();e.target.closest('.ask-box')?.querySelector('[data-ui="ask-send"]')?.click();
+});
+$('#study-dialog').addEventListener('close',()=>{$('#dialog-body').querySelectorAll('audio,video').forEach(m=>m.pause());}); // nothing keeps playing out of sight
+document.addEventListener('click',e=>{
+  const chip=e.target.closest('[data-ask-chip]');if(chip){const box=chip.closest('.ask-box');box.querySelector('.ask-input')?.focus({preventScroll:true});askClaude(box,chip.dataset.askChip);return;}
+  const row=e.target.closest('[data-notes-open]');if(row){const b=blockById(row.dataset.notesOpen);if(b){openNotes(b);document.querySelector('#dialog-body .notes-text')?.focus();}return;}
+  const t=e.target.closest('[data-ui]');if(!t)return;const action=t.dataset.ui;
+  if(action==='ask-send'){
+    const box=t.closest('.ask-box'),input=box.querySelector('.ask-input'),text=input.value;
+    if(!text.trim()||askPending||!sample)return;
+    input.value='';input.focus();askClaude(box,text); // the question moves into the thread straight away
+    return;
+  }
+  if(action==='ask-retry'){
+    const box=t.closest('.ask-box'),b=blockById(box.dataset.askPart),log=b?askThread(b):[],m=log[+t.dataset.index];
+    if(!m||!m.failed||askPending||!sample)return;
+    log.splice(+t.dataset.index,1);box.querySelector('.ask-input')?.focus({preventScroll:true});askClaude(box,m.c);return;
+  }
+  if(action==='ask-save-note'){const box=t.closest('.ask-box'),b=blockById(box.dataset.askPart);if(b)saveAnswerToNotes(b,+t.dataset.index);return;}
+  const b=activeLesson();
+  if(action==='ask-claude'){openDialog(`Ask Claude · Part ${idxOf(b)+1}`,askBox(b,'part'));showNewest(document.querySelector('#dialog-body .ask-box'));document.querySelector('#dialog-body .ask-input')?.focus();}
+  if(action==='my-notes'){openNotes(b);document.querySelector('#dialog-body .notes-text')?.focus();}
+  const pane=document.querySelector('#dialog-body .notes-pane'),nb=pane&&blockById(pane.dataset.notesPart);
+  if(action==='notes-summarize'&&nb)summarizePart(nb);
+  if(action==='notes-voice'&&nb)makeVoice(nb.id);
+  if(action==='episode-summarize')summarizeEpisode();
+  if(action==='episode-voice')makeVoice('episode');
+});
+
+/* ---------- Review first: due part reviews must be done before studying ----------
+   On a new visit with core part reviews due (journey/REVIEWS.md via the helper), a popup that cannot be
+   dismissed asks each one from memory, grades it with the usual fixed checklist (one retry), saves the first
+   score, then continues to the saved part. It keeps to the five-minute review budget: when time is up,
+   the current answer can be finished and the rest stays due for next time. Interview/debug rows are not forced. */
+const REVIEW_BUDGET_MS=5*60*1000;
+const localDay=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;};
+const gateState=()=>{const g=S.reviewGate;return g&&g.day===localDay()?g:(S.reviewGate={day:localDay()});};
+let gate=null; // {rows, index, results, busy, error, canSkip}: skipping is offered only when Claude or saving fails, never for a missing answer
+function coreReviewRows(){return dueReviews.filter(r=>!/\/(iv|dbg)\d+$/.test(r.source)&&reviewItem(r));}
+function gateTimeLeft(){const g=gateState();return g.startedAt?Math.max(0,REVIEW_BUDGET_MS-(Date.now()-g.startedAt)):REVIEW_BUDGET_MS;}
+function gateDialog(){
+  let d=document.querySelector('#review-gate');if(d)return d;
+  d=document.createElement('dialog');d.id='review-gate';d.className='review-gate';d.setAttribute('aria-labelledby','rg-title');
+  d.innerHTML=`<div class="dialog-heading"><h2 id="rg-title">Review first</h2><span class="rg-clock" id="rg-clock" aria-live="off"></span></div><div class="rg-body" id="rg-body"></div>`;
+  d.addEventListener('cancel',e=>{if(gate)e.preventDefault();}); // Escape does not skip the review
+  d.addEventListener('close',()=>{if(gate)d.showModal();});
+  document.body.append(d);return d;
+}
+function maybeOpenReviewGate(){
+  if(gate||!helperReady||!reviewsLoaded||!sample||S.tab!=='path')return;
+  const g=gateState();if(g.finished)return;
+  const rows=coreReviewRows();if(!rows.length)return;
+  if(!g.startedAt){g.startedAt=Date.now();save();}
+  gate={rows,index:0,results:[],busy:false,error:'',canSkip:false};
+  if(vw.isConnected&&!vid.paused)vid.pause();
+  if($('#study-dialog').open)closeDialog();
+  const d=gateDialog();d.showModal();drawGate();gateTick();
+}
+function gateTick(){
+  const clock=$('#rg-clock');if(!gate||!clock)return;
+  const left=gateTimeLeft();clock.textContent=left?`${fmt(Math.ceil(left/1000))} left`:'Time is up';
+  if(!left&&!gate.timeUpShown){gate.timeUpShown=true;drawGate();}
+  setTimeout(gateTick,1000);
+}
+function gateItemHTML(row){
+  const item=reviewItem(row),record=reviewCheck(row),closed=checkClosed(record.attempts),n=gate.index+1,b=item.b;
+  const busy=gate.busy,first=record.attempts[0];
+  return `<p class="rg-meta">Review ${n} of ${gate.rows.length} · Part ${idxOf(b)+1} — ${esc(b.title)}</p><div class="rg-question">${md(item.check.q)}</div>${item.scenario||''}
+  <textarea class="rg-answer" data-reviewanswer="${esc(row.unit)}" placeholder="Answer from memory, in your own words…" aria-label="Your answer" ${closed||busy?'readonly':''}>${esc(record.answer)}</textarea>
+  <div class="row">${closed?'':`<button type="button" class="btn amber" data-ui="gate-check" ${busy?'disabled':''}>${busy==='check'?'Checking…':record.attempts.length?'Check my retry':'Check my answer'}</button>`}${record.attempts.length?`<button type="button" class="btn ${closed?'amber':'ghost'}" data-ui="gate-save" ${busy?'disabled':''}>${busy==='save'?'Saving…':gate.index+1<gate.rows.length&&gateTimeLeft()?'Save and next →':'Save and finish →'}</button>`:''}</div>
+  ${gate.error?`<p class="ask-error" role="alert">${esc(gate.error)}${gate.canSkip?' <button type="button" class="quiet-link" data-ui="gate-skip">Skip this one for today</button>':''}</p>`:''}
+  <div class="rg-feedback" aria-live="polite">${checkFeedback(record.attempts,true)}${first?`<p class="small">Your first score (${first.fb.score}%) sets the next review date.</p>`:''}</div>
+  ${record.attempts.length?rubricHTML(item.check.rubric):''}`;
+}
+function gateDoneHTML(){
+  const left=gate.rows.length-gate.results.length;
+  return `<div class="rg-done"><p class="rg-big">${left?'Time is up for reviews.':'Reviews done ✓'}</p>${gate.results.length?`<ul class="rg-results">${gate.results.map(r=>`<li><strong>${esc(r.title)}</strong> · ${r.score===null?'skipped, still due':r.score+'%'}</li>`).join('')}</ul>`:''}${left?`<p>${left} review${left===1?' stays':'s stay'} due for next time.</p>`:''}<div class="row"><button type="button" class="btn amber" data-ui="gate-continue">Continue to Part ${idxOf(activeLesson())+1} →</button></div></div>`;
+}
+function drawGate(){
+  const body=$('#rg-body');if(!gate||!body)return;
+  const row=gate.rows[gate.index],timeUp=!gateTimeLeft(),started=row&&reviewCheck(row).attempts.length;
+  const finished=!row||(timeUp&&!started&&!gate.busy);
+  body.innerHTML=`<p class="rg-intro">${finished?'':'Before you continue, answer from memory. One short answer per finished part, about five minutes.'}</p><ol class="rg-steps" aria-label="Reviews">${gate.rows.map((r,i)=>`<li class="${i<gate.index?'is-done':i===gate.index&&!finished?'is-now':''}" title="${esc(reviewItem(r).b.title)}">${i<gate.index?'✓':i+1}</li>`).join('')}</ol>${finished?gateDoneHTML():gateItemHTML(row)}`;
+  attachMics(body);
+  (body.querySelector('.rg-answer:not([readonly])')||body.querySelector('[data-ui="gate-save"],[data-ui="gate-continue"]'))?.focus({preventScroll:true});
+}
+function gateFinish(){const g=gateState();g.finished=true;save();const d=$('#review-gate');gate=null;d?.close();S.tab='path';render();}
+document.addEventListener('keydown',e=>{ // keep Space for the answer box, never the video behind the review
+  if(gate&&e.code==='Space'&&!e.target.closest?.('input,textarea,select,button'))e.stopImmediatePropagation();
+},true);
+document.addEventListener('click',async e=>{
+  const t=e.target.closest('#review-gate [data-ui]');if(!t||!gate||gate.busy)return;
+  const action=t.dataset.ui,row=gate.rows[gate.index];
+  if(action==='gate-continue'){gateFinish();return;}
+  if(!row)return;
+  const item=reviewItem(row),record=reviewCheck(row);
+  if(action==='gate-skip'){if(!gate.canSkip)return;gate.results.push({title:item.b.title,score:null});gate.index++;gate.error='';gate.canSkip=false;drawGate();return;}
+  if(action==='gate-check'){
+    const answer=record.answer.trim();
+    if(!answer){gate.error='Write a short answer first.';gate.canSkip=false;drawGate();return;}
+    if(record.attempts.some(a=>a.answer===answer)){gate.error='Change your answer for the retry, or save this review.';gate.canSkip=false;drawGate();return;}
+    gate.busy='check';gate.error='';gate.canSkip=false;drawGate();
+    try{await gradeAttempt(row.unit,record.attempts,item.b,item.check,answer,()=>record.answer.trim()===answer);}
+    catch(err){gate.error=err.text||err.message||'Claude could not check this answer. Try again.';gate.canSkip=true;}
+    gate.busy=false;drawGate();return;
+  }
+  if(action==='gate-save'){
+    if(!record.attempts.length)return;
+    gate.busy='save';gate.error='';gate.canSkip=false;drawGate();
+    try{
+      const r=await (await fetch('/api/review',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({unit:row.unit,score:record.attempts[0].fb.score})})).json();
+      if(r.error)throw new Error(r.error);
+      gate.results.push({title:item.b.title,score:record.attempts[0].fb.score});gate.index++;save();refreshReviews();
+    }catch(err){gate.error=err.message||'Could not save the review. Try again.';gate.canSkip=true;}
+    gate.busy=false;drawGate();
+  }
+});
+const gateBaseRender=render;
+render=function(){gateBaseRender();maybeOpenReviewGate();};
 
 save(); render();
 })();

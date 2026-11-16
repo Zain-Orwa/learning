@@ -350,3 +350,17 @@ Newest at the bottom. Each entry: date, decision, why.
   hashes are recorded in `experiment/source-snapshot.json`.
 - Use the experiment space for future proposed changes. Await explicit
   confirmation before adopting changes in the main application.
+
+## 2026-11-16: Adopt the experiment's study page as the main page
+- **Decision:** Zain approved the experiment, so its study-kit files now run the
+  main page (`./study`). The experiment folder stays as the workbench for later ideas.
+- **What came over:** three-step tabs, narrow parts list, video controls, Study
+  support with Ask Claude and My notes (notes.md + Kokoro voice summary), support
+  rail and popups that scroll by themselves, the "Review first" popup, full-screen fix.
+- **What stayed main-only:** port 8765, the main review log and progress, and
+  "Stop for today" commit + push. The experiment keeps its own storage key, port,
+  records and no-git Stop. `experiment.js` reads the storage key to pick the
+  start command it shows, so the same file works in both copies.
+- **Records:** main progress and reviews were kept. The experiment's test progress
+  was not copied.
+

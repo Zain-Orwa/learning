@@ -348,7 +348,66 @@
  "checkAttempts": {
   "b03": []
  },
- "reviewChecks": {},
+ "reviewChecks": {
+  "icd01-p01@2026-11-02": {
+   "answer": "dgdfdgf",
+   "attempts": [
+    {
+     "answer": "dgdfdgf",
+     "fb": {
+      "v": 3,
+      "score": 0,
+      "awards": [
+       0,
+       0
+      ],
+      "right": "Your answer does not have any ideas about the question yet.",
+      "missing": [
+       {
+        "point": "A C compiler is needed; it translates source code into machine code",
+        "pct": 70
+       },
+       {
+        "point": "Install the C++ desktop tools in Visual Studio Community to get the Windows compiler",
+        "pct": 30
+       }
+      ],
+      "guide": "Say that you need a C compiler, because it turns your C source code into machine code the computer can run. Then say how to get one on Windows: install Visual Studio Community and choose the C++ desktop tools.",
+      "rewatch": ""
+     }
+    }
+   ]
+  },
+  "icd01-p02@2026-11-03": {
+   "answer": "ddgdgd",
+   "attempts": [
+    {
+     "answer": "ddgdgd",
+     "fb": {
+      "v": 3,
+      "score": 0,
+      "awards": [
+       0,
+       0
+      ],
+      "right": "Your answer doesn't have any ideas about the question yet.",
+      "missing": [
+       {
+        "point": "Source is plain text, without document formatting",
+        "pct": 50
+       },
+       {
+        "point": "An empty project avoids generated code so you control what is added",
+        "pct": 50
+       }
+      ],
+      "guide": "Explain two things. First, why pick an empty project: no code is made for you, so you choose everything you add. Second, what file you add: a .cpp source file, which is plain text with no document formatting.",
+      "rewatch": ""
+     }
+    }
+   ]
+  }
+ },
  "practice": {},
  "practiceDone": {},
  "notes": {
@@ -364,7 +423,7 @@
   ]
  },
  "speed": 1.25,
- "lastVisit": 1794783931913,
+ "lastVisit": 1794792095066,
  "sessionParts": 0,
  "brk": null,
  "stopped": false,
@@ -374,11 +433,16 @@
   "b03": "dsifjifidi"
  },
  "lessonViews": {
-  "b03": "explain"
+  "b03": "experiment"
  },
  "optionalDone": {
   "b03": {
    "guess": true
   }
+ },
+ "reviewGate": {
+  "day": "2026-11-16",
+  "startedAt": 1794792030218,
+  "finished": true
  }
 }

@@ -213,6 +213,8 @@ td.mono{font-family:var(--f-mono);font-size:13px;white-space:nowrap}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 /*WINTER_STYLE*/
 /*EXPLAIN_STYLE*/
+/*GAME_THEME*/
+/*EXPERIMENT_STYLE*/
 </style>
 
 <div class="app-shell">
@@ -824,8 +826,8 @@ function renderStepRaw(b,k){
     <div class="row">${closed?"":sample?`<button class="btn" id="quickcheck" ${checking.has(b.id)?"disabled":""}>${attempts.length?"Check my retry":"Check my answer"}</button>`:`<button class="btn ghost" id="quickcopy">Copy for tutor</button>`}</div>
     <div class="copybox" id="quickcb"></div><div id="quickfb">${checkFeedback(attempts)}</div>
     ${rubricHTML(check.rubric)}
-    ${b.visual?`<button class="btn ghost small" data-reference="visual">Show the idea</button>`:""}
-    <button class="btn ghost small" data-reference="explain">Need an explanation?</button>
+    ${b.visual?`<button class="btn ghost small" data-ui="visual">Show the idea</button>`:""}
+    
     ${sample?`<details class="model" id="chathelp"><summary>Ask about this part</summary><div class="chatlog" id="chatlog">${(S.notes[b.id]||[]).map(m=>`<div class="msg ${m.r==="user"?"u":"a"}">${esc(m.c)}</div>`).join("")}</div><textarea id="chatin" placeholder="Your question…"></textarea><button class="btn" id="chatgo">Ask</button></details>`:""}
     ${(S.park[b.id]||[]).length?`<div class="park"><h3>Your questions</h3><ul class="plist" id="plist">${parkItems(b,true)}</ul></div>`:""}`;
   }
@@ -840,7 +842,7 @@ function renderStepRaw(b,k){
     <p class="small muted">Write one line about what you observed. If you cannot try it now, note what remains to do.</p>
     <textarea data-practice="${b.id}" placeholder="What happened? Or: still to do…">${esc(S.practice[b.id]||"")}</textarea>
     <label class="small"><input type="checkbox" data-practiced="${b.id}" ${S.practiceDone[b.id]?"checked":""}> I tried the task and checked the result</label>
-    ${b.code?`<button class="btn ghost small" data-reference="code">Code reference</button>`:""}
+    ${b.code?`<button class="btn ghost small" data-ui="code-notes">Code reference</button>`:""}
     ${(b.debug||[]).length?`<details class="model"><summary>Optional debugging practice</summary>${b.debug.map((c,i)=>dbgBlock(b,i,c,true)).join("")}</details>`:""}
     ${(b.interview||[]).length?`<details class="model"><summary>Optional interview practice</summary>${b.interview.map((iv,i)=>ivBlock(b,i,iv,true)).join("")}</details>`:""}`;
 
@@ -1124,6 +1126,7 @@ async function chat(){
 }
 /*EXPLAIN_APP*/
 /*WINTER_APP*/
+/*EXPERIMENT_APP*/
 save(); render();
 })();
 </script>

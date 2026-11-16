@@ -39,6 +39,11 @@ PLAYLIST = SUBJECT / "courses" / "playlist.json"
 LOCK = threading.Lock()
 TRANSCRIBE = REPO / "tools" / "transcribe"                # faster-whisper env (setup: tools/transcribe/setup-mac.sh)
 MAX_AUDIO = 30 * 1024 * 1024
+VOICE_DIR = REPO / "tools" / "voice"                            # Kokoro env (setup: tools/voice/setup-mac.sh)
+VOICE_PY = VOICE_DIR / ".venv" / "bin" / "python"
+VOICE_LOCK = threading.Lock()                                    # one Kokoro render at a time
+NOTE_ID = re.compile(r"^(?:b\d{2}|episode)$")
+MAX_NOTES_MD = 300_000
 sys.path.insert(0, str(REPO / "tools"))
 import reviews as review_log
 
@@ -56,7 +61,7 @@ def playlist():
 
 def kit_dir(kit):
     p = (SUBJECT / "courses" / kit).resolve()
-    if not str(p).startswith(str((SUBJECT / "courses").resolve())):
+    if not p.is_relative_to((SUBJECT / "courses").resolve()):
         raise ValueError("bad kit path")
     return p
 
@@ -118,6 +123,70 @@ def ask_claude(prompt, want_json):
         return {"data": json.loads(raw)}
     except Exception:
         return {"error": "Claude's answer wasn't in the expected format. Try again.", "text": text}
+
+
+def kit_page_dir(kit):
+    """A built study kit's folder, or ValueError: notes and voice files are only written next to a real kit."""
+    if not isinstance(kit, str):
+        raise ValueError("bad kit path")
+    d = kit_dir(kit)
+    if not (d / "study-kit.html").is_file():
+        raise ValueError("unknown kit")
+    return d
+
+
+def voice_available():
+    return VOICE_PY.is_file() and shutil.which("ffmpeg") is not None
+
+
+def speak_note(kit, note_id, text):
+    """Render a notes summary with Kokoro to <kit>/audio/notes/<id>.mp3 and return its page-relative URL."""
+    if not voice_available():
+        return {"error": "Voice (Kokoro) isn't set up on this computer."}
+    if not isinstance(note_id, str) or not NOTE_ID.fullmatch(note_id):
+        return {"error": "Unknown note."}
+    text = text.strip() if isinstance(text, str) else ""
+    if not text or len(text) > 6000:
+        return {"error": "The summary is empty or too long."}
+    try:
+        out_dir = kit_page_dir(kit) / "audio" / "notes"
+    except ValueError:
+        return {"error": "Unknown study kit."}
+    out, tmp = out_dir / f"{note_id}.mp3", out_dir / f".{note_id}.tmp.mp3"
+    if not VOICE_LOCK.acquire(blocking=False):
+        return {"error": "Another voice summary is being made. Try again in a minute."}
+    try:
+        out_dir.mkdir(parents=True, exist_ok=True)
+        p = subprocess.run([str(VOICE_PY), str(HERE / "speak_note.py"), str(tmp), str(VOICE_DIR)],
+                           input=text, capture_output=True, text=True, cwd=VOICE_DIR, timeout=300)
+        if p.returncode or not tmp.is_file():
+            sys.stderr.write("  voice summary failed:\n" + (p.stderr or "")[-1200:] + "\n")
+            return {"error": "Could not make the voice summary. The terminal running the helper shows why."}
+        tmp.replace(out)
+    except subprocess.TimeoutExpired:
+        return {"error": "Making the voice took too long. Try again."}
+    except (OSError, ValueError) as e:
+        sys.stderr.write(f"  voice summary failed: {e}\n")
+        return {"error": "Could not make the voice summary."}
+    finally:
+        tmp.unlink(missing_ok=True)
+        VOICE_LOCK.release()
+    return {"file": f"audio/notes/{note_id}.mp3?v={int(time.time())}"}
+
+
+def save_notes_file(kit, markdown):
+    if not isinstance(markdown, str) or len(markdown) > MAX_NOTES_MD:
+        return {"error": "Notes are missing or too long."}, 400
+    try:
+        d = kit_page_dir(kit)
+    except ValueError:
+        return {"error": "Unknown study kit."}, 404
+    try:
+        with LOCK:
+            (d / "notes.md").write_text(markdown, encoding="utf-8")
+    except (OSError, UnicodeError):
+        return {"error": "Could not write notes.md."}, 500
+    return {"ok": True}, 200
 
 
 class Whisper:
@@ -280,7 +349,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
             return
         if path == "/api/ping":
             return self.send_json({"ok": True, "claude": bool(shutil.which(CLAUDE)), "videos": str(VIDEOS),
-                                   "transcribe": WHISPER.available()})
+                                   "transcribe": WHISPER.available(), "voice": voice_available()})
         if path == "/api/progress":
             f = kit_dir(q["kit"][0]) / "progress.json"
             return self.send_json(json.loads(f.read_text(encoding="utf-8")) if f.exists() else {})
@@ -301,9 +370,19 @@ class Handler(http.server.BaseHTTPRequestHandler):
             return self.send_file(f)
         self.send_error(404)
 
+    def same_origin(self):
+        """Only this page may call the helper: a browser always sends Origin on cross-site POSTs."""
+        host = self.headers.get("Host", "")
+        if urllib.parse.urlsplit("//" + host).hostname not in ("localhost", "127.0.0.1"):
+            return False
+        origin = self.headers.get("Origin")
+        return origin is None or origin == f"http://{host}"
+
     def do_POST(self):
         url = urllib.parse.urlparse(self.path)
         path = url.path
+        if not self.same_origin():
+            return self.send_json({"error": "Requests must come from the study page."}, 403)
         if path == "/api/transcribe":           # body: the raw recording (webm/mp4); ?prompt= key terms
             n = int(self.headers.get("Content-Length", "0"))
             if not WHISPER.available():
@@ -331,6 +410,11 @@ class Handler(http.server.BaseHTTPRequestHandler):
             if code:
                 return self.send_json({"error": "Could not save the review."}, 500)
             return self.send_json({"ok": True, "message": out})
+        if path == "/api/speak":
+            return self.send_json(speak_note(body.get("kit"), body.get("id"), body.get("text")))
+        if path == "/api/notes":
+            result, code = save_notes_file(body.get("kit"), body.get("markdown"))
+            return self.send_json(result, code)
         if path == "/api/claude":
             return self.send_json(ask_claude(str(body.get("prompt", "")), bool(body.get("json"))))
         if path in ("/api/progress", "/api/finish"):

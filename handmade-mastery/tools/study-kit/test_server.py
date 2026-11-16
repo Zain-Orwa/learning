@@ -79,5 +79,83 @@ class ReviewsTest(unittest.TestCase):
                     thread.join()
 
 
+
+class NotesTest(unittest.TestCase):
+    """Notes file and voice endpoint: disposable kit folder, Kokoro replaced by a stub (no model load)."""
+
+    def test_notes_and_voice(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            subject = pathlib.Path(tmp) / "handmade-mastery"
+            day = subject / "courses" / "intro-to-c" / "day01"
+            day.mkdir(parents=True)
+            (day / "study-kit.html").write_text("<p>kit</p>", encoding="utf-8")
+            kit = "intro-to-c/day01"
+
+            def fake_run(cmd, **kw):
+                pathlib.Path(cmd[2]).write_bytes(b"ID3fake")      # speak_note.py <out> <voice dir>
+                self.assertEqual(kw["input"], "Main idea.")
+                return type("P", (), {"returncode": 0})()
+
+            with patch.object(helper, "SUBJECT", subject):
+                ok, code = helper.save_notes_file(kit, "# My notes\n")
+                self.assertEqual((ok, code), ({"ok": True}, 200))
+                self.assertEqual((day / "notes.md").read_text(encoding="utf-8"), "# My notes\n")
+                for bad_kit in ["../../etc", "intro-to-c/day99", None, 7]:
+                    with self.subTest(kit=bad_kit):
+                        self.assertEqual(helper.save_notes_file(bad_kit, "x")[1], 404)
+                self.assertEqual(helper.save_notes_file(kit, "x" * (helper.MAX_NOTES_MD + 1))[1], 400)
+                self.assertEqual(helper.save_notes_file(kit, None)[1], 400)
+
+                with patch.object(helper, "voice_available", return_value=True), \
+                        patch.object(helper.subprocess, "run", side_effect=fake_run):
+                    r = helper.speak_note(kit, "b03", "  Main idea.  ")
+                    self.assertTrue(r["file"].startswith("audio/notes/b03.mp3?v="), r)
+                    self.assertEqual((day / "audio" / "notes" / "b03.mp3").read_bytes(), b"ID3fake")
+                    self.assertFalse(any(p.name.startswith(".") for p in (day / "audio" / "notes").iterdir()))
+                    for note_id in ["../x", "b3", "B03", "", None, "episode/../x"]:
+                        with self.subTest(note_id=note_id):
+                            self.assertIn("error", helper.speak_note(kit, note_id, "Main idea."))
+                    self.assertIn("error", helper.speak_note(kit, "b03", "   "))
+                    self.assertIn("error", helper.speak_note(kit, "b03", "x" * 6001))
+                    self.assertIn("error", helper.speak_note("../../etc", "b03", "Main idea."))
+                with patch.object(helper, "voice_available", return_value=False):
+                    self.assertIn("Kokoro", helper.speak_note(kit, "b03", "Main idea.")["error"])
+                with patch.object(helper, "voice_available", return_value=True):
+                    self.assertIn("error", helper.speak_note(kit, "b03\n", "Main idea."))
+                    helper.VOICE_LOCK.acquire()
+                    try:
+                        self.assertIn("Another voice", helper.speak_note(kit, "b03", "Main idea.")["error"])
+                    finally:
+                        helper.VOICE_LOCK.release()
+
+                server = ThreadingHTTPServer(("127.0.0.1", 0), helper.Handler)
+                thread = threading.Thread(target=server.serve_forever, daemon=True)
+                thread.start()
+                origin = f"http://127.0.0.1:{server.server_port}"
+
+                def post(path, body, headers=None):
+                    req = urllib.request.Request(origin + path, data=json.dumps(body).encode(),
+                                                 headers={"Content-Type": "application/json", **(headers or {})})
+                    try:
+                        with urllib.request.urlopen(req, timeout=5) as response:
+                            return response.status, json.load(response)
+                    except urllib.error.HTTPError as e:
+                        with e:
+                            return e.code, json.load(e)
+
+                try:
+                    self.assertEqual(post("/api/notes", {"kit": kit, "markdown": "same page"}, {"Origin": origin}), (200, {"ok": True}))
+                    self.assertEqual((day / "notes.md").read_text(encoding="utf-8"), "same page")
+                    for headers in [{"Origin": "https://evil.example"}, {"Origin": "null"}, {"Host": "evil.example"}]:
+                        with self.subTest(headers=headers):
+                            code, _ = post("/api/notes", {"kit": kit, "markdown": "attack"}, headers)
+                            self.assertEqual(code, 403)
+                    self.assertEqual((day / "notes.md").read_text(encoding="utf-8"), "same page")
+                finally:
+                    server.shutdown()
+                    server.server_close()
+                    thread.join()
+
+
 if __name__ == "__main__":
     unittest.main()
