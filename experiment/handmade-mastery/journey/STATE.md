@@ -28,10 +28,10 @@ _Last updated: 2026-11-15_
 ## Study position
 - Course: intro-to-c, Day 01
 - Section: 3 of 12 ("Building: what compiling actually means", 12:13-16:55)
-- Step: Watch (video at 0:05 into the part, episode time 12:18)
+- Step: Check (video at 0:05 into the part, episode time 12:18)
 - Parts done: 2
 - Completed (part id, date): b01 2026-11-01, b02 2026-11-02
-- Updated: 2026-11-15
+- Updated: 2026-11-16
 
 ## Debugging log
 _(one line per challenge: date, bug class, score, time)_
@@ -91,3 +91,6 @@ return 404, so it is not the owning account.
 - This is a copied study position, not new practice. Experiment created 2026-11-16.
 - Simplified routine pending Zain's review. All new records here are experimental.
 - Run from the main repo with `./experiment/study`; no main progress promotion.
+
+- Palette trial: original game banner colors applied across experimental
+  panels/dialogs; duplicate Flashcards title and footer removed. Pending review.

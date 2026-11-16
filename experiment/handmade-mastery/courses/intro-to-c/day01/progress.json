@@ -1,7 +1,7 @@
 {
  "v": 4,
  "cur": "b03",
- "step": "watch",
+ "step": "recall",
  "tab": "path",
  "done": {
   "b01": {
@@ -25,6 +25,9 @@
    "code": true,
    "cards": true,
    "why": true
+  },
+  "b03": {
+   "watch": true
   }
  },
  "completed": {
@@ -348,9 +351,20 @@
  "checkAttempts": {
   "b03": []
  },
- "reviewChecks": {},
+ "reviewChecks": {
+  "icd01-p01@2026-11-02": {
+   "answer": "",
+   "attempts": []
+  },
+  "icd01-p02@2026-11-03": {
+   "answer": "",
+   "attempts": []
+  }
+ },
  "practice": {},
- "practiceDone": {},
+ "practiceDone": {
+  "b03": false
+ },
  "notes": {
   "b01": [
    {
@@ -363,22 +377,28 @@
    }
   ]
  },
- "speed": 1.25,
- "lastVisit": 1794784170207,
+ "speed": 1,
+ "lastVisit": 1794791898967,
  "sessionParts": 0,
  "brk": null,
  "stopped": false,
  "finished": false,
- "ttsRate": 1.5,
+ "ttsRate": 1,
  "predictions": {
-  "b03": "dsifjifidi"
+  "b03": ""
  },
  "lessonViews": {
-  "b03": "recall"
+  "b03": "watch"
  },
  "optionalDone": {
   "b03": {
    "guess": true
   }
+ },
+ "episodeNotes": {},
+ "reviewGate": {
+  "day": "2026-11-16",
+  "startedAt": 1794791122164,
+  "finished": true
  }
 }

@@ -335,3 +335,13 @@ Newest at the bottom. Each entry: date, decision, why.
   Narrow cards stack the label above its text without shrinking readability.
 - Part 3 configuration is now a named row alongside PARSE, UNDERSTAND and
   EMIT. Existing full explanations and narration remain unchanged.
+
+
+## 2026-11-16: Match the original game's color range
+- Zain supplied channels4_banner.jpg as the palette reference. The experiment
+  now uses deep pine/navy, aurora turquoise, icy blue and warm golden yellow
+  consistently across dialogs, cards, controls and supporting tools, with
+  restrained frosted highlights. Added the supplied artwork to its header.
+- Removed the second Flashcards title and the unnecessary review-schedule
+  footer. The dialog header is the sole title; question and controls remain.
+- Changes apply only to this experiment. The main application is not promoted.
