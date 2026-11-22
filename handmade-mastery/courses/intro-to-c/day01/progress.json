@@ -1,7 +1,7 @@
 {
  "v": 4,
  "cur": "b03",
- "step": "watch",
+ "step": "experiment",
  "tab": "path",
  "done": {
   "b01": {
@@ -25,6 +25,10 @@
    "code": true,
    "cards": true,
    "why": true
+  },
+  "b03": {
+   "watch": true,
+   "recall": true
   }
  },
  "completed": {
@@ -34,7 +38,7 @@
  "vt": {
   "b01": 321,
   "b02": 733,
-  "b03": 737.625034
+  "b03": 1015
  },
  "recall": {
   "b01": "1. how you can code C program in Windows.\n2. what do you need as tools to Code a game using Windows machine.\n3. to able to code a game you need to get a text editor and compiler that is not come out of the box like linux we have to download that.",
@@ -343,10 +347,51 @@
    "due": 20759
   }
  },
- "checkAnswers": {},
- "checkFb": {},
+ "checkAnswers": {
+  "b03": "So, the completion in the process of translating the code that human can read into a binary that machine can read or into a code that machine can read or a CPU can read and we target specific CPU matters. I think because each CPU, it has some specific things that adhere to it. Like for example, the compiler is written for a specific CPU. So it depends on x86 or x64. So that's the monitor, because it depends on the machine you are writing the code to, you have to specify that."
+ },
+ "checkFb": {
+  "b03": {
+   "v": 3,
+   "score": 85,
+   "awards": [
+    50,
+    35
+   ],
+   "right": "You correctly said that compiling turns human-readable code into code the CPU can run, and that the output must match the target machine (for example, x86).",
+   "missing": [
+    {
+     "point": "Different CPU families use different instruction encodings, so output targets a particular family",
+     "pct": 15
+    }
+   ],
+   "guide": "",
+   "rewatch": ""
+  }
+ },
  "checkAttempts": {
-  "b03": []
+  "b03": [
+   {
+    "answer": "So, the completion in the process of translating the code that human can read into a binary that machine can read or into a code that machine can read or a CPU can read and we target specific CPU matters. I think because each CPU, it has some specific things that adhere to it. Like for example, the compiler is written for a specific CPU. So it depends on x86 or x64. So that's the monitor, because it depends on the machine you are writing the code to, you have to specify that.",
+    "fb": {
+     "v": 3,
+     "score": 85,
+     "awards": [
+      50,
+      35
+     ],
+     "right": "You correctly said that compiling turns human-readable code into code the CPU can run, and that the output must match the target machine (for example, x86).",
+     "missing": [
+      {
+       "point": "Different CPU families use different instruction encodings, so output targets a particular family",
+       "pct": 15
+      }
+     ],
+     "guide": "",
+     "rewatch": ""
+    }
+   }
+  ]
  },
  "reviewChecks": {
   "icd01-p01@2026-11-02": {
@@ -406,6 +451,64 @@
      }
     }
    ]
+  },
+  "icd01-p01@2026-11-17": {
+   "answer": "I think we have to install a C compiler so that we can compile and run C programs.",
+   "attempts": [
+    {
+     "answer": "I think we have to install a C compiler so that we can compile and run C programs.",
+     "fb": {
+      "v": 3,
+      "score": 50,
+      "awards": [
+       50,
+       0
+      ],
+      "right": "You are right that you need a C compiler to build and run C programs.",
+      "missing": [
+       {
+        "point": "A C compiler is needed; it translates source code into machine code",
+        "pct": 20
+       },
+       {
+        "point": "Install the C++ desktop tools in Visual Studio Community to get the Windows compiler",
+        "pct": 30
+       }
+      ],
+      "guide": "Say what to install on Windows: Visual Studio Community with the C++ desktop tools, which gives you the compiler. Also say what the compiler does: it turns your source code into machine code.",
+      "rewatch": ""
+     }
+    }
+   ]
+  },
+  "icd01-p02@2026-11-17": {
+   "answer": "Yeah, so I would prefer an anti-project because we're going to build a vegan from scratch. Second thing is that I wouldn't like to, for example, to run a console application, so we're going to run directly from the Windows. And the file that we have to add, file.cpp or .c, depends.",
+   "attempts": [
+    {
+     "answer": "Yeah, so I would prefer an anti-project because we're going to build a vegan from scratch. Second thing is that I wouldn't like to, for example, to run a console application, so we're going to run directly from the Windows. And the file that we have to add, file.cpp or .c, depends.",
+     "fb": {
+      "v": 3,
+      "score": 60,
+      "awards": [
+       15,
+       45
+      ],
+      "right": "You are right: an empty project lets you build everything from scratch, and you add a .cpp source file.",
+      "missing": [
+       {
+        "point": "Source is plain text, without document formatting",
+        "pct": 35
+       },
+       {
+        "point": "An empty project avoids generated code so you control what is added",
+        "pct": 5
+       }
+      ],
+      "guide": "Also say what kind of file the .cpp file is: a plain text file with no document formatting (no bold or fonts like in Word). Only the code goes in it.",
+      "rewatch": ""
+     }
+    }
+   ]
   }
  },
  "practice": {},
@@ -422,8 +525,8 @@
    }
   ]
  },
- "speed": 1.25,
- "lastVisit": 1794792095066,
+ "speed": 1,
+ "lastVisit": 1795385435225,
  "sessionParts": 0,
  "brk": null,
  "stopped": false,
@@ -441,8 +544,8 @@
   }
  },
  "reviewGate": {
-  "day": "2026-11-16",
-  "startedAt": 1794792030218,
+  "day": "2026-11-22",
+  "startedAt": 1795383289107,
   "finished": true
  }
 }
