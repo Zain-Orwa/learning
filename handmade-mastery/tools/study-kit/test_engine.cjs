@@ -4,11 +4,11 @@ const base=require('path').resolve(__dirname,'../../..')+'/';
 const html=fs.readFileSync(base+'handmade-mastery/courses/intro-to-c/day01/study-kit.html','utf8');
 const scripts=[...html.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/g)].map(m=>m[1]);
 const saved={v:2,cur:'b03',step:'guess',tab:'path',done:{b01:{watch:true,recall:true,experiment:true},b02:{watch:true,recall:true,experiment:true}},completed:{b01:true,b02:true},cdate:{b01:'2026-11-01',b02:'2026-11-02'},answers:{'b01?0':'Historical answer'},rfb:{b01:{score:35}},lastVisit:0};
-function el(){return {dataset:{},style:{},classList:{add(){},remove(){},toggle(){}},paused:true,addEventListener(){},querySelector(){return el()},querySelectorAll(){return []},pause(){},getBoundingClientRect(){return {top:0,bottom:0}},setAttribute(){},remove(){},append(){},scrollIntoView(){}}}
+function el(){return {dataset:{},style:{},classList:{add(){},remove(){},toggle(){}},paused:true,addEventListener(){},querySelector(){return el()},querySelectorAll(){return []},pause(){},getBoundingClientRect(){return {top:0,bottom:0}},setAttribute(){},remove(){},append(){},scrollIntoView(){},insertAdjacentHTML(){},focus(){},closest(){return null}}}
 const ctx={window:{scrollTo(){}},document:{querySelector(){return el()},querySelectorAll(){return []},createElement:el,addEventListener(){},body:{}},location:{protocol:'file:',pathname:'/courses/intro-to-c/day01/study-kit.html'},localStorage:{getItem(){return JSON.stringify(saved)},setItem(){}},navigator:{},Audio:class{pause(){}},MutationObserver:class{observe(){}},setTimeout(){return 1},clearTimeout(){},setInterval(){return 1},clearInterval(){},requestAnimationFrame(){},console,URL,CSS:{escape:x=>x}};
 vm.createContext(ctx);for(const script of scripts)new vm.Script(script);
 vm.runInContext(scripts[0],ctx);
-let logic=scripts[1].replace('function render(){','function render(){return;').replace('save(); render();\n})();',`globalThis.api={getState:()=>S,setState:p=>Object.assign(S,p),stepsFor,checkFor,normFb,migrate,goNextStep,est,estLeft,renderPath,renderStepRaw,checked,reviewItem,stepAudio,attemptsFor,checkClosed,gradeAttempt,checkFeedback,reviewCheck,pendingPractice,pendingHTML,positionBlock,courseTreeHTML,selectStudyView,tabFinished,finishSupportView,codeText,codePanel,overview,explanationPanel,explanationData,XC_ICONS,xcHighlight,xcSign,navigationHTML,pseudocodeSteps,searchLessons,flashcardContent,askBox,askMessagesHTML,askRules,richText,notesMarkdown,notesView,saveAnswerToNotes,setSample:v=>sample=v,setReference:v=>referenceStep=v,setHelper:v=>helperReady=v};\n})();`);
+let logic=scripts[1].replace('function render(){','function render(){return;').replace('save(); render();\n})();',`globalThis.api={getState:()=>S,setState:p=>Object.assign(S,p),stepsFor,checkFor,normFb,migrate,goNextStep,est,estLeft,renderPath,renderStepRaw,checked,reviewItem,stepAudio,attemptsFor,checkClosed,gradeAttempt,checkFeedback,reviewCheck,pendingPractice,pendingHTML,positionBlock,courseTreeHTML,selectStudyView,tabFinished,finishSupportView,codeText,codePanel,overview,explanationPanel,explanationData,XC_ICONS,xcHighlight,xcSign,navigationHTML,pseudocodeSteps,searchLessons,flashcardContent,askBox,askMessagesHTML,askRules,richText,notesMarkdown,notesView,saveAnswerToNotes,supportItemCount,markSupportSeen,againHTML,againCheck,againState,setSample:v=>sample=v,setReference:v=>referenceStep=v,setHelper:v=>helperReady=v};\n})();`);
 vm.runInContext(logic,ctx);const a=ctx.api;
 assert.equal(a.getState().cur,'b03');assert.equal(a.getState().step,'watch');assert.equal(Object.keys(a.getState().completed).length,2);
 assert.deepEqual(JSON.parse(JSON.stringify(a.getState().answers)),saved.answers);assert.deepEqual(JSON.parse(JSON.stringify(a.getState().rfb)),saved.rfb);
@@ -39,6 +39,11 @@ a.setState({cur:'b01',step:'experiment',sessionParts:0,brk:null});a.getState().p
 assert.equal(a.getState().cur,'b02');assert.equal(a.getState().step,'watch');assert.equal(a.getState().brk,null,'Continue on a revisited part goes straight into the next part, not a break screen');
 // Practice: the button names the next part, and the Code Lab sits inside the step.
 a.setState({cur:'b02',step:'experiment',brk:null,stopped:false});a.setReference(null);path=a.renderPath();assert(path.includes('Finish part · Continue to Part 3 →'));assert(path.includes('codelab-slot'));
+// Study support numbers: one per reached part where the item is unopened; opening clears it.
+{const B=ctx.window.STUDY.blocks;a.setState({cur:'b03',supportSeen:{},completed:{b01:true,b02:true}});const withCode=B.slice(0,3).filter(x=>x.code).length;
+assert.equal(a.supportItemCount('code'),withCode,'The number counts every reached part');assert(withCode>=2,'Day 1 needs code in the first parts for this check');
+a.markSupportSeen(B[2],'code');assert.equal(a.supportItemCount('code'),0,'Opening clears the number');
+a.setState({cur:'b04',completed:{b01:true,b02:true,b03:true}});assert.equal(a.supportItemCount('code'),B[3].code?1:0,'The next part starts its own count');}
 const lastPart=ctx.window.STUDY.blocks.at(-1);a.setState({cur:lastPart.id,step:'experiment'});a.getState().done[lastPart.id]={watch:true,recall:true};assert(!a.renderPath().includes('Continue to Part'),'The last part has no next part');
 a.setState({cur:'b02',step:'cards'});a.migrate();assert.equal(a.getState().step,'experiment');
 a.setState({cur:'b03'});a.setReference('code');assert(a.stepAudio());a.setReference('explain');assert(a.stepAudio());
@@ -103,7 +108,7 @@ async function checkAttempts(){
   assert.deepEqual(JSON.parse(JSON.stringify(a.getState().rfb)),saved.rfb);
   console.log('PASS: progress migration, fair grading, step transitions, bounded retries, failed/stale/concurrent responses, persisted review scores, pending Windows practice, visuals and optional audio.');
 }
-checkAttempts().catch(error=>{console.error(error);process.exitCode=1;});
+checkAttempts().then(()=>againTest()).catch(error=>{console.error(error);process.exitCode=1;});
 
 const tree=a.courseTreeHTML();assert.equal((tree.match(/class="part-row/g)||[]).length,12);assert(!tree.includes('<details'));assert(tree.includes('Part 12 —'));assert(!tree.includes('Finishing the Game'));
 
@@ -166,3 +171,13 @@ const nv=a.notesView(ctx.window.STUDY.blocks[2]);assert(nv.includes('data-mynote
 console.log('PASS: Ask Claude thread, saving answers to notes, notes path and notes.md.');}
 
 }
+// Try again below 50%: offered under 50, practice tries saved apart, the first score untouched.
+async function againTest(){const B=ctx.window.STUDY.blocks,check=a.checkFor(B[0]),rub=check.rubric;
+assert.equal(a.againHTML('chk:t',B[0],check,70),'','No Try again at 50% or more');
+assert(a.againHTML('chk:t',B[0],check,30).includes('Try again with the answer'),'Offered under 50%');
+const before=JSON.stringify(a.getState().checkAttempts[B[0].id]||null);a.againState('chk:t').draft='My new answer';
+a.setSample({json:async()=>({awards:rub.map(([,w])=>w),right:'ok'})});await a.againCheck('chk:t');
+const st=a.againState('chk:t');assert.equal(st.tries.length,1);assert.equal(st.tries[0].score,100);
+assert.equal(JSON.stringify(a.getState().checkAttempts[B[0].id]||null),before,'Practice tries never change the official attempts');
+assert(a.againHTML('chk:t',B[0],check,30).includes('Practised again: 100%'));a.setSample(null);
+console.log('PASS: Try again below 50% (offer, practice grading, first score kept).');}

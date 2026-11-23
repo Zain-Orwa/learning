@@ -750,7 +750,7 @@ function ivBlock(b,qi,iv,withGrade){
   ${withGrade?`<p class="small muted">Answer out loud first, like in a real interview: press the mic in the box and speak, or type.</p>
   <textarea data-iv="${id}" placeholder="My answer…">${esc(S.ivans[id]||"")}</textarea>
   <div class="row">${sample?`<button class="btn" data-ivcheck="${id}">Grade me like an interviewer</button>`:`<button class="btn ghost" data-ivcopy="${id}">Copy for Claude to grade</button>`}</div>
-  <div class="copybox" id="ivcb-${id}"></div><div id="ivfb-${id}">${fb?renderScore(fb):""}</div>`:(fb?renderScore(fb):`<p class="small muted">Not answered yet.</p>`)}
+  <div class="copybox" id="ivcb-${id}"></div><div id="ivfb-${id}">${fb?renderScore(fb)+againHTML("iv:"+id,b,{q:iv.q,rubric:iv.strong},fb.score):""}</div>`:(fb?renderScore(fb):`<p class="small muted">Not answered yet.</p>`)}
   ${(iv.followups||[]).length?`<details class="model"><summary>Follow-ups the interviewer asks next</summary><ul>${iv.followups.map((f,j)=>`<li>${md(f)}${ivSayBtn(b,id,"f"+j,f,"")}</li>`).join("")}</ul></details>`:""}
   <details class="model"><summary>What a strong answer includes</summary><ul>${(iv.strong||[]).map(([t,p])=>`<li>${md(t)} <span class="muted">(${p}%)</span></li>`).join("")}</ul>
   ${(iv.redflags||[]).length?`<p class="small"><b>Red flags:</b> ${iv.redflags.map(md).join("; ")}</p>`:""}</details>
@@ -774,7 +774,7 @@ function dbgBlock(b,i,c,full){
   <textarea data-dbg="${id}" placeholder="Cause, how you found it, fix, how you'd verify…">${esc(S.dbgans[id]||"")}</textarea>
   <div class="row">${sample?`<button class="btn" data-dbgcheck="${id}">Grade my debugging</button>`:`<button class="btn ghost" data-dbgcopy="${id}">Copy for Claude to grade</button>`}<span class="clock" data-clock="${id}">${fb&&fb.secs?`Solved in ${fmt(fb.secs)}`:""}</span></div>
   ${c.hint?`<details class="model"><summary>Hint (costs nothing, but try first)</summary><p>${md(c.hint)}</p></details>`:""}
-  <div class="copybox" id="dbgcb-${id}"></div><div id="dbgfb-${id}">${fb?renderScore(fb):""}</div>
+  <div class="copybox" id="dbgcb-${id}"></div><div id="dbgfb-${id}">${fb?renderScore(fb)+againHTML("dbg:"+id,b,{q:c.task,rubric:c.strong},fb.score):""}</div>
   <details class="model"><summary>Solution checklist</summary><ul>${(c.strong||[]).map(([t,p])=>`<li>${md(t)} <span class="muted">(${p}%)</span></li>`).join("")}</ul><p class="small"><b>Root cause:</b> ${md(c.cause||"")}</p></details></div>`;
 }
 function dbgPrompt(b,c,ans,secs){
@@ -852,6 +852,7 @@ function renderStepRaw(b,k){
     <textarea data-shortcheck="${b.id}" placeholder="Your answer…" ${closed?"readonly":""}>${esc(S.checkAnswers[b.id]||"")}</textarea>
     <div class="row">${closed?"":sample?`<button class="btn" id="quickcheck" ${checking.has(b.id)?"disabled":""}>${attempts.length?"Check my retry":"Check my answer"}</button>`:`<button class="btn ghost" id="quickcopy">Copy for tutor</button>`}</div>
     <div class="copybox" id="quickcb"></div><div id="quickfb">${checkFeedback(attempts)}</div>
+    ${closed&&attempts.length?againHTML("chk:"+b.id,b,check,attempts[attempts.length-1].fb.score):""}
     ${rubricHTML(check.rubric)}
     ${b.visual?`<button class="btn ghost small" data-ui="visual">Show the idea</button>`:""}
     
@@ -998,7 +999,7 @@ function renderReview(){
   return `<section class="block">${head}<p>${md(check.q)}</p>${item.scenario||""}
   <textarea data-reviewanswer="${esc(row.unit)}" placeholder="From memory…" ${closed?"readonly":""}>${esc(record.answer)}</textarea>
   <div class="row">${closed?"":sample?`<button class="btn" id="checkreview" ${checking.has(row.unit)?"disabled":""}>${record.attempts.length?"Check my retry":"Check answer"}</button>`:`<button class="btn ghost" id="copyreview">Copy for tutor</button>`}${record.attempts.length?`<button class="btn" id="savereview">Save review, next</button>`:""}<button class="btn ghost" data-go="continue">Continue studying</button></div>
-  <div class="copybox" id="reviewcb"></div><div id="reviewfb">${checkFeedback(record.attempts,true)}${record.attempts.length?`<p class="small">The first score (${record.attempts[0].fb.score}%) sets the next review date.</p>`:""}</div>${rubricHTML(check.rubric)}${exp}</section>`;
+  <div class="copybox" id="reviewcb"></div><div id="reviewfb">${checkFeedback(record.attempts,true)}${record.attempts.length?`<p class="small">The first score (${record.attempts[0].fb.score}%) sets the next review date.</p>`:""}</div>${closed&&record.attempts.length?againHTML(`rev:${row.unit}@${row.next}`,item.b,check,record.attempts[record.attempts.length-1].fb.score):""}${rubricHTML(check.rubric)}${exp}</section>`;
 }
 function renderParked(){
   const mine=[];D.blocks.forEach((b,i)=>(S.park[b.id]||[]).forEach(p=>{if(p.status!=="done")mine.push({b,i,p})}));
@@ -1034,8 +1035,8 @@ function render(){
 function goNextStep(){
   referenceStep=null;
   const b=blockById(S.cur); if(!b) return;
-  if(S.step==="recall"&&!(S.checkAnswers[b.id]||"").trim()){toast("Try a short answer first.");return}
-  if(S.step==="experiment"&&!(S.practice[b.id]||"").trim()){toast("Note the result, or what remains to do.");return}
+  if(S.step==="recall"&&!(S.checkAnswers[b.id]||"").trim()){askFirst(`[data-shortcheck="${b.id}"]`,"Write a short answer first, then continue.");return}
+  if(S.step==="experiment"&&!(S.practice[b.id]||"").trim()){askFirst(`[data-practice="${b.id}"]`,"Write one line first: what happened, or what is still to do. Then press the button again.");return}
   (S.done[b.id]=S.done[b.id]||{})[S.step]=true;
   const st=stepsFor(b),i=st.findIndex(([k])=>k===S.step);
   if(i<st.length-1){S.step=st[i+1][0];}
@@ -1048,6 +1049,16 @@ function goNextStep(){
   }
   S.lessonViews=S.lessonViews||{};S.lessonViews[S.cur]=S.step;
   save();render();window.scrollTo({top:0});
+}
+/* A step that needs a line from you says so beside the button and takes you to the box,
+   instead of a short toast that is easy to miss. */
+function askFirst(selector,message){
+  const box=document.querySelector(selector);
+  if(box){box.classList.add("needs-input");box.scrollIntoView({block:"center",behavior:"smooth"});box.focus({preventScroll:true});
+    box.addEventListener("input",()=>{box.classList.remove("needs-input");document.querySelector(".next-hint")?.remove();},{once:true});}
+  const next=document.querySelector("#pane")?.closest("section")?.querySelector(".next");
+  if(next){next.querySelector(".next-hint")?.remove();next.insertAdjacentHTML("beforeend",`<p class="next-hint" role="alert">${esc(message)}</p>`);}
+  else toast(message);
 }
 function addPark(){
   const b=blockById(S.cur), inp=$("#parkin"); const t=inp.value.trim(); if(!t||!b) return;
@@ -1108,14 +1119,14 @@ document.addEventListener("click",async e=>{
     const secs=Math.round((Date.now()-(S.dbgs[id]||Date.now()))/1000);
     if(t.dataset.dbgcopy){copy(dbgPrompt(b,c,ans,secs),$("#dbgcb-"+CSS.escape(id)));return}
     t.disabled=true;const box=$("#dbgfb-"+CSS.escape(id));box.innerHTML=`<div class="fb muted">Thinking…</div>`;
-    try{const r=await sample.json(dbgPrompt(b,c,ans,secs)+"\n"+JSON_SHAPE);S.dbgfb[id]=Object.assign(normFb(r,c.strong),{secs});save();box.innerHTML=renderScore(S.dbgfb[id]);const cl=document.querySelector(`[data-clock="${CSS.escape(id)}"]`);if(cl)cl.textContent=`Solved in ${fmt(secs)} (target ${fmt(c.target||120)})`;}
+    try{const r=await sample.json(dbgPrompt(b,c,ans,secs)+"\n"+JSON_SHAPE);S.dbgfb[id]=Object.assign(normFb(r,c.strong),{secs});save();box.innerHTML=renderScore(S.dbgfb[id])+againHTML("dbg:"+id,b,{q:c.task,rubric:c.strong},S.dbgfb[id].score);const cl=document.querySelector(`[data-clock="${CSS.escape(id)}"]`);if(cl)cl.textContent=`Solved in ${fmt(secs)} (target ${fmt(c.target||120)})`;}
     catch(err){box.innerHTML=`<div class="fb">${esc(err&&err.message||"Couldn't grade this time.")} Open the solution checklist.</div>`}
     finally{t.disabled=false}return}
   if(t.dataset.ivcopy||t.dataset.ivcheck){const id=t.dataset.ivcopy||t.dataset.ivcheck,[bid,qi]=id.split(":"),b=blockById(bid),iv=b.interview[+qi],ans=(S.ivans[id]||"").trim();
     if(!ans){toast("Write your answer first");return}
     if(t.dataset.ivcopy){copy(ivPrompt(b,iv,ans),$("#ivcb-"+CSS.escape(id)));return}
     t.disabled=true;const box=$("#ivfb-"+CSS.escape(id));box.innerHTML=`<div class="fb muted">Thinking…</div>`;
-    try{const r=await sample.json(ivPrompt(b,iv,ans)+"\n"+JSON_SHAPE);S.ivfb[id]=normFb(r,iv.strong);save();box.innerHTML=renderScore(S.ivfb[id]);}
+    try{const r=await sample.json(ivPrompt(b,iv,ans)+"\n"+JSON_SHAPE);S.ivfb[id]=normFb(r,iv.strong);save();box.innerHTML=renderScore(S.ivfb[id])+againHTML("iv:"+id,b,{q:iv.q,rubric:iv.strong},S.ivfb[id].score);}
     catch(err){box.innerHTML=`<div class="fb">Couldn't grade this time. Open “What a strong answer includes”.</div>`}
     finally{t.disabled=false}return}
   if(t.dataset.pset){const [i,st]=t.dataset.pset.split(":");const b=blockById(S.cur);S.park[b.id][+i].status=st;save();$("#plist").innerHTML=parkItems(b,true);return}

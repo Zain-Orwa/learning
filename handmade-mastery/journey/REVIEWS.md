@@ -11,3 +11,4 @@ so the dates are always right. `/review` runs a review session.
 | iv-icd01-b02-0 | [os-windows] On Windows, what's the difference between a console application and a GUI application? Can one .exe be both? | courses/intro-to-c/day01#b02/iv0 | 2026-11-02 | 1d | 2026-11-03 | – |  |
 | icd01-p01 | Intro C D1 · Why this series, and getting a compiler | courses/intro-to-c/day01#b01 | 2026-11-01 | 1d | 2026-11-23 | 50% | 2026-11-16:0% 2026-11-22:50% |
 | icd01-p02 | Intro C D1 · Creating a project and your first .cpp file | courses/intro-to-c/day01#b02 | 2026-11-02 | 1d | 2026-11-23 | 60% | 2026-11-16:0% 2026-11-22:60% |
+| icd01-p03 | Intro C D1 · Building: what compiling actually means | courses/intro-to-c/day01#b03 | 2026-11-23 | 1d | 2026-11-24 | – |  |

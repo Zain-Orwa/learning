@@ -399,3 +399,15 @@ Newest at the bottom. Each entry: date, decision, why.
   and the course list count unopened items in the parts reached so far.
 - **Still pending:** writing on Windows is still the real check; a Mac run is
   recorded in the practice note like any other result.
+
+## 2026-11-23: Try again below 50% (optional practice after the answer)
+- **Why:** Zain wants to fix a weak answer straight away: see the answer, hear it,
+  say it again and check it until it reaches 50%.
+- **What:** below 50% the Check step, Review tab, review popup, Interview and Debug
+  offer "Try again with the answer": the full answer (checklist ideas), Listen
+  (Kokoro, cached per answer in `<day>/audio/answers/`; the browser voice if Kokoro
+  is unavailable), mic or typing, and "Check again" as often as wanted.
+- **Rules kept:** the official check still has one retry, and the first score still
+  sets the review date. Practice tries are stored separately (`again` in
+  progress.json) and never change official scores. Check and Review offer it only
+  after the official retry is used, so the retry stays unaided.

@@ -1,7 +1,7 @@
 {
  "v": 4,
- "cur": "b03",
- "step": "experiment",
+ "cur": "b04",
+ "step": "watch",
  "tab": "path",
  "done": {
   "b01": {
@@ -28,17 +28,23 @@
   },
   "b03": {
    "watch": true,
-   "recall": true
+   "recall": true,
+   "experiment": true
+  },
+  "b04": {
+   "watch": true
   }
  },
  "completed": {
   "b01": true,
-  "b02": true
+  "b02": true,
+  "b03": true
  },
  "vt": {
-  "b01": 321,
-  "b02": 733,
-  "b03": 1014.950256
+  "b01": 0,
+  "b02": 321,
+  "b03": 1014.950256,
+  "b04": 1354.761618
  },
  "recall": {
   "b01": "1. how you can code C program in Windows.\n2. what do you need as tools to Code a game using Windows machine.\n3. to able to code a game you need to get a text editor and compiler that is not come out of the box like linux we have to download that.",
@@ -126,10 +132,12 @@
  },
  "cdate": {
   "b01": "2026-11-01",
-  "b02": "2026-11-02"
+  "b02": "2026-11-02",
+  "b03": "2026-11-23"
  },
  "ivans": {
-  "b02:0": "a console application is app that is using the terminal as its interface while GUI app is creating it's own one and all that can be flagged inside the app itself"
+  "b02:0": "a console application is app that is using the terminal as its interface while GUI app is creating it's own one and all that can be flagged inside the app itself",
+  "b03:0": "A debug relief, a debug is when we are running the debug configuration. We are stepping into the code line by line and translate it directly into machine code so we can see the assembly directly there. This is a debug, and a debug also gives us more tests, we can test more and more, we can figure out what's going wrong with our program. Also, a debug is unoptimized, because not the final release, so it's not going to be more optimized, like more about testing a debug. debug. So a debug can be in a text editor of the program or anything that's related to program that we need to test on the menu of the program so so far. For the release it's more optimized and release is gonna be as translated or compiled the full build or the full text file into one shot so we can release it and so more optimized."
  },
  "ivfb": {
   "b02:0": {
@@ -151,6 +159,25 @@
    ],
    "guide": "You said this can be 'flagged inside the app.' Where exactly is that flag stored, and when is it decided: while the program runs, or when you build the .exe?",
    "rewatch": "5:21-12:13"
+  },
+  "b03:0": {
+   "v": 3,
+   "score": 80,
+   "awards": [
+    35,
+    25,
+    20,
+    0
+   ],
+   "right": "You correctly said that Debug is not optimized and Release is optimized, that Debug lets you step through code line by line because each line maps simply to machine code, and that Debug includes extra test code, editors and menus for developers.",
+   "missing": [
+    {
+     "point": "Same source, different output: the configuration also picks the platform (x86/x64)",
+     "pct": 20
+    }
+   ],
+   "guide": "",
+   "rewatch": ""
   }
  },
  "dbgs": {},
@@ -391,7 +418,8 @@
      "rewatch": ""
     }
    }
-  ]
+  ],
+  "b01": []
  },
  "reviewChecks": {
   "icd01-p01@2026-11-02": {
@@ -513,10 +541,49 @@
   "icd01-p01@2026-11-23": {
    "answer": "",
    "attempts": []
+  },
+  "iv-icd01-b02-0@2026-11-03": {
+   "answer": "Yeah, so the difference between the Windows application and console application, that the Windows application, we already run it on a window, so it's going to be developed through a window. Like the .exe file is going to open in a window, but the console is going to open in a console, so the run maybe it's going to be through a command lines, but they are in window application maybe the run is gonna go like for example the use of it is gonna go through buttons and that are mapped and and they have flag for that And can one that excrete be both? I think yes, can one excrete be both?",
+   "attempts": [
+    {
+     "answer": "Yeah, so the difference between the Windows application and console application, that the Windows application, we already run it on a window, so it's going to be developed through a window. Like the .exe file is going to open in a window, but the console is going to open in a console, so the run maybe it's going to be through a command lines, but they are in window application maybe the run is gonna go like for example the use of it is gonna go through buttons and that are mapped and and they have flag for that And can one that excrete be both? I think yes, can one excrete be both?",
+     "fb": {
+      "v": 3,
+      "score": 35,
+      "awards": [
+       10,
+       25,
+       0,
+       0
+      ],
+      "right": "You are right that a console program runs in a text console, and a GUI program shows its own windows with buttons. You also said there is a flag for this.",
+      "missing": [
+       {
+        "point": "It's decided at build time by a flag in the .exe header (the subsystem: CONSOLE or WINDOWS)",
+        "pct": 25
+       },
+       {
+        "point": "Console: Windows gives the program a text console; GUI: no console, the program makes its own windows",
+        "pct": 5
+       },
+       {
+        "point": "The subsystem also decides which start function the startup code calls (main vs WinMain)",
+        "pct": 20
+       },
+       {
+        "point": "Not cleanly both: on Windows one .exe is one or the other (there are workarounds)",
+        "pct": 15
+       }
+      ],
+      "guide": "The main gap is the subsystem flag. When you build the program, the linker writes CONSOLE or WINDOWS into the .exe header. This flag tells Windows whether to give the program a console. It also decides whether the startup code calls main or WinMain. So one .exe is normally only one type, not both. There are only workarounds.",
+      "rewatch": ""
+     }
+    }
+   ]
   }
  },
  "practice": {
-  "b03": ""
+  "b03": "uhfeehfiehifheihk "
  },
  "practiceDone": {
   "b03": false
@@ -549,8 +616,8 @@
   ]
  },
  "speed": 1,
- "lastVisit": 1795462879168,
- "sessionParts": 0,
+ "lastVisit": 1795466591277,
+ "sessionParts": 1,
  "brk": null,
  "stopped": false,
  "finished": false,
@@ -559,7 +626,9 @@
   "b03": "dsifjifidi"
  },
  "lessonViews": {
-  "b03": "experiment"
+  "b03": "experiment",
+  "b01": "recall",
+  "b04": "watch"
  },
  "optionalDone": {
   "b03": {
@@ -575,7 +644,21 @@
   "b03": {
    "explain": "18m8x90",
    "analogy": "7nz6t3",
-   "graphics": "lz14r7"
+   "graphics": "lz14r7",
+   "code": "w91p4z",
+   "cards": "o9xfuj"
+  },
+  "b02": {
+   "explain": "jmo82r",
+   "analogy": "1ikqtvb",
+   "code": "2kn8gt",
+   "cards": "1713ip4"
+  },
+  "b01": {
+   "explain": "s5xg2x",
+   "analogy": "vh0wxk",
+   "code": "1n2cwcj",
+   "cards": "fku12j"
   }
  }
 }

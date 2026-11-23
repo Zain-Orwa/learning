@@ -10,6 +10,7 @@ Only Python's standard library is used. Nothing is reachable from other computer
 (it listens on 127.0.0.1 only).
 """
 import datetime as dt
+import hashlib
 import http.server
 import json
 import mimetypes
@@ -152,26 +153,53 @@ def speak_note(kit, note_id, text):
         out_dir = kit_page_dir(kit) / "audio" / "notes"
     except ValueError:
         return {"error": "Unknown study kit."}
-    out, tmp = out_dir / f"{note_id}.mp3", out_dir / f".{note_id}.tmp.mp3"
+    error = _kokoro_mp3(out_dir, note_id, text)
+    if error:
+        return {"error": error}
+    return {"file": f"audio/notes/{note_id}.mp3?v={int(time.time())}"}
+
+
+def speak_answer(kit, text):
+    """A model answer read aloud with Kokoro. Cached by its text: the same answer is made only once."""
+    if not voice_available():
+        return {"error": "Voice (Kokoro) isn't set up on this computer."}
+    text = text.strip() if isinstance(text, str) else ""
+    if not text or len(text) > 3000:
+        return {"error": "The answer is empty or too long."}
+    try:
+        out_dir = kit_page_dir(kit) / "audio" / "answers"
+    except ValueError:
+        return {"error": "Unknown study kit."}
+    name = hashlib.sha1(text.encode("utf-8")).hexdigest()[:16]
+    if not (out_dir / f"{name}.mp3").is_file():
+        error = _kokoro_mp3(out_dir, name, text)
+        if error:
+            return {"error": error}
+    return {"file": f"audio/answers/{name}.mp3"}
+
+
+def _kokoro_mp3(out_dir, name, text):
+    """Render text to <out_dir>/<name>.mp3 with the study voice. Returns an error message, or None."""
+    out, tmp = out_dir / f"{name}.mp3", out_dir / f".{name}.tmp.mp3"
     if not VOICE_LOCK.acquire(blocking=False):
-        return {"error": "Another voice summary is being made. Try again in a minute."}
+        return "Another voice is being made. Try again in a minute."
     try:
         out_dir.mkdir(parents=True, exist_ok=True)
         p = subprocess.run([str(VOICE_PY), str(HERE / "speak_note.py"), str(tmp), str(VOICE_DIR)],
                            input=text, capture_output=True, text=True, cwd=VOICE_DIR, timeout=300)
         if p.returncode or not tmp.is_file():
-            sys.stderr.write("  voice summary failed:\n" + (p.stderr or "")[-1200:] + "\n")
-            return {"error": "Could not make the voice summary. The terminal running the helper shows why."}
+            sys.stderr.write("  voice failed:\n" + (p.stderr or "")[-1200:] + "\n")
+            return "Could not make the voice. The terminal running the helper shows why."
         tmp.replace(out)
     except subprocess.TimeoutExpired:
-        return {"error": "Making the voice took too long. Try again."}
+        return "Making the voice took too long. Try again."
     except (OSError, ValueError) as e:
-        sys.stderr.write(f"  voice summary failed: {e}\n")
-        return {"error": "Could not make the voice summary."}
+        sys.stderr.write(f"  voice failed: {e}\n")
+        return "Could not make the voice."
     finally:
         tmp.unlink(missing_ok=True)
         VOICE_LOCK.release()
-    return {"file": f"audio/notes/{note_id}.mp3?v={int(time.time())}"}
+    return None
 
 
 def save_notes_file(kit, markdown):
@@ -637,6 +665,8 @@ class Handler(http.server.BaseHTTPRequestHandler):
             return self.send_json({"ok": True, "message": out})
         if path == "/api/speak":
             return self.send_json(speak_note(body.get("kit"), body.get("id"), body.get("text")))
+        if path == "/api/speak-answer":
+            return self.send_json(speak_answer(body.get("kit"), body.get("text")))
         if path == "/api/notes":
             result, code = save_notes_file(body.get("kit"), body.get("markdown"))
             return self.send_json(result, code)

@@ -1,7 +1,7 @@
 /* Experimental presentation only. Core grading, media and saving remain intact. */
 function experimentSupport(b){
   const deferred=b.deferred||[];
-  return `<aside class="learning-tools" aria-label="Supporting tools"><section class="tool-card"><h2>${uiIcon('book')} Study support${supportCountHTML(supportUnreadTotal(),'support-count')}</h2><div class="tool-body"><button class="btn ghost" data-ui="full-explanation">Explanation &amp; Listen${supportDot(b,'explain')}</button><button class="btn ghost" data-ui="analogy">Analogy${supportDot(b,'analogy')}</button><button class="btn ghost" data-ui="graphics">Graphics${supportDot(b,'graphics')}</button><button class="btn ghost" data-ui="code-notes">Code &amp; Pseudocode${supportDot(b,'code')}</button><button class="btn ghost" data-ui="flashcards" ${(b.cards||[]).length?'':'disabled'}>Flashcards · optional${supportDot(b,'cards')}</button><hr class="tool-divider"><button class="btn ghost" data-ui="ask-claude">Ask Claude</button><button class="btn ghost" data-ui="my-notes">My notes${(S.myNotes?.[b.id]?.text||'').trim()?'<span class="tool-mark" aria-label=" (written)">✓</span>':''}</button></div></section><section class="tool-card"><h2>${uiIcon('layers')} Deferred Topics</h2><div class="tool-body"><p>Ideas for later in the course.</p>${deferred.length?`<ul class="deferred-list">${deferred.map((text,i)=>`<li><button data-ui="deferred" data-index="${i}">${esc(deferredTitle(text))}</button></li>`).join('')}</ul>`:'<p class="empty-tool">No deferred topics in this part.</p>'}</div></section></aside>`;
+  return `<aside class="learning-tools" aria-label="Supporting tools"><section class="tool-card"><h2>${uiIcon('book')} Study support${supportCountHTML(supportUnreadTotal(),'support-count')}</h2><div class="tool-body"><button class="btn ghost" data-ui="full-explanation">Explanation &amp; Listen${supportDot(b,'explain')}</button><button class="btn ghost" data-ui="analogy">Analogy${supportDot(b,'analogy')}</button><button class="btn ghost" data-ui="graphics">Graphics${supportDot(b,'graphics')}</button><button class="btn ghost" data-ui="code-notes">Code &amp; Pseudocode${supportDot(b,'code')}</button><button class="btn ghost" data-ui="flashcards" ${(b.cards||[]).length?'':'disabled'}>Flashcards · optional${(b.cards||[]).length?supportDot(b,'cards'):''}</button><hr class="tool-divider"><button class="btn ghost" data-ui="ask-claude">Ask Claude</button><button class="btn ghost" data-ui="my-notes">My notes${(S.myNotes?.[b.id]?.text||'').trim()?'<span class="tool-mark" aria-label=" (written)">✓</span>':''}</button></div></section><section class="tool-card"><h2>${uiIcon('layers')} Deferred Topics</h2><div class="tool-body"><p>Ideas for later in the course.</p>${deferred.length?`<ul class="deferred-list">${deferred.map((text,i)=>`<li><button data-ui="deferred" data-index="${i}">${esc(deferredTitle(text))}</button></li>`).join('')}</ul>`:'<p class="empty-tool">No deferred topics in this part.</p>'}</div></section></aside>`;
 }
 const experimentBaseStep=renderStepRaw;
 renderStepRaw=function(b,key){
@@ -402,6 +402,7 @@ function gateItemHTML(row){
   <div class="rg-later">${gate.confirmSkip===row.unit?`<span>Skip this review for good? It will not come back.</span><button type="button" class="btn ghost" data-ui="gate-skip-forever" ${busy?'disabled':''}>${busy==='skip'?'Skipping…':'Yes, skip it'}</button><button type="button" class="quiet-link" data-ui="gate-skip-cancel" ${busy?'disabled':''}>No, keep it</button>`:`<button type="button" class="quiet-link" data-ui="gate-skip-ask" ${busy?'disabled':''}>Skip this review</button><button type="button" class="quiet-link" data-ui="gate-later" ${busy?'disabled':''}>Keep for later</button>`}</div>
   ${gate.error?`<p class="ask-error" role="alert">${esc(gate.error)}${gate.canSkip?' <button type="button" class="quiet-link" data-ui="gate-skip">Skip this one for today</button>':''}</p>`:''}
   <div class="rg-feedback" aria-live="polite">${checkFeedback(record.attempts,true)}${first?`<p class="small">Your first score (${first.fb.score}%) sets the next review date.</p>`:''}</div>
+  ${closed&&record.attempts.length?againHTML(`rev:${row.unit}@${row.next}`,b,item.check,record.attempts.at(-1).fb.score):''}
   ${record.attempts.length?rubricHTML(item.check.rubric):''}`;
 }
 function gateDoneHTML(){
@@ -465,9 +466,9 @@ document.addEventListener('click',async e=>{
 const gateBaseRender=render;
 render=function(){gateBaseRender();maybeOpenReviewGate();};
 
-/* Study support notifications: a glowing gold dot on each support item that has
-   content you have not opened yet. Opening it clears the dot. Unopened items add up
-   in the "Study support" heading and on each part in the course list.
+/* Study support notifications: a glowing gold circle on each support item, with the
+   number of reached parts where it is still unopened. Opening it clears the number.
+   Unopened items add up in the "Study support" heading and on each part in the course list.
    "Seen" stores a short fingerprint of the content, so if a part later gets a new
    drawing or a rewritten explanation, its dot comes back. */
 const SUPPORT_ITEMS={
@@ -478,22 +479,38 @@ const SUPPORT_ITEMS={
   cards:{ui:'flashcards',content:b=>(b.cards||[]).length?JSON.stringify(b.cards):''}
 };
 function supportHash(text){let h=5381;for(let i=0;i<text.length;i++)h=((h*33)^text.charCodeAt(i))>>>0;return h.toString(36);}
-function supportUnread(b){
-  const seen=S.supportSeen?.[b.id]||{};
-  return Object.entries(SUPPORT_ITEMS).filter(([key,item])=>{const text=item.content(b);return text&&seen[key]!==supportHash(text);}).map(([key])=>key);
+// Lesson content does not change while the page is open, so each fingerprint is worked out once.
+const SUPPORT_HASHES=new Map();
+function supportHashFor(b,key){
+  const id=b.id+'|'+key;
+  if(!SUPPORT_HASHES.has(id)){const text=SUPPORT_ITEMS[key].content(b);SUPPORT_HASHES.set(id,text?supportHash(text):'');}
+  return SUPPORT_HASHES.get(id);
 }
+function supportIsUnread(b,key){const h=supportHashFor(b,key);return !!h&&S.supportSeen?.[b.id]?.[key]!==h;}
+function supportUnread(b){return Object.keys(SUPPORT_ITEMS).filter(key=>supportIsUnread(b,key));}
 function supportCountedParts(){
   const f=frontier();               // parts you have reached, the same rule as the course list
   return D.blocks.filter((part,i)=>i<=f);
 }
-function supportUnreadTotal(){return (supportCountedParts()||[]).reduce((n,part)=>n+supportUnread(part).length,0);}
-function supportDot(b,key){return supportUnread(b).includes(key)?'<span class="support-dot" role="img" aria-label=", new"></span>':'';}
+function supportUnreadTotal(){return supportCountedParts().reduce((n,part)=>n+supportUnread(part).length,0);}
+// How many reached parts have this item unopened: 1 after one part, 3 after three parts.
+function supportItemCount(key){return supportCountedParts().filter(part=>supportIsUnread(part,key)).length;}
+function supportDot(b,key){
+  const n=supportItemCount(key);
+  return n?`<span class="support-dot" role="img" aria-label=", ${n} new">${n}</span>`:'';
+}
 function supportCountHTML(n,cls){return n?`<span class="${cls}" role="img" aria-label="${n} not opened yet">${n}</span>`:'';}
+// Opening an item clears its number: it counts as opened in every part reached so far.
 function markSupportSeen(b,key){
-  const text=SUPPORT_ITEMS[key].content(b);if(!text)return;
-  S.supportSeen=S.supportSeen||{};S.supportSeen[b.id]=S.supportSeen[b.id]||{};
-  if(S.supportSeen[b.id][key]===supportHash(text))return;
-  S.supportSeen[b.id][key]=supportHash(text);save();
+  const parts=supportCountedParts();if(!parts.includes(b))parts.push(b);
+  let changed=false;
+  for(const part of parts){
+    if(!supportIsUnread(part,key))continue;
+    S.supportSeen=S.supportSeen||{};S.supportSeen[part.id]=S.supportSeen[part.id]||{};
+    S.supportSeen[part.id][key]=supportHashFor(part,key);changed=true;
+  }
+  if(!changed)return;
+  save();
   // Update only the badges: a full render would rebuild the page behind the open popup.
   document.querySelector(`.learning-tools [data-ui="${SUPPORT_ITEMS[key].ui}"] .support-dot`)?.remove();
   const heading=document.querySelector('.learning-tools .tool-card h2');
@@ -520,3 +537,106 @@ function mountCodeLab(){
 }
 const codeLabBaseRender=render;
 render=function(){codeLabBaseRender();mountCodeLab();};
+
+/* Try again below 50%: Check, Review, the review popup, Interview and Debug.
+   When an answer scores under 50%, a "Try again with the answer" panel opens on request:
+   see the full answer, listen to it, say it again in your own words (mic or typing) and
+   check it again, as often as you like, until it reaches 50%. These practice tries are
+   saved in S.again; they never change the first score (which sets review dates). */
+const AGAIN_BELOW=50;
+const againCtx=new Map(),againOpen=new Set(),againBusy=new Set(),againErr=new Map();
+let againAudio=null,againPlaying=null,againLoading=false;
+function againState(key){S.again=S.again||{};return S.again[key]||(S.again[key]={tries:[],draft:''});}
+function againBest(key){return Math.max(-1,...(S.again?.[key]?.tries||[]).map(t=>t.score));}
+// The panel's HTML; the caller passes the score that decides whether it is offered.
+function againHTML(key,b,check,score){
+  const tried=(S.again?.[key]?.tries||[]).length;
+  if(!(score<AGAIN_BELOW)&&!tried)return '';
+  againCtx.set(key,{b,check});
+  return `<div class="again" data-again="${esc(key)}">${againInner(key)}</div>`;
+}
+const againPlain=s=>String(s||'').replace(/<[^>]+>/g,' ').replace(/[`*]/g,'').replace(/\s+/g,' ').trim();
+function againSpeech(check){return `${againPlain(check.q)} A full answer: ${check.rubric.map(([idea])=>againPlain(idea).replace(/[.!?]?$/,'.')).join(' ')}`;}
+function againInner(key){
+  const ctx=againCtx.get(key);if(!ctx)return '';
+  const st=S.again?.[key]||{tries:[],draft:''},best=againBest(key),last=st.tries.at(-1),busy=againBusy.has(key);
+  if(!againOpen.has(key)){
+    return best>=AGAIN_BELOW
+      ?`<p class="again-done">✓ Practised again: ${best}% <button type="button" class="quiet-link" data-again-act="open">Practise again</button></p>`
+      :`<button type="button" class="btn amber" data-again-act="open">↻ Try again with the answer</button><p class="small again-help">See the full answer, listen to it, then say it again in your own words. ${st.tries.length?`Best so far: ${best}%.`:'Your first score stays saved.'}</p>`;
+  }
+  return `<div class="again-panel">
+    <h4>↻ Try again</h4>
+    <p class="again-q"><b>Question:</b> ${md(ctx.check.q)}</p>
+    <div class="again-answer" ${st.hide?'hidden':''}><b>A full answer covers:</b><ol>${ctx.check.rubric.map(([idea])=>`<li>${md(idea)}</li>`).join('')}</ol></div>
+    <div class="row"><button type="button" class="btn ghost" data-again-act="listen">${againListenLabel(key)}</button><button type="button" class="btn ghost" data-again-act="hide">${st.hide?'Show the answer':'Hide the answer while I answer'}</button></div>
+    <textarea data-again-input="${esc(key)}" placeholder="Say it (mic) or type it in your own words…" aria-label="Your new answer" ${busy?'readonly':''}>${esc(st.draft||'')}</textarea>
+    <div class="row"><button type="button" class="btn amber" data-again-act="check" ${busy||!sample?'disabled':''}>${busy?'Checking…':'Check again'}</button><button type="button" class="btn ghost" data-again-act="close">Close</button></div>
+    ${sample?'':`<p class="small">Checking needs Claude: start the page with <code>${START_CMD}</code>.</p>`}
+    ${againErr.has(key)?`<p class="ask-error" role="alert">${esc(againErr.get(key))}</p>`:''}
+    ${st.tries.length?`<p class="again-tries">${st.tries.map((t,i)=>`<span class="${t.score>=AGAIN_BELOW?'is-pass':''}">Try ${i+1}: ${t.score}%</span>`).join('')}</p>`:''}
+    ${last?(last.fb?renderScore(last.fb):'')+(last.score>=AGAIN_BELOW?'<p class="again-pass" role="status">✓ 50% or more. You can continue.</p>':'<p class="small">Still under 50%. Read and listen once more, then try again.</p>'):''}
+  </div>`;
+}
+function againRefresh(key){
+  document.querySelectorAll(`[data-again="${CSS.escape(key)}"]`).forEach(el=>{el.innerHTML=againInner(key);});
+}
+function againListenLabel(key){return againPlaying!==key?'🔊 Listen to the answer':againLoading?'Making the voice…':'■ Stop';}
+// Only the Listen button changes while audio plays, so typing in the box is never interrupted.
+function againListenButton(key){document.querySelectorAll(`[data-again="${CSS.escape(key)}"] [data-again-act="listen"]`).forEach(b=>{b.textContent=againListenLabel(key);});}
+function againStopAudio(){
+  if(againAudio){againAudio.onended=null;againAudio.pause();againAudio=null;}
+  try{window.speechSynthesis?.cancel();}catch{}
+  const was=againPlaying;againPlaying=null;againLoading=false;if(was)againListenButton(was);
+}
+async function againListen(key){
+  if(againPlaying===key){againStopAudio();return;}
+  againStopAudio();
+  const ctx=againCtx.get(key);if(!ctx)return;
+  const text=againSpeech(ctx.check),done=()=>{if(againPlaying===key){againPlaying=null;againListenButton(key);}};
+  againPlaying=key;againLoading=true;againListenButton(key);  // "Making the voice…" until it plays
+  if(helperReady&&voiceReady!==false){
+    try{
+      const r=await (await fetch('/api/speak-answer',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({kit:kitPath,text})})).json();
+      if(r.file&&againPlaying===key){
+        againAudio=new Audio(r.file);againAudio.playbackRate=S.ttsRate||1;againAudio.onended=done;
+        await againAudio.play();againLoading=false;againListenButton(key);return;
+      }
+    }catch{}
+  }
+  if(againPlaying!==key)return;
+  againLoading=false;
+  if(!window.speechSynthesis){againPlaying=null;againErr.set(key,'Listening is not available here.');againRefresh(key);return;}
+  const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=S.ttsRate||1;u.onend=done;u.onerror=done;
+  window.speechSynthesis.speak(u);againListenButton(key);
+}
+function againPrompt(ctx,answer){
+  return `Check a PRACTICE answer. The learner scored under 50% earlier, then read and listened to the full answer and is now saying it again in his own words. Grade it normally against the checklist; repeating the listed ideas in his own words is the goal. ${GRADE_RULES}\nPART: ${ctx.b.title}\nQUESTION: ${againPlain(ctx.check.q)}\nFIXED CHECKLIST:\n${rubricText(ctx.check.rubric)}\nANSWER: ${answer}\n${JSON_SHAPE}`;
+}
+async function againCheck(key){
+  const ctx=againCtx.get(key),st=againState(key),answer=(st.draft||'').trim();
+  if(!ctx||againBusy.has(key)||!sample)return;
+  if(!answer){againErr.set(key,'Say or type your answer first.');againRefresh(key);return;}
+  againErr.delete(key);againBusy.add(key);againStopAudio();againRefresh(key);
+  try{
+    const fb=normFb(await sample.json(againPrompt(ctx,answer)),ctx.check.rubric);
+    st.tries.push({answer,score:fb.score,date:new Date().toISOString().slice(0,10),fb:{score:fb.score,awards:fb.awards,right:fb.right,missing:fb.missing,guide:fb.guide}});
+    save();
+  }catch(err){againErr.set(key,err.text||err.message||'Claude could not check this answer. Try again.');}
+  finally{againBusy.delete(key);againRefresh(key);}
+}
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-again-act]');if(!t)return;
+  const key=t.closest('[data-again]')?.dataset.again;if(!key)return;
+  e.stopPropagation();                          // a click here is never a study-page or review-popup action
+  const act=t.dataset.againAct;
+  if(act==='open'){againOpen.add(key);againErr.delete(key);againRefresh(key);document.querySelector(`[data-again-input="${CSS.escape(key)}"]`)?.focus({preventScroll:true});}
+  if(act==='close'){againOpen.delete(key);if(againPlaying===key)againStopAudio();againRefresh(key);}
+  if(act==='hide'){const st=againState(key);st.hide=!st.hide;save();againRefresh(key);}
+  if(act==='listen')againListen(key);
+  if(act==='check')againCheck(key);
+},true);
+document.addEventListener('input',e=>{
+  const key=e.target.dataset?.againInput;if(!key)return;
+  againState(key).draft=e.target.value;againErr.delete(key);save();
+});
