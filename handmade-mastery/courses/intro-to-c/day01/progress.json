@@ -38,7 +38,7 @@
  "vt": {
   "b01": 321,
   "b02": 733,
-  "b03": 1015
+  "b03": 1014.950256
  },
  "recall": {
   "b01": "1. how you can code C program in Windows.\n2. what do you need as tools to Code a game using Windows machine.\n3. to able to code a game you need to get a text editor and compiler that is not come out of the box like linux we have to download that.",
@@ -509,10 +509,18 @@
      }
     }
    ]
+  },
+  "icd01-p01@2026-11-23": {
+   "answer": "",
+   "attempts": []
   }
  },
- "practice": {},
- "practiceDone": {},
+ "practice": {
+  "b03": ""
+ },
+ "practiceDone": {
+  "b03": false
+ },
  "notes": {
   "b01": [
    {
@@ -523,15 +531,30 @@
     "r": "assistant",
     "c": "Here is only what matters in this part.\n\n**Why this series exists**\nCasey is making Handmade Hero, a full game written in C from scratch, live. He will not stop that series to teach the basics. These Intro to C videos teach the basics first, so you can follow along later.\n\n**Why Visual Studio**\nWindows does not come with a C compiler. Microsoft's compiler comes inside Visual Studio, so Casey installs that. You only need it for a few of its parts, not the whole program.\n\n**What to install today**\nCasey's version is very old now. Install the free **Visual Studio Community** edition. When the installer asks, choose **\"Desktop development with C++\"**.\n\n**The parts you need from it**\n- **cl.exe** is the compiler. It turns your C text into an object file.\n- **link.exe** is the linker. It joins the object files into a .exe.\n- **Debugger** lets you watch your program while it runs.\n\nYou can ignore the other tools for now.\n\n**Keep this picture in mind for the whole video:**\ntext file → compiler → object file → linker → .exe → Windows runs it"
    }
+  ],
+  "b03": [
+   {
+    "r": "user",
+    "c": "Yeah, so when you speak about configuration, I didn't really get what does it mean configuration. I've given an analogy or example so I can understand it better.",
+    "from": "part",
+    "at": "2026-11-23T18:44:50.497Z"
+   },
+   {
+    "r": "assistant",
+    "c": "A configuration is a **set of choices for how to build** your code. The code stays the same. Only the way it is built changes.\n\n**Analogy:** think of a recipe (your C code).\n\n- **Debug** is like cooking slowly while a teacher watches. You do each step in order, so you can stop at any step and check it. It is slow, but easy to follow.\n- **Release** is like a fast, expert chef. He mixes and skips steps to finish quickly. The food is the same, but you can't easily see each step.\n\n**Platform** (`Win32` or `x64`) is a different choice. It is like writing the recipe in the language of one kitchen, because each CPU reads different instructions.\n\nSo `Debug | Win32` means: \"the easy-to-follow build, for 32-bit x86.\"",
+    "q": "Yeah, so when you speak about configuration, I didn't really get what does it mean configuration. I've given an analogy or example so I can understand it better.",
+    "from": "part",
+    "at": "2026-11-23T18:45:03.345Z"
+   }
   ]
  },
  "speed": 1,
- "lastVisit": 1795385435225,
+ "lastVisit": 1795462879168,
  "sessionParts": 0,
  "brk": null,
  "stopped": false,
  "finished": false,
- "ttsRate": 1.5,
+ "ttsRate": 1.25,
  "predictions": {
   "b03": "dsifjifidi"
  },
@@ -544,8 +567,15 @@
   }
  },
  "reviewGate": {
-  "day": "2026-11-22",
-  "startedAt": 1795383289107,
+  "day": "2026-11-23",
+  "startedAt": 1795457229896,
   "finished": true
+ },
+ "supportSeen": {
+  "b03": {
+   "explain": "18m8x90",
+   "analogy": "7nz6t3",
+   "graphics": "lz14r7"
+  }
  }
 }

@@ -31,7 +31,7 @@ _Last updated: 2026-11-16_
 - Step: Practice (video at 4:42 into the part, episode time 16:55)
 - Parts done: 2
 - Completed (part id, date): b01 2026-11-01, b02 2026-11-02
-- Updated: 2026-11-22
+- Updated: 2026-11-23
 
 ## Debugging log
 _(one line per challenge: date, bug class, score, time)_

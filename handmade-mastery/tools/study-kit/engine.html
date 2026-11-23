@@ -333,7 +333,7 @@ let sample=null, downloads=null;
 (async()=>{try{if(window.claude){sample=await claude.use("sample"); safeRender();}}catch(e){}})();
 (async()=>{try{if(window.claude){downloads=await claude.use("downloads");}}catch(e){}})();
 function safeRender(){ if(vid && !vid.paused) return; render(); }
-function toast(t){const el=$("#toast");el.textContent=t;el.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove("on"),2000)}
+function toast(t){const el=$("#toast");const top=[...document.querySelectorAll("dialog[open]")].pop()||document.body;if(top.append&&el.parentNode!==top)top.append(el); /* inside an open popup, or it hides behind it */el.textContent=t;el.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove("on"),2000)}
 async function copy(text,box){
   try{await navigator.clipboard.writeText(text);toast("Copied. Paste it to Claude.");}
   catch(e){ if(box){box.innerHTML=`<textarea readonly>${esc(text)}</textarea><p class="small muted">Select all and copy this, then paste it to Claude.</p>`; box.querySelector("textarea").select();} }
@@ -584,6 +584,35 @@ function micPrompt(b){ // Whisper's initial_prompt: the course's and this part's
 function micStatus(w,cls,text){const s=w.querySelector(".micstat"); if(!s) return; s.className="micstat"+(cls?" "+cls:""); s.textContent=text; s.hidden=!text;}
 function micButton(w,on){const b=w.querySelector(".mic"); if(!b) return; b.classList.toggle("rec",on); b.innerHTML=on?ICON.stop:ICON.mic;
   b.setAttribute("aria-label",on?"Stop recording":"Speak instead of typing");}
+/* Live dictation, like a chat app: the recorder hands over a chunk every second; while you speak, the audio so far
+   is re-transcribed (fast pass, ?live=1) about every 1.5 s and shown in the box, which is read-only meanwhile.
+   Pressing stop sends the whole recording once more (careful pass) and that final text replaces the live one. */
+const LIVE_EVERY=1500;
+function micCompose(r,text){ // the box's original text with `text` at the saved cursor
+  const v=r.base, [a,z]=r.cur||[v.length,v.length];
+  const pre=a>0&&text&&!/\s$/.test(v.slice(0,a))?" ":"", post=z<v.length&&text&&!/^\s/.test(v.slice(z))?" ":"";
+  return {value:v.slice(0,a)+pre+text+post+v.slice(z), end:a+pre.length+text.length};
+}
+function micFind(r){return r.el.isConnected?r.el:(r.key&&document.querySelector(r.key));} // the box may have been re-rendered
+function micShow(r,text,final){
+  const el=micFind(r); if(!el) return null;
+  const {value,end}=micCompose(r,text);
+  el.value=value; el.readOnly=!final;
+  if(final){el.focus(); el.setSelectionRange(end,end); touched.add(el);} else el.scrollTop=el.scrollHeight;
+  return el;
+}
+async function micTranscribe(r,blob,live){
+  const res=await (await fetch("/api/transcribe?"+(live?"live=1&":"")+"prompt="+encodeURIComponent(micPrompt(r.b)),{method:"POST",headers:{"Content-Type":blob.type},body:blob})).json();
+  if(res.error) throw new Error(res.error);
+  return (res.text||"").trim();
+}
+async function micLive(r){
+  if(r.stopped||r.busy||!r.chunks.length) return;
+  r.busy=true;
+  try{const text=await micTranscribe(r,new Blob(r.chunks,{type:r.mr.mimeType||"audio/webm"}),true); if(!r.stopped&&text){r.partial=text; micShow(r,text,false);}}
+  catch(e){} // a missed live update is fine; the final pass still runs
+  finally{r.busy=false;}
+}
 async function micStart(btn){
   const w=btn.closest(".micwrap"), el=w.querySelector("textarea,input");
   let stream;
@@ -591,40 +620,38 @@ async function micStart(btn){
   catch(e){toast(e.name==="NotAllowedError"?"The microphone is blocked. Allow it for this page, or type.":"No microphone found. You can type.");return}
   const mr=new MediaRecorder(stream), chunks=[];
   const cur=touched.has(el)?[el.selectionStart,el.selectionEnd]:null;
-  const rec0=rec={mr,w,el,key:boxKey(el),cur,b:boxBlock(el),t0:Date.now(),tick:null};
+  const rec0=rec={mr,w,el,key:boxKey(el),cur,b:boxBlock(el),t0:Date.now(),tick:null,chunks,base:el.value,partial:"",busy:false,stopped:false,live:null};
   mr.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};
   mr.onstop=()=>{stream.getTracks().forEach(t=>t.stop()); micSend(rec0,new Blob(chunks,{type:mr.mimeType||"audio/webm"}));};
-  mr.start(); micButton(w,true); micStatus(w,"rec","0:00");
-  rec.tick=setInterval(()=>{const s=(Date.now()-rec0.t0)/1000; micStatus(rec0.w,"rec",fmt(s)); if(s>=300) micStop();},500); // 5 min max
+  mr.start(1000); el.readOnly=true; micButton(w,true); micStatus(w,"rec","● 0:00");
+  rec.tick=setInterval(()=>{const s=(Date.now()-rec0.t0)/1000; const box=micFind(rec0), bw=box&&box.closest(".micwrap");
+    if(bw){micStatus(bw,"rec","● "+fmt(s)); micButton(bw,true);} if(s>=300) micStop();},500); // 5 min max
+  rec.live=setInterval(()=>micLive(rec0),LIVE_EVERY);
 }
 function micStop(){
-  if(!rec) return; const r=rec; rec=null;
-  clearInterval(r.tick); micButton(r.w,false);
+  if(!rec) return; const r=rec; rec=null; r.stopped=true;
+  clearInterval(r.tick); clearInterval(r.live);
+  const box=micFind(r), bw=box&&box.closest(".micwrap"); if(bw) micButton(bw,false);
   if(r.mr.state!=="inactive") r.mr.stop();
 }
 async function micSend(r,blob){
-  const find=()=>r.el.isConnected?r.el:(r.key&&document.querySelector(r.key)); // the box may have been re-rendered
-  const status=(c,t)=>{const el=find(); const w=el&&el.closest(".micwrap"); if(w) micStatus(w,c,t);};
-  const lock=on=>{const el=find(), b=el&&el.closest(".micwrap")?.querySelector(".mic"); if(b) b.disabled=on;};
-  if(Date.now()-r.t0<600||blob.size<1000){status("","");toast("Too short. Press the mic, speak, then press it again.");return}
-  status("","Transcribing…"); lock(true);
+  const status=(c,t)=>{const el=micFind(r); const w=el&&el.closest(".micwrap"); if(w) micStatus(w,c,t);};
+  const lock=on=>{const el=micFind(r), b=el&&el.closest(".micwrap")?.querySelector(".mic"); if(b) b.disabled=on;};
+  const done=text=>{const el=micShow(r,text,true); if(el&&el.value!==r.base) el.dispatchEvent(new Event("input",{bubbles:true}));}; // the box's normal save
+  if(Date.now()-r.t0<600||blob.size<1000){done("");status("","");toast("Too short. Press the mic, speak, then press it again.");return}
+  status("","Finishing…"); lock(true);
   try{
-    const res=await (await fetch("/api/transcribe?prompt="+encodeURIComponent(micPrompt(r.b)),{method:"POST",headers:{"Content-Type":blob.type},body:blob})).json();
-    if(res.error) throw new Error(res.error);
-    const text=(res.text||"").trim(); if(!text){toast("I didn't hear any words. Try again, a bit closer to the mic.");return}
-    const el=find(); if(!el){toast("The box is gone, so the text wasn't added.");return}
-    const v=el.value, [a,z]=r.cur||[v.length,v.length];
-    const pre=a>0&&!/\s$/.test(v.slice(0,a))?" ":"", post=z<v.length&&!/^\s/.test(v.slice(z))?" ":"";
-    el.value=v.slice(0,a)+pre+text+post+v.slice(z);
-    const end=a+pre.length+text.length; el.focus(); el.setSelectionRange(end,end); touched.add(el);
-    el.dispatchEvent(new Event("input",{bubbles:true})); // the box's normal save
-  }catch(e){toast("Couldn't turn the speech into text. Your box is unchanged.");}
+    const text=await micTranscribe(r,blob,false);
+    if(!text&&!r.partial){done("");toast("I didn't hear any words. Try again, a bit closer to the mic.");return}
+    if(!micFind(r)){toast("The box is gone, so the text wasn't added.");return}
+    done(text||r.partial);
+  }catch(e){done(r.partial);toast(r.partial?"Kept the live text; the final check failed.":"Couldn't turn the speech into text. Your box is unchanged.");}
   finally{status("",""); lock(false);}
 }
 document.addEventListener("click",e=>{
   const btn=e.target.closest(".mic"); if(!btn) return;
   e.preventDefault(); e.stopPropagation();
-  if(rec&&rec.w===btn.closest(".micwrap")){micStop();return}
+  if(rec&&(micFind(rec)?.closest(".micwrap")||rec.w)===btn.closest(".micwrap")){micStop();return}
   micStop(); micStart(btn); // only one box records at a time
 },true);
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&rec){e.preventDefault();micStop();}});
@@ -1013,9 +1040,10 @@ function goNextStep(){
   const st=stepsFor(b),i=st.findIndex(([k])=>k===S.step);
   if(i<st.length-1){S.step=st[i+1][0];}
   else{
-    if(!S.completed[b.id]){S.cdate[b.id]=new Date().toISOString().slice(0,10);S.sessionParts=(S.sessionParts||0)+1;} S.completed[b.id]=true;
+    const fresh=!S.completed[b.id]; // a revisited part goes straight on; only new work counts toward a break
+    if(fresh){S.cdate[b.id]=new Date().toISOString().slice(0,10);S.sessionParts=(S.sessionParts||0)+1;} S.completed[b.id]=true;
     const nb=D.blocks[idxOf(b)+1];
-    if(nb){S.cur=nb.id;S.step="watch";S.brk=S.sessionParts%LONG_EVERY===0?{from:b.id,until:null}:null;}
+    if(nb){S.cur=nb.id;S.step="watch";S.brk=fresh&&S.sessionParts%LONG_EVERY===0?{from:b.id,until:null}:null;}
     else{S.cur=D.qa?"__qa":b.id; toast("Last part finished");}
   }
   S.lessonViews=S.lessonViews||{};S.lessonViews[S.cur]=S.step;

@@ -381,3 +381,21 @@ Newest at the bottom. Each entry: date, decision, why.
   Checked: breakpoint, step over, call stack, locals, registers, memory,
   disassembly, debug output.
 - **Status:** waiting for Zain's confirmation before adopting it in the main app.
+
+## 2026-11-23: Code Lab inside Practice; Continue goes to the next part; support dots
+- **Why:** Zain asked to bring the Code Lab experiment into the main page, inside
+  the Practice step, and for Continue at the end of Practice to open the next part.
+- **What:** Practice embeds the Code Lab (editor, Build/Run/Disassembly, Visual
+  Studio-style Output, a black console window); `/code` opens the same editor full
+  window and Watch links to it. Shared files: `tools/study-kit/codelab.{js,css,html}`
+  and `winshim/`. Files save to `code/<course>/dayNN/` (Mac-typed, by hand, no
+  autocomplete). The helper compiles the startup shim once, saves atomically and
+  stops a timed-out program with its child processes.
+- **Continue:** the Practice button says "Finish part · Continue to Part N →".
+  Finishing a part you had already completed now goes straight into the next part;
+  before, it could show the break screen. New parts still offer a break after every
+  three in a row.
+- **Study support:** a gold dot marks each support item not opened yet; the heading
+  and the course list count unopened items in the parts reached so far.
+- **Still pending:** writing on Windows is still the real check; a Mac run is
+  recorded in the practice note like any other result.

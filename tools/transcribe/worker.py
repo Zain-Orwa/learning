@@ -1,7 +1,8 @@
 """Speech to text worker for the study helper's mic buttons (serve.py starts it once and keeps it running).
 
 It loads Whisper small.en (int8, CPU) once, then answers one JSON line per request on stdin:
-  {"wav": "/path/to/16k-mono.wav", "prompt": "key terms of the current part"}
+  {"wav": "/path/to/16k-mono.wav", "prompt": "key terms of the current part", "beam": 5}
+("beam": 1 is the fast pass for the live text shown while speaking.)
 with one JSON line on stdout: {"text": "..."} or {"error": "..."}.
 The model lives in tools/transcribe/models/small.en (setup-mac.sh downloads it).
 """
@@ -26,7 +27,7 @@ for line in sys.stdin:
         req = json.loads(line)
         w = wave.open(req["wav"])
         audio = np.frombuffer(w.readframes(w.getnframes()), np.int16).astype(np.float32) / 32768
-        segs, _ = model.transcribe(audio, language="en", beam_size=5, vad_filter=True,
+        segs, _ = model.transcribe(audio, language="en", beam_size=int(req.get("beam", 5)), vad_filter=True,
                                    condition_on_previous_text=False, initial_prompt=req.get("prompt") or None)
         reply({"text": " ".join(s.text.strip() for s in segs).strip()})
     except Exception as e:

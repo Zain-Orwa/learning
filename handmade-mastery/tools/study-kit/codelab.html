@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Code Lab</title>
+<style>
+html,body{height:100%;margin:0;background:#1e1e1e}
+body{display:flex;flex-direction:column}
+#lab{flex:1}
+.back{position:fixed;right:12px;bottom:10px;font:12px -apple-system,"Segoe UI",system-ui,sans-serif;color:#9a9a9a}
+/*CODELAB_STYLE*/
+</style>
+</head>
+<body>
+<div id="lab"></div>
+<a class="back" id="back" href="/">Study page</a>
+<script>
+/*CODELAB_APP*/
+const kit=new URLSearchParams(location.search).get("kit")||"";
+createCodeLab(document.getElementById("lab"),{kit,global:true,onKit:k=>{document.getElementById("back").href=`/courses/${k}/study-kit.html`;}});
+</script>
+</body>
+</html>

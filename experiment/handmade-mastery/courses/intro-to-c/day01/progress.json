@@ -2,7 +2,7 @@
  "v": 4,
  "cur": "b03",
  "step": "recall",
- "tab": "review",
+ "tab": "path",
  "done": {
   "b01": {
    "guess": true,
@@ -128,7 +128,8 @@
   "b02": "2026-11-02"
  },
  "ivans": {
-  "b02:0": "a console application is app that is using the terminal as its interface while GUI app is creating it's own one and all that can be flagged inside the app itself"
+  "b02:0": "a console application is app that is using the terminal as its interface while GUI app is creating it's own one and all that can be flagged inside the app itself",
+  "b03:0": "So the debug build, it is when we put a configuration at debug, so it's more slow and for testing, line by line, we go through line by line while building and testing. release build an unoptimized like already optimized code that for ship and for release and more fast and robust and it happen after the debug build because they will build unoptimized yet but more for testing"
  },
  "ivfb": {
   "b02:0": {
@@ -150,6 +151,33 @@
    ],
    "guide": "You said this can be 'flagged inside the app.' Where exactly is that flag stored, and when is it decided: while the program runs, or when you build the .exe?",
    "rewatch": "5:21-12:13"
+  },
+  "b03:0": {
+   "v": 3,
+   "score": 55,
+   "awards": [
+    35,
+    15,
+    5,
+    0
+   ],
+   "right": "You correctly said that Debug is slower and not optimized, Release is optimized and faster for shipping, and in Debug you can go line by line.",
+   "missing": [
+    {
+     "point": "Debug keeps full debug information, so each line maps simply to machine code and the debugger can follow it",
+     "pct": 10
+    },
+    {
+     "point": "Debug often includes extra checks and developer-only code (test code, debug menus, editors)",
+     "pct": 15
+    },
+    {
+     "point": "Same source, different output: the configuration also picks the platform (x86/x64)",
+     "pct": 20
+    }
+   ],
+   "guide": "Two things are missing. First, Debug keeps full debug information and extra checks, so the debugger can follow each line. Second, a build also chooses a platform: Win32 makes 32-bit x86 code and x64 makes 64-bit code, so the same C gives different machine code.",
+   "rewatch": "12:13-16:55"
   }
  },
  "dbgs": {},
@@ -363,7 +391,7 @@
  },
  "practice": {},
  "practiceDone": {
-  "b03": false
+  "b03": true
  },
  "notes": {
   "b01": [
@@ -378,7 +406,7 @@
   ]
  },
  "speed": 1,
- "lastVisit": 1795438603536,
+ "lastVisit": 1795462136099,
  "sessionParts": 0,
  "brk": null,
  "stopped": false,

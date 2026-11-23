@@ -585,9 +585,61 @@ html:has(#review-gate[open]){overflow:hidden}
 .rg-body .row{margin-top:10px}
 .rg-feedback{margin-top:10px}
 .rg-feedback:empty{display:none}
+.rg-later{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:6px 14px;margin-top:12px;padding-top:10px;border-top:1px solid #8cc3cc33;font:13px var(--f-display);color:var(--muted)}
+.rg-later .quiet-link{color:#cfe6ea;font-size:13px}
+.rg-later span{margin-right:auto;color:var(--game-cream)}
 .rg-done{padding:6px 0}
 .rg-big{margin:0 0 8px;font:700 20px var(--f-body);color:var(--game-cream)}
 .rg-results{margin:0 0 10px;padding-left:18px}
+
+/* Study support notifications: the same gold as the selected step tab, with a soft glow. */
+.learning-tools .tool-body .btn{position:relative}
+.support-dot{position:absolute;top:-5px;right:-5px;width:12px;height:12px;border-radius:50%;border:1px solid #db9e36;background:radial-gradient(circle at 35% 30%,#fff7ce,#ffd36b 55%,#edab36);box-shadow:0 0 0 2px #0a3545,0 0 10px #ffcb55b3;pointer-events:none;animation:support-glow 2.4s ease-in-out infinite}
+@keyframes support-glow{50%{box-shadow:0 0 0 2px #0a3545,0 0 16px #ffcb55e6}}
+.support-count{margin-left:auto;min-width:22px;height:22px;padding:0 7px;border-radius:11px;display:inline-grid;place-items:center;color:#33230c;border:1px solid #db9e36;background:linear-gradient(#fff0ae,#ffd36b 48%,#edab36);box-shadow:inset 0 1px 0 #fff7ce,0 0 12px #ffcb5566;font:700 12px/1 var(--f-display);font-variant-numeric:tabular-nums}
+.part-row .part-count{flex:none;min-width:17px;height:17px;padding:0 5px;border-radius:9px;font-size:10px;box-shadow:0 0 8px #ffcb5559}
+@media(prefers-reduced-motion:reduce){.support-dot{animation:none}}
+
+/* Code Lab: Visual Studio's dark editor, Output pane and a black Windows console.
+   Everything is scoped to .codelab so the study page's own styles are untouched. */
+.codelab{--cl-bg:#1e1e1e;--cl-bar:#2d2d30;--cl-panel:#252526;--cl-edge:#3f3f46;--cl-ink:#dcdcdc;--cl-muted:#9a9a9a;--cl-accent:#0e639c;--cl-gutter:#858585;--cl-err:#f48771;--cl-warn:#cca700;--cl-good:#89d185;--cl-mono:"JetBrains Mono",Consolas,Menlo,monospace;--cl-ui:-apple-system,"Segoe UI",system-ui,sans-serif;
+  display:flex;flex-direction:column;min-height:0;background:var(--cl-bg);color:var(--cl-ink);font:13px var(--cl-ui);color-scheme:dark;text-align:left}
+.codelab *{box-sizing:border-box}
+.codelab .cl-bar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:6px 10px;background:var(--cl-bar);border-bottom:1px solid var(--cl-edge)}
+.codelab .cl-title{display:flex;align-items:center;gap:7px;margin-right:auto;min-width:0;color:var(--cl-muted);font-size:12px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.codelab .cl-dot{flex:none;width:9px;height:9px;border-radius:50%;background:#68217a;box-shadow:0 0 0 2px #68217a55}
+.codelab select,.codelab button{margin:0;font:12px var(--cl-ui);color:var(--cl-ink);background:var(--cl-panel);border:1px solid var(--cl-edge);border-radius:4px;padding:5px 9px;min-height:0;box-shadow:none;cursor:pointer}
+.codelab button:hover:not(:disabled){border-color:var(--cl-accent)}
+.codelab button:disabled{opacity:.5;cursor:default}
+.codelab .cl-primary{background:var(--cl-accent);border-color:var(--cl-accent);color:#fff}
+.codelab kbd{font:10px var(--cl-ui);opacity:.75;margin-left:3px;background:none;border:0;padding:0;color:inherit}
+.codelab .cl-status{font-size:11px;color:var(--cl-muted);min-width:70px}
+.codelab .cl-link{font-size:12px;color:var(--cl-muted)}
+.codelab .cl-link:hover{color:var(--cl-ink)}
+.codelab .cl-editor{flex:1;display:flex;min-height:0;font:14px/1.5 var(--cl-mono)}
+.codelab .cl-gutter{padding:10px 8px 10px 12px;text-align:right;color:var(--cl-gutter);background:var(--cl-bg);user-select:none;overflow:hidden;white-space:pre;border-right:1px solid var(--cl-edge);min-width:48px;font:inherit}
+.codelab .cl-src{flex:1;width:auto;min-height:0;height:auto;margin:0;resize:none;border:0;border-radius:0;outline:none;box-shadow:none;padding:10px 14px;background:var(--cl-bg);color:var(--cl-ink);caret-color:#aeafad;font:inherit;tab-size:4;white-space:pre;overflow:auto;overflow-wrap:normal}
+.codelab .cl-src::selection{background:#264f78}
+.codelab .cl-panel{height:40%;min-height:120px;display:flex;flex-direction:column;border-top:1px solid var(--cl-edge);background:var(--cl-panel)}
+.codelab .cl-tabs{display:flex;flex-wrap:wrap;gap:2px;padding:0 8px;border-bottom:1px solid var(--cl-edge)}
+.codelab .cl-tabs button{border:0;border-bottom:2px solid transparent;border-radius:0;background:none;padding:7px 12px;color:var(--cl-muted)}
+.codelab .cl-tabs button[aria-selected="true"]{color:var(--cl-ink);border-bottom-color:var(--cl-accent)}
+.codelab .cl-tabs button.has::after{content:"•";color:#3794ff;margin-left:5px}
+.codelab .cl-target{margin-left:auto;align-self:center;font-size:11px;color:var(--cl-muted)}
+.codelab .cl-out{flex:1;min-height:0;overflow:auto;margin:0;padding:10px 14px;border:0;border-radius:0;background:none;color:var(--cl-ink);font:12.5px/1.5 var(--cl-mono);white-space:pre-wrap;word-break:break-word;max-height:none}
+.codelab [hidden]{display:none!important}
+.codelab .err{color:var(--cl-err)}.codelab .warn{color:var(--cl-warn)}.codelab .good{color:var(--cl-good)}.codelab .dim{color:var(--cl-muted)}
+.codelab .cl-diag{all:unset;cursor:pointer;text-decoration:underline dotted}
+.codelab .cl-empty{color:var(--cl-muted);font-family:var(--cl-ui)}
+/* The program's console: a black Windows console window inside the panel. */
+.codelab .cl-console{flex:1;min-height:0;display:flex;flex-direction:column;margin:8px;border:1px solid #6b6b6b;background:#0c0c0c}
+.codelab .cl-console-title{flex:none;padding:3px 9px;background:#f0f0f0;color:#1b1b1b;font:12px var(--cl-ui);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.codelab .cl-console .cl-out{color:#cccccc;font-family:Consolas,"Cascadia Mono",Menlo,monospace}
+/* Inside the Practice step. */
+.codelab-slot{margin:16px 0}
+.codelab-slot>.codelab{height:min(620px,78vh);border:1px solid #4c8999;border-radius:10px;overflow:hidden;box-shadow:0 0 0 1px #00000033,0 6px 18px #001a2855}
+.codelab-slot .codelab-off{margin:0;padding:12px 14px;border:1px dashed #6aa5b2;border-radius:10px;font-size:14px}
+@media(max-width:640px){.codelab .cl-title{flex-basis:100%;order:9}.codelab-slot>.codelab{height:80vh}}
 
 </style>
 
@@ -2228,7 +2280,7 @@ let sample=null, downloads=null;
 (async()=>{try{if(window.claude){sample=await claude.use("sample"); safeRender();}}catch(e){}})();
 (async()=>{try{if(window.claude){downloads=await claude.use("downloads");}}catch(e){}})();
 function safeRender(){ if(vid && !vid.paused) return; render(); }
-function toast(t){const el=$("#toast");el.textContent=t;el.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove("on"),2000)}
+function toast(t){const el=$("#toast");const top=[...document.querySelectorAll("dialog[open]")].pop()||document.body;if(top.append&&el.parentNode!==top)top.append(el); /* inside an open popup, or it hides behind it */el.textContent=t;el.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove("on"),2000)}
 async function copy(text,box){
   try{await navigator.clipboard.writeText(text);toast("Copied. Paste it to Claude.");}
   catch(e){ if(box){box.innerHTML=`<textarea readonly>${esc(text)}</textarea><p class="small muted">Select all and copy this, then paste it to Claude.</p>`; box.querySelector("textarea").select();} }
@@ -2479,6 +2531,35 @@ function micPrompt(b){ // Whisper's initial_prompt: the course's and this part's
 function micStatus(w,cls,text){const s=w.querySelector(".micstat"); if(!s) return; s.className="micstat"+(cls?" "+cls:""); s.textContent=text; s.hidden=!text;}
 function micButton(w,on){const b=w.querySelector(".mic"); if(!b) return; b.classList.toggle("rec",on); b.innerHTML=on?ICON.stop:ICON.mic;
   b.setAttribute("aria-label",on?"Stop recording":"Speak instead of typing");}
+/* Live dictation, like a chat app: the recorder hands over a chunk every second; while you speak, the audio so far
+   is re-transcribed (fast pass, ?live=1) about every 1.5 s and shown in the box, which is read-only meanwhile.
+   Pressing stop sends the whole recording once more (careful pass) and that final text replaces the live one. */
+const LIVE_EVERY=1500;
+function micCompose(r,text){ // the box's original text with `text` at the saved cursor
+  const v=r.base, [a,z]=r.cur||[v.length,v.length];
+  const pre=a>0&&text&&!/\s$/.test(v.slice(0,a))?" ":"", post=z<v.length&&text&&!/^\s/.test(v.slice(z))?" ":"";
+  return {value:v.slice(0,a)+pre+text+post+v.slice(z), end:a+pre.length+text.length};
+}
+function micFind(r){return r.el.isConnected?r.el:(r.key&&document.querySelector(r.key));} // the box may have been re-rendered
+function micShow(r,text,final){
+  const el=micFind(r); if(!el) return null;
+  const {value,end}=micCompose(r,text);
+  el.value=value; el.readOnly=!final;
+  if(final){el.focus(); el.setSelectionRange(end,end); touched.add(el);} else el.scrollTop=el.scrollHeight;
+  return el;
+}
+async function micTranscribe(r,blob,live){
+  const res=await (await fetch("/api/transcribe?"+(live?"live=1&":"")+"prompt="+encodeURIComponent(micPrompt(r.b)),{method:"POST",headers:{"Content-Type":blob.type},body:blob})).json();
+  if(res.error) throw new Error(res.error);
+  return (res.text||"").trim();
+}
+async function micLive(r){
+  if(r.stopped||r.busy||!r.chunks.length) return;
+  r.busy=true;
+  try{const text=await micTranscribe(r,new Blob(r.chunks,{type:r.mr.mimeType||"audio/webm"}),true); if(!r.stopped&&text){r.partial=text; micShow(r,text,false);}}
+  catch(e){} // a missed live update is fine; the final pass still runs
+  finally{r.busy=false;}
+}
 async function micStart(btn){
   const w=btn.closest(".micwrap"), el=w.querySelector("textarea,input");
   let stream;
@@ -2486,40 +2567,38 @@ async function micStart(btn){
   catch(e){toast(e.name==="NotAllowedError"?"The microphone is blocked. Allow it for this page, or type.":"No microphone found. You can type.");return}
   const mr=new MediaRecorder(stream), chunks=[];
   const cur=touched.has(el)?[el.selectionStart,el.selectionEnd]:null;
-  const rec0=rec={mr,w,el,key:boxKey(el),cur,b:boxBlock(el),t0:Date.now(),tick:null};
+  const rec0=rec={mr,w,el,key:boxKey(el),cur,b:boxBlock(el),t0:Date.now(),tick:null,chunks,base:el.value,partial:"",busy:false,stopped:false,live:null};
   mr.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};
   mr.onstop=()=>{stream.getTracks().forEach(t=>t.stop()); micSend(rec0,new Blob(chunks,{type:mr.mimeType||"audio/webm"}));};
-  mr.start(); micButton(w,true); micStatus(w,"rec","0:00");
-  rec.tick=setInterval(()=>{const s=(Date.now()-rec0.t0)/1000; micStatus(rec0.w,"rec",fmt(s)); if(s>=300) micStop();},500); // 5 min max
+  mr.start(1000); el.readOnly=true; micButton(w,true); micStatus(w,"rec","● 0:00");
+  rec.tick=setInterval(()=>{const s=(Date.now()-rec0.t0)/1000; const box=micFind(rec0), bw=box&&box.closest(".micwrap");
+    if(bw){micStatus(bw,"rec","● "+fmt(s)); micButton(bw,true);} if(s>=300) micStop();},500); // 5 min max
+  rec.live=setInterval(()=>micLive(rec0),LIVE_EVERY);
 }
 function micStop(){
-  if(!rec) return; const r=rec; rec=null;
-  clearInterval(r.tick); micButton(r.w,false);
+  if(!rec) return; const r=rec; rec=null; r.stopped=true;
+  clearInterval(r.tick); clearInterval(r.live);
+  const box=micFind(r), bw=box&&box.closest(".micwrap"); if(bw) micButton(bw,false);
   if(r.mr.state!=="inactive") r.mr.stop();
 }
 async function micSend(r,blob){
-  const find=()=>r.el.isConnected?r.el:(r.key&&document.querySelector(r.key)); // the box may have been re-rendered
-  const status=(c,t)=>{const el=find(); const w=el&&el.closest(".micwrap"); if(w) micStatus(w,c,t);};
-  const lock=on=>{const el=find(), b=el&&el.closest(".micwrap")?.querySelector(".mic"); if(b) b.disabled=on;};
-  if(Date.now()-r.t0<600||blob.size<1000){status("","");toast("Too short. Press the mic, speak, then press it again.");return}
-  status("","Transcribing…"); lock(true);
+  const status=(c,t)=>{const el=micFind(r); const w=el&&el.closest(".micwrap"); if(w) micStatus(w,c,t);};
+  const lock=on=>{const el=micFind(r), b=el&&el.closest(".micwrap")?.querySelector(".mic"); if(b) b.disabled=on;};
+  const done=text=>{const el=micShow(r,text,true); if(el&&el.value!==r.base) el.dispatchEvent(new Event("input",{bubbles:true}));}; // the box's normal save
+  if(Date.now()-r.t0<600||blob.size<1000){done("");status("","");toast("Too short. Press the mic, speak, then press it again.");return}
+  status("","Finishing…"); lock(true);
   try{
-    const res=await (await fetch("/api/transcribe?prompt="+encodeURIComponent(micPrompt(r.b)),{method:"POST",headers:{"Content-Type":blob.type},body:blob})).json();
-    if(res.error) throw new Error(res.error);
-    const text=(res.text||"").trim(); if(!text){toast("I didn't hear any words. Try again, a bit closer to the mic.");return}
-    const el=find(); if(!el){toast("The box is gone, so the text wasn't added.");return}
-    const v=el.value, [a,z]=r.cur||[v.length,v.length];
-    const pre=a>0&&!/\s$/.test(v.slice(0,a))?" ":"", post=z<v.length&&!/^\s/.test(v.slice(z))?" ":"";
-    el.value=v.slice(0,a)+pre+text+post+v.slice(z);
-    const end=a+pre.length+text.length; el.focus(); el.setSelectionRange(end,end); touched.add(el);
-    el.dispatchEvent(new Event("input",{bubbles:true})); // the box's normal save
-  }catch(e){toast("Couldn't turn the speech into text. Your box is unchanged.");}
+    const text=await micTranscribe(r,blob,false);
+    if(!text&&!r.partial){done("");toast("I didn't hear any words. Try again, a bit closer to the mic.");return}
+    if(!micFind(r)){toast("The box is gone, so the text wasn't added.");return}
+    done(text||r.partial);
+  }catch(e){done(r.partial);toast(r.partial?"Kept the live text; the final check failed.":"Couldn't turn the speech into text. Your box is unchanged.");}
   finally{status("",""); lock(false);}
 }
 document.addEventListener("click",e=>{
   const btn=e.target.closest(".mic"); if(!btn) return;
   e.preventDefault(); e.stopPropagation();
-  if(rec&&rec.w===btn.closest(".micwrap")){micStop();return}
+  if(rec&&(micFind(rec)?.closest(".micwrap")||rec.w)===btn.closest(".micwrap")){micStop();return}
   micStop(); micStart(btn); // only one box records at a time
 },true);
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&rec){e.preventDefault();micStop();}});
@@ -2908,9 +2987,10 @@ function goNextStep(){
   const st=stepsFor(b),i=st.findIndex(([k])=>k===S.step);
   if(i<st.length-1){S.step=st[i+1][0];}
   else{
-    if(!S.completed[b.id]){S.cdate[b.id]=new Date().toISOString().slice(0,10);S.sessionParts=(S.sessionParts||0)+1;} S.completed[b.id]=true;
+    const fresh=!S.completed[b.id]; // a revisited part goes straight on; only new work counts toward a break
+    if(fresh){S.cdate[b.id]=new Date().toISOString().slice(0,10);S.sessionParts=(S.sessionParts||0)+1;} S.completed[b.id]=true;
     const nb=D.blocks[idxOf(b)+1];
-    if(nb){S.cur=nb.id;S.step="watch";S.brk=S.sessionParts%LONG_EVERY===0?{from:b.id,until:null}:null;}
+    if(nb){S.cur=nb.id;S.step="watch";S.brk=fresh&&S.sessionParts%LONG_EVERY===0?{from:b.id,until:null}:null;}
     else{S.cur=D.qa?"__qa":b.id; toast("Last part finished");}
   }
   S.lessonViews=S.lessonViews||{};S.lessonViews[S.cur]=S.step;
@@ -3224,15 +3304,231 @@ document.addEventListener('click',async e=>{
 
 document.addEventListener('keydown',e=>{const tab=e.target.closest?.('[data-view]');if(!tab||!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();const index=VIEW_STEPS.findIndex(([key])=>key===tab.dataset.view),next=e.key==='Home'?0:e.key==='End'?VIEW_STEPS.length-1:(index+(e.key==='ArrowRight'?1:-1)+VIEW_STEPS.length)%VIEW_STEPS.length;selectStudyView(VIEW_STEPS[next][0]);render();document.querySelector(`[data-view="${VIEW_STEPS[next][0]}"]`)?.focus();});
 
+/* Code Lab: write, build and run course C/C++ on the Mac, laid out like Casey's screen:
+   the editor on top, Visual Studio's Output pane, a black console window and Disassembly.
+   One editor for both places: the Practice step embeds it (createCodeLab(root,{kit})) and
+   /code shows it full window ({kit, global:true}). No autocomplete: indentation only.
+   Saving goes through one queue, so an older save can never land after a newer one. */
+function createCodeLab(root,opts){
+  const o=opts||{};
+  const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  root.classList.add('codelab');
+  root.innerHTML=`<div class="cl-bar">
+      <span class="cl-title"><span class="cl-dot" aria-hidden="true"></span><span data-cl="where">Loading…</span></span>
+      <select data-cl="file" aria-label="File"></select>
+      <button type="button" data-cl="new" title="Create a new .c, .cpp or .h file">+ New file</button>
+      <span class="cl-status" data-cl="status" aria-live="polite"></span>
+      <button type="button" data-cl="build" title="Compile and link (Ctrl+Shift+B)">Build <kbd>⌃⇧B</kbd></button>
+      <button type="button" data-cl="run" class="cl-primary" title="Build, then run (F5)">▶ Run <kbd>F5</kbd></button>
+      <button type="button" data-cl="asm" title="Show the x64 assembly the compiler made">Disassembly</button>
+      ${o.fullLink?`<a class="cl-link" data-cl="full" target="codelab" href="/code?kit=${encodeURIComponent(o.kit||'')}">Full window ↗</a>`:''}
+    </div>
+    <div class="cl-editor"><div class="cl-gutter" aria-hidden="true">1</div><textarea class="cl-src" data-mic="off" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" aria-label="Code editor"></textarea></div>
+    <div class="cl-panel">
+      <div class="cl-tabs" role="tablist" aria-label="Results">
+        <button type="button" role="tab" data-cltab="output" aria-selected="true">Output</button>
+        <button type="button" role="tab" data-cltab="console" aria-selected="false">Console</button>
+        <button type="button" role="tab" data-cltab="disasm" aria-selected="false">Disassembly</button>
+        <span class="cl-target" data-cl="target"></span>
+      </div>
+      <pre class="cl-out" data-out="output" role="tabpanel"><span class="cl-empty">Build output and debug output (OutputDebugStringA) appear here, like Visual Studio's Output window.</span></pre>
+      <div class="cl-console" data-out="console" role="tabpanel" hidden><div class="cl-console-title" data-cl="contitle">C:\\Windows\\system32\\cmd.exe</div><pre class="cl-out"><span class="cl-empty">Text your program prints with printf appears here.</span></pre></div>
+      <pre class="cl-out" data-out="disasm" role="tabpanel" hidden><span class="cl-empty">Press Disassembly to see the machine instructions for this file.</span></pre>
+    </div>`;
+  const q=sel=>root.querySelector(`[data-cl="${sel}"]`),out=name=>root.querySelector(`[data-out="${name}"]`);
+  const src=root.querySelector('.cl-src'),gutter=root.querySelector('.cl-gutter'),fileSel=q('file'),statusEl=q('status');
+  const conOut=out('console').querySelector('.cl-out');
+  let kit=o.kit||'',files=[],current='',saveTimer=null,busy=false,queue=Promise.resolve(),lineCount=0,loaded=false;
+  const fileByName=n=>files.find(f=>f.name===n);
+  const buildable=()=>/\.(c|cpp)$/.test(current);
+  const setStatus=t=>{statusEl.textContent=t;};
+
+  async function api(path,body){
+    const r=await fetch(path,body?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}:{});
+    const j=await r.json().catch(()=>({error:`error ${r.status}`}));
+    if(!r.ok||j.error)throw new Error(j.error||`error ${r.status}`);
+    return j;
+  }
+  // The gutter is rebuilt only when the number of lines changes, not on every key.
+  function lines(){
+    let n=1;for(let i=src.value.indexOf('\n');i!==-1;i=src.value.indexOf('\n',i+1))n++;
+    if(n!==lineCount){lineCount=n;let t='1';for(let i=2;i<=n;i++)t+='\n'+i;gutter.textContent=t;}
+    gutter.scrollTop=src.scrollTop;
+  }
+  function fillFiles(){
+    fileSel.innerHTML=files.map(f=>`<option ${f.name===current?'selected':''}>${esc(f.name)}</option>`).join('');
+    for(const id of ['build','run','asm'])q(id).disabled=busy||!buildable();
+  }
+  function openFile(name){
+    current=name;src.value=fileByName(name)?.source??'';lineCount=0;lines();src.scrollTop=0;fillFiles();
+    q('contitle').textContent=`C:\\handmade\\${kit.replace(/\//g,'\\')}\\${current.replace(/\.\w+$/,'')}.exe`;
+    try{localStorage.setItem('codelab-file:'+kit,name);}catch{}
+  }
+
+  /* ---- saving: debounced, queued in order ---- */
+  function save(){
+    clearTimeout(saveTimer);saveTimer=null;
+    if(!current||!loaded)return queue;
+    const body={kit,file:current,source:src.value};
+    const f=fileByName(current);if(f)f.source=body.source;
+    queue=queue.then(()=>api('/api/code/save',body)).then(()=>{if(!saveTimer)setStatus('Saved');},e=>setStatus('Not saved: '+e.message));
+    return queue;
+  }
+  function scheduleSave(){setStatus('Editing…');clearTimeout(saveTimer);saveTimer=setTimeout(save,700);}
+  function flushBeacon(){
+    if(saveTimer&&current&&loaded&&navigator.sendBeacon){clearTimeout(saveTimer);saveTimer=null;navigator.sendBeacon('/api/code/save',new Blob([JSON.stringify({kit,file:current,source:src.value})],{type:'application/json'}));}
+  }
+
+  async function newFile(){
+    const name=(prompt('New file name (for example main.cpp):',files.length?'':'main.cpp')||'').trim();
+    if(!name)return;
+    if(!/^[A-Za-z0-9_][A-Za-z0-9_-]{0,60}\.(c|cpp|h)$/.test(name)){alert('Use a simple name ending in .c, .cpp or .h');return;}
+    await save();
+    if(!fileByName(name))files.push({name,source:''});
+    files.sort((a,b)=>a.name.localeCompare(b.name));
+    openFile(name);src.focus();save();
+  }
+
+  /* ---- editor keys: indentation only, no autocomplete ---- */
+  function insert(text){if(!document.execCommand('insertText',false,text))src.setRangeText(text,src.selectionStart,src.selectionEnd,'end');}
+  function shortcut(e){
+    const mod=e.metaKey||e.ctrlKey;
+    if(mod&&e.key.toLowerCase()==='s'){e.preventDefault();save();return true;}
+    if(mod&&e.shiftKey&&e.key.toLowerCase()==='b'){e.preventDefault();act('build');return true;}
+    if(e.key==='F5'||(mod&&e.key==='Enter')){e.preventDefault();act('run');return true;}
+    return false;
+  }
+  src.addEventListener('keydown',e=>{
+    e.stopPropagation();                         // the study page's own keys (Space for the video…) stay out of the editor
+    if(shortcut(e))return;
+    const mod=e.metaKey||e.ctrlKey;
+    if(e.key==='Tab'){
+      e.preventDefault();
+      const v=src.value,s=src.selectionStart,en=src.selectionEnd;
+      if(s===en&&!e.shiftKey){insert('    ');return;}
+      const ls=v.lastIndexOf('\n',s-1)+1,block=v.slice(ls,en);
+      const res=e.shiftKey?block.replace(/^( {1,4}|\t)/gm,''):block.replace(/^/gm,'    ');
+      src.setSelectionRange(ls,en);insert(res);src.setSelectionRange(ls,ls+res.length);return;
+    }
+    if(e.key==='Enter'&&!mod&&!e.isComposing){
+      const v=src.value,s=src.selectionStart,ls=v.lastIndexOf('\n',s-1)+1;
+      e.preventDefault();insert('\n'+v.slice(ls,s).match(/^[ \t]*/)[0]);
+    }
+  });
+  (o.global?document:root).addEventListener('keydown',e=>{if(e.target!==src)shortcut(e);});
+  src.addEventListener('input',()=>{lines();scheduleSave();});
+  src.addEventListener('scroll',()=>{gutter.scrollTop=src.scrollTop;},{passive:true});
+
+  /* ---- results panel ---- */
+  function showTab(name){
+    root.querySelectorAll('.cl-tabs [data-cltab]').forEach(b=>{const on=b.dataset.cltab===name;b.setAttribute('aria-selected',String(on));if(on)b.classList.remove('has');});
+    for(const id of ['output','console','disasm'])out(id).hidden=id!==name;
+  }
+  root.querySelector('.cl-tabs').addEventListener('click',e=>{const b=e.target.closest('[data-cltab]');if(b)showTab(b.dataset.cltab);});
+  const mark=tab=>{if(out(tab).hidden)root.querySelector(`[data-cltab="${tab}"]`).classList.add('has');};
+  function diagHTML(log){
+    return esc(log).split('\n').map(l=>{
+      const m=l.match(/^([\w.-]+\.(?:c|cpp|h)):(\d+):(\d+): (error|warning|note)/);
+      const cls=/\berror\b/.test(l)?'err':/\bwarning\b/.test(l)?'warn':'';
+      const body=m?`<button type="button" class="cl-diag" data-file="${m[1]}" data-line="${m[2]}" title="Go to line ${m[2]}">${l}</button>`:l;
+      return cls?`<span class="${cls}">${body}</span>`:body;
+    }).join('\n');
+  }
+  out('output').addEventListener('click',e=>{
+    const b=e.target.closest('.cl-diag');if(!b)return;
+    if(b.dataset.file!==current&&fileByName(b.dataset.file)){save();openFile(b.dataset.file);}
+    const n=+b.dataset.line,v=src.value.split('\n'),start=v.slice(0,n-1).reduce((a,l)=>a+l.length+1,0);
+    src.focus();src.setSelectionRange(start,start+(v[n-1]||'').length);
+    src.scrollTop=Math.max(0,(n-5)*parseFloat(getComputedStyle(src).lineHeight));
+  });
+
+  const FAILED='<span class="err">========== Build: 0 succeeded, 1 failed ==========</span>\n';
+  async function act(action){
+    if(busy||!buildable()||!loaded)return;
+    busy=true;fillFiles();
+    clearTimeout(saveTimer);saveTimer=null;
+    const f=fileByName(current);if(f)f.source=src.value;
+    const body={kit,file:current,source:src.value,action};
+    setStatus(action==='asm'?'Compiling…':action==='run'?'Building and running…':'Building…');
+    try{
+      await queue;                               // the build saves the file too: let earlier saves land first
+      const r=await api('/api/code/build',body);
+      setStatus('Saved');
+      if(action==='asm'){
+        q('target').textContent=r.target?`Target: ${r.target}`:'';
+        if(r.built){out('disasm').textContent=r.asm;showTab('disasm');}
+        else{out('output').innerHTML=diagHTML(r.log)+'\n'+FAILED;showTab('output');}
+        return;
+      }
+      let html=`<span class="dim">Build started: ${esc(r.file)}\n$ ${esc(r.command)}</span>\n`;
+      if(r.log)html+=diagHTML(r.log)+'\n';
+      html+=r.built?`<span class="good">========== Build: 1 succeeded, 0 failed ==========</span>${r.buildMs!=null?`<span class="dim"> (${r.buildMs} ms)</span>`:''}\n`:FAILED;
+      if(r.ran){
+        if(r.debug)html+=`\n${esc(r.debug)}${r.debug.endsWith('\n')?'':'\n'}`;
+        if(r.note)html+=`<span class="err">${esc(r.note)}</span>\n`;
+        const code=r.exitCode<0?'(crashed)':`${r.exitCode} (0x${(r.exitCode>>>0).toString(16)})`;
+        html+=`<span class="dim">The program '${esc(current.replace(/\.\w+$/,''))}.exe' has exited with code ${code}.</span>\n`;
+        conOut.innerHTML=r.console?esc(r.console):'<span class="cl-empty">The program printed nothing to the console.</span>';
+        if(r.console)mark('console');
+      }
+      out('output').innerHTML=html;showTab('output');
+    }catch(e){setStatus('');out('output').innerHTML=`<span class="err">${esc(e.message)}</span>`;showTab('output');}
+    finally{busy=false;fillFiles();}
+  }
+  q('build').onclick=()=>act('build');
+  q('run').onclick=()=>act('run');
+  q('asm').onclick=()=>act('asm');
+  q('new').onclick=newFile;
+  fileSel.onchange=()=>{const next=fileSel.value;save();openFile(next);src.focus();};
+  window.addEventListener('pagehide',flushBeacon);
+
+  /* Another window (the full Code Lab, VS Code) may have changed the files: pick that up when
+     you come back, unless you have unsaved typing here. */
+  async function refresh(){
+    if(!loaded||saveTimer||busy)return;
+    try{
+      const r=await api('/api/code?kit='+encodeURIComponent(kit));
+      if(saveTimer||busy||!r.files.length)return;
+      const mine=src.value,disk=r.files.find(f=>f.name===current);
+      files=r.files;
+      if(!disk)files.push({name:current,source:mine});
+      if(disk&&disk.source!==mine){const top=src.scrollTop;openFile(current);src.scrollTop=top;gutter.scrollTop=top;}
+      else fillFiles();
+    }catch{}
+  }
+  window.addEventListener('focus',refresh);
+
+  async function load(){
+    try{
+      const r=await api('/api/code?kit='+encodeURIComponent(kit));
+      kit=r.kit;files=r.files;loaded=true;
+      q('where').textContent=`${kit} · saved in ${r.folder}/`;
+      if(q('full'))q('full').href=`/code?kit=${encodeURIComponent(kit)}`;
+      o.onKit?.(kit);
+      if(!r.compiler)out('output').innerHTML='<span class="err">clang was not found. Run: xcode-select --install</span>';
+      let last='';try{last=localStorage.getItem('codelab-file:'+kit)||'';}catch{}
+      if(!files.length)files=[{name:'main.cpp',source:''}];
+      openFile(fileByName(last)?last:files[0].name);
+      setStatus(r.files.length?'':'New file: main.cpp (saved when you type)');
+    }catch(e){q('where').textContent='Could not load: '+e.message;}
+  }
+  load();
+  return {root,refresh,save,focus:()=>src.focus()};
+}
+
 /* Experimental presentation only. Core grading, media and saving remain intact. */
 function experimentSupport(b){
   const deferred=b.deferred||[];
-  return `<aside class="learning-tools" aria-label="Supporting tools"><section class="tool-card"><h2>${uiIcon('book')} Study support</h2><div class="tool-body"><button class="btn ghost" data-ui="full-explanation">Explanation &amp; Listen</button><button class="btn ghost" data-ui="analogy">Analogy</button><button class="btn ghost" data-ui="graphics">Graphics</button><button class="btn ghost" data-ui="code-notes">Code &amp; Pseudocode</button><button class="btn ghost" data-ui="flashcards" ${(b.cards||[]).length?'':'disabled'}>Flashcards · optional</button><hr class="tool-divider"><button class="btn ghost" data-ui="ask-claude">Ask Claude</button><button class="btn ghost" data-ui="my-notes">My notes${(S.myNotes?.[b.id]?.text||'').trim()?'<span class="tool-mark" aria-label=" (written)">✓</span>':''}</button></div></section><section class="tool-card"><h2>${uiIcon('layers')} Deferred Topics</h2><div class="tool-body"><p>Ideas for later in the course.</p>${deferred.length?`<ul class="deferred-list">${deferred.map((text,i)=>`<li><button data-ui="deferred" data-index="${i}">${esc(deferredTitle(text))}</button></li>`).join('')}</ul>`:'<p class="empty-tool">No deferred topics in this part.</p>'}</div></section></aside>`;
+  return `<aside class="learning-tools" aria-label="Supporting tools"><section class="tool-card"><h2>${uiIcon('book')} Study support${supportCountHTML(supportUnreadTotal(),'support-count')}</h2><div class="tool-body"><button class="btn ghost" data-ui="full-explanation">Explanation &amp; Listen${supportDot(b,'explain')}</button><button class="btn ghost" data-ui="analogy">Analogy${supportDot(b,'analogy')}</button><button class="btn ghost" data-ui="graphics">Graphics${supportDot(b,'graphics')}</button><button class="btn ghost" data-ui="code-notes">Code &amp; Pseudocode${supportDot(b,'code')}</button><button class="btn ghost" data-ui="flashcards" ${(b.cards||[]).length?'':'disabled'}>Flashcards · optional${supportDot(b,'cards')}</button><hr class="tool-divider"><button class="btn ghost" data-ui="ask-claude">Ask Claude</button><button class="btn ghost" data-ui="my-notes">My notes${(S.myNotes?.[b.id]?.text||'').trim()?'<span class="tool-mark" aria-label=" (written)">✓</span>':''}</button></div></section><section class="tool-card"><h2>${uiIcon('layers')} Deferred Topics</h2><div class="tool-body"><p>Ideas for later in the course.</p>${deferred.length?`<ul class="deferred-list">${deferred.map((text,i)=>`<li><button data-ui="deferred" data-index="${i}">${esc(deferredTitle(text))}</button></li>`).join('')}</ul>`:'<p class="empty-tool">No deferred topics in this part.</p>'}</div></section></aside>`;
 }
 const experimentBaseStep=renderStepRaw;
 renderStepRaw=function(b,key){
-  if(key==='watch')return `${videoPanel(b)}<p class="experiment-focus"><strong>Focus:</strong> ${md(b.focus||b.oneLiner||b.summary)}</p><p>When Casey codes, pause and write the change yourself. Predict, build and check the result. That work counts as your practice.</p><details class="experiment-parking"><summary>Park a question for later</summary><div class="row"><input type="text" id="parkin" placeholder="Your question…" aria-label="Question to park"><button class="btn ghost" id="parkgo">Park it</button></div><ul class="plist" id="plist">${parkItems(b,false)}</ul></details>`;
-  if(key==='experiment')return `<details class="experiment-prediction"><summary>Predict the result · optional</summary><p>${md(b.guess||checkFor(b).q)}</p><textarea data-prediction="${b.id}" placeholder="What do you expect to happen?">${esc(S.predictions?.[b.id]||'')}</textarea></details>${experimentBaseStep(b,key)}`;
+  if(key==='watch')return `${videoPanel(b)}<p class="experiment-focus"><strong>Focus:</strong> ${md(b.focus||b.oneLiner||b.summary)}</p><p>When Casey codes, pause and write the change yourself. Predict, build and check the result. That work counts as your practice.</p>${codeLabLink()}<details class="experiment-parking"><summary>Park a question for later</summary><div class="row"><input type="text" id="parkin" placeholder="Your question…" aria-label="Question to park"><button class="btn ghost" id="parkgo">Park it</button></div><ul class="plist" id="plist">${parkItems(b,false)}</ul></details>`;
+  if(key==='experiment'){
+    const base=experimentBaseStep(b,key),at=base.indexOf('<p class="small">If you already');
+    const withLab=at<0?base+CODELAB_SLOT:base.slice(0,at)+CODELAB_SLOT+base.slice(at);
+    return `<details class="experiment-prediction"><summary>Predict the result · optional</summary><p>${md(b.guess||checkFor(b).q)}</p><textarea data-prediction="${b.id}" placeholder="What do you expect to happen?">${esc(S.predictions?.[b.id]||'')}</textarea></details>${withLab}`;
+  }
   return experimentBaseStep(b,key);
 };
 fullExplanation=function(b){
@@ -3247,7 +3543,8 @@ renderPath=function(){
   const b=activeLesson();
   if(!STEPS.some(([key])=>key===(referenceStep||S.step)))referenceStep=null;
   const view=referenceStep||S.step;
-  const label=view==='watch'?'I watched it → Check':view==='recall'?'Continue to practice →':'Finish part';
+  const next=D.blocks[idxOf(b)+1];
+  const label=view==='watch'?'I watched it → Check':view==='recall'?'Continue to practice →':next?`Finish part · Continue to Part ${idxOf(next)+1} →`:D.qa?'Finish part · Questions & answers →':'Finish the last part ✓';
   return `<header class="lesson-header"><div><div class="eyebrow">Part ${idxOf(b)+1} of ${D.blocks.length}</div><h1>Day 1 — ${esc(b.title)}</h1></div><span class="tsr">▶ ${b.start} – ${b.end}</span></header>${navigationHTML(b)}<div class="lesson-columns"><div id="lesson-panel" role="tabpanel" aria-labelledby="study-tab-${view}"><section class="frost-card reading-pane study-primary"><div class="pane" id="pane">${renderStep(b,view)}</div>${stepOpen(b,view)?`<div class="next"><button class="btn amber" data-ui="advance-view">${label}</button></div>`:''}</section></div>${experimentSupport(b)}</div>`;
 };
 document.addEventListener('click',e=>{
@@ -3277,7 +3574,7 @@ courseTreeHTML=function(){
   return `<ol class="part-list">${D.blocks.map((part,i)=>{
     const key=part.id,done=!!S.completed[key],current=key===S.cur,locked=i>f;
     const state=done?(checked(part)?'checked':'finished'):current?'current':locked?'complete the earlier parts first':'open';
-    return `<li><button class="part-row${done?' is-finished':''}${current?' is-current':''}" data-blk="${key}" ${current?'aria-current="page"':''} ${locked?'disabled':''} title="Part ${i+1} — ${esc(part.title)} (${part.start}–${part.end})" aria-label="Part ${i+1}: ${esc(part.title)}, ${state}"><span class="part-mark" aria-hidden="true">${done?'✓':i+1}</span><span class="part-name">${esc(part.title)}</span></button></li>`;
+    return `<li><button class="part-row${done?' is-finished':''}${current?' is-current':''}" data-blk="${key}" ${current?'aria-current="page"':''} ${locked?'disabled':''} title="Part ${i+1} — ${esc(part.title)} (${part.start}–${part.end})" aria-label="Part ${i+1}: ${esc(part.title)}, ${state}"><span class="part-mark" aria-hidden="true">${done?'✓':i+1}</span><span class="part-name">${esc(part.title)}</span>${i>f?'':supportCountHTML(supportUnread(part).length,'support-count part-count')}</button></li>`;
   }).join('')}</ol>`;
 };
 
@@ -3324,7 +3621,7 @@ showVideoSpeed();
 // The helper can replace S after start-up (saved progress), so always reach these through the getters.
 const myNotes=()=>S.myNotes||(S.myNotes={});
 const episodeNotes=()=>S.episodeNotes||(S.episodeNotes={});
-// TODO(human): tune the quick questions to the ones you really ask.
+// Quick questions: tune these to the ones you really ask.
 const ASK_CHIPS={
   part:["I didn't understand this part","What is the most important idea?","What should I remember for later?"],
   explain:['Explain it more simply','Give me a real example','How does this connect to the code?'],
@@ -3579,11 +3876,15 @@ document.addEventListener('click',e=>{
    On a new visit with core part reviews due (journey/REVIEWS.md via the helper), a popup that cannot be
    dismissed asks each one from memory, grades it with the usual fixed checklist (one retry), saves the first
    score, then continues to the saved part. It keeps to the five-minute review budget: when time is up,
-   the current answer can be finished and the rest stays due for next time. Interview/debug rows are not forced. */
+   the current answer can be finished and the rest stays due for next time. Interview/debug rows are not forced.
+   Two ways out: "Keep for later" closes the popup for this visit and every remaining review stays due (they pile up
+   and all come back on the next visit, with a fresh five minutes); "Skip this review" retires one review for good
+   (journey/REVIEWS.md stage "skipped") after a confirm step, then moves on. */
 const REVIEW_BUDGET_MS=5*60*1000;
 const localDay=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;};
 const gateState=()=>{const g=S.reviewGate;return g&&g.day===localDay()?g:(S.reviewGate={day:localDay()});};
-let gate=null; // {rows, index, results, busy, error, canSkip}: skipping is offered only when Claude or saving fails, never for a missing answer
+let gateDeferred=false; // "Keep for later" pressed: no popup again until the page is opened again
+let gate=null; // {rows, index, results, busy, error, canSkip, confirmSkip}: skipping is offered only when Claude or saving fails, never for a missing answer
 function coreReviewRows(){return dueReviews.filter(r=>!/\/(iv|dbg)\d+$/.test(r.source)&&reviewItem(r));}
 function gateTimeLeft(){const g=gateState();return g.startedAt?Math.max(0,REVIEW_BUDGET_MS-(Date.now()-g.startedAt)):REVIEW_BUDGET_MS;}
 function gateDialog(){
@@ -3595,7 +3896,7 @@ function gateDialog(){
   document.body.append(d);return d;
 }
 function maybeOpenReviewGate(){
-  if(gate||!helperReady||!reviewsLoaded||!sample||S.tab!=='path')return;
+  if(gate||gateDeferred||!helperReady||!reviewsLoaded||!sample||S.tab!=='path')return;
   const g=gateState();if(g.finished)return;
   const rows=coreReviewRows();if(!rows.length)return;
   if(!g.startedAt){g.startedAt=Date.now();save();}
@@ -3616,13 +3917,14 @@ function gateItemHTML(row){
   return `<p class="rg-meta">Review ${n} of ${gate.rows.length} · Part ${idxOf(b)+1} — ${esc(b.title)}</p><div class="rg-question">${md(item.check.q)}</div>${item.scenario||''}
   <textarea class="rg-answer" data-reviewanswer="${esc(row.unit)}" placeholder="Answer from memory, in your own words…" aria-label="Your answer" ${closed||busy?'readonly':''}>${esc(record.answer)}</textarea>
   <div class="row">${closed?'':`<button type="button" class="btn amber" data-ui="gate-check" ${busy?'disabled':''}>${busy==='check'?'Checking…':record.attempts.length?'Check my retry':'Check my answer'}</button>`}${record.attempts.length?`<button type="button" class="btn ${closed?'amber':'ghost'}" data-ui="gate-save" ${busy?'disabled':''}>${busy==='save'?'Saving…':gate.index+1<gate.rows.length&&gateTimeLeft()?'Save and next →':'Save and finish →'}</button>`:''}</div>
+  <div class="rg-later">${gate.confirmSkip===row.unit?`<span>Skip this review for good? It will not come back.</span><button type="button" class="btn ghost" data-ui="gate-skip-forever" ${busy?'disabled':''}>${busy==='skip'?'Skipping…':'Yes, skip it'}</button><button type="button" class="quiet-link" data-ui="gate-skip-cancel" ${busy?'disabled':''}>No, keep it</button>`:`<button type="button" class="quiet-link" data-ui="gate-skip-ask" ${busy?'disabled':''}>Skip this review</button><button type="button" class="quiet-link" data-ui="gate-later" ${busy?'disabled':''}>Keep for later</button>`}</div>
   ${gate.error?`<p class="ask-error" role="alert">${esc(gate.error)}${gate.canSkip?' <button type="button" class="quiet-link" data-ui="gate-skip">Skip this one for today</button>':''}</p>`:''}
   <div class="rg-feedback" aria-live="polite">${checkFeedback(record.attempts,true)}${first?`<p class="small">Your first score (${first.fb.score}%) sets the next review date.</p>`:''}</div>
   ${record.attempts.length?rubricHTML(item.check.rubric):''}`;
 }
 function gateDoneHTML(){
   const left=gate.rows.length-gate.results.length;
-  return `<div class="rg-done"><p class="rg-big">${left?'Time is up for reviews.':'Reviews done ✓'}</p>${gate.results.length?`<ul class="rg-results">${gate.results.map(r=>`<li><strong>${esc(r.title)}</strong> · ${r.score===null?'skipped, still due':r.score+'%'}</li>`).join('')}</ul>`:''}${left?`<p>${left} review${left===1?' stays':'s stay'} due for next time.</p>`:''}<div class="row"><button type="button" class="btn amber" data-ui="gate-continue">Continue to Part ${idxOf(activeLesson())+1} →</button></div></div>`;
+  return `<div class="rg-done"><p class="rg-big">${left?'Time is up for reviews.':'Reviews done ✓'}</p>${gate.results.length?`<ul class="rg-results">${gate.results.map(r=>`<li><strong>${esc(r.title)}</strong> · ${r.skippedForGood?'skipped for good':r.score===null?'skipped, still due':r.score+'%'}</li>`).join('')}</ul>`:''}${left?`<p>${left} review${left===1?' stays':'s stay'} due for next time.</p>`:''}<div class="row"><button type="button" class="btn amber" data-ui="gate-continue">Continue to Part ${idxOf(activeLesson())+1} →</button></div></div>`;
 }
 function drawGate(){
   const body=$('#rg-body');if(!gate||!body)return;
@@ -3632,7 +3934,11 @@ function drawGate(){
   attachMics(body);
   (body.querySelector('.rg-answer:not([readonly])')||body.querySelector('[data-ui="gate-save"],[data-ui="gate-continue"]'))?.focus({preventScroll:true});
 }
-function gateFinish(){const g=gateState();g.finished=true;save();const d=$('#review-gate');gate=null;d?.close();S.tab='path';render();}
+function gateFinish(later){
+  const g=gateState();
+  if(later){gateDeferred=true;delete g.startedAt;}else g.finished=true; // later: due rows stay, next visit gets a fresh clock
+  save();const d=$('#review-gate');gate=null;d?.close();S.tab='path';render();
+}
 document.addEventListener('keydown',e=>{ // keep Space for the answer box, never the video behind the review
   if(gate&&e.code==='Space'&&!e.target.closest?.('input,textarea,select,button'))e.stopImmediatePropagation();
 },true);
@@ -3642,6 +3948,17 @@ document.addEventListener('click',async e=>{
   if(action==='gate-continue'){gateFinish();return;}
   if(!row)return;
   const item=reviewItem(row),record=reviewCheck(row);
+  if(action==='gate-later'){gateFinish(true);return;}
+  if(action==='gate-skip-ask'||action==='gate-skip-cancel'){gate.confirmSkip=action==='gate-skip-ask'?row.unit:null;gate.error='';drawGate();return;}
+  if(action==='gate-skip-forever'){
+    gate.busy='skip';gate.error='';gate.canSkip=false;drawGate();
+    try{
+      const r=await (await fetch('/api/review-skip',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({unit:row.unit})})).json();
+      if(r.error)throw new Error(r.error);
+      gate.results.push({title:item.b.title,score:null,skippedForGood:true});gate.index++;refreshReviews();
+    }catch(err){gate.error=err.message||'Could not skip the review. Try again.';}
+    gate.busy=false;drawGate();return;
+  }
   if(action==='gate-skip'){if(!gate.canSkip)return;gate.results.push({title:item.b.title,score:null});gate.index++;gate.error='';gate.canSkip=false;drawGate();return;}
   if(action==='gate-check'){
     const answer=record.answer.trim();
@@ -3665,6 +3982,62 @@ document.addEventListener('click',async e=>{
 });
 const gateBaseRender=render;
 render=function(){gateBaseRender();maybeOpenReviewGate();};
+
+/* Study support notifications: a glowing gold dot on each support item that has
+   content you have not opened yet. Opening it clears the dot. Unopened items add up
+   in the "Study support" heading and on each part in the course list.
+   "Seen" stores a short fingerprint of the content, so if a part later gets a new
+   drawing or a rewritten explanation, its dot comes back. */
+const SUPPORT_ITEMS={
+  explain:{ui:'full-explanation',content:b=>{const x=explanationData(b);return x.fullExplanation?JSON.stringify(x):'';}},
+  analogy:{ui:'analogy',content:b=>{const a=explanationData(b).analogy;return a?JSON.stringify([a,b.mistake||'']):'';}},
+  graphics:{ui:'graphics',content:b=>(b.anim||'')+(b.visual||'')},
+  code:{ui:'code-notes',content:b=>b.code||''},
+  cards:{ui:'flashcards',content:b=>(b.cards||[]).length?JSON.stringify(b.cards):''}
+};
+function supportHash(text){let h=5381;for(let i=0;i<text.length;i++)h=((h*33)^text.charCodeAt(i))>>>0;return h.toString(36);}
+function supportUnread(b){
+  const seen=S.supportSeen?.[b.id]||{};
+  return Object.entries(SUPPORT_ITEMS).filter(([key,item])=>{const text=item.content(b);return text&&seen[key]!==supportHash(text);}).map(([key])=>key);
+}
+function supportCountedParts(){
+  const f=frontier();               // parts you have reached, the same rule as the course list
+  return D.blocks.filter((part,i)=>i<=f);
+}
+function supportUnreadTotal(){return (supportCountedParts()||[]).reduce((n,part)=>n+supportUnread(part).length,0);}
+function supportDot(b,key){return supportUnread(b).includes(key)?'<span class="support-dot" role="img" aria-label=", new"></span>':'';}
+function supportCountHTML(n,cls){return n?`<span class="${cls}" role="img" aria-label="${n} not opened yet">${n}</span>`:'';}
+function markSupportSeen(b,key){
+  const text=SUPPORT_ITEMS[key].content(b);if(!text)return;
+  S.supportSeen=S.supportSeen||{};S.supportSeen[b.id]=S.supportSeen[b.id]||{};
+  if(S.supportSeen[b.id][key]===supportHash(text))return;
+  S.supportSeen[b.id][key]=supportHash(text);save();
+  // Update only the badges: a full render would rebuild the page behind the open popup.
+  document.querySelector(`.learning-tools [data-ui="${SUPPORT_ITEMS[key].ui}"] .support-dot`)?.remove();
+  const heading=document.querySelector('.learning-tools .tool-card h2');
+  if(heading){heading.querySelector('.support-count')?.remove();heading.insertAdjacentHTML('beforeend',supportCountHTML(supportUnreadTotal(),'support-count'));}
+  renderCourseTree();
+}
+document.addEventListener('click',e=>{
+  const button=e.target.closest('.learning-tools [data-ui]');if(!button||button.disabled)return;
+  const key=Object.keys(SUPPORT_ITEMS).find(k=>SUPPORT_ITEMS[k].ui===button.dataset.ui);
+  if(key)markSupportSeen(activeLesson(),key);
+});
+
+/* Code Lab inside Practice. One editor is made the first time Practice opens and is then
+   moved into each new render, so typing, scroll position and results survive re-renders
+   and the files are fetched only once. It needs the helper (./study) to build and run. */
+const CODELAB_SLOT='<div class="codelab-slot" aria-label="Code Lab"></div>';
+let codeLab=null;
+function codeLabLink(){return helperReady?`<p><a class="btn ghost small" href="/code?kit=${encodeURIComponent(kitPath)}" target="codelab">Open Code Lab ↗</a> Write, build and run the code on this Mac.</p>`:'';}
+function mountCodeLab(){
+  const slot=document.querySelector('.codelab-slot');if(!slot)return;
+  if(!helperReady){slot.innerHTML=`<p class="codelab-off">Code Lab (write, build and run here) opens when the page runs through <code>${START_CMD}</code>.</p>`;return;}
+  if(!codeLab)codeLab=createCodeLab(document.createElement('div'),{kit:kitPath,fullLink:true}); // later changes from other windows load on window focus
+  slot.replaceChildren(codeLab.root);
+}
+const codeLabBaseRender=render;
+render=function(){codeLabBaseRender();mountCodeLab();};
 
 save(); render();
 })();

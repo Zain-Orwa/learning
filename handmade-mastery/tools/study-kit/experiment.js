@@ -1,12 +1,16 @@
 /* Experimental presentation only. Core grading, media and saving remain intact. */
 function experimentSupport(b){
   const deferred=b.deferred||[];
-  return `<aside class="learning-tools" aria-label="Supporting tools"><section class="tool-card"><h2>${uiIcon('book')} Study support</h2><div class="tool-body"><button class="btn ghost" data-ui="full-explanation">Explanation &amp; Listen</button><button class="btn ghost" data-ui="analogy">Analogy</button><button class="btn ghost" data-ui="graphics">Graphics</button><button class="btn ghost" data-ui="code-notes">Code &amp; Pseudocode</button><button class="btn ghost" data-ui="flashcards" ${(b.cards||[]).length?'':'disabled'}>Flashcards · optional</button><hr class="tool-divider"><button class="btn ghost" data-ui="ask-claude">Ask Claude</button><button class="btn ghost" data-ui="my-notes">My notes${(S.myNotes?.[b.id]?.text||'').trim()?'<span class="tool-mark" aria-label=" (written)">✓</span>':''}</button></div></section><section class="tool-card"><h2>${uiIcon('layers')} Deferred Topics</h2><div class="tool-body"><p>Ideas for later in the course.</p>${deferred.length?`<ul class="deferred-list">${deferred.map((text,i)=>`<li><button data-ui="deferred" data-index="${i}">${esc(deferredTitle(text))}</button></li>`).join('')}</ul>`:'<p class="empty-tool">No deferred topics in this part.</p>'}</div></section></aside>`;
+  return `<aside class="learning-tools" aria-label="Supporting tools"><section class="tool-card"><h2>${uiIcon('book')} Study support${supportCountHTML(supportUnreadTotal(),'support-count')}</h2><div class="tool-body"><button class="btn ghost" data-ui="full-explanation">Explanation &amp; Listen${supportDot(b,'explain')}</button><button class="btn ghost" data-ui="analogy">Analogy${supportDot(b,'analogy')}</button><button class="btn ghost" data-ui="graphics">Graphics${supportDot(b,'graphics')}</button><button class="btn ghost" data-ui="code-notes">Code &amp; Pseudocode${supportDot(b,'code')}</button><button class="btn ghost" data-ui="flashcards" ${(b.cards||[]).length?'':'disabled'}>Flashcards · optional${supportDot(b,'cards')}</button><hr class="tool-divider"><button class="btn ghost" data-ui="ask-claude">Ask Claude</button><button class="btn ghost" data-ui="my-notes">My notes${(S.myNotes?.[b.id]?.text||'').trim()?'<span class="tool-mark" aria-label=" (written)">✓</span>':''}</button></div></section><section class="tool-card"><h2>${uiIcon('layers')} Deferred Topics</h2><div class="tool-body"><p>Ideas for later in the course.</p>${deferred.length?`<ul class="deferred-list">${deferred.map((text,i)=>`<li><button data-ui="deferred" data-index="${i}">${esc(deferredTitle(text))}</button></li>`).join('')}</ul>`:'<p class="empty-tool">No deferred topics in this part.</p>'}</div></section></aside>`;
 }
 const experimentBaseStep=renderStepRaw;
 renderStepRaw=function(b,key){
-  if(key==='watch')return `${videoPanel(b)}<p class="experiment-focus"><strong>Focus:</strong> ${md(b.focus||b.oneLiner||b.summary)}</p><p>When Casey codes, pause and write the change yourself. Predict, build and check the result. That work counts as your practice.</p><details class="experiment-parking"><summary>Park a question for later</summary><div class="row"><input type="text" id="parkin" placeholder="Your question…" aria-label="Question to park"><button class="btn ghost" id="parkgo">Park it</button></div><ul class="plist" id="plist">${parkItems(b,false)}</ul></details>`;
-  if(key==='experiment')return `<details class="experiment-prediction"><summary>Predict the result · optional</summary><p>${md(b.guess||checkFor(b).q)}</p><textarea data-prediction="${b.id}" placeholder="What do you expect to happen?">${esc(S.predictions?.[b.id]||'')}</textarea></details>${experimentBaseStep(b,key)}`;
+  if(key==='watch')return `${videoPanel(b)}<p class="experiment-focus"><strong>Focus:</strong> ${md(b.focus||b.oneLiner||b.summary)}</p><p>When Casey codes, pause and write the change yourself. Predict, build and check the result. That work counts as your practice.</p>${codeLabLink()}<details class="experiment-parking"><summary>Park a question for later</summary><div class="row"><input type="text" id="parkin" placeholder="Your question…" aria-label="Question to park"><button class="btn ghost" id="parkgo">Park it</button></div><ul class="plist" id="plist">${parkItems(b,false)}</ul></details>`;
+  if(key==='experiment'){
+    const base=experimentBaseStep(b,key),at=base.indexOf('<p class="small">If you already');
+    const withLab=at<0?base+CODELAB_SLOT:base.slice(0,at)+CODELAB_SLOT+base.slice(at);
+    return `<details class="experiment-prediction"><summary>Predict the result · optional</summary><p>${md(b.guess||checkFor(b).q)}</p><textarea data-prediction="${b.id}" placeholder="What do you expect to happen?">${esc(S.predictions?.[b.id]||'')}</textarea></details>${withLab}`;
+  }
   return experimentBaseStep(b,key);
 };
 fullExplanation=function(b){
@@ -21,7 +25,8 @@ renderPath=function(){
   const b=activeLesson();
   if(!STEPS.some(([key])=>key===(referenceStep||S.step)))referenceStep=null;
   const view=referenceStep||S.step;
-  const label=view==='watch'?'I watched it → Check':view==='recall'?'Continue to practice →':'Finish part';
+  const next=D.blocks[idxOf(b)+1];
+  const label=view==='watch'?'I watched it → Check':view==='recall'?'Continue to practice →':next?`Finish part · Continue to Part ${idxOf(next)+1} →`:D.qa?'Finish part · Questions & answers →':'Finish the last part ✓';
   return `<header class="lesson-header"><div><div class="eyebrow">Part ${idxOf(b)+1} of ${D.blocks.length}</div><h1>Day 1 — ${esc(b.title)}</h1></div><span class="tsr">▶ ${b.start} – ${b.end}</span></header>${navigationHTML(b)}<div class="lesson-columns"><div id="lesson-panel" role="tabpanel" aria-labelledby="study-tab-${view}"><section class="frost-card reading-pane study-primary"><div class="pane" id="pane">${renderStep(b,view)}</div>${stepOpen(b,view)?`<div class="next"><button class="btn amber" data-ui="advance-view">${label}</button></div>`:''}</section></div>${experimentSupport(b)}</div>`;
 };
 document.addEventListener('click',e=>{
@@ -51,7 +56,7 @@ courseTreeHTML=function(){
   return `<ol class="part-list">${D.blocks.map((part,i)=>{
     const key=part.id,done=!!S.completed[key],current=key===S.cur,locked=i>f;
     const state=done?(checked(part)?'checked':'finished'):current?'current':locked?'complete the earlier parts first':'open';
-    return `<li><button class="part-row${done?' is-finished':''}${current?' is-current':''}" data-blk="${key}" ${current?'aria-current="page"':''} ${locked?'disabled':''} title="Part ${i+1} — ${esc(part.title)} (${part.start}–${part.end})" aria-label="Part ${i+1}: ${esc(part.title)}, ${state}"><span class="part-mark" aria-hidden="true">${done?'✓':i+1}</span><span class="part-name">${esc(part.title)}</span></button></li>`;
+    return `<li><button class="part-row${done?' is-finished':''}${current?' is-current':''}" data-blk="${key}" ${current?'aria-current="page"':''} ${locked?'disabled':''} title="Part ${i+1} — ${esc(part.title)} (${part.start}–${part.end})" aria-label="Part ${i+1}: ${esc(part.title)}, ${state}"><span class="part-mark" aria-hidden="true">${done?'✓':i+1}</span><span class="part-name">${esc(part.title)}</span>${i>f?'':supportCountHTML(supportUnread(part).length,'support-count part-count')}</button></li>`;
   }).join('')}</ol>`;
 };
 
@@ -98,7 +103,7 @@ showVideoSpeed();
 // The helper can replace S after start-up (saved progress), so always reach these through the getters.
 const myNotes=()=>S.myNotes||(S.myNotes={});
 const episodeNotes=()=>S.episodeNotes||(S.episodeNotes={});
-// TODO(human): tune the quick questions to the ones you really ask.
+// Quick questions: tune these to the ones you really ask.
 const ASK_CHIPS={
   part:["I didn't understand this part","What is the most important idea?","What should I remember for later?"],
   explain:['Explain it more simply','Give me a real example','How does this connect to the code?'],
@@ -353,11 +358,15 @@ document.addEventListener('click',e=>{
    On a new visit with core part reviews due (journey/REVIEWS.md via the helper), a popup that cannot be
    dismissed asks each one from memory, grades it with the usual fixed checklist (one retry), saves the first
    score, then continues to the saved part. It keeps to the five-minute review budget: when time is up,
-   the current answer can be finished and the rest stays due for next time. Interview/debug rows are not forced. */
+   the current answer can be finished and the rest stays due for next time. Interview/debug rows are not forced.
+   Two ways out: "Keep for later" closes the popup for this visit and every remaining review stays due (they pile up
+   and all come back on the next visit, with a fresh five minutes); "Skip this review" retires one review for good
+   (journey/REVIEWS.md stage "skipped") after a confirm step, then moves on. */
 const REVIEW_BUDGET_MS=5*60*1000;
 const localDay=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;};
 const gateState=()=>{const g=S.reviewGate;return g&&g.day===localDay()?g:(S.reviewGate={day:localDay()});};
-let gate=null; // {rows, index, results, busy, error, canSkip}: skipping is offered only when Claude or saving fails, never for a missing answer
+let gateDeferred=false; // "Keep for later" pressed: no popup again until the page is opened again
+let gate=null; // {rows, index, results, busy, error, canSkip, confirmSkip}: skipping is offered only when Claude or saving fails, never for a missing answer
 function coreReviewRows(){return dueReviews.filter(r=>!/\/(iv|dbg)\d+$/.test(r.source)&&reviewItem(r));}
 function gateTimeLeft(){const g=gateState();return g.startedAt?Math.max(0,REVIEW_BUDGET_MS-(Date.now()-g.startedAt)):REVIEW_BUDGET_MS;}
 function gateDialog(){
@@ -369,7 +378,7 @@ function gateDialog(){
   document.body.append(d);return d;
 }
 function maybeOpenReviewGate(){
-  if(gate||!helperReady||!reviewsLoaded||!sample||S.tab!=='path')return;
+  if(gate||gateDeferred||!helperReady||!reviewsLoaded||!sample||S.tab!=='path')return;
   const g=gateState();if(g.finished)return;
   const rows=coreReviewRows();if(!rows.length)return;
   if(!g.startedAt){g.startedAt=Date.now();save();}
@@ -390,13 +399,14 @@ function gateItemHTML(row){
   return `<p class="rg-meta">Review ${n} of ${gate.rows.length} · Part ${idxOf(b)+1} — ${esc(b.title)}</p><div class="rg-question">${md(item.check.q)}</div>${item.scenario||''}
   <textarea class="rg-answer" data-reviewanswer="${esc(row.unit)}" placeholder="Answer from memory, in your own words…" aria-label="Your answer" ${closed||busy?'readonly':''}>${esc(record.answer)}</textarea>
   <div class="row">${closed?'':`<button type="button" class="btn amber" data-ui="gate-check" ${busy?'disabled':''}>${busy==='check'?'Checking…':record.attempts.length?'Check my retry':'Check my answer'}</button>`}${record.attempts.length?`<button type="button" class="btn ${closed?'amber':'ghost'}" data-ui="gate-save" ${busy?'disabled':''}>${busy==='save'?'Saving…':gate.index+1<gate.rows.length&&gateTimeLeft()?'Save and next →':'Save and finish →'}</button>`:''}</div>
+  <div class="rg-later">${gate.confirmSkip===row.unit?`<span>Skip this review for good? It will not come back.</span><button type="button" class="btn ghost" data-ui="gate-skip-forever" ${busy?'disabled':''}>${busy==='skip'?'Skipping…':'Yes, skip it'}</button><button type="button" class="quiet-link" data-ui="gate-skip-cancel" ${busy?'disabled':''}>No, keep it</button>`:`<button type="button" class="quiet-link" data-ui="gate-skip-ask" ${busy?'disabled':''}>Skip this review</button><button type="button" class="quiet-link" data-ui="gate-later" ${busy?'disabled':''}>Keep for later</button>`}</div>
   ${gate.error?`<p class="ask-error" role="alert">${esc(gate.error)}${gate.canSkip?' <button type="button" class="quiet-link" data-ui="gate-skip">Skip this one for today</button>':''}</p>`:''}
   <div class="rg-feedback" aria-live="polite">${checkFeedback(record.attempts,true)}${first?`<p class="small">Your first score (${first.fb.score}%) sets the next review date.</p>`:''}</div>
   ${record.attempts.length?rubricHTML(item.check.rubric):''}`;
 }
 function gateDoneHTML(){
   const left=gate.rows.length-gate.results.length;
-  return `<div class="rg-done"><p class="rg-big">${left?'Time is up for reviews.':'Reviews done ✓'}</p>${gate.results.length?`<ul class="rg-results">${gate.results.map(r=>`<li><strong>${esc(r.title)}</strong> · ${r.score===null?'skipped, still due':r.score+'%'}</li>`).join('')}</ul>`:''}${left?`<p>${left} review${left===1?' stays':'s stay'} due for next time.</p>`:''}<div class="row"><button type="button" class="btn amber" data-ui="gate-continue">Continue to Part ${idxOf(activeLesson())+1} →</button></div></div>`;
+  return `<div class="rg-done"><p class="rg-big">${left?'Time is up for reviews.':'Reviews done ✓'}</p>${gate.results.length?`<ul class="rg-results">${gate.results.map(r=>`<li><strong>${esc(r.title)}</strong> · ${r.skippedForGood?'skipped for good':r.score===null?'skipped, still due':r.score+'%'}</li>`).join('')}</ul>`:''}${left?`<p>${left} review${left===1?' stays':'s stay'} due for next time.</p>`:''}<div class="row"><button type="button" class="btn amber" data-ui="gate-continue">Continue to Part ${idxOf(activeLesson())+1} →</button></div></div>`;
 }
 function drawGate(){
   const body=$('#rg-body');if(!gate||!body)return;
@@ -406,7 +416,11 @@ function drawGate(){
   attachMics(body);
   (body.querySelector('.rg-answer:not([readonly])')||body.querySelector('[data-ui="gate-save"],[data-ui="gate-continue"]'))?.focus({preventScroll:true});
 }
-function gateFinish(){const g=gateState();g.finished=true;save();const d=$('#review-gate');gate=null;d?.close();S.tab='path';render();}
+function gateFinish(later){
+  const g=gateState();
+  if(later){gateDeferred=true;delete g.startedAt;}else g.finished=true; // later: due rows stay, next visit gets a fresh clock
+  save();const d=$('#review-gate');gate=null;d?.close();S.tab='path';render();
+}
 document.addEventListener('keydown',e=>{ // keep Space for the answer box, never the video behind the review
   if(gate&&e.code==='Space'&&!e.target.closest?.('input,textarea,select,button'))e.stopImmediatePropagation();
 },true);
@@ -416,6 +430,17 @@ document.addEventListener('click',async e=>{
   if(action==='gate-continue'){gateFinish();return;}
   if(!row)return;
   const item=reviewItem(row),record=reviewCheck(row);
+  if(action==='gate-later'){gateFinish(true);return;}
+  if(action==='gate-skip-ask'||action==='gate-skip-cancel'){gate.confirmSkip=action==='gate-skip-ask'?row.unit:null;gate.error='';drawGate();return;}
+  if(action==='gate-skip-forever'){
+    gate.busy='skip';gate.error='';gate.canSkip=false;drawGate();
+    try{
+      const r=await (await fetch('/api/review-skip',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({unit:row.unit})})).json();
+      if(r.error)throw new Error(r.error);
+      gate.results.push({title:item.b.title,score:null,skippedForGood:true});gate.index++;refreshReviews();
+    }catch(err){gate.error=err.message||'Could not skip the review. Try again.';}
+    gate.busy=false;drawGate();return;
+  }
   if(action==='gate-skip'){if(!gate.canSkip)return;gate.results.push({title:item.b.title,score:null});gate.index++;gate.error='';gate.canSkip=false;drawGate();return;}
   if(action==='gate-check'){
     const answer=record.answer.trim();
@@ -439,3 +464,59 @@ document.addEventListener('click',async e=>{
 });
 const gateBaseRender=render;
 render=function(){gateBaseRender();maybeOpenReviewGate();};
+
+/* Study support notifications: a glowing gold dot on each support item that has
+   content you have not opened yet. Opening it clears the dot. Unopened items add up
+   in the "Study support" heading and on each part in the course list.
+   "Seen" stores a short fingerprint of the content, so if a part later gets a new
+   drawing or a rewritten explanation, its dot comes back. */
+const SUPPORT_ITEMS={
+  explain:{ui:'full-explanation',content:b=>{const x=explanationData(b);return x.fullExplanation?JSON.stringify(x):'';}},
+  analogy:{ui:'analogy',content:b=>{const a=explanationData(b).analogy;return a?JSON.stringify([a,b.mistake||'']):'';}},
+  graphics:{ui:'graphics',content:b=>(b.anim||'')+(b.visual||'')},
+  code:{ui:'code-notes',content:b=>b.code||''},
+  cards:{ui:'flashcards',content:b=>(b.cards||[]).length?JSON.stringify(b.cards):''}
+};
+function supportHash(text){let h=5381;for(let i=0;i<text.length;i++)h=((h*33)^text.charCodeAt(i))>>>0;return h.toString(36);}
+function supportUnread(b){
+  const seen=S.supportSeen?.[b.id]||{};
+  return Object.entries(SUPPORT_ITEMS).filter(([key,item])=>{const text=item.content(b);return text&&seen[key]!==supportHash(text);}).map(([key])=>key);
+}
+function supportCountedParts(){
+  const f=frontier();               // parts you have reached, the same rule as the course list
+  return D.blocks.filter((part,i)=>i<=f);
+}
+function supportUnreadTotal(){return (supportCountedParts()||[]).reduce((n,part)=>n+supportUnread(part).length,0);}
+function supportDot(b,key){return supportUnread(b).includes(key)?'<span class="support-dot" role="img" aria-label=", new"></span>':'';}
+function supportCountHTML(n,cls){return n?`<span class="${cls}" role="img" aria-label="${n} not opened yet">${n}</span>`:'';}
+function markSupportSeen(b,key){
+  const text=SUPPORT_ITEMS[key].content(b);if(!text)return;
+  S.supportSeen=S.supportSeen||{};S.supportSeen[b.id]=S.supportSeen[b.id]||{};
+  if(S.supportSeen[b.id][key]===supportHash(text))return;
+  S.supportSeen[b.id][key]=supportHash(text);save();
+  // Update only the badges: a full render would rebuild the page behind the open popup.
+  document.querySelector(`.learning-tools [data-ui="${SUPPORT_ITEMS[key].ui}"] .support-dot`)?.remove();
+  const heading=document.querySelector('.learning-tools .tool-card h2');
+  if(heading){heading.querySelector('.support-count')?.remove();heading.insertAdjacentHTML('beforeend',supportCountHTML(supportUnreadTotal(),'support-count'));}
+  renderCourseTree();
+}
+document.addEventListener('click',e=>{
+  const button=e.target.closest('.learning-tools [data-ui]');if(!button||button.disabled)return;
+  const key=Object.keys(SUPPORT_ITEMS).find(k=>SUPPORT_ITEMS[k].ui===button.dataset.ui);
+  if(key)markSupportSeen(activeLesson(),key);
+});
+
+/* Code Lab inside Practice. One editor is made the first time Practice opens and is then
+   moved into each new render, so typing, scroll position and results survive re-renders
+   and the files are fetched only once. It needs the helper (./study) to build and run. */
+const CODELAB_SLOT='<div class="codelab-slot" aria-label="Code Lab"></div>';
+let codeLab=null;
+function codeLabLink(){return helperReady?`<p><a class="btn ghost small" href="/code?kit=${encodeURIComponent(kitPath)}" target="codelab">Open Code Lab ↗</a> Write, build and run the code on this Mac.</p>`:'';}
+function mountCodeLab(){
+  const slot=document.querySelector('.codelab-slot');if(!slot)return;
+  if(!helperReady){slot.innerHTML=`<p class="codelab-off">Code Lab (write, build and run here) opens when the page runs through <code>${START_CMD}</code>.</p>`;return;}
+  if(!codeLab)codeLab=createCodeLab(document.createElement('div'),{kit:kitPath,fullLink:true}); // later changes from other windows load on window focus
+  slot.replaceChildren(codeLab.root);
+}
+const codeLabBaseRender=render;
+render=function(){codeLabBaseRender();mountCodeLab();};

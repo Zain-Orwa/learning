@@ -12,6 +12,9 @@ Usage (run from the repo root):
       Add a learned unit (first review tomorrow). Skips it if it already exists.
   python3 tools/reviews.py grade <subject> <unit-id> <score 0-100> [--date YYYY-MM-DD]
       Record a review score and move the unit to its next date.
+  python3 tools/reviews.py skip <subject> <unit-id> [--date YYYY-MM-DD]
+      Retire a unit for good: it is never due again (its history is kept,
+      and "add" will not bring it back).
   python3 tools/reviews.py list <subject>
   python3 tools/reviews.py areas
       Readiness per area: interview units ("iv-…") and debug challenges
@@ -25,6 +28,7 @@ import sys
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 STAGES = [("1d", 1), ("3d", 3), ("1w", 7), ("2w", 14), ("1m", 30), ("3m", 90), ("6m", 180)]
 PASS = 80
+SKIPPED = "skipped"  # stage of a retired unit: never due, never graded
 HEADER = "| Unit | Title | Source | Learned | Stage | Next due | Last | History |"
 SEP = "|---|---|---|---|---|---|---|---|"
 INTRO = """# Spaced reviews
@@ -89,7 +93,7 @@ def main(argv):
         found = False
         for subj in subjects():
             for r in load(subj):
-                if r["next"] <= d.isoformat():
+                if r["stage"] != SKIPPED and r["next"] <= d.isoformat():
                     found = True
                     print(f"{subj}\t{r['unit']}\t{r['title']}\tstage {r['stage']}\tdue {r['next']}\tsource {r['source']}")
         if not found:
@@ -122,11 +126,20 @@ def main(argv):
         r["history"] = (r["history"] + " " if r["history"] else "") + f"{d.isoformat()}:{score}%"
         store(subj, rows)
         print(f"{unit}: {score}% -> {'passed' if score >= PASS else 'back to 1 day'}; next review {r['next']} ({r['stage']}).")
+    elif cmd == "skip":
+        subj, unit = args[0], args[1]
+        rows = load(subj)
+        r = next((r for r in rows if r["unit"] == unit), None)
+        if not r:
+            sys.exit(f"{unit} not found in {path(subj)}")
+        # TODO(human): retire this row so it never comes back.
+        store(subj, rows)
+        print(f"{unit}: skipped for good; it will not come back.")
     elif cmd == "areas":
         stats = {}
         for subj in subjects():
             for r in load(subj):
-                if not r["unit"].startswith(("iv-", "dbg-")) or not r["title"].startswith("["):
+                if r["stage"] == SKIPPED or not r["unit"].startswith(("iv-", "dbg-")) or not r["title"].startswith("["):
                     continue
                 area = r["title"][1:r["title"].index("]")]
                 a = stats.setdefault(area, {"n": 0, "scores": []})

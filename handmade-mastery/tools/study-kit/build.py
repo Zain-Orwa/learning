@@ -13,9 +13,11 @@ engine = engine.replace("/*WINTER_STYLE*/", (here / "winter.css").read_text(enco
 engine = engine.replace("/*WINTER_APP*/", (here / "winter.js").read_text(encoding="utf-8"))
 engine = engine.replace("/*EXPLAIN_STYLE*/", (here / "explanation.css").read_text(encoding="utf-8"))
 engine = engine.replace("/*EXPLAIN_APP*/", (here / "explanation.js").read_text(encoding="utf-8"))
-engine = engine.replace("/*EXPERIMENT_APP*/", (here / "experiment.js").read_text(encoding="utf-8"))
+engine = engine.replace("/*EXPERIMENT_APP*/", (here / "codelab.js").read_text(encoding="utf-8") + "\n"
+                        + (here / "experiment.js").read_text(encoding="utf-8"))
 engine = engine.replace("/*GAME_THEME*/", (here / "game-theme.css").read_text(encoding="utf-8"))
-engine = engine.replace("/*EXPERIMENT_STYLE*/", (here / "experiment.css").read_text(encoding="utf-8"))
+engine = engine.replace("/*EXPERIMENT_STYLE*/", (here / "experiment.css").read_text(encoding="utf-8") + "\n"
+                        + (here / "codelab.css").read_text(encoding="utf-8"))
 data = (day / "data.js").read_text(encoding="utf-8")
 if "</script" in data.lower():
     sys.exit("data.js must not contain </script>")
