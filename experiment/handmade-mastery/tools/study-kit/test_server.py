@@ -165,5 +165,73 @@ class NotesTest(unittest.TestCase):
                     thread.join()
 
 
+DAY1 = """#include <windows.h>
+
+int CALLBACK
+WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+{
+    OutputDebugStringA("This is the first thing we have actually printed.\\n");
+    return 0;
+}
+"""
+
+
+@unittest.skipUnless(shutil.which("clang++"), "needs clang (Xcode Command Line Tools)")
+class CodeLabTest(unittest.TestCase):
+    """Code Lab: real clang builds in a disposable code folder."""
+
+    def test_build_run_and_disassembly(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = pathlib.Path(tmp)
+            subject = root / "handmade-mastery"
+            (subject / "courses" / "intro-to-c" / "day01").mkdir(parents=True)
+            kit = "intro-to-c/day01"
+            with patch.multiple(helper, REPO=root, SUBJECT=subject, CODE_ROOT=subject / "code", RUN_SECONDS=1):
+                build = lambda name, source, action: helper.build_code(kit, name, source, action)
+
+                r, code = build("main.cpp", DAY1, "run")
+                self.assertEqual(code, 200, r)
+                self.assertTrue(r["built"], r["log"])
+                self.assertEqual(r["exitCode"], 0)
+                self.assertEqual(r["debug"], "This is the first thing we have actually printed.\n")
+                saved = (subject / "code" / kit / "main.cpp").read_bytes()
+                self.assertIn(b"\r\n", saved)
+                self.assertEqual(helper.code_files(kit), [{"name": "main.cpp", "source": DAY1}])
+
+                r, _ = build("main.cpp", DAY1, "asm")
+                self.assertEqual(r["target"], "Windows x64")
+                self.assertIn("call\tOutputDebugStringA", r["asm"])
+                self.assertNotIn(".seh_", r["asm"])
+
+                r, _ = build("empty.cpp", "", "run")      # Casey's empty file: compiles, fails to link
+                self.assertFalse(r["built"])
+                self.assertNotIn("ran", r)
+                self.assertNotIn(tmp, r["log"])
+
+                r, _ = build("typo.cpp", DAY1.replace("return 0;", "return 0"), "build")
+                self.assertFalse(r["built"])
+                self.assertIn("typo.cpp:7:", r["log"]); self.assertIn("error", r["log"])
+
+                r, _ = build("hello.c", '#include <stdio.h>\nint main(void){ printf("hi\\n"); return 3; }\n', "run")
+                self.assertEqual((r["console"], r["exitCode"]), ("hi\n", 3))
+                r, _ = build("hello.c", '#include <stdio.h>\nint main(void){ return 0; }\n', "asm")
+                self.assertTrue(r["built"])
+                self.assertIn("Mac x64", r["target"])
+
+                r, _ = build("crash.c", "int main(void){ int *p = 0; *p = 1; return 0; }\n", "run")
+                self.assertIn("Access violation", r["note"])
+                r, _ = build("loop.c", "int main(void){ for(;;){} }\n", "run")
+                self.assertIn("Stopped after 1 seconds", r["note"])
+
+                for name in ["../x.c", "a/b.c", "x.exe", ".hidden.c", "", None]:
+                    with self.subTest(name=name):
+                        self.assertEqual(helper.save_code(kit, name, "x")[1], 400)
+                for bad_kit in ["../../etc", "intro-to-c", "intro-to-c/day01/..", None]:
+                    with self.subTest(kit=bad_kit), self.assertRaises(ValueError):
+                        helper.code_dir(bad_kit)
+                self.assertEqual(build("main.cpp", DAY1, "rm -rf")[1], 400)
+                self.assertEqual(build("main.h", "", "run")[1], 400)
+
+
 if __name__ == "__main__":
     unittest.main()

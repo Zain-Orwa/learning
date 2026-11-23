@@ -282,6 +282,7 @@ function save(){
 const HELPER_PAGE=/^https?:$/.test(location.protocol)&&!window.claude;
 const kitPath=decodeURIComponent(location.pathname).replace(/^\/courses\//,"").replace(/\/study-kit\.html$/,"");
 let helperReady=false, videoFolder=null;
+const codeLabLink=()=>helperReady?`<a class="btn ghost small" href="/code?kit=${encodeURIComponent(kitPath)}" target="codelab">Open Code Lab ↗</a>`:"";
 function helperMeta(){
   return {kit:kitPath,unitPrefix:D.unitPrefix||D.storageKey,unitLabel:D.unitLabel||D.title,
     completedParts:D.blocks.filter(b=>S.completed[b.id]).map(b=>({id:b.id,n:idxOf(b)+1,title:b.title,date:S.cdate[b.id]||new Date().toISOString().slice(0,10),interview:[],debug:[]}))};
@@ -838,6 +839,7 @@ function renderStepRaw(b,k){
     + b.explain + (b.prereq?`<div class="callout"><b>Prerequisite, explained now:</b> ${b.prereq}</div>`:"")
     + (b.mistake?`<div class="callout later"><b>Common beginner mistake:</b> ${md(b.mistake)}</div>`:"");
   if(k==="experiment") return `<p><b>One task (~${b.practiceMinutes||5} min).</b></p>${b.practice||b.experiment}
+    ${codeLabLink()?`<p class="small">${codeLabLink()} Write, build and run the code on this Mac.</p>`:""}
     <p class="small">If you already wrote and verified this change while watching, record that result here. Do not repeat it. For a coding task: predict → write → build/run → compare.</p>
     <p class="small muted">Write one line about what you observed. If you cannot try it now, note what remains to do.</p>
     <textarea data-practice="${b.id}" placeholder="What happened? Or: still to do…">${esc(S.practice[b.id]||"")}</textarea>

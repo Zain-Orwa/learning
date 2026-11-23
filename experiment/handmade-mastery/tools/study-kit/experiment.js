@@ -5,7 +5,7 @@ function experimentSupport(b){
 }
 const experimentBaseStep=renderStepRaw;
 renderStepRaw=function(b,key){
-  if(key==='watch')return `${videoPanel(b)}<p class="experiment-focus"><strong>Focus:</strong> ${md(b.focus||b.oneLiner||b.summary)}</p><p>When Casey codes, pause and write the change yourself. Predict, build and check the result. That work counts as your practice.</p><details class="experiment-parking"><summary>Park a question for later</summary><div class="row"><input type="text" id="parkin" placeholder="Your question…" aria-label="Question to park"><button class="btn ghost" id="parkgo">Park it</button></div><ul class="plist" id="plist">${parkItems(b,false)}</ul></details>`;
+  if(key==='watch')return `${videoPanel(b)}<p class="experiment-focus"><strong>Focus:</strong> ${md(b.focus||b.oneLiner||b.summary)}</p><p>When Casey codes, pause and write the change yourself. Predict, build and check the result. That work counts as your practice.</p>${codeLabLink()?`<p>${codeLabLink()}</p>`:''}<details class="experiment-parking"><summary>Park a question for later</summary><div class="row"><input type="text" id="parkin" placeholder="Your question…" aria-label="Question to park"><button class="btn ghost" id="parkgo">Park it</button></div><ul class="plist" id="plist">${parkItems(b,false)}</ul></details>`;
   if(key==='experiment')return `<details class="experiment-prediction"><summary>Predict the result · optional</summary><p>${md(b.guess||checkFor(b).q)}</p><textarea data-prediction="${b.id}" placeholder="What do you expect to happen?">${esc(S.predictions?.[b.id]||'')}</textarea></details>${experimentBaseStep(b,key)}`;
   return experimentBaseStep(b,key);
 };

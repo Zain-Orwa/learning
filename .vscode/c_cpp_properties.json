@@ -1,0 +1,14 @@
+{
+  // Lets the C/C++ extension find the Mac windows.h stand-in (no red squiggle on #include <windows.h>).
+  "configurations": [
+    {
+      "name": "Mac",
+      "includePath": ["${workspaceFolder}/experiment/handmade-mastery/tools/study-kit/winshim"],
+      "compilerPath": "/usr/bin/clang++",
+      "cStandard": "c17",
+      "cppStandard": "c++17",
+      "intelliSenseMode": "macos-clang-arm64"
+    }
+  ],
+  "version": 4
+}

@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Code Lab</title>
+<style>
+:root{color-scheme:dark;--bg:#1e1e1e;--bar:#2d2d30;--panel:#252526;--edge:#3f3f46;--ink:#dcdcdc;--muted:#9a9a9a;--accent:#0e639c;--accent-ink:#fff;--gutter:#858585;--err:#f48771;--warn:#cca700;--good:#89d185;--mono:"JetBrains Mono",Consolas,Menlo,monospace;--ui:-apple-system,"Segoe UI",system-ui,sans-serif}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font:13px var(--ui);display:flex;flex-direction:column}
+header{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:7px 12px;background:var(--bar);border-bottom:1px solid var(--edge)}
+header h1{font-size:14px;margin:0 6px 0 0;font-weight:600}
+header .where{color:var(--muted);font-size:12px;margin-right:auto}
+header a{color:var(--muted);font-size:12px}
+select,button{font:12px var(--ui);color:var(--ink);background:var(--panel);border:1px solid var(--edge);border-radius:4px;padding:5px 9px}
+button{cursor:pointer}button:hover{border-color:var(--accent)}button:disabled{opacity:.5;cursor:default}
+button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+kbd{font:10px var(--ui);opacity:.75;margin-left:4px}
+#status{font-size:11px;color:var(--muted);min-width:80px}
+main{flex:1;display:flex;flex-direction:column;min-height:0}
+.editor{flex:1;display:flex;min-height:0;font:14px/1.5 var(--mono)}
+#gutter{padding:10px 8px 10px 12px;text-align:right;color:var(--gutter);background:var(--bg);user-select:none;overflow:hidden;white-space:pre;border-right:1px solid var(--edge);min-width:48px}
+#src{flex:1;resize:none;border:0;outline:none;padding:10px 14px;background:var(--bg);color:var(--ink);font:inherit;tab-size:4;white-space:pre;overflow:auto}
+.panel{height:38%;min-height:120px;display:flex;flex-direction:column;border-top:1px solid var(--edge);background:var(--panel)}
+.tabs{display:flex;gap:2px;padding:0 8px;border-bottom:1px solid var(--edge)}
+.tabs button{border:0;border-bottom:2px solid transparent;border-radius:0;background:none;padding:7px 12px;color:var(--muted)}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.tabs button.has::after{content:"•";color:var(--accent);margin-left:5px}
+.tabs .target{margin-left:auto;align-self:center;font-size:11px;color:var(--muted)}
+.out{flex:1;overflow:auto;margin:0;padding:10px 14px;font:12.5px/1.5 var(--mono);white-space:pre-wrap;word-break:break-word}
+.out[hidden]{display:none}
+.out .err{color:var(--err)}.out .warn{color:var(--warn)}.out .good{color:var(--good)}.out .dim{color:var(--muted)}
+.out button.diag{all:unset;cursor:pointer;text-decoration:underline dotted}
+.empty{color:var(--muted);font-family:var(--ui)}
+@media (max-width:640px){header .where{flex-basis:100%;order:9}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Code Lab</h1>
+  <span class="where" id="where">Loading…</span>
+  <select id="file" aria-label="File"></select>
+  <button id="newfile" title="Create a new .c, .cpp or .h file">+ New file</button>
+  <span id="status" aria-live="polite"></span>
+  <button id="build" title="Compile and link (Ctrl+Shift+B)">Build<kbd>⌃⇧B</kbd></button>
+  <button id="run" class="primary" title="Build, then run (F5)">▶ Run<kbd>F5</kbd></button>
+  <button id="asm" title="Show the x64 assembly the compiler made">Disassembly</button>
+  <a id="back" href="/">Study page</a>
+</header>
+<main>
+  <div class="editor">
+    <div id="gutter" aria-hidden="true">1</div>
+    <textarea id="src" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" aria-label="Code editor"></textarea>
+  </div>
+  <section class="panel">
+    <div class="tabs" role="tablist">
+      <button role="tab" data-tab="output" aria-selected="true">Output</button>
+      <button role="tab" data-tab="console" aria-selected="false">Console</button>
+      <button role="tab" data-tab="disasm" aria-selected="false">Disassembly</button>
+      <span class="target" id="target"></span>
+    </div>
+    <pre class="out" id="output"><span class="empty">Build output and debug output (OutputDebugStringA) appear here, like Visual Studio's Output window.</span></pre>
+    <pre class="out" id="console" hidden><span class="empty">Text your program prints with printf appears here.</span></pre>
+    <pre class="out" id="disasm" hidden><span class="empty">Press Disassembly to see the machine instructions for this file.</span></pre>
+  </section>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const src=$("src"),gutter=$("gutter"),fileSel=$("file"),statusEl=$("status");
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const params=new URLSearchParams(location.search);
+let kit=params.get("kit")||"",files=[],current="",saveTimer=null,busy=false;
+
+async function api(path,body){
+  const r=await fetch(path,body?{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)}:{});
+  const j=await r.json().catch(()=>({error:`error ${r.status}`}));
+  if(!r.ok||j.error)throw new Error(j.error||`error ${r.status}`);
+  return j;
+}
+function setStatus(t){statusEl.textContent=t;}
+function lines(){gutter.textContent=Array.from({length:src.value.split("\n").length},(_,i)=>i+1).join("\n");gutter.scrollTop=src.scrollTop;}
+function fileByName(n){return files.find(f=>f.name===n);}
+
+function fillFiles(){
+  fileSel.innerHTML=files.map(f=>`<option ${f.name===current?"selected":""}>${esc(f.name)}</option>`).join("");
+  const buildable=/\.(c|cpp)$/.test(current);
+  for(const id of ["build","run","asm"])$(id).disabled=!buildable;
+}
+function openFile(name){
+  current=name;src.value=fileByName(name)?.source??"";lines();fillFiles();
+  try{localStorage.setItem("codelab-file:"+kit,name);}catch{}
+  src.focus();
+}
+
+async function save(){
+  clearTimeout(saveTimer);saveTimer=null;
+  if(!current)return;
+  const f=fileByName(current);if(f)f.source=src.value;
+  try{await api("/api/code/save",{kit,file:current,source:src.value});setStatus("Saved");}
+  catch(e){setStatus("Not saved: "+e.message);}
+}
+function scheduleSave(){setStatus("Editing…");clearTimeout(saveTimer);saveTimer=setTimeout(save,800);}
+
+async function newFile(){
+  const name=(prompt("New file name (for example main.cpp):",files.length?"":"main.cpp")||"").trim();
+  if(!name)return;
+  if(!/^[A-Za-z0-9_][A-Za-z0-9_-]{0,60}\.(c|cpp|h)$/.test(name)){alert("Use a simple name ending in .c, .cpp or .h");return;}
+  await save();
+  if(!fileByName(name))files.push({name,source:""});
+  files.sort((a,b)=>a.name.localeCompare(b.name));
+  openFile(name);save();
+}
+
+/* ---- editor keys: indentation only, no autocomplete ---- */
+function insert(text){if(!document.execCommand("insertText",false,text))src.setRangeText(text,src.selectionStart,src.selectionEnd,"end");}
+src.addEventListener("keydown",e=>{
+  const mod=e.metaKey||e.ctrlKey;
+  if(mod&&e.key.toLowerCase()==="s"){e.preventDefault();save();return;}
+  if(mod&&e.shiftKey&&e.key.toLowerCase()==="b"){e.preventDefault();act("build");return;}
+  if(e.key==="F5"||(mod&&e.key==="Enter")){e.preventDefault();act("run");return;}
+  if(e.key==="Tab"){
+    e.preventDefault();
+    const v=src.value,s=src.selectionStart,en=src.selectionEnd;
+    if(s===en&&!e.shiftKey){insert("    ");return;}
+    const ls=v.lastIndexOf("\n",s-1)+1,block=v.slice(ls,en);
+    const out=e.shiftKey?block.replace(/^( {1,4}|\t)/gm,""):block.replace(/^/gm,"    ");
+    src.setSelectionRange(ls,en);insert(out);src.setSelectionRange(ls,ls+out.length);return;
+  }
+  if(e.key==="Enter"&&!mod&&!e.isComposing){
+    const v=src.value,s=src.selectionStart,ls=v.lastIndexOf("\n",s-1)+1;
+    const indent=v.slice(ls,s).match(/^[ \t]*/)[0];
+    e.preventDefault();insert("\n"+indent);
+  }
+});
+document.addEventListener("keydown",e=>{
+  if(e.target===src)return;
+  if(e.key==="F5"){e.preventDefault();act("run");}
+  else if((e.metaKey||e.ctrlKey)&&e.shiftKey&&e.key.toLowerCase()==="b"){e.preventDefault();act("build");}
+});
+src.addEventListener("input",()=>{lines();scheduleSave();});
+src.addEventListener("scroll",()=>{gutter.scrollTop=src.scrollTop;});
+
+/* ---- output panel ---- */
+function showTab(name){
+  document.querySelectorAll(".tabs [data-tab]").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.tab===name)));
+  for(const id of ["output","console","disasm"])$(id).hidden=id!==name;
+  document.querySelector(`[data-tab="${name}"]`).classList.remove("has");
+}
+document.querySelectorAll(".tabs [data-tab]").forEach(b=>b.addEventListener("click",()=>showTab(b.dataset.tab)));
+function mark(tab){if($(tab).hidden)document.querySelector(`[data-tab="${tab}"]`).classList.add("has");}
+
+function diagHTML(log){
+  return esc(log).split("\n").map(l=>{
+    const m=l.match(/^([\w.-]+\.(?:c|cpp|h)):(\d+):(\d+): (error|warning|note)/);
+    const cls=/\berror\b/.test(l)?"err":/\bwarning\b/.test(l)?"warn":"";
+    const body=m?`<button class="diag" data-file="${m[1]}" data-line="${m[2]}" title="Go to line ${m[2]}">${l}</button>`:l;
+    return cls?`<span class="${cls}">${body}</span>`:body;
+  }).join("\n");
+}
+$("output").addEventListener("click",e=>{
+  const b=e.target.closest(".diag");if(!b)return;
+  if(b.dataset.file!==current&&fileByName(b.dataset.file))openFile(b.dataset.file);
+  const n=+b.dataset.line,v=src.value.split("\n");
+  const start=v.slice(0,n-1).reduce((a,l)=>a+l.length+1,0);
+  src.focus();src.setSelectionRange(start,start+(v[n-1]||"").length);
+  src.scrollTop=Math.max(0,(n-5)*parseFloat(getComputedStyle(src).lineHeight));
+});
+
+const FAILED=`<span class="err">========== Build: 0 succeeded, 1 failed ==========</span>\n`;
+async function act(action){
+  if(busy||!/\.(c|cpp)$/.test(current))return;
+  busy=true;for(const id of ["build","run","asm"])$(id).disabled=true;
+  clearTimeout(saveTimer);saveTimer=null;
+  const f=fileByName(current);if(f)f.source=src.value;
+  setStatus(action==="asm"?"Compiling…":action==="run"?"Building and running…":"Building…");
+  try{
+    const r=await api("/api/code/build",{kit,file:current,source:src.value,action});
+    setStatus("Saved");
+    if(action==="asm"){
+      $("target").textContent=r.target?`Target: ${r.target}`:"";
+      if(r.built){$("disasm").textContent=r.asm;showTab("disasm");}
+      else{$("output").innerHTML=diagHTML(r.log)+"\n"+FAILED;showTab("output");}
+      return;
+    }
+    let html=`<span class="dim">Build started: ${esc(r.file)}\n$ ${esc(r.command)}</span>\n`;
+    if(r.log)html+=diagHTML(r.log)+"\n";
+    html+=r.built?`<span class="good">========== Build: 1 succeeded, 0 failed ==========</span>\n`:FAILED;
+    if(r.ran){
+      if(r.debug)html+=`\n${esc(r.debug)}${r.debug.endsWith("\n")?"":"\n"}`;
+      if(r.note)html+=`<span class="err">${esc(r.note)}</span>\n`;
+      const code=r.exitCode<0?"(crashed)":`${r.exitCode} (0x${(r.exitCode>>>0).toString(16)})`;
+      html+=`<span class="dim">The program '${esc(current.replace(/\.\w+$/,""))}' has exited with code ${code}.</span>\n`;
+      $("console").innerHTML=r.console?esc(r.console):`<span class="empty">The program printed nothing to the console.</span>`;
+      if(r.console)mark("console");
+    }
+    $("output").innerHTML=html;showTab("output");
+  }catch(e){setStatus("");$("output").innerHTML=`<span class="err">${esc(e.message)}</span>`;showTab("output");}
+  finally{busy=false;fillFiles();}
+}
+$("build").onclick=()=>act("build");
+$("run").onclick=()=>act("run");
+$("asm").onclick=()=>act("asm");
+$("newfile").onclick=newFile;
+fileSel.onchange=async()=>{const next=fileSel.value;fileSel.value=current;await save();openFile(next);};
+window.addEventListener("pagehide",()=>{if(saveTimer&&current)navigator.sendBeacon?.("/api/code/save",new Blob([JSON.stringify({kit,file:current,source:src.value})],{type:"application/json"}));});
+
+(async()=>{
+  try{
+    const r=await api("/api/code?kit="+encodeURIComponent(kit));
+    kit=r.kit;files=r.files;
+    $("where").textContent=`${kit} · saved in ${r.folder}/`;
+    $("back").href=`/courses/${kit}/study-kit.html`;
+    if(!r.compiler)$("output").innerHTML=`<span class="err">clang was not found. Run: xcode-select --install</span>`;
+    let last="";try{last=localStorage.getItem("codelab-file:"+kit)||"";}catch{}
+    if(!files.length)files=[{name:"main.cpp",source:""}];
+    openFile(fileByName(last)?last:files[0].name);
+    setStatus(r.files.length?"":"New file: main.cpp (saved when you type)");
+  }catch(e){$("where").textContent="Could not load: "+e.message;}
+})();
+</script>
+</body>
+</html>

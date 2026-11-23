@@ -2,7 +2,7 @@
  "v": 4,
  "cur": "b03",
  "step": "recall",
- "tab": "path",
+ "tab": "review",
  "done": {
   "b01": {
    "guess": true,
@@ -378,7 +378,7 @@
   ]
  },
  "speed": 1,
- "lastVisit": 1794791898967,
+ "lastVisit": 1795438603536,
  "sessionParts": 0,
  "brk": null,
  "stopped": false,
@@ -388,7 +388,7 @@
   "b03": ""
  },
  "lessonViews": {
-  "b03": "watch"
+  "b03": "experiment"
  },
  "optionalDone": {
   "b03": {
@@ -397,8 +397,8 @@
  },
  "episodeNotes": {},
  "reviewGate": {
-  "day": "2026-11-16",
-  "startedAt": 1794791122164,
+  "day": "2026-11-23",
+  "startedAt": 1795394054896,
   "finished": true
  }
 }

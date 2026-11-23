@@ -20,6 +20,11 @@ What changed here:
 - Explanation and listening share one supporting panel.
 - Code/pseudocode and flashcards remain optional tools.
 - No repeated takeaway or separate required ticks for supporting notes.
+- **Code Lab** (`/code`, linked from Watch and Practice): write, build and run
+  course C/C++ on the Mac with clang. A small `windows.h` stand-in
+  (`tools/study-kit/winshim/`) runs `WinMain` and shows `OutputDebugStringA` in
+  an Output panel; Disassembly shows Windows x64 assembly. Files save to
+  `handmade-mastery/code/<course>/dayNN/`.
 
 All lesson content, winter assets, existing audio, helper sources and a
 snapshot of progress are copied here. Answers and review changes made here

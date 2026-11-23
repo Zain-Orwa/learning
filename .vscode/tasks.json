@@ -1,0 +1,25 @@
+{
+  // Build the open .c/.cpp file on the Mac (Debug build) for the debugger in launch.json.
+  // Uses the windows.h stand-in from the Code Lab experiment.
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Mac: build this file (x64)",
+      "type": "shell",
+      "command": "${workspaceFolder}/experiment/handmade-mastery/tools/study-kit/winshim/build.sh",
+      "args": ["${file}", "x86_64"],
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": { "base": "$gcc", "fileLocation": ["relative", "${fileDirname}"] },
+      "presentation": { "reveal": "silent", "revealProblems": "onProblem", "clear": true }
+    },
+    {
+      "label": "Mac: build this file (ARM)",
+      "type": "shell",
+      "command": "${workspaceFolder}/experiment/handmade-mastery/tools/study-kit/winshim/build.sh",
+      "args": ["${file}", "arm64"],
+      "group": "build",
+      "problemMatcher": { "base": "$gcc", "fileLocation": ["relative", "${fileDirname}"] },
+      "presentation": { "reveal": "silent", "revealProblems": "onProblem", "clear": true }
+    }
+  ]
+}

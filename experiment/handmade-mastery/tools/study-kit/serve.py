@@ -266,6 +266,147 @@ def git_sync(message):
     return True, "Experiment saved. The main study records are unchanged."
 
 
+# ---------- Code Lab: write, build and run course code on the Mac ----------
+CODE_ROOT = SUBJECT / "code"
+WINSHIM = HERE / "winshim"
+CODE_KIT = re.compile(r"^[a-z0-9-]+/day\d{2}$")
+CODE_FILE = re.compile(r"^[A-Za-z0-9_][A-Za-z0-9_-]{0,60}\.(?:c|cpp|h)$")
+MAX_SOURCE = 200_000
+RUN_SECONDS = 5
+MAX_OUTPUT = 64_000
+SIGNALS = {signal.SIGSEGV: "Access violation: the program read or wrote memory it does not own.",
+           signal.SIGBUS: "Access violation: the program read or wrote memory it does not own.",
+           signal.SIGTRAP: "Breakpoint hit (__debugbreak).",
+           signal.SIGABRT: "The program aborted (abort or a failed assert).",
+           signal.SIGFPE: "Arithmetic error (for example an integer divided by zero).",
+           signal.SIGILL: "Illegal instruction."}
+
+
+def build_flags():
+    """Extra compiler flags for Build/Run, like the settings of a Visual Studio Debug build."""
+    # TODO(human)
+    return []
+
+
+def code_dir(kit):
+    if not isinstance(kit, str) or not CODE_KIT.match(kit):
+        raise ValueError("bad kit")
+    kit_dir(kit)                                   # must be a real course folder path
+    return CODE_ROOT / kit
+
+
+def code_files(kit):
+    d = code_dir(kit)
+    files = sorted(p for p in d.glob("*") if p.is_file() and CODE_FILE.match(p.name)) if d.is_dir() else []
+    return [{"name": p.name, "source": p.read_text(encoding="utf-8", errors="replace").replace("\r\n", "\n")}
+            for p in files]
+
+
+def save_code(kit, name, source):
+    if not isinstance(name, str) or not CODE_FILE.match(name):
+        return {"error": "Use a simple file name ending in .c, .cpp or .h (for example main.cpp)."}, 400
+    if not isinstance(source, str) or len(source) > MAX_SOURCE:
+        return {"error": "The file is too large."}, 400
+    d = code_dir(kit)
+    d.mkdir(parents=True, exist_ok=True)
+    # CRLF, like .gitattributes gives these files on Windows.
+    with open(d / name, "w", encoding="utf-8", newline="\r\n") as f:
+        f.write(source.replace("\r\n", "\n"))
+    return {"ok": True, "path": os.path.relpath(d / name, REPO)}, 200
+
+
+def _capped_run(cmd, cwd):
+    """Run the learner's program with a time limit; keep only the first MAX_OUTPUT bytes of each stream."""
+    p = subprocess.Popen(cmd, cwd=cwd, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    kept = {"out": bytearray(), "err": bytearray()}
+
+    def drain(stream, buf):
+        for chunk in iter(lambda: stream.read(4096), b""):
+            if len(buf) < MAX_OUTPUT:
+                buf += chunk[:MAX_OUTPUT - len(buf)]
+    readers = [threading.Thread(target=drain, args=(p.stdout, kept["out"]), daemon=True),
+               threading.Thread(target=drain, args=(p.stderr, kept["err"]), daemon=True)]
+    for t in readers:
+        t.start()
+    timed_out = False
+    try:
+        p.wait(timeout=RUN_SECONDS)
+    except subprocess.TimeoutExpired:
+        timed_out = True
+        p.kill()
+        p.wait()
+    for t in readers:
+        t.join(timeout=1)
+    text = lambda b: b.decode("utf-8", errors="replace") + ("\n…(output cut)" if len(b) >= MAX_OUTPUT else "")
+    return p.returncode, text(kept["out"]), text(kept["err"]), timed_out
+
+
+def _asm_view(raw):
+    """Keep what Visual Studio's Disassembly window shows: labels, instructions and strings."""
+    keep = []
+    for line in raw.splitlines():
+        s = line.rstrip() if line.lstrip().startswith(".asciz") else line.split(" #", 1)[0].rstrip()
+        t = s.strip()
+        if not t or t.startswith("#") or t.startswith("@feat"):
+            continue
+        if t.startswith(".") and not t.startswith((".asciz", ".ascii")):
+            continue
+        keep.append(s)
+    return "\n".join(keep)
+
+
+def build_code(kit, name, source, action):
+    if action not in ("build", "run", "asm"):
+        return {"error": "Unknown action."}, 400
+    saved, code = save_code(kit, name, source)
+    if code != 200:
+        return saved, code
+    if name.endswith(".h"):
+        return {"error": "Open a .c or .cpp file to build. A header is built by the file that includes it."}, 400
+    d = code_dir(kit)
+    cc = "clang++" if name.endswith(".cpp") else "clang"
+    if not shutil.which(cc):
+        return {"error": f"`{cc}` was not found. Install the Xcode Command Line Tools: xcode-select --install"}, 503
+    result = {"ok": True, "file": saved["path"], "action": action}
+    with tempfile.TemporaryDirectory(prefix="codelab-") as tmp:
+        tmp = pathlib.Path(tmp)
+        clean = lambda text: text.replace(str(tmp) + "/", "").replace(str(d) + "/", "")
+        if action == "asm":
+            base = [cc, "-S", "-masm=intel", "-O0", "-g0", "-fno-asynchronous-unwind-tables", "-I", str(WINSHIM)]
+            rc, out = run(base + ["--target=x86_64-pc-windows-msvc", name, "-o", str(tmp / "out.s")], cwd=d, timeout=30)
+            result["target"] = "Windows x64"
+            if rc and "file not found" in out:
+                # The Windows target has no C library headers here; fall back to Mac x64 (Intel).
+                rc, out = run(base + ["--target=x86_64-apple-macos11", name, "-o", str(tmp / "out.s")], cwd=d, timeout=30)
+                result["target"] = ("Mac x64: Windows passes the first arguments in rcx, rdx, r8, r9; "
+                                    "this view uses rdi, rsi, rdx, rcx")
+            result.update(built=rc == 0, log=clean(out))
+            if rc == 0:
+                result["asm"] = _asm_view((tmp / "out.s").read_text(encoding="utf-8", errors="replace"))
+            return result, 200
+        shim_cmd = ["clang", "-c", "-O0", "-I", str(WINSHIM), str(WINSHIM / "winmain_shim.c"), "-o", str(tmp / "shim.o")]
+        if re.search(r"\bWinMain\b", source):
+            shim_cmd.insert(2, "-DCODELAB_WITH_WINMAIN")
+        rc, out = run(shim_cmd, cwd=d, timeout=30)
+        if rc:
+            return {"error": "The Code Lab helper did not compile: " + clean(out)[-400:]}, 500
+        flags = build_flags()
+        rc, out = run([cc, *flags, "-I", str(WINSHIM), name, str(tmp / "shim.o"), "-o", str(tmp / "program")],
+                      cwd=d, timeout=60)
+        result.update(built=rc == 0, log=clean(out), command=" ".join([cc, *flags, name]))
+        if rc or action == "build":
+            return result, 200
+        exit_code, stdout, stderr, timed_out = _capped_run([str(tmp / "program")], cwd=d)
+        if timed_out:
+            note = f"Stopped after {RUN_SECONDS} seconds (an endless loop?)."
+        elif exit_code < 0:
+            note = SIGNALS.get(-exit_code, f"The program crashed (signal {-exit_code}).")
+        else:
+            note = ""
+        result.update(ran=True, exitCode=exit_code, console=stdout, debug=stderr, note=note)
+    return result, 200
+
+
 class Handler(http.server.BaseHTTPRequestHandler):
     server_version = "StudyHelper/1"
 
@@ -356,6 +497,16 @@ class Handler(http.server.BaseHTTPRequestHandler):
             return self.send_json({"exists": bool(name) and (VIDEOS / name).is_file(), "folder": str(VIDEOS)})
         if path == "/api/next":
             return self.send_json({"next": next_item(q["kit"][0])})
+        if path == "/code":
+            return self.send_file(HERE / "codelab.html")
+        if path == "/api/code":
+            kit = q.get("kit", [""])[0] or (current_kit() or {}).get("kit", "")
+            try:
+                return self.send_json({"kit": kit, "files": code_files(kit),
+                                       "folder": os.path.relpath(code_dir(kit), REPO),
+                                       "compiler": bool(shutil.which("clang"))})
+            except ValueError:
+                return self.send_json({"error": "Unknown course day."}, 400)
         if path.startswith("/video/"):
             f = VIDEOS / os.path.basename(path[len("/video/"):])
             return self.send_file(f, ranged=True) if f.is_file() else self.send_error(404)
@@ -411,6 +562,17 @@ class Handler(http.server.BaseHTTPRequestHandler):
             return self.send_json(result, code)
         if path == "/api/claude":
             return self.send_json(ask_claude(str(body.get("prompt", "")), bool(body.get("json"))))
+        if path in ("/api/code/save", "/api/code/build"):
+            try:
+                if path == "/api/code/save":
+                    result, code = save_code(body.get("kit"), body.get("file"), body.get("source"))
+                else:
+                    result, code = build_code(body.get("kit"), body.get("file"), body.get("source"), body.get("action"))
+            except ValueError:
+                result, code = {"error": "Unknown course day."}, 400
+            except subprocess.TimeoutExpired:
+                result, code = {"error": "The compiler took too long."}, 504
+            return self.send_json(result, code)
         if path in ("/api/progress", "/api/finish"):
             meta, state = body.get("meta", {}), body.get("state", {})
             with LOCK:

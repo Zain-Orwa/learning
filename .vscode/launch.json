@@ -1,0 +1,24 @@
+{
+  // F5 on an open .c/.cpp file: build it, then debug with LLDB (extension: LLDB DAP).
+  // Keys match Visual Studio: F9 breakpoint, F10 step over, F11 step into, Shift+F11 step out.
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Mac: debug this file (x64, like Casey)",
+      "type": "lldb-dap",
+      "request": "launch",
+      "program": "${fileDirname}/build/${fileBasenameNoExtension}",
+      "cwd": "${fileDirname}",
+      "preLaunchTask": "Mac: build this file (x64)",
+      "initCommands": ["settings set target.x86-disassembly-flavor intel"]
+    },
+    {
+      "name": "Mac: debug this file (ARM)",
+      "type": "lldb-dap",
+      "request": "launch",
+      "program": "${fileDirname}/build/${fileBasenameNoExtension}",
+      "cwd": "${fileDirname}",
+      "preLaunchTask": "Mac: build this file (ARM)"
+    }
+  ]
+}

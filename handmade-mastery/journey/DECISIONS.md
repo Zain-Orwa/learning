@@ -364,3 +364,20 @@ Newest at the bottom. Each entry: date, decision, why.
 - **Records:** main progress and reviews were kept. The experiment's test progress
   was not copied.
 
+## 2026-11-23: Code Lab experiment (Intro to C on the Mac)
+- **Why:** Zain wants to practise the first playlist inside the study app,
+  without switching to the Windows PC.
+- **What:** experiment-only page `/code` with an editor (no autocomplete),
+  Build / Run / Disassembly. clang compiles on the Mac; `winshim/windows.h` and
+  `winmain_shim.c` supply `WinMain` startup and `OutputDebugStringA`.
+  Disassembly targets `x86_64-pc-windows-msvc` (falls back to Mac x64 when C
+  library headers are included).
+- **Limits:** no step-through debugger, watch or memory window yet; real Win32
+  windows (Handmade Hero) still need Windows. Run stops after 5 seconds.
+- **VS Code debugger (same day):** `.vscode/launch.json` + `tasks.json` build the
+  open file with `winshim/build.sh` (-g -O0) and debug it with LLDB DAP. The
+  default is an x86-64 build run through Rosetta, so registers and disassembly
+  show x64 (rax, rip, Intel syntax) like Casey's screen; an ARM option exists.
+  Checked: breakpoint, step over, call stack, locals, registers, memory,
+  disassembly, debug output.
+- **Status:** waiting for Zain's confirmation before adopting it in the main app.
