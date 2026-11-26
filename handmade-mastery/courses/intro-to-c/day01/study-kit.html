@@ -657,11 +657,68 @@ textarea.needs-input{outline:2px solid #ffd36b;outline-offset:2px;box-shadow:0 0
 .codelab .cl-console{flex:1;min-height:0;display:flex;flex-direction:column;margin:8px;border:1px solid #6b6b6b;background:#0c0c0c}
 .codelab .cl-console-title{flex:none;padding:3px 9px;background:#f0f0f0;color:#1b1b1b;font:12px var(--cl-ui);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .codelab .cl-console .cl-out{color:#cccccc;font-family:Consolas,"Cascadia Mono",Menlo,monospace}
-/* Inside the Practice step. */
+/* Inside the Practice step. Drag the bottom-right corner to make it taller or shorter. */
 .codelab-slot{margin:16px 0}
-.codelab-slot>.codelab{height:min(620px,78vh);border:1px solid #4c8999;border-radius:10px;overflow:hidden;box-shadow:0 0 0 1px #00000033,0 6px 18px #001a2855}
+.codelab-slot>.codelab{height:min(620px,78vh);resize:vertical;min-height:320px;max-height:none;border:1px solid #4c8999;border-radius:10px;overflow:hidden;box-shadow:0 0 0 1px #00000033,0 6px 18px #001a2855}
 .codelab-slot .codelab-off{margin:0;padding:12px 14px;border:1px dashed #6aa5b2;border-radius:10px;font-size:14px}
 @media(max-width:640px){.codelab .cl-title{flex-basis:100%;order:9}.codelab-slot>.codelab{height:80vh}}
+
+/* CPU lab: Windows Task Manager's light Performance page. Scoped to .cpulab. */
+.cpulab{--tm-blue:#117dbb;--tm-ink:#1b1b1b;--tm-muted:#6b6b6b;--tm-edge:#d6d6d6;--tm-ui:"Segoe UI",-apple-system,system-ui,sans-serif;text-align:left}
+.cpulab *{box-sizing:border-box}
+.cpulab .tm{position:relative;display:flex;flex-direction:column;height:100%;min-height:0;background:#fff;color:var(--tm-ink);font:13px var(--tm-ui);color-scheme:light;border:1px solid #8a8a8a;border-radius:8px;overflow:hidden;box-shadow:0 8px 24px #001a2866}
+.cpulab .tm-title{flex:none;display:flex;align-items:center;gap:8px;height:30px;padding-left:10px;font-size:12px;background:#fff;border-bottom:1px solid #f0f0f0}
+.cpulab .tm-logo{width:14px;height:12px;border:1.5px solid var(--tm-blue);border-radius:2px;background:linear-gradient(135deg,transparent 45%,var(--tm-blue) 46% 56%,transparent 57%)}
+.cpulab .tm-caps{margin-left:auto;display:flex;height:100%}
+.cpulab .tm-caps i{display:grid;place-items:center;width:44px;font-style:normal;color:#333}
+.cpulab .tm-tabs{flex:none;display:flex;gap:2px;padding:0 6px;border-bottom:1px solid var(--tm-edge);overflow:hidden;white-space:nowrap}
+.cpulab .tm-tabs span{padding:5px 9px;color:var(--tm-muted);font-size:12px}
+.cpulab .tm-tabs .is-on{color:var(--tm-ink);border:1px solid var(--tm-edge);border-bottom-color:#fff;margin-bottom:-1px;background:#fff}
+.cpulab .tm-body{flex:1;min-height:0;display:flex}
+.cpulab .tm-nav{flex:none;width:190px;padding:8px 0;border-right:1px solid var(--tm-edge);overflow:auto}
+.cpulab .tm-card{display:flex;gap:9px;align-items:center;width:100%;margin:0;padding:8px 10px;border:0;border-left:3px solid transparent;border-radius:0;background:none;box-shadow:none;color:var(--tm-ink);font:inherit;text-align:left;cursor:pointer;min-height:0}
+.cpulab .tm-card:hover{background:#e5f3fb}
+.cpulab .tm-card.is-on{background:#cce8ff;border-left-color:var(--tm-blue)}
+.cpulab .tm-card canvas{flex:none;width:62px;height:42px}
+.cpulab .tm-card b{display:block;font-size:15px;font-weight:400}
+.cpulab .tm-card small{display:block;font-size:11px;color:var(--tm-muted);line-height:1.35}
+.cpulab .tm-main{flex:1;min-width:0;display:flex;flex-direction:column;padding:12px 16px 10px}
+.cpulab .tm-head{display:flex;align-items:baseline;gap:12px;margin-bottom:6px}
+.cpulab .tm-head h3{margin:0;font:300 26px var(--tm-ui);color:var(--tm-ink)}
+.cpulab .tm-head span{margin-left:auto;font-size:13px;text-align:right;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cpulab .tm-axis{display:flex;justify-content:space-between;font-size:11px;color:var(--tm-muted);padding:2px 0}
+.cpulab .tm-graph{flex:1;min-height:120px;outline:none}
+.cpulab .tm-graph:focus-visible{box-shadow:0 0 0 2px #000}
+.cpulab .tm-graph canvas{display:block;width:100%;height:100%}
+.cpulab .tm-stats{flex:none;display:flex;flex-wrap:wrap;gap:8px 28px;margin-top:8px}
+.cpulab .tm-big{display:flex;gap:26px}
+.cpulab .tm-big small{display:block;font-size:11px;color:var(--tm-muted)}
+.cpulab .tm-big b{display:block;font:400 22px var(--tm-ui)}
+.cpulab dl{display:grid;grid-template-columns:auto auto;gap:1px 18px;margin:0 0 0 auto;font-size:12px}
+.cpulab dt{color:var(--tm-muted)}
+.cpulab dd{margin:0}
+.cpulab .tm-note{flex:none;margin:8px 0 0;padding:6px 9px;font-size:12px;background:#fff8e1;border:1px solid #f0d58a;border-radius:4px;color:#5a4500}
+.cpulab .tm-note code{font-size:11.5px}
+.cpulab .tm-menu{position:absolute;z-index:3;min-width:190px;padding:4px 0;background:#f2f2f2;border:1px solid #a0a0a0;box-shadow:2px 3px 8px #0004;font-size:12px}
+.cpulab .tm-menu-h{padding:4px 12px;color:var(--tm-muted)}
+.cpulab .tm-menu button{display:block;width:100%;margin:0;padding:5px 12px 5px 26px;border:0;border-radius:0;background:none;box-shadow:none;color:var(--tm-ink);font:inherit;text-align:left;cursor:pointer;min-height:0}
+.cpulab .tm-menu button:hover,.cpulab .tm-menu button:focus{background:#91c9f7;outline:none}
+.cpulab .tm-menu [aria-checked="true"]{position:relative}
+.cpulab .tm-menu [aria-checked="true"]::before{content:"•";position:absolute;left:12px}
+.cpulab .tm-tools,.cpulab .tm-mine{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin-top:10px;font-size:14px}
+/* Controls under the window use the study page's own teal buttons and ice-blue fields. */
+.cpulab .tm-tools button,.cpulab .tm-mine button{margin:0;padding:5px 12px;min-height:0;font:600 13px var(--tm-ui);color:#e3f3f1;border:1px solid #85bcc9;border-radius:7px;background:linear-gradient(#286678db,#154858eb);box-shadow:inset 0 1px 0 #c4f4f33d,0 2px 5px #001a2838;cursor:pointer}
+.cpulab .tm-tools button:hover,.cpulab .tm-mine button:hover{color:#fff3cc;border-color:#b8e4e4;background:linear-gradient(#337b87,#1d5b6b)}
+.cpulab .tm-tools [aria-pressed="true"]{color:#34250e;border-color:var(--game-gold,#ffd36b);background:linear-gradient(#ffe08a,#ffc34d);box-shadow:0 0 10px #ffd36b66}
+.cpulab .tm-tools button:focus-visible,.cpulab .tm-mine button:focus-visible,.cpulab .tm-mine input:focus-visible{outline:2px solid var(--game-gold,#ffd36b);outline-offset:2px}
+.cpulab .tm-mine input{width:76px;margin:0 0 0 4px;padding:4px 7px;min-height:0;font:14px var(--tm-ui);color:#123946;background:#c3e1e5;border:1px solid #8fc4ce;border-radius:6px;box-shadow:inset 0 2px 4px #1b53651a;color-scheme:light}
+.cpulab .tm-mine p{flex-basis:100%;margin:2px 0 0;min-height:1.3em}
+.cpulab .tm-mine-for{opacity:.75;font-size:13px}
+.cpulab .tm-good{color:#9be59b}.cpulab .tm-bad{color:#ffb4a2}
+/* Inside Practice: drag the bottom-right corner to make the window taller or shorter. */
+.lab-slot{margin:16px 0}
+.lab-slot>.cpulab>.tm{height:min(470px,70vh);resize:vertical;min-height:300px;max-height:none}
+@media(max-width:640px){.cpulab .tm-nav{width:118px}.cpulab .tm-card canvas{display:none}.cpulab .tm-tabs{display:none}.cpulab dl{margin-left:0}}
 
 </style>
 
@@ -694,7 +751,7 @@ textarea.needs-input{outline:2px solid #ffd36b;outline-offset:2px;box-shadow:0 0
 
 window.STUDY = {blocks: [
 /* ============ 1 ============ */
-{id:"b01", title:"Why this series, and getting a compiler", start:"0:00", end:"5:21",
+{id:"b01", lab:"none", title:"Why this series, and getting a compiler", start:"0:00", end:"5:21",
 summary:"Casey explains the plan. Handmade Hero will build a complete game in C, live, and these Intro to C streams exist so a beginner can follow it. Then he gets a C compiler on Windows, which means installing Microsoft Visual Studio.",
 watchFor:[
  "At 1:38: what Casey says he **won't** stop to explain once the game series starts (the `?:` operator, how the stack works). That's why this prelude exists.",
@@ -735,7 +792,7 @@ why:`<p>Most programmers only know the IDE's green "play" button. When something
 <p><b>In the AI era:</b> AI tools write a lot of code now. The person who can say exactly which stage failed (compile, link, load or run) fixes problems in minutes while others paste errors back into a chat window. That skill starts with this mental model.</p>`},
 
 /* ============ 2 ============ */
-{id:"b02", title:"Creating a project and your first .cpp file", start:"5:21", end:"12:13",
+{id:"b02", lab:"code", title:"Creating a project and your first .cpp file", start:"5:21", end:"12:13",
 summary:"Casey creates a Win32 Project, explains console vs. windowed programs, ticks Empty Project, finds the Solution Explorer, adds test.cpp, and points out that C source is nothing but plain text.",
 watchFor:[
  "At 6:03: the two Win32 options. The difference is a legacy Windows split between command-line and windowed programs.",
@@ -780,7 +837,7 @@ code:`<p>Nothing compiles yet. This is the state of <code>test.cpp</code> when C
 why:`<p>Knowing that a project is just "a list of files plus settings that get passed to cl and link" removes the mystery from build systems: CMake, MSBuild, Make and the rest. They all generate the same two kinds of command. In Handmade Hero, Casey replaces the whole project system with a <code>build.bat</code> of a few lines on Day 1. This block is why that works.</p>`},
 
 /* ============ 3 ============ */
-{id:"b03", title:"Building: what compiling actually means", start:"12:13", end:"16:55",
+{id:"b03", lab:"code", title:"Building: what compiling actually means", start:"12:13", end:"16:55",
 summary:"Casey hits Build Solution and reads the output window line by line: which project, which configuration (Debug | Win32), then \"Compiling\". He defines compilation as translation, from text humans read into instructions for one specific kind of CPU.",
 watchFor:[
  "At 12:51: the output window pops up by itself. It's the log of every build stage.",
@@ -832,7 +889,7 @@ why:`<p>Handmade Hero builds in Debug on purpose for most of the series, so the 
 <p>From the CPU's side: the compiler is the <i>only</i> thing standing between your intent and the machine. The habit of asking "what instructions did my C become?" is the habit Handmade Hero builds from Day 2 onward, and it's what separates programmers who can make code fast from those who can't.</p>`},
 
 /* ============ 4 ============ */
-{id:"b04", title:"Excursion: processors, cores, hyperthreads", start:"16:55", end:"23:10",
+{id:"b04", lab:"cpu", title:"Excursion: processors, cores, hyperthreads", start:"16:55", end:"23:10",
 summary:"The \"1>\" in front of each output line sends Casey off on a tangent. He opens Task Manager and explains physical processors, cores and hyperthreads, the units that show up as \"logical processors\". He comes back to say that compilers can run several jobs in parallel, and the number tags which job printed each line.",
 watchFor:[
  "At 17:22: Ctrl+Shift+Esc opens Task Manager. One graph per **logical processor**.",
@@ -881,7 +938,7 @@ why:`<p>This is Casey's first "CPU first" tangent, and it sets the tone for the 
 
 window.STUDY.blocks.push(
 /* ============ 5 ============ */
-{id:"b05", title:"Errors, object files and the linker", start:"23:10", end:"32:17",
+{id:"b05", lab:"code", title:"Errors, object files and the linker", start:"23:10", end:"32:17",
 summary:"The nonsense file fails to compile. Casey types the smallest valid code (an empty function), and the build gets further: past the compiler and the resource compiler, to the linker. He explains why builds are split into compile and link, then reads the first link error: unresolved external symbol _WinMain@16.",
 watchFor:[
  "At 24:19 to 24:37: a compile error. Double-clicking it jumps to the line.",
@@ -945,7 +1002,7 @@ why:`<p>Compile vs. link is the most useful debugging split in native programmin
 <p>Handmade Hero builds directly on this. Casey's <code>build.bat</code> calls <code>cl</code> with linker options, links <code>user32.lib</code> and <code>gdi32.lib</code> by hand when it needs them, and later compiles the game into a DLL that's linked at runtime so code can be hot-reloaded. Each of those is just "who resolves which symbol, and when".</p>`},
 
 /* ============ 6 ============ */
-{id:"b06", title:"How Windows starts your program: the entry point", start:"32:17", end:"40:09",
+{id:"b06", lab:"none", title:"How Windows starts your program: the entry point", start:"32:17", end:"40:09",
 summary:"Casey asks how Windows knows where to start running our code, given that Windows and our program were never linked together. The answer: the .exe file format holds an entry address the linker writes, found by a predefined name, WinMain. He looks WinMain up on MSDN, copies its prototype, builds with F7, and hits errors that need windows.h.",
 watchFor:[
  "At 32:30: the CPU is already running Windows. How does Windows hand control to *our* code?",
@@ -998,7 +1055,7 @@ why:`<p>"Where does my program actually start?" is a question most programmers n
 <p>Knowing the PE format also explains real-world things: why antivirus tools inspect headers, how game anti-cheat and mod loaders work, and what a "loader" is when your program fails before main.</p>`},
 
 /* ============ 7 ============ */
-{id:"b07", title:"Windows types, Hungarian notation, _In_", start:"40:09", end:"46:15",
+{id:"b07", lab:"none", title:"Windows types, Hungarian notation, _In_", start:"40:09", end:"46:15",
 summary:"Casey decodes the strange words in WinMain's prototype. HINSTANCE and LPSTR are names Windows made up, unreadable even to an experienced C programmer who hasn't used Windows. He explains Hungarian notation (H = handle, LP = long pointer, P = pointer) and pleads with you not to use it. Then he explains the _In_ annotations and deletes them.",
 watchFor:[
  "At 41:06: \"even an experienced C programmer … would not know what LPSTR meant\". Not knowing is normal.",
@@ -1051,7 +1108,7 @@ why:`<p>Most real-world C code is code <i>someone else</i> wrote, full of their 
 <p>Handles come up all through Handmade Hero: <code>HWND</code> for the window, <code>HDC</code> for drawing, file handles, thread handles. "Opaque ID you pass back to the owner" is also how most operating system APIs, graphics APIs and game engine resource systems work.</p>`},
 
 /* ============ 8 ============ */
-{id:"b08", title:"First run, OutputDebugStringA, functions", start:"46:15", end:"54:52",
+{id:"b08", lab:"code", title:"First run, OutputDebugStringA, functions", start:"46:15", end:"54:52",
 summary:"The program builds and runs under the debugger. It does nothing and exits. Casey adds one line, OutputDebugStringA(\"...\"), and text appears in the Output window. Then he uses the empty foo function to teach functions: definition, call, return type, parameters, signature vs. body, and comments.",
 watchFor:[
  "At 46:32: Debug → **Start Debugging** runs the program. It starts and exits at once, because it does nothing.",
@@ -1124,7 +1181,7 @@ why:`<p><code>OutputDebugStringA</code> is Handmade Hero's first logging tool. C
 
 window.STUDY.blocks.push(
 /* ============ 9 ============ */
-{id:"b09", title:"Strings, semicolons, statements, whitespace", start:"54:52", end:"57:23",
+{id:"b09", lab:"code", title:"Strings, semicolons, statements, whitespace", start:"54:52", end:"57:23",
 summary:"A short syntax block. Call syntax mirrors the prototype. A string is text in double quotes. A semicolon ends a statement. Line breaks and indentation mean nothing to C, but a space inside a name splits it in two.",
 watchFor:[
  "At 54:28: a call's parentheses hold what you pass, mirroring the prototype's parentheses.",
@@ -1170,7 +1227,7 @@ code:`<p>The one call statement, tokenized the way the compiler sees it:</p>
 why:`<p>Small block, durable payoff: when you know the compiler reads <i>tokens</i> separated by whitespace, error messages make sense. "Missing ';' before '}'" tells you exactly what the parser expected. Handmade Hero's code style (braces on their own lines, aligned parameters) is Casey's own choice, layered on top of rules that don't care.</p>`},
 
 /* ============ 10 ============ */
-{id:"b10", title:"WinMain in detail: int, CALLBACK and the four parameters", start:"57:23", end:"1:03:53",
+{id:"b10", lab:"code", title:"WinMain in detail: int, CALLBACK and the four parameters", start:"57:23", end:"1:03:53",
 summary:"Casey walks WinMain's decoration: int as the return type, CALLBACK as a macro that marks a special calling convention, then each parameter: hInstance (a handle to ourselves), hPrevInstance (legacy, ignore it), lpCmdLine (shown via the command prompt and a shortcut's Target field) and nCmdShow (the shortcut's Run: normal/minimized/maximized).",
 watchFor:[
  "At 57:34 to 58:01: `int` = this function hands back a whole number (−5, 12…).",
@@ -1231,7 +1288,7 @@ why:`<p>Handmade Hero Day 2 opens the game window with <code>RegisterClass</code
 <p>Casey's "both sides must agree" idea is one of the most general ideas in systems programming. Calling conventions, file formats (block 6), network protocols and GPU command buffers are all contracts between code that was built separately. Bugs live where the two sides disagree.</p>`},
 
 /* ============ 11 ============ */
-{id:"b11", title:"Declaration vs. definition: forward declarations", start:"1:03:53", end:"1:07:46",
+{id:"b11", lab:"code", title:"Declaration vs. definition: forward declarations", start:"1:03:53", end:"1:07:46",
 summary:"Casey deletes foo's definition and gets a **compile** error (identifier not found), not a link error. Why? C++ won't let you use a name it hasn't seen. Then he writes a forward declaration, the prototype ending in a semicolon, and the error turns into a **link** error: the compiler emits the call and leaves the linker a note to patch in the address.",
 watchFor:[
  "At 1:04:11: without foo, `foo();` gives \"identifier not found\". That's a compile error.",
@@ -1303,7 +1360,7 @@ why:`<p>Header files are built on this split. A <code>.h</code> is mostly declar
 <p>Reading a build error and knowing in one second "the compiler doesn't know this name" vs. "the linker can't find this body" is a real professional skill. It's also exactly the error class AI-generated code produces most often: missing includes, missing libraries, functions it invented.</p>`},
 
 /* ============ 12 ============ */
-{id:"b12", title:"#include: who defined everything else?", start:"1:07:46", end:"1:11:58",
+{id:"b12", lab:"code", title:"#include: who defined everything else?", start:"1:07:46", end:"1:11:58",
 summary:"Keywords (blue) are built into the language. Everything else, like WinMain's types, CALLBACK and OutputDebugStringA, came from one line: #include <windows.h>. Casey explains that #include literally pastes another file's contents in place, opens windows.h to show it's mostly more includes, and previews Day 2: assembly, linking, the C runtime, and why WinMain isn't really the entry point.",
 watchFor:[
  "At 1:07:59: blue keywords (`void`, `int`) work in any C compiler. Everything else had to come from somewhere.",
@@ -3549,6 +3606,205 @@ function createCodeLab(root,opts){
   return {root,refresh,save,focus:()=>src.focus()};
 }
 
+/* CPU lab: Task Manager's Performance → CPU page inside Practice, for parts about
+   processors, cores and hyperthreads. Two computers:
+   - This Mac (live): real cores, logical processors and per-processor load from the helper's
+     /api/cpu, polled once a second only while the lab is on screen and the tab is visible.
+   - Example Windows PC (simulated): 8 cores, 16 logical processors, so two threads per core
+     can be compared with a machine that has one.
+   Right-click the graph (or use the buttons) → Change graph to → Logical processors, as in
+   the video. One canvas draws every graph; history lives in fixed Float32Array rings.
+   createCpuLab(root,{live,onNote}) → {root, wake}. */
+function createCpuLab(root,opts={}){
+  const SAMPLES=60,POLL=1000;
+  const EXAMPLE={name:'Intel(R) Core(TM) i7-10700 CPU @ 2.90GHz',sockets:1,cores:8,logical:16,groups:[],ghz:2.9,os:'Windows',example:true};
+  const LIVE_OFF={name:'This computer',sockets:null,cores:null,logical:navigator.hardwareConcurrency||null,groups:[],ghz:null,os:'',off:true};
+  const H=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const comp={live:{topo:opts.live?null:LIVE_OFF,ring:null,overall:null,prev:null,sim:null},example:{topo:EXAMPLE,ring:null,overall:null,prev:null,sim:null}};
+  let source='live',view='overall',head=0,timer=0,busy=false,err='';
+
+  root.classList.add('cpulab');
+  root.innerHTML=`<div class="tm" role="group" aria-label="Task Manager, CPU performance">
+  <div class="tm-title"><span class="tm-logo" aria-hidden="true"></span>Task Manager<span class="tm-caps" aria-hidden="true"><i>─</i><i>☐</i><i>✕</i></span></div>
+  <div class="tm-tabs" aria-hidden="true"><span>Processes</span><span class="is-on">Performance</span><span>App history</span><span>Startup</span><span>Users</span><span>Details</span><span>Services</span></div>
+  <div class="tm-body">
+    <nav class="tm-nav" aria-label="Computer">
+      <button type="button" class="tm-card" data-tm-src="live"><canvas data-tm-spark="live" aria-hidden="true"></canvas><span><b>CPU</b><small>This Mac · live</small><small data-tm-pct="live"></small></span></button>
+      <button type="button" class="tm-card" data-tm-src="example"><canvas data-tm-spark="example" aria-hidden="true"></canvas><span><b>CPU</b><small>Example Windows PC</small><small data-tm-pct="example"></small></span></button>
+    </nav>
+    <section class="tm-main">
+      <header class="tm-head"><h3>CPU</h3><span data-tm-name></span></header>
+      <div class="tm-axis"><span data-tm-axis>% Utilization over 60 seconds</span><span>100%</span></div>
+      <div class="tm-graph" data-tm-graph tabindex="0" title="Right-click: Change graph to…"><canvas></canvas></div>
+      <div class="tm-axis"><span>60 seconds</span><span>0</span></div>
+      <div class="tm-stats"><div class="tm-big"><div><small>Utilization</small><b data-tm-util>–</b></div><div><small>Speed</small><b data-tm-speed>–</b></div></div><dl data-tm-facts></dl></div>
+      <p class="tm-note" data-tm-note hidden></p>
+    </section>
+  </div>
+  <div class="tm-menu" role="menu" data-tm-menu hidden><div class="tm-menu-h">Change graph to</div><button type="button" role="menuitemradio" data-tm-view="overall">Overall utilization</button><button type="button" role="menuitemradio" data-tm-view="logical">Logical processors</button></div>
+</div>
+<div class="tm-tools"><span>Graph:</span><button type="button" data-tm-view="overall">Overall</button><button type="button" data-tm-view="logical">Logical processors</button></div>
+<div class="tm-mine"><b>Your numbers</b> <span class="tm-mine-for" data-tm-for></span>
+  <label>Cores <input type="number" min="1" max="512" inputmode="numeric" data-tm-in="cores"></label>
+  <label>Logical processors <input type="number" min="1" max="1024" inputmode="numeric" data-tm-in="logical"></label>
+  <button type="button" data-tm-check>Check</button><button type="button" data-tm-copy hidden>Put it in my note</button>
+  <p data-tm-result aria-live="polite"></p></div>`;
+  const q=s=>root.querySelector(s),graph=q('[data-tm-graph]'),canvas=graph.querySelector('canvas'),ctx=canvas.getContext('2d'),menu=q('[data-tm-menu]');
+  const ins={cores:q('[data-tm-in="cores"]'),logical:q('[data-tm-in="logical"]')},result=q('[data-tm-result]'),copyBtn=q('[data-tm-copy]');
+
+  /* ---------- data ---------- */
+  function ensureRings(c){
+    const n=Math.max(1,c.topo?.logical||1);
+    if(c.ring&&c.ring.length===n)return;
+    c.ring=Array.from({length:n},()=>new Float32Array(SAMPLES).fill(NaN));c.overall=new Float32Array(SAMPLES).fill(NaN);
+  }
+  function push(c,usage){                                  // usage: one 0..100 value per logical processor
+    ensureRings(c);
+    let sum=0;
+    for(let i=0;i<c.ring.length;i++){const v=usage[i]??0;c.ring[i][head]=v;sum+=v;}
+    c.overall[head]=sum/c.ring.length;
+  }
+  function simulate(c){                                    // hyperthread pairs share their core's load, roughly
+    const n=c.topo.logical;c.sim??=Array.from({length:n},()=>8+Math.random()*20);
+    const out=new Array(n);
+    for(let core=0;core<n/2;core++){
+      const base=c.sim[core*2]=Math.min(92,Math.max(2,c.sim[core*2]+(Math.random()-.5)*14+(Math.random()<.04?40:0)-(c.sim[core*2]>60?6:0)));
+      out[core*2]=base;out[core*2+1]=Math.min(100,Math.max(0,base*(.35+Math.random()*.4)));
+    }
+    return out;
+  }
+  async function sampleLive(){
+    const c=comp.live;
+    if(!opts.live){push(c,[]);return;}
+    try{
+      const r=await fetch('/api/cpu',{cache:'no-store'});
+      if(!r.ok)throw new Error('HTTP '+r.status);
+      const d=await r.json();err='';
+      if(!c.topo){c.topo=d;fillFacts();}
+      if(!d.ticks){push(c,[]);return;}
+      const usage=d.ticks.map((t,i)=>{const p=c.prev?.[i];if(!p)return NaN;const dt=t[1]-p[1];return dt>0?Math.min(100,Math.max(0,100*(t[0]-p[0])/dt)):(c.ring?.[i]?.[(head+SAMPLES-1)%SAMPLES]??0);});
+      c.prev=d.ticks;push(c,usage);
+    }catch(e){err='The helper did not answer, so the live numbers are paused.';push(c,[]);}
+  }
+  async function tick(){
+    head=(head+1)%SAMPLES;
+    await sampleLive();
+    push(comp.example,simulate(comp.example));
+    draw();
+  }
+
+  /* ---------- drawing ---------- */
+  const COL={line:'#117dbb',fill:'rgba(17,125,187,.13)',grid:'#d9eaf4',edge:'#117dbb',bg:'#fff'};
+  function fit(cv){
+    const dpr=window.devicePixelRatio||1,w=Math.max(1,Math.round(cv.clientWidth*dpr)),h=Math.max(1,Math.round(cv.clientHeight*dpr));
+    if(cv.width!==w||cv.height!==h){cv.width=w;cv.height=h;}
+    return dpr;
+  }
+  function plot(g,ring,x,y,w,h,dpr,gridCols,gridRows){
+    g.fillStyle=COL.bg;g.fillRect(x,y,w,h);
+    g.strokeStyle=COL.grid;g.lineWidth=dpr;g.beginPath();
+    for(let i=1;i<gridCols;i++){const gx=Math.round(x+w*i/gridCols)+.5;g.moveTo(gx,y);g.lineTo(gx,y+h);}
+    for(let i=1;i<gridRows;i++){const gy=Math.round(y+h*i/gridRows)+.5;g.moveTo(x,gy);g.lineTo(x+w,gy);}
+    g.stroke();
+    g.beginPath();let started=false,firstX=0,lastX=0;
+    for(let k=0;k<SAMPLES;k++){                               // oldest on the left, newest on the right
+      const v=ring[(head+1+k)%SAMPLES];if(Number.isNaN(v))continue;
+      const px=x+w*k/(SAMPLES-1),py=y+h-(h*v/100);
+      if(!started){g.moveTo(px,py);firstX=px;started=true;}else g.lineTo(px,py);lastX=px;
+    }
+    if(started){
+      g.strokeStyle=COL.line;g.lineWidth=1.2*dpr;g.stroke();
+      g.lineTo(lastX,y+h);g.lineTo(firstX,y+h);g.closePath();g.fillStyle=COL.fill;g.fill();
+    }
+    g.strokeStyle=COL.edge;g.lineWidth=dpr;g.strokeRect(x+dpr/2,y+dpr/2,w-dpr,h-dpr);
+  }
+  function draw(){
+    if(!root.isConnected)return;
+    const c=comp[source];ensureRings(c);
+    const dpr=fit(canvas),W=canvas.width,Hh=canvas.height;
+    ctx.clearRect(0,0,W,Hh);
+    if(view==='overall'||c.ring.length<2)plot(ctx,c.overall,0,0,W,Hh,dpr,12,10);
+    else{
+      const n=c.ring.length,gap=Math.round(4*dpr);
+      let cols=Math.min(n,Math.max(1,Math.ceil(Math.sqrt(n*W/Hh))));const rows=Math.ceil(n/cols);cols=Math.ceil(n/rows); // even rows: 16 → 8×2, not 10+6
+      const cw=(W-gap*(cols-1))/cols,ch=(Hh-gap*(rows-1))/rows;
+      for(let i=0;i<n;i++){const cx=(i%cols)*(cw+gap),cy=Math.floor(i/cols)*(ch+gap);plot(ctx,c.ring[i],Math.round(cx),Math.round(cy),Math.round(cw),Math.round(ch),dpr,4,4);}
+    }
+    for(const key of ['live','example']){
+      const cc=comp[key];ensureRings(cc);
+      const sp=q(`[data-tm-spark="${key}"]`),sd=fit(sp),g=sp.getContext('2d');
+      plot(g,cc.overall,0,0,sp.width,sp.height,sd,1,1);
+      const v=cc.overall[head];q(`[data-tm-pct="${key}"]`).textContent=Number.isNaN(v)?'':`${Math.round(v)}%`;
+    }
+    const v=c.overall[head];
+    q('[data-tm-util]').textContent=Number.isNaN(v)?'–':`${Math.round(v)}%`;
+    const note=q('[data-tm-note]'),msg=source==='live'?(c.topo?.off?`Live numbers need the helper: start the page with <code>${H(typeof START_CMD==='string'?START_CMD:'./study')}</code>. The browser alone only knows ${c.topo.logical?`${c.topo.logical} logical processors`:'nothing about the cores'}.`:H(err)):'Simulated: a typical Windows PC with Hyper-Threading (two hardware threads per core).';
+    note.hidden=!msg;if(msg&&note.innerHTML!==msg)note.innerHTML=msg;
+  }
+  function fillFacts(){
+    const t=comp[source].topo||{};
+    q('[data-tm-name]').textContent=t.name||'';
+    q('[data-tm-speed]').textContent=t.ghz?`${t.ghz.toFixed(2)} GHz`:'–';
+    const rows=[['Base speed',t.ghz?`${t.ghz.toFixed(2)} GHz`:'not reported'],['Sockets',t.sockets],['Cores',t.cores],['Logical processors',t.logical]];
+    for(const gp of t.groups||[])rows.push([`${gp.name} cores`,gp.cores]);
+    if(t.example)rows.push(['Virtualization','Enabled'],['L1 cache','512 KB'],['L2 cache','2.0 MB'],['L3 cache','16.0 MB']);
+    q('[data-tm-facts]').innerHTML=rows.map(([k,v])=>`<dt>${H(k)}</dt><dd>${v==null||v===''?'–':H(v)}</dd>`).join('');
+    q('[data-tm-for]').textContent=source==='live'?'(this Mac)':'(example PC)';
+    q('[data-tm-axis]').textContent=view==='logical'?'% Utilization over 60 seconds, one graph per logical processor':'% Utilization over 60 seconds';
+    root.querySelectorAll('[data-tm-src]').forEach(b=>b.classList.toggle('is-on',b.dataset.tmSrc===source));
+    root.querySelectorAll('[data-tm-view]').forEach(b=>b.setAttribute(b.getAttribute('role')==='menuitemradio'?'aria-checked':'aria-pressed',String(b.dataset.tmView===view)));
+  }
+
+  /* ---------- your numbers ---------- */
+  function checkMine(){
+    const c=+ins.cores.value,l=+ins.logical.value,t=comp[source].topo||{};
+    copyBtn.hidden=true;
+    if(!(c>0&&l>0)){result.textContent='Type both numbers from the bottom right first.';result.className='tm-bad';return;}
+    if(l<c){result.textContent='Logical processors can never be fewer than cores. Look again.';result.className='tm-bad';return;}
+    if((t.cores&&c!==t.cores)||(t.logical&&l!==t.logical)){result.textContent='That is not what this window shows. Read "Cores" and "Logical processors" again.';result.className='tm-bad';return;}
+    const per=l/c,perTxt=Number.isInteger(per)?String(per):per.toFixed(2);
+    result.className='tm-good';
+    result.textContent=`${l} ÷ ${c} = ${perTxt} thread${per===1?'':'s'} per core. `+(per===1?'Equal: no hyperthreading here, each core runs one thread.':`Not equal: each core runs ${perTxt} hardware threads (hyperthreading).`)+(t.groups?.length>1?` This chip also mixes ${t.groups.map(gp=>`${gp.cores} ${gp.name.toLowerCase()}`).join(' and ')} cores.`:'');
+    copyBtn.hidden=!opts.onNote;
+    copyBtn.dataset.note=`Task Manager (${source==='live'?'this Mac':'example PC'}): ${c} cores, ${l} logical processors, ${perTxt} per core, ${per===1?'equal':'not equal'}.`;
+  }
+
+  /* ---------- events ---------- */
+  function openMenu(x,y){
+    const box=root.querySelector('.tm').getBoundingClientRect();
+    menu.hidden=false;
+    menu.style.left=`${Math.min(x-box.left,box.width-menu.offsetWidth-4)}px`;menu.style.top=`${Math.min(y-box.top,box.height-menu.offsetHeight-4)}px`;
+    menu.querySelector(`[data-tm-view="${view}"]`)?.focus();
+  }
+  const closeMenu=()=>{if(!menu.hidden){menu.hidden=true;}};
+  graph.addEventListener('contextmenu',e=>{e.preventDefault();openMenu(e.clientX,e.clientY);});
+  graph.addEventListener('keydown',e=>{if(e.key==='ContextMenu'||(e.shiftKey&&e.key==='F10')){e.preventDefault();const r=graph.getBoundingClientRect();openMenu(r.left+24,r.top+24);}});
+  menu.addEventListener('keydown',e=>{if(e.key==='Escape'){closeMenu();graph.focus();}});
+  root.addEventListener('click',e=>{
+    const src=e.target.closest('[data-tm-src]'),v=e.target.closest('[data-tm-view]');
+    if(!e.target.closest('[data-tm-menu]'))closeMenu();
+    if(src&&src.dataset.tmSrc!==source){source=src.dataset.tmSrc;result.textContent='';copyBtn.hidden=true;fillFacts();draw();}
+    if(v){view=v.dataset.tmView;closeMenu();fillFacts();draw();}
+    if(e.target.closest('[data-tm-check]'))checkMine();
+    if(e.target===copyBtn&&opts.onNote)opts.onNote(copyBtn.dataset.note);
+  });
+  document.addEventListener('pointerdown',e=>{if(!menu.hidden&&!menu.contains(e.target))closeMenu();},true);
+  root.addEventListener('keydown',e=>{e.stopPropagation();if(e.key==='Enter'&&e.target.matches('[data-tm-in]')){e.preventDefault();checkMine();}}); // page shortcuts stay out of the inputs
+  if(typeof ResizeObserver==='function')new ResizeObserver(()=>draw()).observe(graph);
+
+  /* ---------- loop: only while visible ---------- */
+  function loop(){
+    timer=0;
+    if(!root.isConnected||busy)return;                        // left the page: stop until wake()
+    if(document.hidden){timer=setTimeout(loop,POLL);return;}
+    busy=true;
+    tick().finally(()=>{busy=false;const warm=opts.live&&Number.isNaN(comp.live.overall?.[head]);if(root.isConnected&&!timer)timer=setTimeout(loop,warm?300:POLL);}); // first live reading needs a second one to compare
+  }
+  function wake(){fillFacts();draw();if(!timer&&!busy)loop();}
+  fillFacts();
+  return {root,wake};
+}
+
 /* Experimental presentation only. Core grading, media and saving remain intact. */
 function experimentSupport(b){
   const deferred=b.deferred||[];
@@ -3556,10 +3812,10 @@ function experimentSupport(b){
 }
 const experimentBaseStep=renderStepRaw;
 renderStepRaw=function(b,key){
-  if(key==='watch')return `${videoPanel(b)}<p class="experiment-focus"><strong>Focus:</strong> ${md(b.focus||b.oneLiner||b.summary)}</p><p>When Casey codes, pause and write the change yourself. Predict, build and check the result. That work counts as your practice.</p>${codeLabLink()}<details class="experiment-parking"><summary>Park a question for later</summary><div class="row"><input type="text" id="parkin" placeholder="Your question…" aria-label="Question to park"><button class="btn ghost" id="parkgo">Park it</button></div><ul class="plist" id="plist">${parkItems(b,false)}</ul></details>`;
+  if(key==='watch')return `${videoPanel(b)}<p class="experiment-focus"><strong>Focus:</strong> ${md(b.focus||b.oneLiner||b.summary)}</p><p>When Casey codes, pause and write the change yourself. Predict, build and check the result. That work counts as your practice.</p>${labFor(b)==='code'?codeLabLink():''}<details class="experiment-parking"><summary>Park a question for later</summary><div class="row"><input type="text" id="parkin" placeholder="Your question…" aria-label="Question to park"><button class="btn ghost" id="parkgo">Park it</button></div><ul class="plist" id="plist">${parkItems(b,false)}</ul></details>`;
   if(key==='experiment'){
-    const base=experimentBaseStep(b,key),at=base.indexOf('<p class="small">If you already');
-    const withLab=at<0?base+CODELAB_SLOT:base.slice(0,at)+CODELAB_SLOT+base.slice(at);
+    const base=experimentBaseStep(b,key),at=base.indexOf('<p class="small">If you already'),slot=labSlot(b);
+    const withLab=at<0?base+slot:base.slice(0,at)+slot+base.slice(at);
     return `<details class="experiment-prediction"><summary>Predict the result · optional</summary><p>${md(b.guess||checkFor(b).q)}</p><textarea data-prediction="${b.id}" placeholder="What do you expect to happen?">${esc(S.predictions?.[b.id]||'')}</textarea></details>${withLab}`;
   }
   return experimentBaseStep(b,key);
@@ -4074,20 +4330,48 @@ document.addEventListener('click',e=>{
   if(key)markSupportSeen(activeLesson(),key);
 });
 
-/* Code Lab inside Practice. One editor is made the first time Practice opens and is then
-   moved into each new render, so typing, scroll position and results survive re-renders
-   and the files are fetched only once. It needs the helper (./study) to build and run. */
-const CODELAB_SLOT='<div class="codelab-slot" aria-label="Code Lab"></div>';
-let codeLab=null;
+/* Practice labs: the tool next to the task matches the part.
+   A part names its lab in data.js with lab:"code" (Code Lab: write, build and run C),
+   lab:"cpu" (Task Manager's CPU page: cores, logical processors, live load) or lab:"none".
+   Kits made before the field existed get Code Lab only when the task asks to build or run code.
+   Each lab is made once and moved into each new render, so typing, results and graph history
+   survive re-renders and nothing is fetched twice. */
+const LAB_KINDS=['code','cpu','none'];
+const LAB_CODE_HINT=/\b(build|compile[sd]?|compiling|F5|Ctrl\+Shift\+B|\w+\.(?:cpp|c)\b|cl \/)/i;
+function labFor(b){
+  const named=String(b.lab||'').trim().toLowerCase();
+  if(named)return LAB_KINDS.includes(named)?named:'none';
+  const task=String(b.practice||b.experiment||'').replace(/<[^>]+>/g,' ');
+  return LAB_CODE_HINT.test(task)?'code':'none';
+}
+function labSlot(b){
+  const kind=labFor(b);
+  if(kind==='code')return CODELAB_SLOT;
+  if(kind==='cpu')return '<div class="lab-slot" data-lab="cpu" aria-label="Task Manager, CPU page"></div>';
+  return '';
+}
+const CODELAB_SLOT='<div class="lab-slot codelab-slot" data-lab="code" aria-label="Code Lab"></div>';
+let codeLab=null,cpuLab=null;
 function codeLabLink(){return helperReady?`<p><a class="btn ghost small" href="/code?kit=${encodeURIComponent(kitPath)}" target="codelab">Open Code Lab ↗</a> Write, build and run the code on this Mac.</p>`:'';}
-function mountCodeLab(){
-  const slot=document.querySelector('.codelab-slot');if(!slot)return;
+function addToPracticeNote(text){                              // the lab's "Put it in my note"
+  const box=document.querySelector('[data-practice]');if(!box)return;
+  if(!box.value.includes(text))box.value=box.value.trim()?`${box.value.trimEnd()}\n${text}`:text;
+  box.dispatchEvent(new Event('input',{bubbles:true}));        // the box's normal save
+  box.focus();
+}
+function mountLab(){
+  const slot=document.querySelector('.lab-slot');if(!slot)return;
+  if(slot.dataset.lab==='cpu'){
+    if(!cpuLab)cpuLab=createCpuLab(document.createElement('div'),{live:helperReady,onNote:addToPracticeNote});
+    slot.replaceChildren(cpuLab.root);cpuLab.wake();
+    return;
+  }
   if(!helperReady){slot.innerHTML=`<p class="codelab-off">Code Lab (write, build and run here) opens when the page runs through <code>${START_CMD}</code>.</p>`;return;}
   if(!codeLab)codeLab=createCodeLab(document.createElement('div'),{kit:kitPath,fullLink:true}); // later changes from other windows load on window focus
   slot.replaceChildren(codeLab.root);
 }
 const codeLabBaseRender=render;
-render=function(){codeLabBaseRender();mountCodeLab();};
+render=function(){codeLabBaseRender();mountLab();};
 
 /* Try again below 50%: Check, Review, the review popup, Interview and Debug.
    When an answer scores under 50%, a "Try again with the answer" panel opens on request:

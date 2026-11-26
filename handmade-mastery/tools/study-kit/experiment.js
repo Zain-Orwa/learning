@@ -5,10 +5,10 @@ function experimentSupport(b){
 }
 const experimentBaseStep=renderStepRaw;
 renderStepRaw=function(b,key){
-  if(key==='watch')return `${videoPanel(b)}<p class="experiment-focus"><strong>Focus:</strong> ${md(b.focus||b.oneLiner||b.summary)}</p><p>When Casey codes, pause and write the change yourself. Predict, build and check the result. That work counts as your practice.</p>${codeLabLink()}<details class="experiment-parking"><summary>Park a question for later</summary><div class="row"><input type="text" id="parkin" placeholder="Your question…" aria-label="Question to park"><button class="btn ghost" id="parkgo">Park it</button></div><ul class="plist" id="plist">${parkItems(b,false)}</ul></details>`;
+  if(key==='watch')return `${videoPanel(b)}<p class="experiment-focus"><strong>Focus:</strong> ${md(b.focus||b.oneLiner||b.summary)}</p><p>When Casey codes, pause and write the change yourself. Predict, build and check the result. That work counts as your practice.</p>${labFor(b)==='code'?codeLabLink():''}<details class="experiment-parking"><summary>Park a question for later</summary><div class="row"><input type="text" id="parkin" placeholder="Your question…" aria-label="Question to park"><button class="btn ghost" id="parkgo">Park it</button></div><ul class="plist" id="plist">${parkItems(b,false)}</ul></details>`;
   if(key==='experiment'){
-    const base=experimentBaseStep(b,key),at=base.indexOf('<p class="small">If you already');
-    const withLab=at<0?base+CODELAB_SLOT:base.slice(0,at)+CODELAB_SLOT+base.slice(at);
+    const base=experimentBaseStep(b,key),at=base.indexOf('<p class="small">If you already'),slot=labSlot(b);
+    const withLab=at<0?base+slot:base.slice(0,at)+slot+base.slice(at);
     return `<details class="experiment-prediction"><summary>Predict the result · optional</summary><p>${md(b.guess||checkFor(b).q)}</p><textarea data-prediction="${b.id}" placeholder="What do you expect to happen?">${esc(S.predictions?.[b.id]||'')}</textarea></details>${withLab}`;
   }
   return experimentBaseStep(b,key);
@@ -523,20 +523,48 @@ document.addEventListener('click',e=>{
   if(key)markSupportSeen(activeLesson(),key);
 });
 
-/* Code Lab inside Practice. One editor is made the first time Practice opens and is then
-   moved into each new render, so typing, scroll position and results survive re-renders
-   and the files are fetched only once. It needs the helper (./study) to build and run. */
-const CODELAB_SLOT='<div class="codelab-slot" aria-label="Code Lab"></div>';
-let codeLab=null;
+/* Practice labs: the tool next to the task matches the part.
+   A part names its lab in data.js with lab:"code" (Code Lab: write, build and run C),
+   lab:"cpu" (Task Manager's CPU page: cores, logical processors, live load) or lab:"none".
+   Kits made before the field existed get Code Lab only when the task asks to build or run code.
+   Each lab is made once and moved into each new render, so typing, results and graph history
+   survive re-renders and nothing is fetched twice. */
+const LAB_KINDS=['code','cpu','none'];
+const LAB_CODE_HINT=/\b(build|compile[sd]?|compiling|F5|Ctrl\+Shift\+B|\w+\.(?:cpp|c)\b|cl \/)/i;
+function labFor(b){
+  const named=String(b.lab||'').trim().toLowerCase();
+  if(named)return LAB_KINDS.includes(named)?named:'none';
+  const task=String(b.practice||b.experiment||'').replace(/<[^>]+>/g,' ');
+  return LAB_CODE_HINT.test(task)?'code':'none';
+}
+function labSlot(b){
+  const kind=labFor(b);
+  if(kind==='code')return CODELAB_SLOT;
+  if(kind==='cpu')return '<div class="lab-slot" data-lab="cpu" aria-label="Task Manager, CPU page"></div>';
+  return '';
+}
+const CODELAB_SLOT='<div class="lab-slot codelab-slot" data-lab="code" aria-label="Code Lab"></div>';
+let codeLab=null,cpuLab=null;
 function codeLabLink(){return helperReady?`<p><a class="btn ghost small" href="/code?kit=${encodeURIComponent(kitPath)}" target="codelab">Open Code Lab ↗</a> Write, build and run the code on this Mac.</p>`:'';}
-function mountCodeLab(){
-  const slot=document.querySelector('.codelab-slot');if(!slot)return;
+function addToPracticeNote(text){                              // the lab's "Put it in my note"
+  const box=document.querySelector('[data-practice]');if(!box)return;
+  if(!box.value.includes(text))box.value=box.value.trim()?`${box.value.trimEnd()}\n${text}`:text;
+  box.dispatchEvent(new Event('input',{bubbles:true}));        // the box's normal save
+  box.focus();
+}
+function mountLab(){
+  const slot=document.querySelector('.lab-slot');if(!slot)return;
+  if(slot.dataset.lab==='cpu'){
+    if(!cpuLab)cpuLab=createCpuLab(document.createElement('div'),{live:helperReady,onNote:addToPracticeNote});
+    slot.replaceChildren(cpuLab.root);cpuLab.wake();
+    return;
+  }
   if(!helperReady){slot.innerHTML=`<p class="codelab-off">Code Lab (write, build and run here) opens when the page runs through <code>${START_CMD}</code>.</p>`;return;}
   if(!codeLab)codeLab=createCodeLab(document.createElement('div'),{kit:kitPath,fullLink:true}); // later changes from other windows load on window focus
   slot.replaceChildren(codeLab.root);
 }
 const codeLabBaseRender=render;
-render=function(){codeLabBaseRender();mountCodeLab();};
+render=function(){codeLabBaseRender();mountLab();};
 
 /* Try again below 50%: Check, Review, the review popup, Interview and Debug.
    When an answer scores under 50%, a "Try again with the answer" panel opens on request:

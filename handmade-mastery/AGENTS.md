@@ -55,6 +55,10 @@ cover only ideas requested in the question. `practiceMinutes` estimates the
 actual work, including coding; a large implementation can exceed 8 minutes.
 Use the lesson's implementation as the task; avoid assigning the same work twice.
 Optional `visual` HTML can show a small model without adding a required step.
+Give each block `lab`: the tool shown beside its Practice task. `"code"` is the
+Code Lab (write, build and run C on the Mac), `"cpu"` is Task Manager's CPU page
+(cores, logical processors, live load), `"none"` shows no tool. Pick the one the
+task actually uses; leaving it out shows Code Lab only when the task builds code.
 
 Build from this subject with:
 `python3 tools/study-kit/build.py courses/<course>/dayNN`.

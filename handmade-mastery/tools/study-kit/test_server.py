@@ -253,5 +253,32 @@ class CodeLabTest(unittest.TestCase):
                 self.assertIn("Stopped after", r["note"])
 
 
+class CpuInfoTest(unittest.TestCase):
+    """Task Manager lab: the helper's /api/cpu numbers."""
+
+    def test_topology_and_ticks(self):
+        snap = helper.cpuinfo.snapshot()
+        self.assertGreaterEqual(snap["logical"], 1)
+        self.assertGreaterEqual(snap["sockets"], 1)
+        if snap["cores"]:
+            self.assertLessEqual(snap["cores"], snap["logical"])
+            self.assertEqual(sum(g["cores"] for g in snap["groups"]) or snap["cores"], snap["cores"])
+        json.dumps(snap)                                     # the route sends it as JSON
+        a = helper.cpuinfo.ticks()
+        if a is None:
+            self.skipTest("no per-processor counters on this OS")
+        self.assertEqual(len(a), snap["logical"])
+        b = helper.cpuinfo.ticks()
+        for (busy0, total0), (busy1, total1) in zip(a, b):   # counters only grow; busy never exceeds total
+            self.assertLessEqual(busy0, total0)
+            self.assertGreaterEqual(total1, total0)
+            self.assertGreaterEqual(busy1, busy0)
+
+    def test_topology_is_read_once(self):
+        first = helper.cpuinfo.topology()
+        first["cores"] = -1                                  # callers get a copy, not the cache
+        self.assertNotEqual(helper.cpuinfo.topology()["cores"], -1)
+
+
 if __name__ == "__main__":
     unittest.main()

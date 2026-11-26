@@ -411,3 +411,15 @@ Newest at the bottom. Each entry: date, decision, why.
   sets the review date. Practice tries are stored separately (`again` in
   progress.json) and never change official scores. Check and Review offer it only
   after the official retry is used, so the retry stays unaided.
+
+## 2026-11-24: Practice shows the tool the part uses
+- **Why:** the CPU part asked Zain to read Task Manager, but Practice showed the
+  code editor. The tool beside a task should match the task.
+- **What:** each block names `lab` in data.js: `"code"` (Code Lab), `"cpu"` (Task
+  Manager's Performance → CPU page) or `"none"`. The CPU lab shows this Mac's real
+  sockets, cores, logical processors and live per-processor load (helper route
+  `/api/cpu`, standard library only), plus a simulated Windows PC with
+  Hyper-Threading for comparison, the "Logical processors" graph view, a numbers
+  check (logical ÷ cores) and "Put it in my note". Both labs can be resized by
+  dragging their bottom-right corner. Kits without `lab` show Code Lab only when the
+  task builds code.

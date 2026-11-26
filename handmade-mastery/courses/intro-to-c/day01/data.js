@@ -1,7 +1,7 @@
 
 window.STUDY = {blocks: [
 /* ============ 1 ============ */
-{id:"b01", title:"Why this series, and getting a compiler", start:"0:00", end:"5:21",
+{id:"b01", lab:"none", title:"Why this series, and getting a compiler", start:"0:00", end:"5:21",
 summary:"Casey explains the plan. Handmade Hero will build a complete game in C, live, and these Intro to C streams exist so a beginner can follow it. Then he gets a C compiler on Windows, which means installing Microsoft Visual Studio.",
 watchFor:[
  "At 1:38: what Casey says he **won't** stop to explain once the game series starts (the `?:` operator, how the stack works). That's why this prelude exists.",
@@ -42,7 +42,7 @@ why:`<p>Most programmers only know the IDE's green "play" button. When something
 <p><b>In the AI era:</b> AI tools write a lot of code now. The person who can say exactly which stage failed (compile, link, load or run) fixes problems in minutes while others paste errors back into a chat window. That skill starts with this mental model.</p>`},
 
 /* ============ 2 ============ */
-{id:"b02", title:"Creating a project and your first .cpp file", start:"5:21", end:"12:13",
+{id:"b02", lab:"code", title:"Creating a project and your first .cpp file", start:"5:21", end:"12:13",
 summary:"Casey creates a Win32 Project, explains console vs. windowed programs, ticks Empty Project, finds the Solution Explorer, adds test.cpp, and points out that C source is nothing but plain text.",
 watchFor:[
  "At 6:03: the two Win32 options. The difference is a legacy Windows split between command-line and windowed programs.",
@@ -87,7 +87,7 @@ code:`<p>Nothing compiles yet. This is the state of <code>test.cpp</code> when C
 why:`<p>Knowing that a project is just "a list of files plus settings that get passed to cl and link" removes the mystery from build systems: CMake, MSBuild, Make and the rest. They all generate the same two kinds of command. In Handmade Hero, Casey replaces the whole project system with a <code>build.bat</code> of a few lines on Day 1. This block is why that works.</p>`},
 
 /* ============ 3 ============ */
-{id:"b03", title:"Building: what compiling actually means", start:"12:13", end:"16:55",
+{id:"b03", lab:"code", title:"Building: what compiling actually means", start:"12:13", end:"16:55",
 summary:"Casey hits Build Solution and reads the output window line by line: which project, which configuration (Debug | Win32), then \"Compiling\". He defines compilation as translation, from text humans read into instructions for one specific kind of CPU.",
 watchFor:[
  "At 12:51: the output window pops up by itself. It's the log of every build stage.",
@@ -139,7 +139,7 @@ why:`<p>Handmade Hero builds in Debug on purpose for most of the series, so the 
 <p>From the CPU's side: the compiler is the <i>only</i> thing standing between your intent and the machine. The habit of asking "what instructions did my C become?" is the habit Handmade Hero builds from Day 2 onward, and it's what separates programmers who can make code fast from those who can't.</p>`},
 
 /* ============ 4 ============ */
-{id:"b04", title:"Excursion: processors, cores, hyperthreads", start:"16:55", end:"23:10",
+{id:"b04", lab:"cpu", title:"Excursion: processors, cores, hyperthreads", start:"16:55", end:"23:10",
 summary:"The \"1>\" in front of each output line sends Casey off on a tangent. He opens Task Manager and explains physical processors, cores and hyperthreads, the units that show up as \"logical processors\". He comes back to say that compilers can run several jobs in parallel, and the number tags which job printed each line.",
 watchFor:[
  "At 17:22: Ctrl+Shift+Esc opens Task Manager. One graph per **logical processor**.",
@@ -188,7 +188,7 @@ why:`<p>This is Casey's first "CPU first" tangent, and it sets the tone for the 
 
 window.STUDY.blocks.push(
 /* ============ 5 ============ */
-{id:"b05", title:"Errors, object files and the linker", start:"23:10", end:"32:17",
+{id:"b05", lab:"code", title:"Errors, object files and the linker", start:"23:10", end:"32:17",
 summary:"The nonsense file fails to compile. Casey types the smallest valid code (an empty function), and the build gets further: past the compiler and the resource compiler, to the linker. He explains why builds are split into compile and link, then reads the first link error: unresolved external symbol _WinMain@16.",
 watchFor:[
  "At 24:19 to 24:37: a compile error. Double-clicking it jumps to the line.",
@@ -252,7 +252,7 @@ why:`<p>Compile vs. link is the most useful debugging split in native programmin
 <p>Handmade Hero builds directly on this. Casey's <code>build.bat</code> calls <code>cl</code> with linker options, links <code>user32.lib</code> and <code>gdi32.lib</code> by hand when it needs them, and later compiles the game into a DLL that's linked at runtime so code can be hot-reloaded. Each of those is just "who resolves which symbol, and when".</p>`},
 
 /* ============ 6 ============ */
-{id:"b06", title:"How Windows starts your program: the entry point", start:"32:17", end:"40:09",
+{id:"b06", lab:"none", title:"How Windows starts your program: the entry point", start:"32:17", end:"40:09",
 summary:"Casey asks how Windows knows where to start running our code, given that Windows and our program were never linked together. The answer: the .exe file format holds an entry address the linker writes, found by a predefined name, WinMain. He looks WinMain up on MSDN, copies its prototype, builds with F7, and hits errors that need windows.h.",
 watchFor:[
  "At 32:30: the CPU is already running Windows. How does Windows hand control to *our* code?",
@@ -305,7 +305,7 @@ why:`<p>"Where does my program actually start?" is a question most programmers n
 <p>Knowing the PE format also explains real-world things: why antivirus tools inspect headers, how game anti-cheat and mod loaders work, and what a "loader" is when your program fails before main.</p>`},
 
 /* ============ 7 ============ */
-{id:"b07", title:"Windows types, Hungarian notation, _In_", start:"40:09", end:"46:15",
+{id:"b07", lab:"none", title:"Windows types, Hungarian notation, _In_", start:"40:09", end:"46:15",
 summary:"Casey decodes the strange words in WinMain's prototype. HINSTANCE and LPSTR are names Windows made up, unreadable even to an experienced C programmer who hasn't used Windows. He explains Hungarian notation (H = handle, LP = long pointer, P = pointer) and pleads with you not to use it. Then he explains the _In_ annotations and deletes them.",
 watchFor:[
  "At 41:06: \"even an experienced C programmer … would not know what LPSTR meant\". Not knowing is normal.",
@@ -358,7 +358,7 @@ why:`<p>Most real-world C code is code <i>someone else</i> wrote, full of their 
 <p>Handles come up all through Handmade Hero: <code>HWND</code> for the window, <code>HDC</code> for drawing, file handles, thread handles. "Opaque ID you pass back to the owner" is also how most operating system APIs, graphics APIs and game engine resource systems work.</p>`},
 
 /* ============ 8 ============ */
-{id:"b08", title:"First run, OutputDebugStringA, functions", start:"46:15", end:"54:52",
+{id:"b08", lab:"code", title:"First run, OutputDebugStringA, functions", start:"46:15", end:"54:52",
 summary:"The program builds and runs under the debugger. It does nothing and exits. Casey adds one line, OutputDebugStringA(\"...\"), and text appears in the Output window. Then he uses the empty foo function to teach functions: definition, call, return type, parameters, signature vs. body, and comments.",
 watchFor:[
  "At 46:32: Debug → **Start Debugging** runs the program. It starts and exits at once, because it does nothing.",
@@ -431,7 +431,7 @@ why:`<p><code>OutputDebugStringA</code> is Handmade Hero's first logging tool. C
 
 window.STUDY.blocks.push(
 /* ============ 9 ============ */
-{id:"b09", title:"Strings, semicolons, statements, whitespace", start:"54:52", end:"57:23",
+{id:"b09", lab:"code", title:"Strings, semicolons, statements, whitespace", start:"54:52", end:"57:23",
 summary:"A short syntax block. Call syntax mirrors the prototype. A string is text in double quotes. A semicolon ends a statement. Line breaks and indentation mean nothing to C, but a space inside a name splits it in two.",
 watchFor:[
  "At 54:28: a call's parentheses hold what you pass, mirroring the prototype's parentheses.",
@@ -477,7 +477,7 @@ code:`<p>The one call statement, tokenized the way the compiler sees it:</p>
 why:`<p>Small block, durable payoff: when you know the compiler reads <i>tokens</i> separated by whitespace, error messages make sense. "Missing ';' before '}'" tells you exactly what the parser expected. Handmade Hero's code style (braces on their own lines, aligned parameters) is Casey's own choice, layered on top of rules that don't care.</p>`},
 
 /* ============ 10 ============ */
-{id:"b10", title:"WinMain in detail: int, CALLBACK and the four parameters", start:"57:23", end:"1:03:53",
+{id:"b10", lab:"code", title:"WinMain in detail: int, CALLBACK and the four parameters", start:"57:23", end:"1:03:53",
 summary:"Casey walks WinMain's decoration: int as the return type, CALLBACK as a macro that marks a special calling convention, then each parameter: hInstance (a handle to ourselves), hPrevInstance (legacy, ignore it), lpCmdLine (shown via the command prompt and a shortcut's Target field) and nCmdShow (the shortcut's Run: normal/minimized/maximized).",
 watchFor:[
  "At 57:34 to 58:01: `int` = this function hands back a whole number (−5, 12…).",
@@ -538,7 +538,7 @@ why:`<p>Handmade Hero Day 2 opens the game window with <code>RegisterClass</code
 <p>Casey's "both sides must agree" idea is one of the most general ideas in systems programming. Calling conventions, file formats (block 6), network protocols and GPU command buffers are all contracts between code that was built separately. Bugs live where the two sides disagree.</p>`},
 
 /* ============ 11 ============ */
-{id:"b11", title:"Declaration vs. definition: forward declarations", start:"1:03:53", end:"1:07:46",
+{id:"b11", lab:"code", title:"Declaration vs. definition: forward declarations", start:"1:03:53", end:"1:07:46",
 summary:"Casey deletes foo's definition and gets a **compile** error (identifier not found), not a link error. Why? C++ won't let you use a name it hasn't seen. Then he writes a forward declaration, the prototype ending in a semicolon, and the error turns into a **link** error: the compiler emits the call and leaves the linker a note to patch in the address.",
 watchFor:[
  "At 1:04:11: without foo, `foo();` gives \"identifier not found\". That's a compile error.",
@@ -610,7 +610,7 @@ why:`<p>Header files are built on this split. A <code>.h</code> is mostly declar
 <p>Reading a build error and knowing in one second "the compiler doesn't know this name" vs. "the linker can't find this body" is a real professional skill. It's also exactly the error class AI-generated code produces most often: missing includes, missing libraries, functions it invented.</p>`},
 
 /* ============ 12 ============ */
-{id:"b12", title:"#include: who defined everything else?", start:"1:07:46", end:"1:11:58",
+{id:"b12", lab:"code", title:"#include: who defined everything else?", start:"1:07:46", end:"1:11:58",
 summary:"Keywords (blue) are built into the language. Everything else, like WinMain's types, CALLBACK and OutputDebugStringA, came from one line: #include <windows.h>. Casey explains that #include literally pastes another file's contents in place, opens windows.h to show it's mostly more includes, and previews Day 2: assembly, linking, the C runtime, and why WinMain isn't really the entry point.",
 watchFor:[
  "At 1:07:59: blue keywords (`void`, `int`) work in any C compiler. Everything else had to come from somewhere.",

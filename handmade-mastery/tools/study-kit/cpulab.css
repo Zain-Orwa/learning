@@ -1,0 +1,56 @@
+/* CPU lab: Windows Task Manager's light Performance page. Scoped to .cpulab. */
+.cpulab{--tm-blue:#117dbb;--tm-ink:#1b1b1b;--tm-muted:#6b6b6b;--tm-edge:#d6d6d6;--tm-ui:"Segoe UI",-apple-system,system-ui,sans-serif;text-align:left}
+.cpulab *{box-sizing:border-box}
+.cpulab .tm{position:relative;display:flex;flex-direction:column;height:100%;min-height:0;background:#fff;color:var(--tm-ink);font:13px var(--tm-ui);color-scheme:light;border:1px solid #8a8a8a;border-radius:8px;overflow:hidden;box-shadow:0 8px 24px #001a2866}
+.cpulab .tm-title{flex:none;display:flex;align-items:center;gap:8px;height:30px;padding-left:10px;font-size:12px;background:#fff;border-bottom:1px solid #f0f0f0}
+.cpulab .tm-logo{width:14px;height:12px;border:1.5px solid var(--tm-blue);border-radius:2px;background:linear-gradient(135deg,transparent 45%,var(--tm-blue) 46% 56%,transparent 57%)}
+.cpulab .tm-caps{margin-left:auto;display:flex;height:100%}
+.cpulab .tm-caps i{display:grid;place-items:center;width:44px;font-style:normal;color:#333}
+.cpulab .tm-tabs{flex:none;display:flex;gap:2px;padding:0 6px;border-bottom:1px solid var(--tm-edge);overflow:hidden;white-space:nowrap}
+.cpulab .tm-tabs span{padding:5px 9px;color:var(--tm-muted);font-size:12px}
+.cpulab .tm-tabs .is-on{color:var(--tm-ink);border:1px solid var(--tm-edge);border-bottom-color:#fff;margin-bottom:-1px;background:#fff}
+.cpulab .tm-body{flex:1;min-height:0;display:flex}
+.cpulab .tm-nav{flex:none;width:190px;padding:8px 0;border-right:1px solid var(--tm-edge);overflow:auto}
+.cpulab .tm-card{display:flex;gap:9px;align-items:center;width:100%;margin:0;padding:8px 10px;border:0;border-left:3px solid transparent;border-radius:0;background:none;box-shadow:none;color:var(--tm-ink);font:inherit;text-align:left;cursor:pointer;min-height:0}
+.cpulab .tm-card:hover{background:#e5f3fb}
+.cpulab .tm-card.is-on{background:#cce8ff;border-left-color:var(--tm-blue)}
+.cpulab .tm-card canvas{flex:none;width:62px;height:42px}
+.cpulab .tm-card b{display:block;font-size:15px;font-weight:400}
+.cpulab .tm-card small{display:block;font-size:11px;color:var(--tm-muted);line-height:1.35}
+.cpulab .tm-main{flex:1;min-width:0;display:flex;flex-direction:column;padding:12px 16px 10px}
+.cpulab .tm-head{display:flex;align-items:baseline;gap:12px;margin-bottom:6px}
+.cpulab .tm-head h3{margin:0;font:300 26px var(--tm-ui);color:var(--tm-ink)}
+.cpulab .tm-head span{margin-left:auto;font-size:13px;text-align:right;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cpulab .tm-axis{display:flex;justify-content:space-between;font-size:11px;color:var(--tm-muted);padding:2px 0}
+.cpulab .tm-graph{flex:1;min-height:120px;outline:none}
+.cpulab .tm-graph:focus-visible{box-shadow:0 0 0 2px #000}
+.cpulab .tm-graph canvas{display:block;width:100%;height:100%}
+.cpulab .tm-stats{flex:none;display:flex;flex-wrap:wrap;gap:8px 28px;margin-top:8px}
+.cpulab .tm-big{display:flex;gap:26px}
+.cpulab .tm-big small{display:block;font-size:11px;color:var(--tm-muted)}
+.cpulab .tm-big b{display:block;font:400 22px var(--tm-ui)}
+.cpulab dl{display:grid;grid-template-columns:auto auto;gap:1px 18px;margin:0 0 0 auto;font-size:12px}
+.cpulab dt{color:var(--tm-muted)}
+.cpulab dd{margin:0}
+.cpulab .tm-note{flex:none;margin:8px 0 0;padding:6px 9px;font-size:12px;background:#fff8e1;border:1px solid #f0d58a;border-radius:4px;color:#5a4500}
+.cpulab .tm-note code{font-size:11.5px}
+.cpulab .tm-menu{position:absolute;z-index:3;min-width:190px;padding:4px 0;background:#f2f2f2;border:1px solid #a0a0a0;box-shadow:2px 3px 8px #0004;font-size:12px}
+.cpulab .tm-menu-h{padding:4px 12px;color:var(--tm-muted)}
+.cpulab .tm-menu button{display:block;width:100%;margin:0;padding:5px 12px 5px 26px;border:0;border-radius:0;background:none;box-shadow:none;color:var(--tm-ink);font:inherit;text-align:left;cursor:pointer;min-height:0}
+.cpulab .tm-menu button:hover,.cpulab .tm-menu button:focus{background:#91c9f7;outline:none}
+.cpulab .tm-menu [aria-checked="true"]{position:relative}
+.cpulab .tm-menu [aria-checked="true"]::before{content:"•";position:absolute;left:12px}
+.cpulab .tm-tools,.cpulab .tm-mine{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin-top:10px;font-size:14px}
+/* Controls under the window use the study page's own teal buttons and ice-blue fields. */
+.cpulab .tm-tools button,.cpulab .tm-mine button{margin:0;padding:5px 12px;min-height:0;font:600 13px var(--tm-ui);color:#e3f3f1;border:1px solid #85bcc9;border-radius:7px;background:linear-gradient(#286678db,#154858eb);box-shadow:inset 0 1px 0 #c4f4f33d,0 2px 5px #001a2838;cursor:pointer}
+.cpulab .tm-tools button:hover,.cpulab .tm-mine button:hover{color:#fff3cc;border-color:#b8e4e4;background:linear-gradient(#337b87,#1d5b6b)}
+.cpulab .tm-tools [aria-pressed="true"]{color:#34250e;border-color:var(--game-gold,#ffd36b);background:linear-gradient(#ffe08a,#ffc34d);box-shadow:0 0 10px #ffd36b66}
+.cpulab .tm-tools button:focus-visible,.cpulab .tm-mine button:focus-visible,.cpulab .tm-mine input:focus-visible{outline:2px solid var(--game-gold,#ffd36b);outline-offset:2px}
+.cpulab .tm-mine input{width:76px;margin:0 0 0 4px;padding:4px 7px;min-height:0;font:14px var(--tm-ui);color:#123946;background:#c3e1e5;border:1px solid #8fc4ce;border-radius:6px;box-shadow:inset 0 2px 4px #1b53651a;color-scheme:light}
+.cpulab .tm-mine p{flex-basis:100%;margin:2px 0 0;min-height:1.3em}
+.cpulab .tm-mine-for{opacity:.75;font-size:13px}
+.cpulab .tm-good{color:#9be59b}.cpulab .tm-bad{color:#ffb4a2}
+/* Inside Practice: drag the bottom-right corner to make the window taller or shorter. */
+.lab-slot{margin:16px 0}
+.lab-slot>.cpulab>.tm{height:min(470px,70vh);resize:vertical;min-height:300px;max-height:none}
+@media(max-width:640px){.cpulab .tm-nav{width:118px}.cpulab .tm-card canvas{display:none}.cpulab .tm-tabs{display:none}.cpulab dl{margin-left:0}}

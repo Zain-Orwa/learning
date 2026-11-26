@@ -1,7 +1,7 @@
 {
  "v": 4,
  "cur": "b04",
- "step": "watch",
+ "step": "experiment",
  "tab": "path",
  "done": {
   "b01": {
@@ -32,7 +32,8 @@
    "experiment": true
   },
   "b04": {
-   "watch": true
+   "watch": true,
+   "recall": true
   }
  },
  "completed": {
@@ -44,7 +45,7 @@
   "b01": 0,
   "b02": 321,
   "b03": 1014.950256,
-  "b04": 1354.761618
+  "b04": 1320.584599
  },
  "recall": {
   "b01": "1. how you can code C program in Windows.\n2. what do you need as tools to Code a game using Windows machine.\n3. to able to code a game you need to get a text editor and compiler that is not come out of the box like linux we have to download that.",
@@ -137,7 +138,8 @@
  },
  "ivans": {
   "b02:0": "a console application is app that is using the terminal as its interface while GUI app is creating it's own one and all that can be flagged inside the app itself",
-  "b03:0": "A debug relief, a debug is when we are running the debug configuration. We are stepping into the code line by line and translate it directly into machine code so we can see the assembly directly there. This is a debug, and a debug also gives us more tests, we can test more and more, we can figure out what's going wrong with our program. Also, a debug is unoptimized, because not the final release, so it's not going to be more optimized, like more about testing a debug. debug. So a debug can be in a text editor of the program or anything that's related to program that we need to test on the menu of the program so so far. For the release it's more optimized and release is gonna be as translated or compiled the full build or the full text file into one shot so we can release it and so more optimized."
+  "b03:0": "A debug relief, a debug is when we are running the debug configuration. We are stepping into the code line by line and translate it directly into machine code so we can see the assembly directly there. This is a debug, and a debug also gives us more tests, we can test more and more, we can figure out what's going wrong with our program. Also, a debug is unoptimized, because not the final release, so it's not going to be more optimized, like more about testing a debug. debug. So a debug can be in a text editor of the program or anything that's related to program that we need to test on the menu of the program so so far. For the release it's more optimized and release is gonna be as translated or compiled the full build or the full text file into one shot so we can release it and so more optimized.",
+  "b04:0": "So, a CPU core, it is a part of the CPU. So, each CPU contains multiple cores and each core, it has hardware threads that call registers. Like multiple registers combined give us hardware threads and logical processors are just the the group of the registers inside one core and a CPU core it has inside three things it has the registers it has ALU it has the control unit so the the job there the control unit feature the instruction from the register send it to ALU and ALU perform the instruction and hyperthreads it is multiple threads like a hyperthreading is like multiple threads maybe two inside one core that's sharing one core like sharing one core by a double performance I don't think it will performance because at the end of the day, if one is working, one is not working, so they are switching between works and at the end of the day, they are sharing one processor."
  },
  "ivfb": {
   "b02:0": {
@@ -178,6 +180,33 @@
    ],
    "guide": "",
    "rewatch": ""
+  },
+  "b04:0": {
+   "v": 3,
+   "score": 72,
+   "awards": [
+    30,
+    25,
+    5,
+    12
+   ],
+   "right": "You correctly said a CPU has several cores, a core is a full engine with registers, an ALU and a control unit, a hyperthread is a second set of registers sharing one core, and hyperthreading does not double speed.",
+   "missing": [
+    {
+     "point": "A hardware thread is an extra saved thread state on one core; the core runs both through the same execution units",
+     "pct": 5
+    },
+    {
+     "point": "The OS counts each hardware thread as a logical processor (sockets × cores × threads per core)",
+     "pct": 15
+    },
+    {
+     "point": "No, it doesn't double: the threads share the core's units; it helps mostly by filling idle time (e.g. waiting on memory)",
+     "pct": 8
+    }
+   ],
+   "guide": "A logical processor is not a group of registers. It is what Windows shows for each hardware thread, so Casey's machine has 2 chips × 4 cores × 2 threads = 16 logical processors, which are the 16 graphs in Task Manager.",
+   "rewatch": "16:55-23:10"
   }
  },
  "dbgs": {},
@@ -375,7 +404,8 @@
   }
  },
  "checkAnswers": {
-  "b03": "So, the completion in the process of translating the code that human can read into a binary that machine can read or into a code that machine can read or a CPU can read and we target specific CPU matters. I think because each CPU, it has some specific things that adhere to it. Like for example, the compiler is written for a specific CPU. So it depends on x86 or x64. So that's the monitor, because it depends on the machine you are writing the code to, you have to specify that."
+  "b03": "So, the completion in the process of translating the code that human can read into a binary that machine can read or into a code that machine can read or a CPU can read and we target specific CPU matters. I think because each CPU, it has some specific things that adhere to it. Like for example, the compiler is written for a specific CPU. So it depends on x86 or x64. So that's the monitor, because it depends on the machine you are writing the code to, you have to specify that.",
+  "b04": "So, a CPU. It is a physical hardware inside the machine. The CPU is contained multiple cores inside some 4, some 8, some 10, and also more. and inside each core we have threads depends on the our CPU kind if we speak about Intel processors that normally they have two threads if you have you speak about M1 or Apple silicon each core it has one thread and one thread is is just a combined of multiple registers that do instructions in a line, one by one. So that's the CPU chip. This is considered the ultimate, the big, and inside it we have a core, cores some one maybe some can be one core the all the way or all the CPUs or two or three or four whatever see a course it has inside but nowadays it varies four eight and maybe ten cores depends"
  },
  "checkFb": {
   "b03": {
@@ -393,6 +423,28 @@
     }
    ],
    "guide": "",
+   "rewatch": ""
+  },
+  "b04": {
+   "v": 3,
+   "score": 60,
+   "awards": [
+    35,
+    15,
+    10
+   ],
+   "right": "You are right that a CPU chip holds several cores, and that each thread keeps its own set of registers (Intel often has 2 threads per core; Apple M1 cores have 1).",
+   "missing": [
+    {
+     "point": "A core executes instructions",
+     "pct": 20
+    },
+    {
+     "point": "Hardware threads share a core’s execution resources; they are not extra full cores",
+     "pct": 20
+    }
+   ],
+   "guide": "Say clearly that the core is the part that runs the instructions. The hardware threads on one core each keep their own registers, but they share that core's execution units, so two threads are not two full cores.",
    "rewatch": ""
   }
  },
@@ -419,7 +471,34 @@
     }
    }
   ],
-  "b01": []
+  "b01": [],
+  "b04": [
+   {
+    "answer": "So, a CPU. It is a physical hardware inside the machine. The CPU is contained multiple cores inside some 4, some 8, some 10, and also more. and inside each core we have threads depends on the our CPU kind if we speak about Intel processors that normally they have two threads if you have you speak about M1 or Apple silicon each core it has one thread and one thread is is just a combined of multiple registers that do instructions in a line, one by one. So that's the CPU chip. This is considered the ultimate, the big, and inside it we have a core, cores some one maybe some can be one core the all the way or all the CPUs or two or three or four whatever see a course it has inside but nowadays it varies four eight and maybe ten cores depends",
+    "fb": {
+     "v": 3,
+     "score": 60,
+     "awards": [
+      35,
+      15,
+      10
+     ],
+     "right": "You are right that a CPU chip holds several cores, and that each thread keeps its own set of registers (Intel often has 2 threads per core; Apple M1 cores have 1).",
+     "missing": [
+      {
+       "point": "A core executes instructions",
+       "pct": 20
+      },
+      {
+       "point": "Hardware threads share a core’s execution resources; they are not extra full cores",
+       "pct": 20
+      }
+     ],
+     "guide": "Say clearly that the core is the part that runs the instructions. The hardware threads on one core each keep their own registers, but they share that core's execution units, so two threads are not two full cores.",
+     "rewatch": ""
+    }
+   }
+  ]
  },
  "reviewChecks": {
   "icd01-p01@2026-11-02": {
@@ -580,13 +659,19 @@
      }
     }
    ]
+  },
+  "icd01-p02@2026-11-23": {
+   "answer": "",
+   "attempts": []
   }
  },
  "practice": {
-  "b03": "uhfeehfiehifheihk "
+  "b03": "uhfeehfiehifheihk ",
+  "b04": "I'm realizing that here the core, it is aligned with processor. If you have 8 cores, that means 8 logical processors. And if you have 4 cores, you're going to have 4 logical processors and so on and so forth."
  },
  "practiceDone": {
-  "b03": false
+  "b03": false,
+  "b04": false
  },
  "notes": {
   "b01": [
@@ -616,8 +701,8 @@
   ]
  },
  "speed": 1,
- "lastVisit": 1795466591277,
- "sessionParts": 1,
+ "lastVisit": 1795724827166,
+ "sessionParts": 0,
  "brk": null,
  "stopped": false,
  "finished": false,
@@ -628,7 +713,7 @@
  "lessonViews": {
   "b03": "experiment",
   "b01": "recall",
-  "b04": "watch"
+  "b04": "experiment"
  },
  "optionalDone": {
   "b03": {
@@ -636,8 +721,8 @@
   }
  },
  "reviewGate": {
-  "day": "2026-11-23",
-  "startedAt": 1795457229896,
+  "day": "2026-11-26",
+  "startedAt": 1795712800233,
   "finished": true
  },
  "supportSeen": {
@@ -659,6 +744,9 @@
    "analogy": "vh0wxk",
    "code": "1n2cwcj",
    "cards": "fku12j"
+  },
+  "b04": {
+   "explain": "16e0nhg"
   }
  }
 }

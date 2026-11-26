@@ -28,11 +28,11 @@ _Last updated: 2026-11-16_
 ## Study position
 - Course: intro-to-c, Day 01
 - Section: 4 of 12 ("Excursion: processors, cores, hyperthreads", 16:55-23:10)
-- Step: Watch (video at 5:40 into the part, episode time 22:35)
+- Step: Practice (video at 5:06 into the part, episode time 22:01)
 - Parts done: 3
 - Completed (part id, date): b01 2026-11-01, b02 2026-11-02, b03 2026-11-23
 - Practice still to try: b03
-- Updated: 2026-11-23
+- Updated: 2026-11-26
 
 ## Debugging log
 _(one line per challenge: date, bug class, score, time)_

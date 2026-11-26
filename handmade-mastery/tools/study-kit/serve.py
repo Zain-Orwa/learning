@@ -47,6 +47,8 @@ NOTE_ID = re.compile(r"^(?:b\d{2}|episode)$")
 MAX_NOTES_MD = 300_000
 sys.path.insert(0, str(REPO / "tools"))
 import reviews as review_log
+sys.path.insert(0, str(HERE))
+import cpuinfo
 
 TUTOR = ("You are a concise, helpful programming tutor for Zain, whose English is not his first "
          "language. Use plain, simple English. Follow the instructions in the message exactly. "
@@ -589,6 +591,8 @@ class Handler(http.server.BaseHTTPRequestHandler):
             return self.send_json({"exists": bool(name) and (VIDEOS / name).is_file(), "folder": str(VIDEOS)})
         if path == "/api/next":
             return self.send_json({"next": next_item(q["kit"][0])})
+        if path == "/api/cpu":                    # Task Manager lab: cores, logical processors, live load
+            return self.send_json(cpuinfo.snapshot())
         if path == "/code":
             return self.send_html(codelab_page())
         if path == "/api/code":
