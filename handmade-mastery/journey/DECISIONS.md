@@ -423,3 +423,29 @@ Newest at the bottom. Each entry: date, decision, why.
   check (logical ÷ cores) and "Put it in my note". Both labs can be resized by
   dragging their bottom-right corner. Kits without `lab` show Code Lab only when the
   task builds code.
+
+## 2026-11-28: Side trips, starting with "How CPUs Work" (Branch Education)
+- **Why:** Zain wants to leave the course for a while to understand how a CPU works
+  (Day 1 Part 4 talks about cores), study that video the same way as the course,
+  and then come back. He asked for the video's own graphics, one by one.
+- **What:** a new kind of kit, the side trip, in `courses/side-trips/<name>/`.
+  First one: `side-trips/how-cpus-work`, 20 parts that follow the video's chapters
+  (sponsor, About and thank-you chapters skipped). Each part's Graphics panel shows
+  frames taken from the video (`frames/`), in order, with the time and what to notice.
+- **Kept apart from the course:** playlist entries with `"sideTrip": true` are skipped
+  by `./study` and by "Next video". `./study cpu` opens the side trip. Its last screen
+  says "Back to the course". It saves `## Side trip position` in STATE.md, so the
+  course's `## Study position` is never overwritten. Reviews go to the same REVIEWS.md.
+- **Page wording:** `data.js` may now set `teacher`, `lessonLabel`, `watchNote`,
+  `pendingNote`, `micContext` and `positionHeading`. Defaults are the old text, so
+  the Intro to C pages read the same as before.
+- **Practice:** small Mac tasks (Terminal, paper, CPU lab, Code Lab). The Code Lab
+  accepts `side-trips/<name>` and saves to `code/side-trips/<name>/`. It still shows
+  x64 instructions, which the kit says where it matters.
+- **Source and limits:** transcript from the local Whisper model (two stretches
+  re-run after it repeated lines); frame captions checked against the frames. A few
+  "going deeper" notes go beyond the video and are marked as such.
+- **Not done:** no Kokoro audio for this kit; not tried in `experiment/` first, since
+  it adds a kit and optional settings rather than changing the course page.
+- **Known:** `test_server.py` `test_shared_schedule` (review skip) was already failing
+  before this change and still fails; the new `SideTripTest` passes.

@@ -1,0 +1,273 @@
+[0:00:00] Inside every desktop computer, smartphone, gaming console, laptop, or practically any
+[0:00:06] other device you use on a daily basis is a CPU or central processing unit and in
+[0:00:13] this video we're going to see how they work. A typical processor for a powerful
+[0:00:18] laptop like this one is built from billions of nanoscopic transistors
+[0:00:23] connected together using dozens of layers of wires and is essentially the
+[0:00:28] brain of the device. But before we explore the microprocessor and all its
+[0:00:34] complexity, let's travel to the early days of personal computers and video game
+[0:00:39] consoles and compare the Apple IIe from 1983 to the modern-day MacBook Pro.
+[0:00:46] Inside the Apple IIe we find a chip called a 6502 which is considered one of the
+[0:00:53] great-grandparents of all modern processors. This chip is built from
+[0:00:57] 4,528 transistors and can perform around 430,000 calculations a second. While it
+[0:01:07] could only run primitive applications in video games with simple graphics, this chip
+[0:01:12] was the backbone of a generation of early computers and video game consoles such as
+[0:01:18] the NES, the Commodore 64, and the Atari. Compare that to the MacBook Pro's M1 processor which is built from 16 billion transistors capable of performing around 3 trillion calculations a second, thus enabling it to generate
+[0:01:36] expansive 3D worlds with immersive graphics. Despite these two chips being released around 45 years apart,
+[0:01:45] the underlying principles of how they work are rather similar. In a way, you can think of these devices as sharing a common section of technological DNA.
+[0:01:53] In fact, if we were to open up a desktop computer and grab the CPU or the GPU inside the graphics card,
+[0:02:03] or tear down a Nintendo Switch or smartphone and find the system on a chip or SoC, or even if you could make your way into an AI
+[0:02:12] data center and grab a state of the art AI chip, you'd find that all of these processors operate using the same underlying principles.
+[0:02:22] In other words, both the Oregon Trail of 50 years ago and advanced AI algorithms run on processors with similar
+[0:02:31] technological DNA. But of course, one of these chips is 10 billion times more computationally powerful than the other.
+[0:02:41] So in this video, we're going to take apart this microprocessor and find out exactly what the shared
+[0:02:47] technological DNA is and how it enables CPUs to work. And just to be clear, the technological DNA is not transistors and it's not logic gates.
+[0:03:01] But rather, it's an architectural design and basic operational principle that's fundamental to microprocessors and differentiates these chips from other integrated circuits.
+[0:03:13] So stick around and let's dive right in.
+[0:03:24] This video is sponsored by Brilliant.
+[0:03:27] Let's begin with a quick 3D animated teardown of this MacBook Pro.
+[0:03:32] When we open it up, we find a range of different components, such as the touchpad, battery cells, speakers, a cooling fan, and the motherboard and the
+[0:03:43] center. Mounted to the motherboard are the solid state drive or SSD storage chips, where all your files are saved, and a range of other chips.
+[0:03:54] Underneath the heat pipe, we find the DRAM, which is the short-term working memory and central processing unit.
+[0:04:01] Let's desolder the DRAM and CPU and open it up.
+[0:04:06] Inside, we find three parts. On the top is a protective cover that conducts and dissipates heat. On the bottom is an interposer with thousands of connection points on either side and wires running inside of it.
+[0:04:19] And soldered onto the interposer is the integrated circuit, or IC, which is also called a die, and is the functional part of the CPU.
+[0:04:30] On the die, we can see the complex design of billions of transistors and wires organized into different sections, such as the four high-performance computational cores,
+[0:04:41] four energy-efficient cores, graphics processing cores, cache memory, and many other sections.
+[0:04:48] Let's zoom in on one of the performance cores, where we find that it's separated into different functional blocks, which we'll add labels to and then reorganize into an architectural diagram.
+[0:05:02] This diagram illustrates how data and instructions move around a single processing core in the CPU, and, although it's rather complicated, you'll understand how it works by the end of this video.
+[0:05:16] But for now, let's zoom in even further to get a nanoscopic view of a massive multilayer labyrinth of wires with the transistors at the very bottom.
+[0:05:26] Here we see a group of six transistors that are wired together to build an AND logic gate.
+[0:05:33] And in this view, we can see around 650 transistors out of the total 16 billion that make up the overall chip.
+[0:05:42] Understanding how billions of transistors work together to build a CPU capable of playing video games, watching movies, or browsing the internet will take a bit of work.
+[0:05:55] So, let's start with an analogy.
+[0:05:58] You may have heard that CPUs are like super powerful calculators.
+[0:06:02] This analogy is only around 20% complete, as it's missing some critical parts.
+[0:06:08] So, let's add them in to make a more accurate analogy.
+[0:06:12] First, we'll add a table for the calculator to sit on, along with a pencil and a sheet of paper.
+[0:06:18] Next, we'll add rows and rows of bookshelves containing thousands of books, along with a cart that can carry a small stack of books between the shelves and the table.
+[0:06:31] And finally, we'll add an automated robot, which we'll call a control unit or controller.
+[0:06:38] The controller can grab books from the bookshelves, move them to the cart and onto the table, and it can put them back.
+[0:06:45] The controller can also read the contents of each book, write on the paper and in the books, and use the calculator.
+[0:06:54] You can think of the controller as a super-fast human, but we're bad at animating humans, so it's a robot instead.
+[0:07:03] And with that, we have all the parts for our analogy.
+[0:07:06] Now let's see how each part of our CPU analogy works.
+[0:07:11] To start, the bookshelves of the storage devices in your computer, such as the SSD chips.
+[0:07:18] The cart represents the DRAM, and the table and its contents represent the CPU.
+[0:07:25] On the CPU table, there's a small space for a single open book, which is similar to the very limited capacity of the cache memory inside the CPU itself.
+[0:07:36] Next, the single sheet of paper represents the registers which are used for storing values or numbers that are actively being used.
+[0:07:46] Specifically, on it are four general-purpose registers, and a few more special locations, which we'll discuss in a little bit.
+[0:07:55] Additionally, the pencil is there to write and erase things on the paper and in the books.
+[0:08:01] Finally, the calculator represents the arithmetic logic unit, or ALU.
+[0:08:07] This ALU calculator works using binary, so there are only the digits 0 and 1,
+[0:08:14] and it can do simple functions like add, subtract, or multiply two numbers.
+[0:08:20] The ALU calculator has many more functions that you may be unfamiliar with, but are still rather simple.
+[0:08:27] For example, it can increase or decrease a number by 1, or the ALU can perform bit shifts,
+[0:08:34] which is essentially taking a number and adding a 0 to the end of it.
+[0:08:39] In decimal, bit shifting is like multiplying a number by 10, but in binary, it's equivalent to multiplying a number by 2.
+[0:08:46] The ALU can also perform logic functions on two numbers, such as the logical AND, OR, or exclusive OR operations.
+[0:08:57] For example, here is the logical AND operation for two binary inputs, and you can see that the output is a logical AND for each place value of the two inputs.
+[0:09:09] However, more importantly, the ALU calculator can perform comparisons.
+[0:09:15] For example, you can input two numbers and hit the comparison button to test whether the numbers are equal to one another.
+[0:09:22] And if they are, then an equals flag goes up, while the other comparison flags, like less than or greater than, stay down.
+[0:09:32] Finally, the ALU calculator's display that outputs the result has a special name called the accumulator.
+[0:09:40] So, now that we've explained the various parts of this analogy, how does it all work together?
+[0:09:46] Well, the first step is to load a program that we want to run, which is like moving a set of books from the bookshelves to the cart,
+[0:09:54] and then moving a single book to the table, and opening it up.
+[0:09:59] It's important to note that the DRAM cart and cache memory on the table are both temporary and limited capacity locations.
+[0:10:08] Whereas the SSD bookshelves can hold a lot more and are semi-permanent, long-term storage.
+[0:10:15] Additionally, when the computer is turned off, there are no books in the DRAM or the CPU.
+[0:10:21] But when the computer turns on, the cart and table are very actively shuffling books around.
+[0:10:28] Let's take a look at the contents of one of the books.
+[0:10:31] Essentially, there are two types of pages: instructions and data.
+[0:10:37] You can think of the instructions as the directions in a cookbook, with each step numbered sequentially across the pages.
+[0:10:44] And the pages of data contain a list of addresses with values stored at each address, and are like the ingredients that go into the recipe itself.
+[0:10:54] Similar to cooking, you need both the recipe and ingredients to make it work.
+[0:11:00] And just a few ingredients can be combined in dozens of different ways, using different recipes.
+[0:11:07] But to not use an analogy inside another analogy, let's drop the cooking one and focus on the books, table, and calculator.
+[0:11:16] Let's start at the beginning of this program and flip to page one, instruction one, which is called a load, and is the most common type of instruction.
+[0:11:26] This load has us open the pages of data and find a specific address.
+[0:11:32] We then copy and write down the value stored at that address into one of the general purpose registers on the sheet of paper.
+[0:11:41] With instruction one completed, we move to instruction two, which is to increment the value in register zero by one.
+[0:11:50] So we plug the value into the ALU calculator and hit plus one.
+[0:11:56] The third instruction, called a store instruction, is used to save or store the output of the calculator found in the accumulator display into the pages of data in the same address it was in before.
+[0:12:10] These simple, yet very common instructions are equivalent to this line of code.
+[0:12:16] Next, we move on to instruction four and complete it, and then instruction five, and so on.
+[0:12:23] Moving through the list of instructions, which goes on and on and on.
+[0:12:28] In order to keep track of which instruction is the next one to be completed, we use one of the special locations on the sheet of paper that we mentioned earlier, called the program counter or PC.
+[0:12:41] Also called an instruction address register or instruction pointer.
+[0:12:46] Since the PC currently has a value of five, we find instruction five, complete it, and increase the program counter by one.
+[0:12:56] Therefore, the next instruction to be completed will be instruction six.
+[0:13:01] However, what if after completing instruction six, we want to jump directly to instruction 42?
+[0:13:09] Well, to do this, we use a jump instruction at seven, which directly sets the value in the program counter to a new number, and in this case, it's 42.
+[0:13:20] As a result, the sequence of instructions will be five, six, seven, which is the jump instruction, then 42, 43, 44, and so on.
+[0:13:32] Another set of instructions is called a conditional branch, which is used for implementing if statements, loops, and other conditional code.
+[0:13:42] Let's use an example of a for loop with a few simple lines of code inside of it.
+[0:13:48] Quite simply, this loop is used to repeat the code inside of it four times.
+[0:13:54] So, let's take a look at the instructions.
+[0:13:55] Let's take a look at the instructions for the code inside of it.
+[0:14:00] And we color coded each of the elements to keep track of which specific lines of code result in the corresponding instructions.
+[0:14:08] We'll discuss how compilers turn code into instruction later in this video.
+[0:14:13] But for now, let's focus on the for loop and its instructions.
+[0:14:17] Specifically, here's where i gets set to zero and stored in an address in the pages of data.
+[0:14:24] Here's where i is loaded from that address and incremented by one.
+[0:14:29] And here's the contents of the loop.
+[0:14:32] At the top, you can see the three instructions: load, compare, and branch greater than or equal to.
+[0:14:40] The load first grabs the value for i and places it into register zero.
+[0:14:46] Compare feeds i stored in register zero and a value of four into the ALU and compares them, resulting in the applicable comparison flags being triggered.
+[0:14:58] Next, branch greater than or equal to checks whether either the greater than or the equals flag is on.
+[0:15:07] It sets the program counter to 23, which corresponds to completing and leaving the loop.
+[0:15:15] However, when i is less than 4, those flags aren't triggered and the loop continues until it hits the jump instruction at address 22,
+[0:15:26] where the jump sets the program counter to 6, which corresponds to the top of the for loop.
+[0:15:32] As a result, the loop will repeat a total of four times.
+[0:15:37] Note that this code on the left is in C++,
+[0:15:42] whereas the actual instructions completed by your CPU are in a binary language called machine code.
+[0:15:49] And the semi-readable version of the instructions is called assembly.
+[0:15:54] But we modified this assembly a little bit to make it more readable.
+[0:15:58] One interesting note is that you may think that with everything a computer can do, there must be tens of thousands of different instructions.
+[0:16:07] Well, actually, the 6502 processor in the Apple IIe from 1983 could only complete 56 different instructions,
+[0:16:17] whereas the modern M1 chip in the MacBook Pro can complete 354 instructions.
+[0:16:23] Here's the list of all the instructions each chip can execute.
+[0:16:28] And if you take a good look, most of these instructions are rather simple.
+[0:16:33] Let's just think about that for a second.
+[0:16:36] Every single thing you do on your computer can be constructed using only various sequences of 354 different instructions.
+[0:16:46] However, many programs have millions upon millions of lines of instructions, and hopefully there aren't any bugs in them.
+[0:16:55] So, now that we've discussed the range of possible instructions, let's further explore how CPUs work.
+[0:17:03] In order to complete an instruction, there are always three key steps:
+[0:17:08] Fetch, Decode, and Execute.
+[0:17:11] The first step is Fetch, and is where the controller uses the value in the program counter to search through the pages of instructions in the book for the corresponding instruction address.
+[0:17:22] The controller then copies the instruction found at that address into a special location called the Current Instruction Register, or CIR.
+[0:17:32] At the same time, the controller increases the program counter by one.
+[0:17:37] The second step is Decode, and in this step the current instruction is fed into a circuit called the instruction decoder.
+[0:17:45] In our analogy from earlier, this decoder is a key part of the controller, and in essence, it's the circuitry that reads in an instruction, and both interprets what the machine code of an instruction actually does, and simultaneously produces the control signals to properly execute that instruction.
+[0:18:05] Specifically, this instruction decoder circuit uses the binary values of the instruction, and an incredibly complex arrangement of logic gates to produce the corresponding control signals, which are then sent to the different elements in the CPU.
+[0:18:21] Instruction decoders are one of the more complicated parts of the CPU, but here's an example along with a simplified explanation.
+[0:18:30] Let's say we have this ADD instruction in the Current Instruction Register, or CIR, and it's fed into the instruction decoder.
+[0:18:39] The first part of the binary instruction specifies we want to use the ALU.
+[0:18:45] With the ALU selected, the next three bits specify that we want to use the ADD function, and then the last four bits of the instruction indicates we want the values in register 0 and register 1 to be routed and sent to the ALU.
+[0:19:02] Instruction decoding is considerably more complicated than that, but let's move on to the third step, which is Execute.
+[0:19:10] During Execute, using our example instruction, the control signals from the instruction decoder and an intricate set of electrical timing signals are used to first send the value in register 0 and then the value in register 1 to the ALU.
+[0:19:29] The Timing signals are used to accommodate the time it takes electricity to travel from the registers to the ALU and for transistors and logic gates to change their state, thereby ensuring the correct result at the output.
+[0:19:44] After the values are input, the ALU adds the two numbers together, and a subsequent timing signal saves the result into the accumulator, thus completing the Execute step.
+[0:19:57] These three steps: Fetch, Decode, and Execute are used to complete a single line of instructions, and once it's completed, these steps repeat by using the new value in the program counter.
+[0:20:11] In essence, Fetch, Decode, and Execute form a cycle, so let's run through it again.
+[0:20:18] During Fetch, the controller uses the program counter's value to fetch the corresponding instruction and places it in the CIR and the program counter increases by 1.
+[0:20:31] Next, during Decode, the instructions binary is fed into the instruction decoder, where a complex set of logic gates generate the correct electrical control signals for that instruction.
+[0:20:43] Finally, during Execute, the instruction is completed using the control signals and timing signals, and in this case, the value in the accumulator is stored back into a memory address which, using the analogy, is like writing the value from the calculator display into a data location in the book.
+[0:21:04] Then, the Fetch, Decode, Execute cycle repeats again using the next program counter's value, and so on.
+[0:21:13] The Fetch, Decode, Execute cycle is used in every processor, no matter whether it's the 6502 in the Apple IIe or the M1 in the MacBook Pro.
+[0:21:24] But, of course, there are many differences such as the size of the cache, the registers, or functions on the ALU calculator, and much more.
+[0:21:36] We'll cover these differences in a few minutes, but for now, one important detail is that the Fetch, Decode, Execute cycle uses your computer's clock to regulate its pace.
+[0:21:46] The 6502 chip had a 1 MHz clock, which ticked away at a million times a second, and thus each step in the Fetch, Decode, Execute cycle took a microsecond.
+[0:21:58] Additionally, the 6502 was an 8-bit processor, meaning the size of the registers in the ALU's input and output were 8 bits wide.
+[0:22:09] On the other hand, the M1 chip is a 64-bit processor, so it can handle much larger numbers, and it uses a 3.2 GHz clock, and therefore each step takes a third of a nanosecond.
+[0:22:24] Additionally, the M1 chip, along with all modern chips, uses a technique called pipelining, where multiple instructions are queued up, resulting in Fetch, Decode, and Execute for different program counter values and different instructions being completed at the same time.
+[0:22:43] There are many other optimizations in modern processors that we will soon discuss, but it's important to understand that from the second you turn on your laptop,
+[0:22:53] smartphone, gaming console, GPU, or AI server, to the second you shut it off, the processor is continuously cycling through Fetch, Decode, Execute, over and over,
+[0:23:06] using programs filled with instructions and data, along with the CPU's clock to regulate its pace.
+[0:23:13] In essence, this Fetch, Decode, Execute cycle is the common section of technological DNA that has powered every single processor built over the past 50 years.
+[0:23:25] This cycle of steps is incredibly powerful, capable of performing trillions to quadrillions of mathematical operations every second in a single chip.
+[0:23:38] But you may be wondering, are there alternatives to the Fetch, Decode, Execute cycle?
+[0:23:44] Well, there's a world of different kinds of microchips. But specifically, alternatives include application-specific integrated circuits, or ASICs, such as these microchips found in this Bitcoin mining computer,
+[0:24:00] or field-programmable gate arrays, or FPGAs, which are the main chips in a number of automotive computers and cameras.
+[0:24:09] Both ASICs and FPGAs don't use the Fetch and Decode steps, but rather they perform repetitive operations by flowing data through a set pattern of logic gates and execution units,
+[0:24:21] making them highly optimized, but very inflexible.
+[0:24:25] And then even further from these chips are quantum computers, which are based on qubits and quantum circuits, which we'll discuss in future videos.
+[0:24:34] But now that we've covered the Fetch, Decode, Execute cycle, it's important to discuss two more steps, which are memory and write-back.
+[0:24:44] Memory is analogous to moving books from the SSD bookshelves onto the DRAM cart, and then onto the table or cache memory.
+[0:24:54] Write-back is like writing data into the books, and when space for a new book is needed on the table, the old book is placed back on the DRAM cart and eventually returned to the bookshelves.
+[0:25:06] These two steps use another special location, called the memory address register, and are critical to a functioning computer.
+[0:25:14] But they typically take a lot longer to complete than the Fetch, Decode, Execute steps, and therefore in some architectures and textbooks they're included in the cycle, and sometimes they aren't.
+[0:25:26] We're working on a separate video on how data moves around these memory locations, so stay tuned.
+[0:25:33] Now that we've uncovered the technological DNA inside all processors, it's important to note that, similar to the DNA found in the nucleus of the cell, and there being multiple layers of biological organization and structure for all living things, there are many layers of complexity or abstraction between the Fetch, Decode, Execute cycle, and a computer running a video game or browsing the internet.
+[0:26:00] If you want to dive into some of the other layers and understand more about how computers work, we recommend you check out Brilliant, which is the sponsor of this video.
+[0:26:12] Brilliant has a massive library of interactive courses that include subjects like calculus, scientific thinking, circuits, programming in Python, logic, data analysis, and many more topics that would take far too long to list.
+[0:26:28] However, Brilliant is much more than a list of courses.
+[0:26:32] Rather, it's as if your favorite teacher who makes classes engaging is combined with your favorite video game and then mixed with the knowledge from countless textbooks.
+[0:26:43] The result would be Brilliant.
+[0:26:45] Their mission is to create a world of better problem solvers, and every one of their courses focuses on critical thinking through interactive games and lessons.
+[0:26:56] Furthermore, with technology progressing faster than ever, Brilliant continuously updates their lessons to anticipate what you need to know for your education and career.
+[0:27:07] For example, they have a new course on AI and large language models that explains how generative AI works far better than any other textbook or video out there.
+[0:27:16] than any other textbook or video out there. Develop your knowledge by learning a little
+[0:27:21] every day. You can start today by signing up for free using the link brilliant.org
+[0:27:28] slash branch education or by scanning the QR code on screen and you'll then have access to
+[0:27:35] with a wide range of courses throughout their catalog.
+[0:27:38] If you enjoy their content and decide to stay,
+[0:27:42] the link in the description below
+[0:27:43] will also save you 20% off an annual premium subscription,
+[0:27:49] which will give you unlimited daily access
+[0:27:51] to everything on Brilliant.
+[0:27:54] Okay, so let's quickly run through slightly more advanced
+[0:27:58] topics to finish up this video.
+[0:28:01] Earlier, we mentioned that the MacBook Pro's M1 chip can complete 354 different instructions.
+[0:28:08] This set of instructions is called ARMv8.4, and it's categorized by a RISC architecture or reduced instruction set computer.
+[0:28:19] For example, here's a simple game of Snake using 145 lines of C++ code.
+[0:28:26] It's the job of a compiler, which is a separate piece of software,
+[0:28:31] to take this code along with ARMv8.4's 354 RISC instructions
+[0:28:36] and generate a list of 676 assembly instructions
+[0:28:41] equivalent to the machine code instructions that would be found in a book or program named snake.app.
+[0:28:48] The other common architecture found in Intel and AMD chips
+[0:28:52] is called CISC or complex instruction set computer and is composed of thousands of different possible
+[0:28:59] instructions. For example, here's the equivalent snake program that is compiled to run on an Intel
+[0:29:06] or AMD chip using CISC and x86 64-bit instructions and you can see it's only 560 instructions now.
+[0:29:17] A few key differences between RISC and CISC are that each RISC instruction is relatively simple
+[0:29:24] and is executed at a consistently fast execution rate. Additionally, RISC architectures are more
+[0:29:31] energy efficient and thus used in all smartphones, whereas CISC architectures have thousands of
+[0:29:37] different instructions and pack a lot more into a single instruction. Additionally, the CISC
+[0:29:44] instruction decoder is much more complicated and individual instructions have a variable execution
+[0:29:50] rate sometimes taking multiple clock cycles to execute there are many additional pros and cons
+[0:29:57] to RISC versus CISC which we'll save for yet another video but we thought it worth mentioning
+[0:30:03] these simplified differences here computer architecture is incredibly complicated with
+[0:30:10] many different facets and layers of complexity,
+[0:30:13] and we have plans to make more videos that dive into each of these topics.
+[0:30:30] For example, we spent over 250 hours tearing down these non-working computers we bought from eBay and meticulously rebuilding each of the 3D models in Blender.
+[0:30:42] So if you could take a few seconds to like this video, subscribe if you haven't already, share this video with someone who might be curious as to how CPUs work, and most importantly, write a quick comment below.
+[0:30:56] It would help us out immensely.
+[0:30:59] Just a few seconds of your time helps us far more than you think.
+[0:31:03] So, thank you.
+[0:31:05] In the final section of this video, we'll discuss this diagram we showed earlier, and the architecture of modern processors such as the M1.
+[0:31:15] In contrast, the analogy we've laid out is rather simple, and you're probably thinking that there must be more components than an actual CPU.
+[0:31:25] In fact, this analogy is actually pretty close to what's happening inside an Apple IIe computer.
+[0:31:32] Specifically, the floppy drives are the bookshelves, and then when we open up this computer, we see the DRAM chips, which are the cart.
+[0:31:41] And then, going inside the 6502 processor, we find an integrated circuit, or die, which has the corresponding sections that will organize into an internal architectural diagram.
+[0:31:54] In this diagram, you can see the instruction decoder, ALU, the program counter, current instruction register, the other registers, and a few other sections.
+[0:32:06] Specifically, here's where the program counter is used to fetch an instruction, and here's where the instructions and data from the DRAM chips are bussed in and out.
+[0:32:17] Finally, here's where the instructions are decoded, and the control signals are generated.
+[0:32:24] One note is that there's no cache in the 6502, because the DRAM chips in the 80s were just as fast as the instructions, so the table in the analogy is even smaller.
+[0:32:36] As we said at the beginning of this video, the 6502 chip is made from 4528 transistors.
+[0:32:45] So, let's see what an M1 chip with 16 billion transistors would look like.
+[0:32:51] To start, we have to significantly increase the size of this table.
+[0:32:56] Next, we have to section off areas for each of the performance and energy efficient cores, the GPU, and other areas.
+[0:33:05] When we focus on one of the performance cores, we see the complex diagram from earlier.
+[0:33:10] So let's discuss how this diagram compares to our analogy.
+[0:33:16] Specifically, there's a separate set of 64 kilobyte data and instruction caches.
+[0:33:22] As mentioned earlier, there's a pipeline to queue eight instructions per clock cycle
+[0:33:28] and additional sections like a branch predictor to reduce issues with conditional branching
+[0:33:34] and help the pipeline run smoothly. Here you can see the pipelined instruction decoder
+[0:33:39] and 32 general purpose registers. One key difference is that the calculator is broken
+[0:33:45] up into eight separate smaller calculators, each handling a few functions. Additionally,
+[0:33:51] there's a special section for load and store instructions. This is the layout of just a single core.
+[0:33:58] And there are entirely different architectures in the graphics processing unit,
+[0:34:03] as well as inside the neural processing unit.
+[0:34:06] One important note is that the inclusion of these three types of processors,
+[0:34:11] along with hardware accelerators, such as the media engine,
+[0:34:15] makes this M1 chip closer to a system on a chip, or SoC, than a traditional CPU.
+[0:34:22] Similarly, all the processors in these devices, including the CPU in your desktop computer,
+[0:34:28] can be considered SoCs.
+[0:34:30] And therefore, the difference is more a marketing term than a technical one.
+[0:34:35] On a separate note, it's important to mention that the M1, along with all modern processors,
+[0:34:40] are proprietary designs and knowledge.
+[0:34:43] And therefore, the diagrams we've shown are close approximations that we built using input from industry experts.
+[0:34:51] Let's finally discuss our analogy in the terms of GPU chips found in graphics cards.
+[0:34:58] We have a separate video covering how graphics cards work, but with respect to this analogy,
+[0:35:04] a GPU CUDA core is actually very similar in complexity to the architecture of the 6502.
+[0:35:11] Therefore, with 10,000 to 20,000 CUDA cores in a single GPU chip,
+[0:35:17] it's like having a massive array of 6502 cores.
+[0:35:21] The difference is that GPUs typically use 32-bit ALU calculators and perform single-instruction multiple-thread,
+[0:35:30] or SIMT calculations, where a single instruction is fetched, decoded, and then distributed to a batch of cores.
+[0:35:38] And then those cores execute that instruction using different addresses and data.
+[0:35:43] However, there are many more nuances to SIMT and GPU architecture, so let's wrap up this video on how CPUs work.
+[0:35:52] We're thankful to all our Patreon and YouTube membership sponsors for supporting our videos.
+[0:35:59] If you want to financially support our work, you can find the links in the description below.
+[0:36:04] This is Branch Education, and we create 3D animations that dive deeply into the technology that drives our modern world.
+[0:36:12] Watch another Branch video by clicking one of these cards, or click here to subscribe.
+[0:36:18] Thanks for watching to the end.

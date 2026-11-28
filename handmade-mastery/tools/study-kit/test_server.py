@@ -280,5 +280,52 @@ class CpuInfoTest(unittest.TestCase):
         self.assertNotEqual(helper.cpuinfo.topology()["cores"], -1)
 
 
+class SideTripTest(unittest.TestCase):
+    """A side trip never takes over ./study, saves its own position and leads back to the course."""
+
+    def test_side_trip_leaves_the_course_alone(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            subject = pathlib.Path(tmp) / "handmade-mastery"
+            (subject / "journey").mkdir(parents=True)
+            for kit in ("intro-to-c/day01", "side-trips/how-cpus-work"):
+                (subject / "courses" / kit).mkdir(parents=True)
+            playlist = subject / "courses" / "playlist.json"
+            playlist.write_text(json.dumps([
+                {"kit": "intro-to-c/day01", "title": "Intro to C, Day 1", "built": True},
+                {"kit": "intro-to-c/day02", "title": "Intro to C, Day 2", "built": False},
+                {"kit": "side-trips/how-cpus-work", "title": "Side trip: How CPUs Work", "built": True,
+                 "sideTrip": True, "returnTo": "intro-to-c/day01"}]), encoding="utf-8")
+            state = subject / "journey" / "STATE.md"
+            state.write_text("# Current state\n\n## Study position\n- Course: intro-to-c, Day 01\n- Section: 5 of 12\n\n## Next action\nStart.\n", encoding="utf-8")
+            with patch.multiple(helper, SUBJECT=subject, PLAYLIST=playlist):
+                self.assertEqual(helper.current_kit()["kit"], "intro-to-c/day01")
+                # Even with the course video finished, ./study does not fall through to the side trip.
+                (subject / "courses/intro-to-c/day01/progress.json").write_text('{"finished": true}', encoding="utf-8")
+                self.assertEqual(helper.current_kit()["kit"], "intro-to-c/day01")
+                self.assertEqual(helper.next_item("intro-to-c/day01")["kit"], "intro-to-c/day02")
+                back = helper.next_item("side-trips/how-cpus-work")
+                self.assertEqual((back["kit"], back["back"]), ("intro-to-c/day01", True))
+                self.assertEqual(helper.find_kit(["cpu"])["kit"], "side-trips/how-cpus-work")
+                self.assertIsNone(helper.find_kit(["day 2"]))                      # not built yet
+                self.assertIsNone(helper.find_kit([]))
+                # The side trip writes its own section; the course position stays as it was.
+                helper.update_state_position("## Side trip position\n- Course: side trip\n- Section: 2 of 20")
+                text = state.read_text(encoding="utf-8")
+                self.assertIn("## Study position\n- Course: intro-to-c, Day 01\n- Section: 5 of 12\n", text)
+                self.assertIn("## Side trip position\n- Course: side trip\n- Section: 2 of 20\n", text)
+                self.assertLess(text.index("## Side trip position"), text.index("## Next action"))
+                helper.update_state_position("## Side trip position\n- Course: side trip\n- Section: 3 of 20")
+                helper.update_state_position("## Study position\n- Course: intro-to-c, Day 01\n- Section: 6 of 12")
+                text = state.read_text(encoding="utf-8")
+                self.assertEqual(text.count("## Side trip position"), 1)
+                self.assertIn("- Section: 3 of 20", text)
+                self.assertIn("- Section: 6 of 12", text)
+                self.assertNotIn("- Section: 5 of 12", text)
+                self.assertIn("## Next action\nStart.", text)
+                self.assertTrue(helper.CODE_KIT.match("side-trips/how-cpus-work"))
+                self.assertTrue(helper.CODE_KIT.match("intro-to-c/day01"))
+                self.assertFalse(helper.CODE_KIT.match("side-trips/../x"))
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -38,7 +38,7 @@ renderPath=function(){
   if(S.cur==='__qa')return `<section class="block"><h2>Questions &amp; answers</h2>${D.qa?.html||''}<div id="nextbox"></div></section>`;
   const b=activeLesson(),view=referenceStep||S.step;
   const content=view==='explain'?overview(b):`<section class="frost-card reading-pane study-primary"><div class="pane" id="pane">${renderStep(b,view)}</div>${STEPS.some(([k])=>k===view)&&stepOpen(b,view)?`<div class="next"><button class="btn amber" data-ui="advance-view">${view==='watch'?'I watched it → Recall':view==='recall'?'Continue to practice →':'Finish part'}</button></div>`:''}</section>`;
-  return `<header class="lesson-header"><div><div class="eyebrow">Part ${idxOf(b)+1} of ${D.blocks.length}</div><h1>Day 1 — ${esc(b.title)}</h1></div><span class="tsr">▶ ${b.start} – ${b.end}</span></header>${navigationHTML(b)}<div class="lesson-columns"><div id="lesson-panel" role="tabpanel" aria-labelledby="study-tab-${view}">${content}${supportFinishButton(b,view)}</div>${toolsRail(b)}</div>`;
+  return `<header class="lesson-header"><div><div class="eyebrow">Part ${idxOf(b)+1} of ${D.blocks.length}</div><h1>${esc(LESSON_LABEL)} — ${esc(b.title)}</h1></div><span class="tsr">▶ ${b.start} – ${b.end}</span></header>${navigationHTML(b)}<div class="lesson-columns"><div id="lesson-panel" role="tabpanel" aria-labelledby="study-tab-${view}">${content}${supportFinishButton(b,view)}</div>${toolsRail(b)}</div>`;
 };
 function courseTreeHTML(){
   const f=frontier();

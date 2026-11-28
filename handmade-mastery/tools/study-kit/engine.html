@@ -263,6 +263,12 @@ document.title=D.title+" · Handmade Hero Study Platform";
 const FRESH={v:4,cur:D.blocks[0].id,step:"watch",tab:"path",done:{},completed:{},vt:{},recall:{},cmp:{},guess:{},guesses:{},lb:{},lbShow:{},rfb:{},cdate:{},ivans:{},ivfb:{},dbgs:{},dbgans:{},dbgfb:{},session:null,park:{},answers:{},fb:{},cards:{},checkAnswers:{},checkFb:{},checkAttempts:{},reviewChecks:{},practice:{},practiceDone:{},notes:{},speed:1,lastVisit:0,sessionParts:0,brk:null,stopped:false};
 let S=JSON.parse(JSON.stringify(FRESH));
 const LS=D.storageKey||"study-kit";
+/* Optional per-kit wording, so a side trip (another teacher, no Windows code) reads right. Defaults are the course's. */
+const TEACHER=D.teacher||"Casey";
+const LESSON_LABEL=D.lessonLabel||"Day 1";
+const WATCH_NOTE=D.watchNote||"";
+const PENDING_NOTE=D.pendingNote||"On Windows, finish these before adding code that depends on them.";
+const POSITION_HEADING=D.positionHeading||"Study position";
 try{const raw=localStorage.getItem(LS); if(raw) S=Object.assign(S,JSON.parse(raw));}catch(e){}
 migrate();
 const localLast=S.lastVisit||0;
@@ -395,15 +401,15 @@ function checked(b){return !!(S.checkFb[b.id]&&S.checkFb[b.id].score>=80&&S.prac
 function pendingPractice(){return D.blocks.filter(b=>S.completed[b.id]&&(S.practice[b.id]||"").trim()&&!S.practiceDone[b.id]);}
 function pendingHTML(){
   const pending=pendingPractice();if(!pending.length)return "";
-  return `<details class="plan"><summary>${pending.length} practical task${pending.length===1?"":"s"} still to try</summary><p class="small">On Windows, finish these before adding code that depends on them.</p><ul>${pending.map(b=>`<li><button class="btn ghost small" data-practicepart="${b.id}">Part ${idxOf(b)+1}: ${esc(b.title)}</button> ${esc(S.practice[b.id])}</li>`).join("")}</ul></details>`;
+  return `<details class="plan"><summary>${pending.length} practical task${pending.length===1?"":"s"} still to try</summary><p class="small">${esc(PENDING_NOTE)}</p><ul>${pending.map(b=>`<li><button class="btn ghost small" data-practicepart="${b.id}">Part ${idxOf(b)+1}: ${esc(b.title)}</button> ${esc(S.practice[b.id])}</li>`).join("")}</ul></details>`;
 }
 function blockContext(b){
   const strip=h=>String(h||"").replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim();
   return `VIDEO: "${D.title}"${D.eyebrow?" ("+D.eyebrow+")":""}.
 PART: ${b.title} (${b.start}-${b.end})
-WHAT CASEY COVERS: ${b.summary}
+WHAT ${TEACHER.toUpperCase()} COVERS: ${b.summary}
 STUDY NOTES: ${strip(b.explain).slice(0,3500)}
-TOPICS CASEY PARKS FOR LATER (do not teach these; say they come later): ${(D.parked||[]).map(p=>p.what+" ["+p.where+"]").join("; ")}`;
+TOPICS ${TEACHER.toUpperCase()} PARKS FOR LATER (do not teach these; say they come later): ${(D.parked||[]).map(p=>p.what+" ["+p.where+"]").join("; ")}`;
 }
 
 /* ---------- the video player (one element, kept alive across renders) ---------- */
@@ -579,7 +585,7 @@ function micPrompt(b){ // Whisper's initial_prompt: the course's and this part's
   for(const m of text.matchAll(/<code>([^<]{2,40})<\/code>|`([^`]{2,40})`/g)) terms.add((m[1]||m[2]).replace(/&[a-z]+;/g,"").trim());
   for(const m of text.replace(/<[^>]+>/g," ").matchAll(/\b(?:[a-z]+[A-Z]\w*|[A-Z][a-z]+[A-Z]\w*|[A-Z]{2,}\w*)\b/g)) terms.add(m[0]);
   const list=[...terms].filter(t=>t&&!/[{};]/.test(t)).slice(0,40).join(", ");
-  return `${D.title}. ${b.title}. C programming on Windows, Visual Studio, compiler, linker, debugger. ${list}.`.slice(0,800);
+  return `${D.title}. ${b.title}. ${D.micContext||"C programming on Windows, Visual Studio, compiler, linker, debugger."} ${list}.`.slice(0,800);
 }
 function micStatus(w,cls,text){const s=w.querySelector(".micstat"); if(!s) return; s.className="micstat"+(cls?" "+cls:""); s.textContent=text; s.hidden=!text;}
 function micButton(w,on){const b=w.querySelector(".mic"); if(!b) return; b.classList.toggle("rec",on); b.innerHTML=on?ICON.stop:ICON.mic;
@@ -836,7 +842,7 @@ function renderStepRaw(b,k){
 
     return `<p><b>Watch ${b.start} → ${b.end}</b> (${fmt(en-st)}).</p>
     <p><b>Focus:</b> ${md(b.focus||b.oneLiner||b.summary)}</p>
-    <p class="small">When Casey codes: pause after a meaningful change, write it yourself on Windows, predict the result, then build and check it. That counts as your practice.</p>
+    <p class="small">${WATCH_NOTE?md(WATCH_NOTE):"When Casey codes: pause after a meaningful change, write it yourself on Windows, predict the result, then build and check it. That counts as your practice."}</p>
     ${loader}
     <div class="park" id="parkbox"><h3>Parking lot</h3><p class="small muted">Want to search something? Don't leave. Write it here and keep watching. We look at it after this part.</p>
     <div class="row"><input type="text" id="parkin" placeholder="e.g. what does LPSTR stand for?" autocomplete="off"><button class="btn small" id="parkgo">Park it</button></div>
@@ -948,17 +954,17 @@ async function finishSync(){
 async function showNext(){
   const box=$("#nextbox"); if(!box||!helperReady||!allDone()) return;
   try{const r=await (await fetch("/api/next?kit="+encodeURIComponent(kitPath))).json(); const n=r.next;
-    box.innerHTML=!n?`<p>That's the last video in the playlist.</p>`:n.built?`<p class="row" style="justify-content:center"><a class="btn" href="/courses/${n.kit}/study-kit.html">Next video: ${esc(n.title)} →</a></p>`
+    box.innerHTML=!n?`<p>That's the last video in the playlist.</p>`:n.built?`<p class="row" style="justify-content:center"><a class="btn" href="/courses/${n.kit}/study-kit.html">${n.back?"Back to the course":"Next video"}: ${esc(n.title)} →</a></p>`
       :`<p><b>Next video: ${esc(n.title)}.</b> Its study kit isn't built yet. ${n.video?`Put <code>${esc(n.video)}</code> in your videos folder, then t`:"Get the video, then t"}ell Claude Code: “build the kit for ${esc(n.title)}”.</p>`;}catch(e){}
 }
 function positionBlock(){
   const f=frontier(), b=blockById(S.cur), d=new Date().toISOString().slice(0,10);
   const step=(STEPS.find(([k])=>k===S.step)||[])[1]||"Watch";
   const pending=pendingPractice(), pendingNote=pending.length?`\n- Practice still to try: ${pending.map(x=>x.id).join(", ")}`:"";
-  if(allDone()) return `## Study position\n- Course: ${D.course||D.title}\n- Section: all ${D.blocks.length} parts done; next is the Q&A\n- Step: Q&A\n- Completed (part id, date): ${completedList()}${pendingNote}\n- Updated: ${d}`;
+  if(allDone()) return `## ${POSITION_HEADING}\n- Course: ${D.course||D.title}\n- Section: all ${D.blocks.length} parts done; next is the Q&A\n- Step: Q&A\n- Completed (part id, date): ${completedList()}${pendingNote}\n- Updated: ${d}`;
   const nb=(S.brk||S.stopped)?D.blocks[f]:b, i=idxOf(nb), st=(S.brk||S.stopped)?"Watch":step;
   const into=S.vt[nb.id]?Math.max(0,S.vt[nb.id]-secs(nb.start)):0;
-  return `## Study position\n- Course: ${D.course||D.title}\n- Section: ${i+1} of ${D.blocks.length} ("${nb.title}", ${nb.start}-${nb.end})\n- Step: ${st}${into>1?` (video at ${fmt(into)} into the part, episode time ${fmt(secs(nb.start)+into)})`:""}\n- Parts done: ${Object.keys(S.completed).length}\n- Completed (part id, date): ${completedList()}${pendingNote}\n- Updated: ${d}`;
+  return `## ${POSITION_HEADING}\n- Course: ${D.course||D.title}\n- Section: ${i+1} of ${D.blocks.length} ("${nb.title}", ${nb.start}-${nb.end})\n- Step: ${st}${into>1?` (video at ${fmt(into)} into the part, episode time ${fmt(secs(nb.start)+into)})`:""}\n- Parts done: ${Object.keys(S.completed).length}\n- Completed (part id, date): ${completedList()}${pendingNote}\n- Updated: ${d}`;
 }
 function tickBreak(){
   const el=$("#bclock"); if(!el||!S.brk||!S.brk.until){clearInterval(brkTimer);brkTimer=null;return}
@@ -1005,7 +1011,7 @@ function renderParked(){
   const mine=[];D.blocks.forEach((b,i)=>(S.park[b.id]||[]).forEach(p=>{if(p.status!=="done")mine.push({b,i,p})}));
   return `<section class="block"><h2>Parked</h2>
   <h3>Your questions</h3>${mine.length?`<div class="tbl"><table><thead><tr><th>Part</th><th>Question</th><th>Status</th></tr></thead><tbody>${mine.map(({i,p})=>`<tr><td class="mono">Part ${i+1} · ${fmt(p.at)}</td><td>${esc(p.t)}</td><td><span class="chip ${p.status}">${p.status==="later"?"later":"open"}</span></td></tr>`).join("")}</tbody></table></div>`:`<p class="muted small">None yet. Questions you park while watching show up here until they're answered.</p>`}
-  <h3>What Casey parks for later</h3><p class="small muted">He says "we'll get to that later" about these. When one comes up in a later episode, you'll recognize it.</p>
+  <h3>What ${esc(TEACHER)} parks for later</h3><p class="small muted">He says "we'll get to that later" about these. When one comes up in a later episode, you'll recognize it.</p>
   <div class="tbl"><table><thead><tr><th>When</th><th>What he parks</th><th>Where it's covered</th></tr></thead><tbody>
   ${(D.parked||[]).map(p=>`<tr><td class="mono">${p.t}</td><td>${md(p.what)}</td><td>${md(p.where)}</td></tr>`).join("")}</tbody></table></div></section>`;
 }
@@ -1130,9 +1136,9 @@ document.addEventListener("click",async e=>{
     catch(err){box.innerHTML=`<div class="fb">Couldn't grade this time. Open “What a strong answer includes”.</div>`}
     finally{t.disabled=false}return}
   if(t.dataset.pset){const [i,st]=t.dataset.pset.split(":");const b=blockById(S.cur);S.park[b.id][+i].status=st;save();$("#plist").innerHTML=parkItems(b,true);return}
-  if(t.dataset.pcopy){const b=blockById(S.cur),p=S.park[b.id][+t.dataset.pcopy];copy(`I'm studying "${D.title}", part "${b.title}" (${b.start}-${b.end}). While watching I parked this question at ${fmt(p.at)} into the part: "${p.t}". Answer it briefly in simple English. If Casey covers it later in the series, just say so and give a one-line preview.`,$("#pans-"+t.dataset.pcopy));return}
+  if(t.dataset.pcopy){const b=blockById(S.cur),p=S.park[b.id][+t.dataset.pcopy];copy(`I'm studying "${D.title}", part "${b.title}" (${b.start}-${b.end}). While watching I parked this question at ${fmt(p.at)} into the part: "${p.t}". Answer it briefly in simple English. If ${TEACHER} covers it later in the series, just say so and give a one-line preview.`,$("#pans-"+t.dataset.pcopy));return}
   if(t.dataset.pask){const i=+t.dataset.pask,b=blockById(S.cur),p=S.park[b.id][i],out=$("#pans-"+i);t.disabled=true;out.textContent="Thinking…";
-    try{const r=await sample(`You are a tutor for one part of a programming video. Answer the student's parked question in under 120 words, simple English. If it's about something Casey parks for later, say so in one line and give at most a one-sentence preview.\n${blockContext(b)}\n\nQUESTION (asked at ${fmt(p.at)} into the part): ${p.t}`,{onText:({text})=>{out.textContent=text}});p.ans=r.text;p.status="done";save();$("#plist").innerHTML=parkItems(b,true);}
+    try{const r=await sample(`You are a tutor for one part of a programming video. Answer the student's parked question in under 120 words, simple English. If it's about something ${TEACHER} parks for later, say so in one line and give at most a one-sentence preview.\n${blockContext(b)}\n\nQUESTION (asked at ${fmt(p.at)} into the part): ${p.t}`,{onText:({text})=>{out.textContent=text}});p.ans=r.text;p.status="done";save();$("#plist").innerHTML=parkItems(b,true);}
     catch(err){out.textContent=err.text||"Couldn't answer this time. Try again later.";t.disabled=false}return}
   if(t.id==="chatgo"){chat();return}
   if(t.id==="chatclear"){S.notes[S.cur]=[];save();render();return}
@@ -1159,7 +1165,7 @@ async function chat(){
   const b=blockById(S.cur); const inp=$("#chatin"); const text=inp.value.trim(); if(!text) return;
   const log=S.notes[b.id]=S.notes[b.id]||[]; log.push({r:"user",c:text}); inp.value=""; save(); render(); $("#chathelp").open=true;
   const out=document.createElement("div"); out.className="msg a"; out.textContent="Thinking…"; $("#chatlog").append(out);
-  const rules=`You tutor one student through this video part. Simple English. Stay inside the part's topic. If the question is about something Casey parks for later, say so in one line and give at most a one-sentence preview. Under 80 words. Answer only the question, with no repeated summary.\n${blockContext(b)}`;
+  const rules=`You tutor one student through this video part. Simple English. Stay inside the part's topic. If the question is about something ${TEACHER} parks for later, say so in one line and give at most a one-sentence preview. Under 80 words. Answer only the question, with no repeated summary.\n${blockContext(b)}`;
   try{const r=await sample([{role:"user",content:rules},...log.slice(-8).map(m=>({role:m.r,content:m.c}))],{cache:false,onText:({text})=>{out.textContent=text}});log.push({r:"assistant",c:r.text});save();}
   catch(err){out.textContent=err.text||"Couldn't answer this time. Try again."}
 }

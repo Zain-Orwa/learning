@@ -78,10 +78,12 @@ def progress_done(kit):
 
 
 def current_kit():
-    for item in playlist():
+    """The course video to study now. Side trips ("sideTrip": true) never take over ./study."""
+    course = [i for i in playlist() if not i.get("sideTrip")]
+    for item in course:
         if item.get("built") and not progress_done(item["kit"]):
             return item
-    built = [i for i in playlist() if i.get("built")]
+    built = [i for i in course if i.get("built")]
     return built[-1] if built else None
 
 
@@ -89,7 +91,22 @@ def next_item(kit):
     items = playlist()
     for i, item in enumerate(items):
         if item["kit"] == kit:
-            return items[i + 1] if i + 1 < len(items) else None
+            if item.get("sideTrip"):               # a side trip ends where it started: back on the course
+                home = next((x for x in items if x["kit"] == item.get("returnTo")), None) or current_kit()
+                return dict(home, back=True) if home else None
+            rest = [x for x in items[i + 1:] if not x.get("sideTrip")]
+            return rest[0] if rest else None
+    return None
+
+
+def find_kit(words):
+    """./study cpu → the first built kit whose path or title contains the words (used for side trips)."""
+    want = " ".join(words).strip().lower()
+    if not want:
+        return None
+    for item in playlist():
+        if item.get("built") and want in (item["kit"] + " " + item.get("title", "")).lower():
+            return item
     return None
 
 
@@ -265,13 +282,25 @@ class Whisper:
 WHISPER = Whisper()
 
 
+POSITION_HEADINGS = ("## Study position", "## Side trip position")
+
+
 def update_state_position(block):
-    """Replace the '## Study position' section of journey/STATE.md with the page's block."""
+    """Replace the page's position section of journey/STATE.md with the page's block.
+
+    The course writes '## Study position'. A side trip writes '## Side trip position',
+    so leaving the course for a while never erases the place to come back to."""
     p = SUBJECT / "journey" / "STATE.md"
     s = p.read_text(encoding="utf-8")
     block = block.strip() + "\n"
-    if "## Study position" in s:
-        s = re.sub(r"## Study position\n.*?(?=\n## |\Z)", block, s, count=1, flags=re.S)
+    heading = block.split("\n", 1)[0].strip()
+    if heading not in POSITION_HEADINGS:
+        heading = POSITION_HEADINGS[0]
+    section = lambda h: re.escape(h) + r"\n.*?(?=\n## |\Z)"
+    if heading in s:
+        s = re.sub(section(heading), lambda m: block, s, count=1, flags=re.S)
+    elif POSITION_HEADINGS[0] in s:                 # a new side-trip section goes right after the course position
+        s = re.sub(section(POSITION_HEADINGS[0]), lambda m: m.group(0).rstrip("\n") + "\n\n" + block, s, count=1, flags=re.S)
     else:
         s = s.rstrip() + "\n\n" + block
     p.write_text(s, encoding="utf-8")
@@ -305,7 +334,7 @@ def git_sync(message):
 # ---------- Code Lab: write, build and run course code on the Mac ----------
 CODE_ROOT = SUBJECT / "code"
 WINSHIM = HERE / "winshim"
-CODE_KIT = re.compile(r"^[a-z0-9-]+/day\d{2}$")
+CODE_KIT = re.compile(r"^[a-z0-9-]+/(?:day\d{2}|[a-z0-9]+(?:-[a-z0-9]+)*)$")   # course/dayNN, or side-trips/<name>
 CODE_FILE = re.compile(r"^[A-Za-z0-9_][A-Za-z0-9_-]{0,60}\.(?:c|cpp|h)$")
 MAX_SOURCE = 200_000
 RUN_SECONDS = 5
@@ -721,6 +750,13 @@ def stuck_helpers():
 
 def main():
     url = f"http://localhost:{PORT}/"
+    wanted = [a for a in sys.argv[1:] if not a.startswith("-")]      # ./study cpu → open that kit (a side trip)
+    if wanted:
+        item = find_kit(wanted)
+        if not item:
+            sys.exit(f"No built study kit matches \"{' '.join(wanted)}\". See courses/playlist.json.")
+        url += f"courses/{item['kit']}/study-kit.html"
+        print(f"Opening: {item['title']}")
     bind = lambda: http.server.ThreadingHTTPServer(("127.0.0.1", PORT), Handler)
     try:
         server = bind()

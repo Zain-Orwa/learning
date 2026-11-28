@@ -43,6 +43,26 @@ Manim for motion that helps. Keep faster-whisper mic input in editable boxes
 and existing optional Kokoro audio. LearnHarness and Anki are parked optional
 tools, not required installations or parallel practice/review queues.
 
+## Side trips (go understand, then come back)
+
+A side trip is one outside video studied the same way (Watch → Check →
+Practice) to understand something the course touches but does not explain.
+It is not part of the course order.
+
+- Kits live in `courses/side-trips/<name>/` and have a `playlist.json` entry
+  with `"sideTrip": true` and `"returnTo": "<course kit>"`.
+- `./study` never opens a side trip by itself. Open one with `./study <word>`
+  (for example `./study cpu`). Its last screen links back to the course.
+- A side trip saves `## Side trip position` in `journey/STATE.md`; the course's
+  `## Study position` is left alone. Its reviews join the normal `REVIEWS.md`.
+- In `data.js` set `teacher`, `lessonLabel`, `watchNote`, `pendingNote`,
+  `micContext` and `positionHeading: "Side trip position"`. Tasks are small Mac
+  tasks; there is no Windows code. Skip sponsor and channel chapters.
+- Use the video's own frames as the part's graphics: `frames/bNN-MMmSSs.jpg`,
+  listed in order in `visual` with the time and what to notice.
+- Current: `side-trips/how-cpus-work` (Branch Education, "How do CPUs Work?"),
+  left from Intro to C Day 1 Part 4.
+
 ## Building the next kit
 
 Build only the next needed episode, not hundreds of speculative kits. Group

@@ -5,7 +5,7 @@ function experimentSupport(b){
 }
 const experimentBaseStep=renderStepRaw;
 renderStepRaw=function(b,key){
-  if(key==='watch')return `${videoPanel(b)}<p class="experiment-focus"><strong>Focus:</strong> ${md(b.focus||b.oneLiner||b.summary)}</p><p>When Casey codes, pause and write the change yourself. Predict, build and check the result. That work counts as your practice.</p>${labFor(b)==='code'?codeLabLink():''}<details class="experiment-parking"><summary>Park a question for later</summary><div class="row"><input type="text" id="parkin" placeholder="Your question…" aria-label="Question to park"><button class="btn ghost" id="parkgo">Park it</button></div><ul class="plist" id="plist">${parkItems(b,false)}</ul></details>`;
+  if(key==='watch')return `${videoPanel(b)}<p class="experiment-focus"><strong>Focus:</strong> ${md(b.focus||b.oneLiner||b.summary)}</p><p>${WATCH_NOTE?md(WATCH_NOTE):"When Casey codes, pause and write the change yourself. Predict, build and check the result. That work counts as your practice."}</p>${labFor(b)==='code'?codeLabLink():''}<details class="experiment-parking"><summary>Park a question for later</summary><div class="row"><input type="text" id="parkin" placeholder="Your question…" aria-label="Question to park"><button class="btn ghost" id="parkgo">Park it</button></div><ul class="plist" id="plist">${parkItems(b,false)}</ul></details>`;
   if(key==='experiment'){
     const base=experimentBaseStep(b,key),at=base.indexOf('<p class="small">If you already'),slot=labSlot(b);
     const withLab=at<0?base+slot:base.slice(0,at)+slot+base.slice(at);
@@ -27,7 +27,7 @@ renderPath=function(){
   const view=referenceStep||S.step;
   const next=D.blocks[idxOf(b)+1];
   const label=view==='watch'?'I watched it → Check':view==='recall'?'Continue to practice →':next?`Finish part · Continue to Part ${idxOf(next)+1} →`:D.qa?'Finish part · Questions & answers →':'Finish the last part ✓';
-  return `<header class="lesson-header"><div><div class="eyebrow">Part ${idxOf(b)+1} of ${D.blocks.length}</div><h1>Day 1 — ${esc(b.title)}</h1></div><span class="tsr">▶ ${b.start} – ${b.end}</span></header>${navigationHTML(b)}<div class="lesson-columns"><div id="lesson-panel" role="tabpanel" aria-labelledby="study-tab-${view}"><section class="frost-card reading-pane study-primary"><div class="pane" id="pane">${renderStep(b,view)}</div>${stepOpen(b,view)?`<div class="next"><button class="btn amber" data-ui="advance-view">${label}</button></div>`:''}</section></div>${experimentSupport(b)}</div>`;
+  return `<header class="lesson-header"><div><div class="eyebrow">Part ${idxOf(b)+1} of ${D.blocks.length}</div><h1>${esc(LESSON_LABEL)} — ${esc(b.title)}</h1></div><span class="tsr">▶ ${b.start} – ${b.end}</span></header>${navigationHTML(b)}<div class="lesson-columns"><div id="lesson-panel" role="tabpanel" aria-labelledby="study-tab-${view}"><section class="frost-card reading-pane study-primary"><div class="pane" id="pane">${renderStep(b,view)}</div>${stepOpen(b,view)?`<div class="next"><button class="btn amber" data-ui="advance-view">${label}</button></div>`:''}</section></div>${experimentSupport(b)}</div>`;
 };
 document.addEventListener('click',e=>{
   const button=e.target.closest('[data-ui]');if(!button)return;const b=activeLesson();
@@ -160,7 +160,7 @@ function askContext(b,from){
 }
 function askRules(b,from){
   const practice=plainText(md(b.practice||''));
-  return `You tutor Zain through one part of a programming video, inside his study page. English is not his first language: use plain, simple English and short sentences. He is asking about ${ASK_ABOUT[from]}. Answer only his question, directly, in under 120 words. Stay inside this part. If he asks about something Casey parks for later, say so in one line and give at most a one-sentence preview. Use \`backticks\` for code names. No headings.${practice?`\nHIS PRACTICE TASK (he must write it himself: never give the answer or the code for it; give one short hint or ask one guiding question instead): ${practice}`:''}\n${blockContext(b)}\n${askContext(b,from)}`;
+  return `You tutor Zain through one part of a programming video, inside his study page. English is not his first language: use plain, simple English and short sentences. He is asking about ${ASK_ABOUT[from]}. Answer only his question, directly, in under 120 words. Stay inside this part. If he asks about something ${TEACHER} parks for later, say so in one line and give at most a one-sentence preview. Use \`backticks\` for code names. No headings.${practice?`\nHIS PRACTICE TASK (he must write it himself: never give the answer or the code for it; give one short hint or ask one guiding question instead): ${practice}`:''}\n${blockContext(b)}\n${askContext(b,from)}`;
 }
 function askPrompt(b,from,history,text){
   const past=history.map(m=>`${m.r==='user'?'ZAIN':'TUTOR'}: ${m.c}`).join('\n\n');
@@ -227,7 +227,7 @@ function notesActionsHTML(key,kind,hasText){
 }
 function episodeHasNotes(){return D.blocks.some(x=>(notesFor(x.id).text||'').trim());}
 function notesPathHTML(b){
-  return `<section class="notes-path" aria-label="Notes for every part"><h3>${uiIcon('list')} Your notes path · Day 1</h3><ol>${D.blocks.map((x,i)=>{const t=(notesFor(x.id).text||'').trim(),open=t||x.id===b.id||unlocked(x);return `<li><button type="button" class="notes-path-row${x.id===b.id?' is-here':''}${t?' has-notes':''}" data-notes-open="${x.id}" ${open?'':'disabled'} ${x.id===b.id?'aria-current="true"':''}><span class="part-mark" aria-hidden="true">${t?'✓':i+1}</span><span class="np-text"><span class="np-title">Part ${i+1} — ${esc(x.title)}</span><span class="np-preview" data-np-preview="${x.id}">${t?esc(t.split('\n')[0].slice(0,90)):'No notes yet'}</span></span></button></li>`;}).join('')}</ol><div class="episode-box"><div class="row notes-actions" data-notes-actions="episode">${notesActionsHTML('episode','episode',episodeHasNotes())}</div>${summarySlots('episode')}</div></section>`;
+  return `<section class="notes-path" aria-label="Notes for every part"><h3>${uiIcon('list')} Your notes path · ${esc(LESSON_LABEL)}</h3><ol>${D.blocks.map((x,i)=>{const t=(notesFor(x.id).text||'').trim(),open=t||x.id===b.id||unlocked(x);return `<li><button type="button" class="notes-path-row${x.id===b.id?' is-here':''}${t?' has-notes':''}" data-notes-open="${x.id}" ${open?'':'disabled'} ${x.id===b.id?'aria-current="true"':''}><span class="part-mark" aria-hidden="true">${t?'✓':i+1}</span><span class="np-text"><span class="np-title">Part ${i+1} — ${esc(x.title)}</span><span class="np-preview" data-np-preview="${x.id}">${t?esc(t.split('\n')[0].slice(0,90)):'No notes yet'}</span></span></button></li>`;}).join('')}</ol><div class="episode-box"><div class="row notes-actions" data-notes-actions="episode">${notesActionsHTML('episode','episode',episodeHasNotes())}</div>${summarySlots('episode')}</div></section>`;
 }
 function notesStatus(b){const n=notesFor(b.id);return (n.updated?'Saved '+niceTime(n.updated):'Not written yet')+(notesFileError?' · notes.md not updated: '+notesFileError:'');}
 function notesView(b){
