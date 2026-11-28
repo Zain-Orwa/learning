@@ -1,7 +1,7 @@
 {
  "v": 4,
- "cur": "b04",
- "step": "experiment",
+ "cur": "b05",
+ "step": "watch",
  "tab": "path",
  "done": {
   "b01": {
@@ -33,19 +33,22 @@
   },
   "b04": {
    "watch": true,
-   "recall": true
+   "recall": true,
+   "experiment": true
   }
  },
  "completed": {
   "b01": true,
   "b02": true,
-  "b03": true
+  "b03": true,
+  "b04": true
  },
  "vt": {
   "b01": 0,
   "b02": 321,
   "b03": 1014.950256,
-  "b04": 1320.584599
+  "b04": 1320.584599,
+  "b05": 1390
  },
  "recall": {
   "b01": "1. how you can code C program in Windows.\n2. what do you need as tools to Code a game using Windows machine.\n3. to able to code a game you need to get a text editor and compiler that is not come out of the box like linux we have to download that.",
@@ -134,7 +137,8 @@
  "cdate": {
   "b01": "2026-11-01",
   "b02": "2026-11-02",
-  "b03": "2026-11-23"
+  "b03": "2026-11-23",
+  "b04": "2026-11-26"
  },
  "ivans": {
   "b02:0": "a console application is app that is using the terminal as its interface while GUI app is creating it's own one and all that can be flagged inside the app itself",
@@ -701,7 +705,7 @@
   ]
  },
  "speed": 1,
- "lastVisit": 1795724827166,
+ "lastVisit": 1795884469737,
  "sessionParts": 0,
  "brk": null,
  "stopped": false,
@@ -713,7 +717,8 @@
  "lessonViews": {
   "b03": "experiment",
   "b01": "recall",
-  "b04": "experiment"
+  "b04": "experiment",
+  "b05": "watch"
  },
  "optionalDone": {
   "b03": {
@@ -721,9 +726,7 @@
   }
  },
  "reviewGate": {
-  "day": "2026-11-26",
-  "startedAt": 1795712800233,
-  "finished": true
+  "day": "2026-11-28"
  },
  "supportSeen": {
   "b03": {

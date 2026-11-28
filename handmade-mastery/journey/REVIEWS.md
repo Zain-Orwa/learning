@@ -12,3 +12,4 @@ so the dates are always right. `/review` runs a review session.
 | icd01-p01 | Intro C D1 · Why this series, and getting a compiler | courses/intro-to-c/day01#b01 | 2026-11-01 | 1d | 2026-11-23 | 50% | 2026-11-16:0% 2026-11-22:50% |
 | icd01-p02 | Intro C D1 · Creating a project and your first .cpp file | courses/intro-to-c/day01#b02 | 2026-11-02 | 1d | 2026-11-23 | 60% | 2026-11-16:0% 2026-11-22:60% |
 | icd01-p03 | Intro C D1 · Building: what compiling actually means | courses/intro-to-c/day01#b03 | 2026-11-23 | 1d | 2026-11-24 | – |  |
+| icd01-p04 | Intro C D1 · Excursion: processors, cores, hyperthreads | courses/intro-to-c/day01#b04 | 2026-11-26 | 1d | 2026-11-27 | – |  |
