@@ -37,7 +37,7 @@ _Last updated: 2026-11-16_
 ## Side trip position
 - Course: side trip: How CPUs Work (Branch Education)
 - Section: 1 of 20 ("The CPU Inside Your Computer", 0:00-1:45)
-- Step: Watch
+- Step: Watch (video at 0:02 into the part, episode time 0:02)
 - Parts done: 0
 - Completed (part id, date): none
 - Updated: 2026-11-28
@@ -58,6 +58,9 @@ _(one line per challenge: date, bug class, score, time)_
   About and thank-you chapters skipped). Not started: 0 of 20 parts.
 - Open it with `./study cpu`. `./study` alone still opens Intro to C Day 1.
 - Each part's Graphics panel shows the video's own frames in order.
+- Parts 8, 11 and 12 also have the video's desk redrawn so it moves (Anatomy
+  figure `anatomy/fde.html`): one click is one clock tick of fetch, decode,
+  execute, with the video's instructions 1 to 5 and its numbers 42, 68, 110.
 - The video file is `~/learning-videos/How_CPU_Works.mp4` (Mac only, not in git).
 - It was left from Day 1 Part 4 (cores). The last screen links back to Day 1.
 

@@ -1248,9 +1248,17 @@ b20:[
  ["35:19","A hall of desks","The analogy for a GPU: behind the GPU chip, the library is filled with rows of small desks, each one a simple core."],
  ["35:39","SIMT","The diagram at the top right: one Fetch box, one Decode box, then many core boxes below. One instruction, executed by many cores on different data."]
 ]};
+// The video's fetch-decode-execute desk, redrawn so it can be stepped (an Anatomy figure). The page in
+// anatomy/ is built in ~/Developer/Branch-Education/figures/how-cpus-work/fetch-decode-execute and copied here.
+const MACHINE={
+ b08:"Look at the sheet of paper and find the blue box <b>PC - Program Counter</b>. Every fetch starts there: the number in the box says which instruction in the book comes next. When the instruction has been copied, the number goes up by one: 001, 002, 003.",
+ b11:"Each click is one clock tick, and each tick is one step. <b>Fetch:</b> the PC finds the instruction in the book, and it is copied into the CIR on the sheet. <b>Decode:</b> the decoder shows the instruction and its machine code, and the control signals light up green. <b>Execute:</b> a value travels over the grey bus, and a register, the calculator or the book changes.",
+ b12:"Watch the alarm clock next to the decoder. Its hand moves once for every tick, and nothing on the desk moves without a tick. Its face takes the colour of the step: blue for fetch, orange for decode, green for execute. You make about one tick a second here. The 6502 made a million each second; the M1 makes 3.2 billion."
+};
+const machine=(text)=>`<h3>Move it yourself</h3><p>This is the desk from the video, redrawn with the same objects, colours and numbers, so you can step it yourself. The picture moves close to the part that is working, as the video does. ${text}</p><iframe src="anatomy/fde.html" title="The video's fetch, decode, execute desk, to step yourself" loading="lazy" style="display:block;width:100%;height:1180px;border:0;border-radius:8px;margin:0 0 28px"></iframe>`;
 window.STUDY.blocks.forEach(b=>{
   const v=V[b.id]; if(!v) return;
-  b.visual=`<h3>The video's own graphics, in order</h3><p>Go from top to bottom. Each picture is a frame from this part of the video, with the time it appears and what to notice in it.</p>`+v.map(x=>fig(b.id,x[0],x[1],x[2])).join("");
+  b.visual=(MACHINE[b.id]?machine(MACHINE[b.id]):"")+`<h3>The video's own graphics, in order</h3><p>Go from top to bottom. Each picture is a frame from this part of the video, with the time it appears and what to notice in it.</p>`+v.map(x=>fig(b.id,x[0],x[1],x[2])).join("");
 });
 })();
 
@@ -1258,6 +1266,7 @@ window.STUDY.how = `<h2>A side trip, studied the same way</h2>
 <p><b>Why you are here:</b> Intro to C Day 1 talks about the CPU, cores and "the instructions the CPU runs". This video shows what that means. When you finish, the page sends you back to the course.</p>
 <p><b>Watch → Check → Practice</b>, one part at a time. The 20 parts are the video's own chapters.</p>
 <p><b>Graphics:</b> every part has the video's own pictures, in order, each with the time and what to notice. Open <b>Graphics</b> in Study support, or "Show the idea" on the Check step.</p>
+<p><b>A machine you can step:</b> parts 8, 11 and 12 also have the video's desk at the top of Graphics, redrawn so it moves. Click it and it does one clock tick: fetch, decode or execute.</p>
 <p><b>Check:</b> answer in your own words. Only the visible checklist counts and 80% is enough.</p>
 <p><b>Practice:</b> small tasks on this Mac: a Terminal command, a trace on paper, or the Code Lab. There is no Windows code in this side trip.</p>
 <p><b>Your place in the course is safe.</b> This side trip saves its own position. <code>./study</code> still opens Intro to C; <code>./study cpu</code> opens this page.</p>

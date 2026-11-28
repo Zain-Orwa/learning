@@ -1,0 +1,58 @@
+{
+ "v": 4,
+ "cur": "b01",
+ "step": "watch",
+ "tab": "review",
+ "done": {},
+ "completed": {},
+ "vt": {
+  "b01": 1.983323
+ },
+ "recall": {},
+ "cmp": {},
+ "guess": {},
+ "guesses": {},
+ "lb": {},
+ "lbShow": {},
+ "rfb": {},
+ "cdate": {},
+ "ivans": {},
+ "ivfb": {},
+ "dbgs": {},
+ "dbgans": {},
+ "dbgfb": {},
+ "session": null,
+ "park": {},
+ "answers": {},
+ "fb": {},
+ "cards": {},
+ "checkAnswers": {},
+ "checkFb": {},
+ "checkAttempts": {
+  "b01": []
+ },
+ "reviewChecks": {},
+ "practice": {},
+ "practiceDone": {},
+ "notes": {},
+ "speed": 1,
+ "lastVisit": 1795899342553,
+ "sessionParts": 0,
+ "brk": null,
+ "stopped": false,
+ "predictions": {},
+ "reviewGate": {
+  "day": "2026-11-28"
+ },
+ "finished": false,
+ "supportSeen": {
+  "b01": {
+   "cards": "12se7kg",
+   "analogy": "180tavq",
+   "graphics": "1hgy9zy"
+  }
+ },
+ "lessonViews": {
+  "b01": "watch"
+ }
+}

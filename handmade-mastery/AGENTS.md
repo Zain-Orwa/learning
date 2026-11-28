@@ -60,6 +60,13 @@ It is not part of the course order.
   tasks; there is no Windows code. Skip sponsor and channel chapters.
 - Use the video's own frames as the part's graphics: `frames/bNN-MMmSSs.jpg`,
   listed in order in `visual` with the time and what to notice.
+- Where motion explains more than a still frame, add an Anatomy figure Zain can
+  step above the frames, as an `<iframe src="anatomy/…html">` in `visual`. Draw
+  it with the video's own objects, colours, labels and numbers (sample the
+  colours from the frames), so it goes together with the frames below it. The figure's source and the Anatomy kit live in
+  `~/Developer/Branch-Education` (`figures/`, `anatomy/`); build it there with
+  `node build.mjs` and copy the built page into the kit's `anatomy/` folder.
+  Say in its caption what was added that the video does not show.
 - Current: `side-trips/how-cpus-work` (Branch Education, "How do CPUs Work?"),
   left from Intro to C Day 1 Part 4.
 
